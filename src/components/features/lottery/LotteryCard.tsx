@@ -115,7 +115,7 @@ export function LotteryCard({
       <div className='relative z-10 mt-6 mb-6'>
         <span
           className={clsx(
-            'block font-benzin text-[32px] leading-none font-black uppercase tracking-tight drop-shadow-sm',
+            'block font-benzin text-[24px] leading-none font-semibold uppercase tracking-tight drop-shadow-sm',
             textColor,
           )}
         >
@@ -127,7 +127,7 @@ export function LotteryCard({
       <Link href='/check-ticket' className='relative z-10 block w-full'>
         <button
           className={clsx(
-            'w-full rounded-full py-4 px-6 transition-all active:scale-[0.98] shadow-lg shadow-black/5',
+            'rounded-full py-3 px-6 transition-all active:scale-[0.98] shadow-lg shadow-black/5',
             buttonClass,
           )}
         >

@@ -4,3 +4,7 @@
   --font-benzin: var(--font-benzin), ui-sans-serif, system-ui, sans-serif;
   --font-rubik: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
 }
+
+body {
+  background-color: wheat;
+}
