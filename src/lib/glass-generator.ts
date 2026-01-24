@@ -91,7 +91,7 @@ export function generateGlassMap(
       const g = 128 + vectorY * intensity * 127;
 
       // Альфа-канал используем для карты высот (для Specular Lighting)
-    //   const alpha = intensity * 255;
+      const alpha = intensity * 255;
 
       const i = (y * width + x) * 4;
       data[i] = r; // R -> X Displacement
