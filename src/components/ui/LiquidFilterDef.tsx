@@ -18,14 +18,14 @@ export function LiquidFilterDef() {
           />
           <feGaussianBlur
             in='SourceGraphic'
-            stdDeviation='0.02'
+            stdDeviation='0.002'
             result='blur'
           />
           <feDisplacementMap
             id='disp'
             in='blur'
             in2='map'
-            scale='0.4'
+            scale='0.1'
             xChannelSelector='R'
             yChannelSelector='G'
           ></feDisplacementMap>
