@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Star, Ticket, User, ScanLine } from 'lucide-react';
-import { clsx } from 'clsx'; // Импортируем clsx
+import { clsx } from 'clsx';
 
 export function BottomNav() {
   const pathname = usePathname();
