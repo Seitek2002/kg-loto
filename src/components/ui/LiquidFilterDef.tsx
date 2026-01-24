@@ -25,7 +25,7 @@ export function LiquidFilterDef() {
             id='disp'
             in='blur'
             in2='map'
-            scale='0.1'
+            scale='0.4'
             xChannelSelector='R'
             yChannelSelector='G'
           ></feDisplacementMap>
