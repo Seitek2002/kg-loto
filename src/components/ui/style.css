@@ -1,4 +1,22 @@
-.glass {
+/* .glass {
   backdrop-filter: url(#frosted);
-}
+} */
 /* -webkit-backdrop-filter: url(#frosted); */
+
+.glass {
+  /* 1. Ссылка на наш JS-сгенерированный ID */
+  backdrop-filter: url(#liquid-glass);
+  /* -webkit-backdrop-filter: url(#liquid-glass); */
+  
+  /* 2. Легкая тонировка, чтобы меню не терялось на белом фоне */
+  background: rgba(255, 255, 255, 0.2); 
+  
+  /* 3. Тонкая белая граница для четкости */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+  /* 4. Небольшая тень для отрыва от фона */
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+  
+  /* Обязательно: overflow-hidden, чтобы SVG фильтр не вылезал за скругления */
+  overflow: hidden; 
+}
