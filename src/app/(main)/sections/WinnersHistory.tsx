@@ -55,19 +55,19 @@ export const WinnersHistory = () => {
 
       {/* Слайдер */}
       <Swiper
-        spaceBetween={16}
-        slidesPerView={1.6} // Показываем полторы карточки, чтобы было понятно, что можно свайпать
+        spaceBetween={8}
+        slidesPerView={2.1} // Показываем полторы карточки, чтобы было понятно, что можно свайпать
         breakpoints={{
           // На экранах побольше показываем 2.2 карточки
           640: {
             slidesPerView: 2.2,
           },
         }}
-        className='!overflow-visible' // Важно: разрешаем слайдам вылезать за границы контейнера при свайпе
+        className='overflow-visible!' // Важно: разрешаем слайдам вылезать за границы контейнера при свайпе
       >
         {winners.map((winner) => (
           <SwiperSlide key={winner.id}>
-            <div className='relative w-full h-[400px] rounded-[32px] overflow-hidden bg-gray-100'>
+            <div className='relative w-full h-[213px] rounded-4xl overflow-hidden bg-gray-100'>
               {/* Фото победителя */}
               <Image
                 src={winner.image}
@@ -84,7 +84,7 @@ export const WinnersHistory = () => {
                 <p className='text-xs text-[#4B4B4B] font-rubik mb-2 font-medium'>
                   {winner.city}
                 </p>
-                <span className='text-xs font-black text-black font-benzin tracking-tight'>
+                <span className='text-xs font-semibold text-black font-benzin tracking-tight'>
                   {winner.prize}
                 </span>
               </div>
