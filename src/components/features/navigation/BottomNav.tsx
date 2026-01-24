@@ -44,8 +44,8 @@ export function BottomNav() {
               className={clsx(
                 'flex flex-col items-center px-4 py-2.5 rounded-full transition-all duration-200',
                 isActive
-                  ? 'bg-gray-100 text-gray-900'
-                  : 'bg-transparent text-gray-400 hover:text-gray-600',
+                  ? 'bg-gray-100/80 text-gray-900'
+                  : 'bg-transparent text-gray-600',
               )}
             >
               <item.icon
