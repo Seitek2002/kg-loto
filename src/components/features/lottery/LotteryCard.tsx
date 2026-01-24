@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Clock } from 'lucide-react';
+import { clsx } from 'clsx';
 
 interface LotteryCardProps {
   title: string;
@@ -8,7 +10,13 @@ interface LotteryCardProps {
   prize: string;
   gradientFrom?: string;
   gradientTo?: string;
-  time?: string; // Добавил проп для времени (например, "14:56")
+  imageSrc?: string;
+  time?: string;
+
+  // 🔥 НОВЫЙ ПРОП: Явное управление темой текста
+  // 'white' = белый текст (для темных фонов)
+  // 'dark' = темный текст (для светлых фонов/желтого)
+  theme?: 'white' | 'dark';
 }
 
 export function LotteryCard({
@@ -18,43 +26,111 @@ export function LotteryCard({
   prize,
   gradientFrom = 'from-blue-400',
   gradientTo = 'to-blue-600',
-  time = '14:56', // Дефолтное время
+  imageSrc,
+  time = '14:56',
+  theme, // Достаем тему
 }: LotteryCardProps) {
+  let isTextDark: boolean;
+
+  if (theme) {
+    // 1. Если тема передана явно — слушаемся её
+    isTextDark = theme === 'dark';
+  } else if (imageSrc) {
+    // 2. Если есть картинка (и нет темы), по умолчанию текст белый (так как есть затемнение)
+    isTextDark = false;
+  } else {
+    // 3. Если ничего не передано — пробуем угадать по градиенту
+    isTextDark = isLightBackground(gradientFrom);
+  }
+
+  // Цвет основного текста
+  const textColor = isTextDark ? 'text-gray-900' : 'text-white';
+  const descriptionColor = isTextDark ? 'text-gray-700' : 'text-white/90';
+
+  // Цвет бейджа (полупрозрачная подложка)
+  const badgeBg = isTextDark
+    ? 'bg-black/10 border-black/5'
+    : 'bg-white/20 border-white/10';
+  const badgeText = isTextDark ? 'text-gray-900' : 'text-white';
+
+  // Цвет кнопки (инверсия для контраста)
+  const buttonClass = isTextDark
+    ? 'bg-gray-900 text-white hover:bg-gray-800' // На светлом фоне черная кнопка
+    : 'bg-white text-gray-900 hover:bg-gray-50'; // На темном фоне белая кнопка
+
   return (
     <div
-      className={`relative w-full rounded-4xl p-6 mb-4 flex flex-col justify-between bg-linear-to-br ${gradientFrom} ${gradientTo} shadow-xl`}
-      style={{ minHeight: '320px' }} // Минимальная высота, чтобы карточка была "высокой", как на дизайне
+      className={clsx(
+        'relative w-full rounded-4xl p-6 mb-4 flex flex-col justify-between shadow-xl overflow-hidden',
+        // Если картинки нет, ставим градиент
+        !imageSrc && `bg-linear-to-br ${gradientFrom} ${gradientTo}`,
+      )}
+      style={{ minHeight: '320px' }}
     >
-      {/* 1. Верхний бейдж с временем */}
-      <div className='w-fit mb-4'>
-        <div className='flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10'>
-          <Clock size={14} className='text-white' strokeWidth={2.5} />
-          <span className='text-white font-bold text-sm tracking-wide'>
+      {/* ФОН: КАРТИНКА + ЗАТЕМНЕНИЕ */}
+      {imageSrc && (
+        <>
+          <Image src={imageSrc} alt={title} fill className='object-cover z-0' />
+          {/* Если текст белый, добавляем затемнение, чтобы он читался */}
+          {!isTextDark && <div className='absolute inset-0 bg-black/40 z-0' />}
+        </>
+      )}
+
+      {/* ВЕРХНИЙ БЕЙДЖ */}
+      <div className='relative z-10 w-fit mb-4'>
+        <div
+          className={clsx(
+            'flex items-center gap-1.5 backdrop-blur-md px-3 py-1.5 rounded-full border',
+            badgeBg,
+          )}
+        >
+          <Clock size={14} className={badgeText} strokeWidth={2.5} />
+          <span className={clsx('font-bold text-sm tracking-wide', badgeText)}>
             {time}
           </span>
         </div>
       </div>
 
-      {/* 2. Контент: Заголовок и Описание */}
-      <div className='mb-auto'>
-        <h3 className='text-sm font-black text-white uppercase tracking-wide mb-3 font-benzin'>
+      {/* ТЕКСТЫ */}
+      <div className='relative z-10 mb-auto'>
+        <h3
+          className={clsx(
+            'text-sm font-black uppercase tracking-wide mb-3 font-benzin',
+            textColor,
+          )}
+        >
           {title}
         </h3>
-        <p className='text-xs text-white/90 leading-relaxed font-medium font-rubik'>
+        <p
+          className={clsx(
+            'text-xs leading-relaxed font-medium font-rubik',
+            descriptionColor,
+          )}
+        >
           {description}
         </p>
       </div>
 
-      {/* 3. Огромная цена приза */}
-      <div className='mt-6 mb-6'>
-        <span className='block font-benzin text-[24px] leading-none font-black text-white uppercase tracking-tight drop-shadow-sm'>
+      {/* ЦЕНА */}
+      <div className='relative z-10 mt-6 mb-6'>
+        <span
+          className={clsx(
+            'block font-benzin text-[32px] leading-none font-black uppercase tracking-tight drop-shadow-sm',
+            textColor,
+          )}
+        >
           {prize}
         </span>
       </div>
 
-      {/* 4. Белая кнопка */}
-      <Link href='/check-ticket' className='block w-full'>
-        <button className='bg-white hover:bg-gray-50 text-gray-900 rounded-full py-3 px-6 transition-all active:scale-[0.98] shadow-lg shadow-black/5'>
+      {/* КНОПКА */}
+      <Link href='/check-ticket' className='relative z-10 block w-full'>
+        <button
+          className={clsx(
+            'w-full rounded-full py-4 px-6 transition-all active:scale-[0.98] shadow-lg shadow-black/5',
+            buttonClass,
+          )}
+        >
           <span className='font-extrabold text-xs uppercase'>
             Играть • {price} сом
           </span>
@@ -62,4 +138,32 @@ export function LotteryCard({
       </Link>
     </div>
   );
+}
+
+// Вспомогательная функция (оставляем как запасной вариант)
+function isLightBackground(colorClass: string): boolean {
+  const lightColors = [
+    'white',
+    'yellow',
+    'lime',
+    'amber',
+    'orange',
+    'cyan',
+    'sky-300',
+    'sky-200',
+  ];
+  if (lightColors.some((c) => colorClass.includes(c))) {
+    if (
+      colorClass.includes('-900') ||
+      colorClass.includes('-800') ||
+      colorClass.includes('-950')
+    )
+      return false;
+    return true;
+  }
+  const match = colorClass.match(/-(\d{2,3})/);
+  if (match) {
+    return parseInt(match[1]) < 500;
+  }
+  return false;
 }
