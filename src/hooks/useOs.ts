@@ -1,18 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
+
+const emptySubscribe = () => () => {};
 
 export function useOs() {
-  const [isAndroid, setIsAndroid] = useState(false);
-
-  useEffect(() => {
-    // Простая проверка User Agent
-    const userAgent =
-      navigator.userAgent || navigator.vendor || (window as any).opera;
-    if (/android/i.test(userAgent)) {
-      setIsAndroid(true);
-    }
-  }, []);
+  const isAndroid = useSyncExternalStore(
+    emptySubscribe,
+    () => {
+      const userAgent =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        navigator.userAgent || navigator.vendor || (window as any).opera;
+      return /android/i.test(userAgent);
+    },
+    () => false,
+  );
 
   return { isAndroid };
 }
