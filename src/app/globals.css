@@ -5,6 +5,19 @@
   --font-rubik: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
 }
 
+@layer utilities {
+  /* Скрытие скроллбара для Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Скрытие скроллбара для IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
 body {
-  background-color: wheat;
+  background-color: #f4f4f4;
 }

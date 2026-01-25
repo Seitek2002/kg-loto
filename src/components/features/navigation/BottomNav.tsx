@@ -29,7 +29,7 @@ export function BottomNav() {
   return (
     <div className='fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between gap-3 max-w-md mx-auto pointer-events-none'>
       {/* ЛЕВАЯ ЧАСТЬ: Основное меню (Капсула) */}
-      <nav className='glass flex-1 pointer-events-auto bg-white/70 border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 p-1.5 flex justify-between items-center'>
+      <nav className='glass flex-1 pointer-events-auto bg-white/70 border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 p-1 flex justify-between items-center'>
         {navItems.map((item) => {
           // Логика активности
           const isActive =
@@ -42,8 +42,10 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={clsx(
-                'flex flex-col items-center px-4 py-2.5 rounded-full transition-all duration-200',
-                isActive ? ' text-gray-900' : 'bg-transparent text-gray-600',
+                'flex flex-col items-center px-3 py-1.5 rounded-full transition-all duration-200',
+                isActive
+                  ? ' text-gray-900 bg-gray-600/10 backdrop-blur-lg'
+                  : 'bg-transparent text-gray-600',
               )}
             >
               <item.icon

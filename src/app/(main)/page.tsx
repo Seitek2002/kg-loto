@@ -1,4 +1,6 @@
+import { BestMaterials } from './sections/BestMaterials';
 import { CheckLottery } from './sections/CheckLottery';
+import { FAQ } from './sections/FAQ';
 import { Hero } from './sections/Hero';
 import { PopularTickets } from './sections/PopularTickets';
 import { WinnersHistory } from './sections/WinnersHistory';
@@ -11,6 +13,8 @@ export default function Home() {
         <PopularTickets />
         <CheckLottery />
         <WinnersHistory />
+        <BestMaterials />
+        <FAQ />
       </div>
 
       <div className='h-8' />
