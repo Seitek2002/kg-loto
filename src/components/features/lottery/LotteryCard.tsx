@@ -4,19 +4,22 @@ import { Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface LotteryCardProps {
+  // Основные данные
   title: string;
   description: string;
-  price: number;
+  price?: number; // Для лотереи
   prize: string;
+
+  // Внешний вид
   gradientFrom?: string;
   gradientTo?: string;
   imageSrc?: string;
   time?: string;
-
-  // 🔥 НОВЫЙ ПРОП: Явное управление темой текста
-  // 'white' = белый текст (для темных фонов)
-  // 'dark' = темный текст (для светлых фонов/желтого)
   theme?: 'white' | 'dark';
+
+  // 🔥 НОВЫЕ ПРОПЫ ДЛЯ УНИВЕРСАЛЬНОСТИ
+  variant?: 'lottery' | 'prize'; // 'lottery' по умолчанию
+  status?: 'received' | 'waiting'; // Только для variant='prize'
 }
 
 export function LotteryCard({
@@ -28,55 +31,51 @@ export function LotteryCard({
   gradientTo = 'to-blue-600',
   imageSrc,
   time = '14:56',
-  theme, // Достаем тему
+  theme,
+  variant = 'lottery', // По дефолту - игровая карточка
+  status,
 }: LotteryCardProps) {
+  // 1. Логика определения цвета (твоя, без изменений)
   let isTextDark: boolean;
-
   if (theme) {
-    // 1. Если тема передана явно — слушаемся её
     isTextDark = theme === 'dark';
   } else if (imageSrc) {
-    // 2. Если есть картинка (и нет темы), по умолчанию текст белый (так как есть затемнение)
     isTextDark = false;
   } else {
-    // 3. Если ничего не передано — пробуем угадать по градиенту
     isTextDark = isLightBackground(gradientFrom);
   }
 
-  // Цвет основного текста
   const textColor = isTextDark ? 'text-gray-900' : 'text-white';
   const descriptionColor = isTextDark ? 'text-gray-700' : 'text-white/90';
 
-  // Цвет бейджа (полупрозрачная подложка)
+  // Фон для бейджей
   const badgeBg = isTextDark
     ? 'bg-black/10 border-black/5'
     : 'bg-white/20 border-white/10';
   const badgeText = isTextDark ? 'text-gray-900' : 'text-white';
 
-  // Цвет кнопки (инверсия для контраста)
-  const buttonClass = isTextDark
-    ? 'bg-gray-900 text-white hover:bg-gray-800' // На светлом фоне черная кнопка
-    : 'bg-white text-gray-900 hover:bg-gray-50'; // На темном фоне белая кнопка
+  // 2. Логика для статуса приза
+  const isReceived = status === 'received';
+  const statusDotColor = isReceived ? 'bg-green-400' : 'bg-yellow-400';
+  const statusText = isReceived ? 'получен' : 'ожидает';
 
   return (
     <div
       className={clsx(
-        'relative w-full rounded-4xl p-6 mb-4 flex flex-col justify-between shadow-xl overflow-hidden',
-        // Если картинки нет, ставим градиент
-        !imageSrc && `bg-linear-to-br ${gradientFrom} ${gradientTo}`,
+        'relative w-full rounded-[32px] p-6 mb-4 flex flex-col justify-between shadow-xl overflow-hidden',
+        !imageSrc && `bg-gradient-to-br ${gradientFrom} ${gradientTo}`,
       )}
-      style={{ minHeight: '320px' }}
+      style={{ minHeight: variant === 'prize' ? '240px' : '320px' }} // Призы могут быть чуть компактнее
     >
-      {/* ФОН: КАРТИНКА + ЗАТЕМНЕНИЕ */}
+      {/* ФОН */}
       {imageSrc && (
         <>
           <Image src={imageSrc} alt={title} fill className='object-cover z-0' />
-          {/* Если текст белый, добавляем затемнение, чтобы он читался */}
           {!isTextDark && <div className='absolute inset-0 bg-black/40 z-0' />}
         </>
       )}
 
-      {/* ВЕРХНИЙ БЕЙДЖ */}
+      {/* ВЕРХНИЙ БЕЙДЖ: Меняется в зависимости от варианта */}
       <div className='relative z-10 w-fit mb-4'>
         <div
           className={clsx(
@@ -84,10 +83,35 @@ export function LotteryCard({
             badgeBg,
           )}
         >
-          <Clock size={14} className={badgeText} strokeWidth={2.5} />
-          <span className={clsx('font-bold text-sm tracking-wide', badgeText)}>
-            {time}
-          </span>
+          {variant === 'lottery' ? (
+            // Лотерея: Часики + Время
+            <>
+              <Clock size={14} className={badgeText} strokeWidth={2.5} />
+              <span
+                className={clsx('font-bold text-sm tracking-wide', badgeText)}
+              >
+                {time}
+              </span>
+            </>
+          ) : (
+            // Приз: Точка + Статус
+            <>
+              <div
+                className={clsx(
+                  'w-2 h-2 rounded-full shadow-sm',
+                  statusDotColor,
+                )}
+              />
+              <span
+                className={clsx(
+                  'font-bold text-[10px] uppercase tracking-wider font-benzin',
+                  badgeText,
+                )}
+              >
+                {statusText}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
@@ -111,8 +135,13 @@ export function LotteryCard({
         </p>
       </div>
 
-      {/* ЦЕНА */}
-      <div className='relative z-10 mt-6 mb-6'>
+      {/* ЦЕНА / ПРИЗ */}
+      <div
+        className={clsx(
+          'relative z-10 mt-6',
+          variant === 'lottery' ? 'mb-6' : 'mb-0',
+        )}
+      >
         <span
           className={clsx(
             'block font-benzin text-[32px] leading-none font-black uppercase tracking-tight drop-shadow-sm',
@@ -123,24 +152,28 @@ export function LotteryCard({
         </span>
       </div>
 
-      {/* КНОПКА */}
-      <Link href='/check-ticket' className='relative z-10 block w-full'>
-        <button
-          className={clsx(
-            'w-full rounded-full py-4 px-6 transition-all active:scale-[0.98] shadow-lg shadow-black/5',
-            buttonClass,
-          )}
-        >
-          <span className='font-extrabold text-xs uppercase'>
-            Играть • {price} сом
-          </span>
-        </button>
-      </Link>
+      {/* КНОПКА (Только для лотереи) */}
+      {variant === 'lottery' && price && (
+        <Link href='/check-ticket' className='relative z-10 block w-full'>
+          <button
+            className={clsx(
+              'w-full rounded-full py-4 px-6 transition-all active:scale-[0.98] shadow-lg shadow-black/5',
+              isTextDark
+                ? 'bg-gray-900 text-white hover:bg-gray-800'
+                : 'bg-white text-gray-900 hover:bg-gray-50',
+            )}
+          >
+            <span className='font-extrabold text-xs uppercase'>
+              Играть • {price} сом
+            </span>
+          </button>
+        </Link>
+      )}
     </div>
   );
 }
 
-// Вспомогательная функция (оставляем как запасной вариант)
+// Вспомогательная функция (оставляем как есть)
 function isLightBackground(colorClass: string): boolean {
   const lightColors = [
     'white',
