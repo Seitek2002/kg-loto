@@ -112,7 +112,7 @@ export default function WithdrawDetailsPage() {
             <h2 className='text-sm font-bold font-benzin uppercase text-[#2D2D2D] mb-2'>
               Введите код из СМС
             </h2>
-            <p className='text-xs text-gray-400 font-rubik max-w-[250px] mx-auto'>
+            <p className='text-xs text-gray-400 font-rubik max-w-62.5 mx-auto'>
               Мы отправили код подтверждения на номер <br />
               <span className='text-[#FFD600] font-bold'>{phone}</span>
             </p>
