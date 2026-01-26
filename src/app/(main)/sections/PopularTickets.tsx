@@ -1,4 +1,6 @@
-import { LotteryCard } from '@/components/features/lottery/LotteryCard';
+import { LotteryCard } from '@/components/features/lottery/GameCard';
+import { Description } from '@/components/ui/Description';
+import { Title } from '@/components/ui/Title';
 
 export const PopularTickets = () => {
   const lotteries = [
@@ -79,15 +81,13 @@ export const PopularTickets = () => {
 
   return (
     <div>
-      <h1 className='text-base font-bold text-[#4B4B4B] font-benzin uppercase'>
-        Популярные лотереи
-      </h1>
-      <p className='text-xs text-[#6E6E6E] my-3'>
+      <Title>Популярные лотереи</Title>
+      <Description>
         Популярные лотереи привлекают внимание благодаря крупным джекпотам,
         частым тиражам и удобным условиям участия. Тысячи игроков ежедневно
         выбирают именно эти розыгрыши, чтобы испытать удачу и побороться за
         выигрыш.
-      </p>
+      </Description>
 
       {lotteries.map((loto) => (
         <LotteryCard

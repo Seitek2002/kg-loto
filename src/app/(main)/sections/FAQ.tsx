@@ -1,4 +1,6 @@
+import { Description } from '@/components/ui/Description';
 import { FAQItem } from '@/components/ui/FAQItem';
+import { Title } from '@/components/ui/Title';
 
 export const FAQ = () => {
   const questions = [
@@ -38,13 +40,13 @@ export const FAQ = () => {
     <section className='mb-12'>
       {/* Заголовки */}
       <div className='mb-8'>
-        <h2 className='text-2xl font-black text-[#2D2D2D] font-benzin uppercase mb-4 leading-tight'>
+        <Title>
           ОТВЕТЫ НА ЧАСТЫЕ <br /> ВОПРОСЫ
-        </h2>
-        <p className='text-sm text-[#6E6E6E] font-rubik leading-relaxed'>
+        </Title>
+        <Description>
           Если не нашли ответа на свой вопрос, просто спросите у нас в привычном
           мессенджере.
-        </p>
+        </Description>
       </div>
 
       {/* Список вопросов */}

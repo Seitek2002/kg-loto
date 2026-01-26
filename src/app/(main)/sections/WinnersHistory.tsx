@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Title } from '@/components/ui/Title';
+import { Description } from '@/components/ui/Description';
 import 'swiper/css';
 
 interface Winner {
@@ -42,16 +44,11 @@ const winners: Winner[] = [
 export const WinnersHistory = () => {
   return (
     <section className='mb-12 overflow-hidden'>
-      {/* Заголовок */}
-      <h2 className='text-base font-bold text-[#2d2d2d] font-benzin uppercase'>
-        ИСТОРИЯ ПОБЕДИТЕЛЕЙ
-      </h2>
-
-      {/* Описание */}
-      <p className='text-xs text-[#6E6E6E] my-3'>
+      <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>
+      <Description>
         Популярные лотереи привлекают внимание благодаря крупным джекпотам,
         частым тиражам и удобным условиям участия.
-      </p>
+      </Description>
 
       {/* Слайдер */}
       <Swiper

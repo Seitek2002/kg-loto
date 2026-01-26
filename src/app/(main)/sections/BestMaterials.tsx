@@ -3,6 +3,8 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { ArticleCard, ArticleCardProps } from '@/components/ui/ArticleCard';
+import { Title } from '@/components/ui/Title';
+import { Description } from '@/components/ui/Description';
 
 // Данные, настроенные под макет
 const articles: ArticleCardProps[] = [
@@ -60,13 +62,11 @@ export const BestMaterials = () => {
     <section className='mb-16 overflow-hidden'>
       {/* Заголовки */}
       <div className='mb-8'>
-        <h2 className='text-2xl font-black text-[#2D2D2D] font-benzin uppercase mb-4'>
-          ЛУЧШИЕ МАТЕРИАЛЫ
-        </h2>
-        <p className='text-sm text-[#6E6E6E] font-rubik leading-relaxed max-w-2xl'>
+        <Title>ЛУЧШИЕ МАТЕРИАЛЫ</Title>
+        <Description>
           Следите за последними событиями, улучшениями и нововведениями — мы
           регулярно рассказываем о том, что важно знать.
-        </p>
+        </Description>
       </div>
 
       {/* Слайдер */}

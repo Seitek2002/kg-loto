@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PrizeTabs } from '@/components/features/prizes/PrizeTabs';
-import { LotteryCard } from '@/components/features/lottery/LotteryCard';
+import { LotteryCard } from '@/components/features/lottery/GameCard';
 
 const prizes = [
   {

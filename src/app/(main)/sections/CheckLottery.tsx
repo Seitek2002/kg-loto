@@ -1,14 +1,14 @@
+import { Description } from '@/components/ui/Description';
+import { Title } from '@/components/ui/Title';
+
 export const CheckLottery = () => {
   return (
     <section className='mb-12'>
-      <h2 className='font-black text-[#4B4B4B] font-benzin uppercase mb-3'>
-        ПРОВЕРКА ЛОТЕРЕИ
-      </h2>
-
-      <p className='text-xs text-[#6E6E6E] font-rubik leading-tight mb-8'>
+      <Title>ПРОВЕРКА ЛОТЕРЕИ</Title>
+      <Description>
         Популярные лотереи привлекают внимание благодаря крупным джекпотам,
         частым тиражам и удобным условиям участия.
-      </p>
+      </Description>
 
       {/* Форма */}
       <form className='flex flex-col gap-6'>

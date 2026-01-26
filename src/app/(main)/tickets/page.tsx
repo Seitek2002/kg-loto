@@ -1,5 +1,5 @@
 import { TicketFilters } from '@/components/features/tickets/TicketFilters';
-import { LotteryCard } from '@/components/features/lottery/LotteryCard';
+import { LotteryCard } from '@/components/features/lottery/GameCard';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 export default function TicketsPage() {
