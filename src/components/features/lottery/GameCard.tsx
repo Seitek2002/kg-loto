@@ -1,22 +1,25 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Clock } from 'lucide-react';
 import { clsx } from 'clsx';
-import { BaseCard } from '@/components/ui/BaseCard'; // Убедись, что путь правильный
+import { BaseCard } from '@/components/ui/BaseCard';
+
+// Тип статуса, который мы определили в сторе
+type CardStatus = 'winning' | 'losing' | 'pending' | 'archive';
 
 interface LotteryCardProps {
   title: string;
   description: string;
   price?: number;
   prize: string;
-
   gradientFrom?: string;
   gradientTo?: string;
   imageSrc?: string;
   time?: string;
   theme?: 'white' | 'dark';
 
-  variant?: 'lottery' | 'prize';
-  status?: 'received' | 'waiting';
+  // 🔥 Новый проп: Статус билета
+  ticketStatus?: CardStatus;
 }
 
 export function LotteryCard({
@@ -29,35 +32,54 @@ export function LotteryCard({
   imageSrc,
   time = '14:56',
   theme,
-  variant = 'lottery',
-  status,
+  ticketStatus, // Принимаем статус
 }: LotteryCardProps) {
   let finalTheme: 'dark' | 'white';
-
   if (theme) {
     finalTheme = theme;
   } else if (imageSrc) {
-    finalTheme = 'white'; // На картинках обычно белый текст читается лучше
+    finalTheme = 'white';
   } else {
     finalTheme = isLightBackground(gradientFrom) ? 'dark' : 'white';
   }
 
   const isDark = finalTheme === 'dark';
-
   const descriptionColor = isDark ? 'text-gray-700' : 'text-white/90';
-
-  const badgeBg = isDark
-    ? 'bg-black/10 border-black/5'
-    : 'bg-white/20 border-white/10';
-  const badgeText = isDark ? 'text-gray-900' : 'text-white';
-
   const buttonClass = isDark
     ? 'bg-gray-900 text-white hover:bg-gray-800'
     : 'bg-white text-gray-900 hover:bg-gray-50';
 
-  const isReceived = status === 'received';
-  const statusDotColor = isReceived ? 'bg-green-400' : 'bg-yellow-400';
-  const statusText = isReceived ? 'получен' : 'ожидает';
+  // --- ЛОГИКА БЕЙДЖА СТАТУСА ---
+  const getStatusConfig = (status: CardStatus) => {
+    switch (status) {
+      case 'winning':
+        return {
+          text: 'выигрышный',
+          dot: 'bg-green-500',
+          textCol: 'text-green-600',
+        };
+      case 'losing':
+        return {
+          text: 'проигрышный',
+          dot: 'bg-red-500',
+          textCol: 'text-red-500',
+        };
+      case 'pending':
+        return {
+          text: 'не проверен',
+          dot: 'bg-blue-400',
+          textCol: 'text-blue-500',
+        };
+      case 'archive':
+        return { text: 'архив', dot: 'bg-gray-400', textCol: 'text-gray-500' };
+      default:
+        return { text: '', dot: '', textCol: '' };
+    }
+  };
+
+  // Фон бейджа (белый полупрозрачный)
+  const badgeWrapperClass =
+    'flex items-center gap-2 bg-white/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20';
 
   return (
     <BaseCard
@@ -65,51 +87,41 @@ export function LotteryCard({
       gradientTo={gradientTo}
       imageSrc={imageSrc}
       theme={finalTheme}
-      className='mb-4'
-      minHeight={variant === 'prize' ? '240px' : '320px'}
+      className='mb-0' // Убираем маргин, так как оборачиваем в Link
     >
+      {/* ВЕРХНИЙ БЕЙДЖ */}
       <div className='w-fit mb-4'>
-        <div
-          className={clsx(
-            'flex items-center gap-1.5 backdrop-blur-md px-3 py-1.5 rounded-full border',
-            badgeBg,
-          )}
-        >
-          {variant === 'lottery' ? (
-            // Лотерея: Часики
-            <>
-              <Clock size={14} className={badgeText} strokeWidth={2.5} />
-              <span
-                className={clsx('font-bold text-sm tracking-wide', badgeText)}
-              >
-                {time}
-              </span>
-            </>
-          ) : (
-            // Приз: Статус
-            <>
-              <div
-                className={clsx(
-                  'w-2 h-2 rounded-full shadow-sm',
-                  statusDotColor,
-                )}
-              />
-              <span
-                className={clsx(
-                  'font-bold text-[10px] uppercase tracking-wider font-benzin',
-                  badgeText,
-                )}
-              >
-                {statusText}
-              </span>
-            </>
-          )}
-        </div>
+        {/* Если передан статус билета — показываем статус (для страницы Билеты) */}
+        {ticketStatus ? (
+          <div className={badgeWrapperClass}>
+            <div
+              className={clsx(
+                'w-2 h-2 rounded-full',
+                getStatusConfig(ticketStatus).dot,
+              )}
+            />
+            <span
+              className={clsx(
+                'text-[10px] font-bold uppercase font-benzin',
+                getStatusConfig(ticketStatus).textCol,
+              )}
+            >
+              {getStatusConfig(ticketStatus).text}
+            </span>
+          </div>
+        ) : (
+          // Иначе показываем время (для Главной страницы)
+          <div className={badgeWrapperClass}>
+            <Clock size={14} className='text-gray-900' strokeWidth={2.5} />
+            <span className='font-bold text-sm tracking-wide text-gray-900'>
+              {time}
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* 2. ТЕКСТЫ */}
+      {/* ... Остальной контент (Текст, Приз, Кнопка) без изменений ... */}
       <div className='mb-auto'>
-        {/* Заголовок (цвет наследуется от BaseCard, но можно переопределить) */}
         <h3 className='text-sm font-black uppercase tracking-wide mb-3 font-benzin opacity-100'>
           {title}
         </h3>
@@ -123,31 +135,27 @@ export function LotteryCard({
         </p>
       </div>
 
-      <div className={clsx('mt-6', variant === 'lottery' ? 'mb-6' : 'mb-0')}>
+      <div className={clsx('mt-6 mb-6')}>
         <span className='block font-benzin text-[32px] leading-none font-black uppercase tracking-tight drop-shadow-sm'>
           {prize}
         </span>
       </div>
 
-      {variant === 'lottery' && price && (
-        <Link href='/check-ticket' className='block w-full'>
-          <button
-            className={clsx(
-              'w-full rounded-full py-4 px-6 transition-all active:scale-[0.98] shadow-lg shadow-black/5',
-              buttonClass,
-            )}
-          >
-            <span className='font-extrabold text-xs uppercase'>
-              Играть • {price} сом
-            </span>
-          </button>
-        </Link>
-      )}
+      <button
+        className={clsx(
+          'w-full rounded-full py-4 px-6 transition-all shadow-lg',
+          buttonClass,
+        )}
+      >
+        <span className='font-extrabold text-xs uppercase'>
+          Играть • {price} сом
+        </span>
+      </button>
     </BaseCard>
   );
 }
 
-// Вспомогательная функция определения светлоты (осталась без изменений)
+// Хелпер цвета (тот же)
 function isLightBackground(colorClass: string): boolean {
   const lightColors = [
     'white',

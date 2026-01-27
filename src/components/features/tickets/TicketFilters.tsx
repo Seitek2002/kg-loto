@@ -1,37 +1,34 @@
 'use client';
 
-import { useState } from 'react';
 import { clsx } from 'clsx';
+import { useTicketsStore, TicketStatus } from '@/store/tickets'; // Импорт стора
 
 const filters = [
-  'Выигрышные',
-  'Проигрышные',
-  'Не проверенные',
-  'Архив',
-  'Избранное', // Добавил для теста скролла
+  { label: 'Все билеты', value: 'all' },
+  { label: 'Выигрышные', value: 'winning' },
+  { label: 'Проигрышные', value: 'losing' },
+  { label: 'Не проверенные', value: 'pending' },
 ];
 
 export const TicketFilters = () => {
-  const [activeFilter, setActiveFilter] = useState('Выигрышные');
+  const { filter, setFilter } = useTicketsStore();
 
   return (
-    // overflow-x-auto позволяет скроллить по горизонтали
-    // no-scrollbar скрывает полосу прокрутки (надо добавить в globals.css или использовать плагин, но пока так)
     <div className='flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide'>
-      {filters.map((filter) => {
-        const isActive = activeFilter === filter;
+      {filters.map((f) => {
+        const isActive = filter === f.value;
         return (
           <button
-            key={filter}
-            onClick={() => setActiveFilter(filter)}
+            key={f.value}
+            onClick={() => setFilter(f.value as TicketStatus | 'all')}
             className={clsx(
-              'px-6 py-3 rounded-full font-bold text-sm whitespace-nowrap transition-all border border-transparent',
+              'px-6 py-3 rounded-full font-bold text-xs font-benzin uppercase whitespace-nowrap transition-all',
               isActive
-                ? 'bg-[#2D2D2D] text-white shadow-lg' // Активный: темный
-                : 'bg-white text-[#2D2D2D] border border-gray-100', // Неактивный: белый
+                ? 'bg-[#2D2D2D] text-white shadow-lg'
+                : 'bg-white text-[#2D2D2D] border border-gray-100',
             )}
           >
-            {filter}
+            {f.label}
           </button>
         );
       })}
