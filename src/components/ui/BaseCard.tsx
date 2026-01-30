@@ -1,24 +1,22 @@
-'use client';
-
-import { ReactNode } from 'react';
 import Image from 'next/image';
+import { ReactNode } from 'react';
 import { clsx } from 'clsx';
+import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
 
 interface BaseCardProps {
   children: ReactNode;
-  // Визуальные настройки
-  gradientFrom?: string;
-  gradientTo?: string;
-  imageSrc?: string;
-  className?: string; // Для доп. отступов если надо
+  backgroundId?: string; // Приходит с бека (например "red-gradient")
+  imageSrc?: string; // Для обратной совместимости (если картинка задана url)
+
+  // Старые градиенты можно оставить как fallback, или удалить
+  className?: string;
   minHeight?: string;
-  theme?: 'dark' | 'white'; // Чтобы управлять цветом текста внутри
+  theme?: 'dark' | 'white';
 }
 
 export const BaseCard = ({
   children,
-  gradientFrom = 'from-gray-100',
-  gradientTo = 'to-gray-200',
+  backgroundId,
   imageSrc,
   className,
   minHeight = '320px',
@@ -26,23 +24,33 @@ export const BaseCard = ({
 }: BaseCardProps) => {
   const textColor = theme === 'dark' ? 'text-[#2D2D2D]' : 'text-white';
 
+  const bgPath = backgroundId
+    ? BACKGROUND_VARIANTS[backgroundId] || BACKGROUND_VARIANTS['default']
+    : imageSrc;
+
   return (
     <div
       className={clsx(
         'relative w-full rounded-4xl p-6 flex flex-col shadow-xl overflow-hidden',
-        !imageSrc && `bg-linear-to-br ${gradientFrom} ${gradientTo}`,
+        !bgPath && 'bg-gray-200',
         textColor,
         className,
       )}
       style={{ minHeight }}
     >
-      {/* Фоновая картинка (если есть) */}
-      {imageSrc && (
+      {/* ФОНОВАЯ КАРТИНКА */}
+      {bgPath && (
         <>
-          <Image src={imageSrc} alt='' fill className='object-cover z-0' />
-          {/* Затемнение, если текст белый */}
+          <Image
+            src={bgPath}
+            alt='card background'
+            fill
+            className='object-cover z-0'
+            priority // Важно для LCP, так как это основные элементы
+          />
+          {/* Затемнение, если текст белый, чтобы читалось лучше (опционально) */}
           {theme === 'white' && (
-            <div className='absolute inset-0 bg-black/40 z-0' />
+            <div className='absolute inset-0 bg-black/10 z-0' />
           )}
         </>
       )}

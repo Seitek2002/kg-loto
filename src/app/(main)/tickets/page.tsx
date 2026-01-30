@@ -1,19 +1,31 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { TicketFilters } from '@/components/features/tickets/TicketFilters';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { useTicketsStore } from '@/store/tickets'; // Импортируем хук стора
+import { useTicketsStore } from '@/store/tickets';
 import { LotteryCard } from '@/components/features/lottery/GameCard';
+import { LOTTERIES_DB } from '@/data/mock-lotteries';
 
 export default function TicketsPage() {
   const tickets = useTicketsStore((state) => state.tickets);
   const filter = useTicketsStore((state) => state.filter);
 
-  const filteredTickets = tickets.filter((ticket) => {
-    if (filter === 'all') return true;
-    return ticket.status === filter;
-  });
+  const filteredTickets = useMemo(() => {
+    const filtered =
+      filter === 'all' ? tickets : tickets.filter((t) => t.status === filter);
+
+    return filtered.map((ticket) => {
+      const lotteryInfo = LOTTERIES_DB.find((l) => l.id === ticket.lotteryId);
+
+      if (!lotteryInfo) {
+        return { ...LOTTERIES_DB[0], ...ticket };
+      }
+
+      return { ...lotteryInfo, ...ticket };
+    });
+  }, [tickets, filter]);
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] px-4 pt-2 pb-32'>
@@ -36,12 +48,10 @@ export default function TicketsPage() {
                 description={ticket.description}
                 prize={ticket.prize}
                 price={ticket.price}
-                // Передаем статус, чтобы появился бейдж вместо часов
-                ticketStatus={ticket.status}
-                gradientFrom={ticket.gradientFrom}
-                gradientTo={ticket.gradientTo}
-                imageSrc={ticket.imageSrc}
                 theme={ticket.theme}
+                backgroundId={ticket.backgroundId}
+                prizeFontId={ticket.prizeFontId}
+                ticketStatus={ticket.status}
               />
             </Link>
           ))

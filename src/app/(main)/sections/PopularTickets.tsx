@@ -29,9 +29,10 @@ export const PopularTickets = () => {
               prize={loto.prize}
               price={loto.price}
               time={loto.time}
-              gradientFrom={loto.gradientFrom}
-              gradientTo={loto.gradientTo}
               theme={loto.theme}
+
+              backgroundId={loto.backgroundId}
+              prizeFontId={loto.prizeFontId}
             />
           </Link>
         ))}

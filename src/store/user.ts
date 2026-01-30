@@ -9,20 +9,19 @@ export interface UserTicket {
   drawNumber: string;
   drawDate: string;
   price: number;
-
   status: 'winning' | 'losing' | 'pending';
 
-  // Если выиграл
-  winType?: WinType; // 'money' - деньги, 'item' - вещь
-  winAmount?: string; // "5 000 KGS" или "iPhone 16 Pro"
+  winType?: WinType;
+  winAmount?: string;
 
-  // Визуал
-  gradientFrom: string;
-  gradientTo: string;
+  // 🔥 ОБНОВЛЯЕМ ТИПЫ ДЛЯ ДИЗАЙНА
+  // Вместо gradientFrom/To
+  backgroundId: string;
+  prizeFontId: string;
   theme: 'dark' | 'white';
 }
 
-// МОКОВЫЕ ДАННЫЕ (Имитация купленных билетов)
+// МОКОВЫЕ ДАННЫЕ
 const MOCK_MY_TICKETS: UserTicket[] = [
   {
     id: 't-101',
@@ -34,13 +33,15 @@ const MOCK_MY_TICKETS: UserTicket[] = [
     status: 'winning',
     winType: 'money',
     winAmount: '2 000 KGS',
-    gradientFrom: 'from-blue-600',
-    gradientTo: 'to-indigo-900',
+
+    // 🔥 Ставим ID картинки и шрифт
+    backgroundId: '1',
+    prizeFontId: 'benzin',
     theme: 'white',
   },
   {
     id: 't-102',
-    title: 'Техно-Бум',
+    title: 'Техно-Бум', // Предположим это лотерея с айфоном (Лаймовый фреш - ID 3)
     ticketNumber: '7777 8888 9999',
     drawNumber: 'No 00123',
     drawDate: '28.01.2026',
@@ -48,9 +49,10 @@ const MOCK_MY_TICKETS: UserTicket[] = [
     status: 'winning',
     winType: 'item',
     winAmount: 'iPhone 16 Pro',
-    gradientFrom: 'from-gray-900',
-    gradientTo: 'to-gray-700',
-    theme: 'white',
+
+    backgroundId: '3', // Лаймовый фон
+    prizeFontId: 'benzin',
+    theme: 'dark',
   },
   {
     id: 't-104',
@@ -60,8 +62,9 @@ const MOCK_MY_TICKETS: UserTicket[] = [
     drawDate: '01.02.2026',
     price: 500,
     status: 'pending',
-    gradientFrom: 'from-orange-400',
-    gradientTo: 'to-red-500',
+
+    backgroundId: '5', // Красный фон
+    prizeFontId: 'rubik',
     theme: 'white',
   },
 ];

@@ -9,38 +9,23 @@ import { useUserStore, UserTicket } from '@/store/user';
 
 export default function MyPrizesPage() {
   const router = useRouter();
-
-  // 1. Достаем билеты из стора
   const myTickets = useUserStore((state) => state.myTickets);
-
-  // 2. Состояние табов
   const [activeTab, setActiveTab] = useState<'received' | 'waiting'>('waiting');
 
-  // 3. Подготовка данных
-  // Фильтруем только выигрышные билеты
   const winningTickets = myTickets.filter((t) => t.status === 'winning');
 
-  // 4. Логика распределения по табам
-  // В реальном проекте у билета было бы поле isReceived: boolean.
-  // ДЛЯ ДЕМО: Мы покажем все выигрышные билеты во вкладке "Ожидают",
-  // чтобы ты мог протестировать сценарии получения приза.
   const filteredPrizes = winningTickets.filter(() => {
     if (activeTab === 'waiting') return true;
-    if (activeTab === 'received') return false; // Пока пусто в полученных
+    if (activeTab === 'received') return false;
     return false;
   });
 
-  // 5. ГЛАВНАЯ ЛОГИКА: Обработка клика
   const handlePrizeClick = (ticket: UserTicket) => {
-    // Если выиграл ДЕНЬГИ -> Идем на страницу вывода
     if (ticket.winType === 'money') {
       router.push('/scan/withdraw');
       return;
     }
-
-    // Если выиграл ПРЕДМЕТ (iPhone, Машина) -> Идем на карту (искать филиал)
     if (ticket.winType === 'item') {
-      // Можно передать параметр, чтобы карта знала, что мы пришли за призом
       router.push('/map?mode=pickup');
       return;
     }
@@ -57,7 +42,6 @@ export default function MyPrizesPage() {
       <div className='flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500'>
         {filteredPrizes.length > 0 ? (
           filteredPrizes.map((ticket) => (
-            // Оборачиваем в div с onClick
             <div
               key={ticket.id}
               onClick={() => handlePrizeClick(ticket)}
@@ -67,12 +51,12 @@ export default function MyPrizesPage() {
                 variant='prize'
                 ticketStatus={activeTab === 'received' ? 'archive' : 'winning'}
                 title={ticket.title}
-                description={`Тираж ${ticket.drawNumber}`} // Используем данные билета
+                description={`Тираж ${ticket.drawNumber}`}
                 prize={ticket.winAmount || 'ПРИЗ'}
-                gradientFrom={ticket.gradientFrom}
-                gradientTo={ticket.gradientTo}
                 price={ticket.price}
                 theme={ticket.theme}
+                backgroundId={ticket.backgroundId}
+                prizeFontId={ticket.prizeFontId}
               />
             </div>
           ))
