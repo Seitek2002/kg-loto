@@ -4,9 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Bell, Bookmark, Info, Shield, LogOut } from 'lucide-react';
 import { ProfileMenuItem } from '@/components/features/profile/ProfileMenuItem';
-import { BottomNav } from '@/components/features/navigation/BottomNav'; // Твой компонент навигации
+import { useUserStore } from '@/store/user'; // <--- Импорт стора
 
 export default function ProfilePage() {
+  // Получаем данные пользователя
+  const user = useUserStore((state) => state.user);
+
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-32'>
       {/* --- ХЕДЕР --- */}
@@ -20,32 +23,29 @@ export default function ProfilePage() {
       </div>
 
       <div className='px-4 flex flex-col gap-6'>
-        {/* --- КАРТОЧКА ПОЛЬЗОВАТЕЛЯ --- */}
+        {/* --- КАРТОЧКА ПОЛЬЗОВАТЕЛЯ (ТЕПЕРЬ ДИНАМИЧЕСКАЯ) --- */}
         <Link href='/profile/edit'>
           <div className='bg-white p-4 rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.99] transition-transform'>
             <div className='flex items-center gap-4'>
-              {/* Аватар */}
+              {/* Аватар из стора */}
               <div className='relative w-14 h-14 rounded-full overflow-hidden bg-gray-200'>
                 <Image
-                  src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop'
-                  alt='User'
+                  src={user.avatar}
+                  alt={user.name}
                   fill
                   className='object-cover'
                 />
               </div>
 
-              {/* Инфо */}
+              {/* Инфо из стора */}
               <div>
                 <h3 className='text-sm font-black font-benzin text-[#2D2D2D] mb-1'>
-                  Santana Lopez
+                  {user.name}
                 </h3>
-                <p className='text-xs text-gray-400 font-rubik'>
-                  santanalopez@gmail.com
-                </p>
+                <p className='text-xs text-gray-400 font-rubik'>{user.email}</p>
               </div>
             </div>
 
-            {/* Стрелочка (шеврон) */}
             <div className='text-gray-300'>
               <span className='text-xl'>›</span>
             </div>
@@ -57,7 +57,7 @@ export default function ProfilePage() {
           <ProfileMenuItem
             icon={Bookmark}
             label='Мои призы'
-            href='/profile/prizes'
+            href='/profile/prizes' // <--- Сюда мы пойдем дальше
           />
           <ProfileMenuItem icon={Info} label='Помощь' href='/help' />
           <ProfileMenuItem
@@ -77,9 +77,6 @@ export default function ProfilePage() {
           />
         </div>
       </div>
-
-      {/* Нижняя навигация */}
-      {/* <BottomNav /> */}
     </div>
   );
 }

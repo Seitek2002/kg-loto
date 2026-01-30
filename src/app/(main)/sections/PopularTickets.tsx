@@ -1,10 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import { LotteryCard } from '@/components/features/lottery/GameCard';
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
-import { LOTTERIES_DB } from '@/data/mock-lotteries'; // <--- Импорт базы
+import { useContentStore } from '@/store/content';
 
 export const PopularTickets = () => {
+  const lotteries = useContentStore((state) => state.lotteries);
+
   return (
     <div>
       <Title>Популярные лотереи</Title>
@@ -13,7 +17,7 @@ export const PopularTickets = () => {
       </Description>
 
       <div className='flex flex-col gap-4'>
-        {LOTTERIES_DB.map((loto) => (
+        {lotteries.map((loto) => (
           <Link
             key={loto.id}
             href={`/lottery/${loto.id}`}
