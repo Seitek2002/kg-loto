@@ -28,40 +28,34 @@ export default function LotteryDetailPage() {
         <PageHeader title='' />
       </div>
 
-      {/* 2. Динамический Hero */}
-      {/* Мы можем передать в Hero специфичные цвета лотереи, если Hero это поддерживает */}
-      <Hero
-      // title={lottery.heroTitle}
-      // subtitle={`СУПЕРПРИЗ ОТ ${lottery.prize}`}
-      />
+      <Hero />
 
       <div className='px-4 mt-8 flex flex-col gap-2'>
-        {/* Блок проверки */}
         <CheckLottery />
 
-        {/* Условия */}
         <LotteryConditions />
 
-        {/* 3. Динамические Категории призов */}
-        <section className='mb-12'>
-          <h2 className='text-xs text-gray-500 font-rubik mb-4 uppercase'>
-            Призовой фонд лотереи «{lottery.title}»
-          </h2>
-          <div className='flex flex-col'>
-            {lottery.prizeTiers.map((tier, idx) => (
-              <PrizeTierCard
-                key={idx}
-                category={tier.category}
-                description={tier.description}
-                amount={tier.amount}
-                winnersCount={tier.winners}
-                // Цвета берутся из конфига
-                gradientFrom={tier.gradientFrom}
-                gradientTo={tier.gradientTo}
-              />
-            ))}
-          </div>
-        </section>
+        {lottery.prizeTiers && lottery.prizeTiers.length > 0 && (
+          <section className='mb-12'>
+            <h2 className='text-xs text-gray-500 font-rubik mb-4 uppercase'>
+              Призовой фонд лотереи «{lottery.title}»
+            </h2>
+            <div className='flex flex-col'>
+              {/* 🔥 ИСПРАВЛЕНИЕ: Добавлен ? перед .map */}
+              {lottery.prizeTiers?.map((tier, idx) => (
+                <PrizeTierCard
+                  key={idx}
+                  category={tier.category}
+                  description={tier.description}
+                  amount={tier.amount}
+                  winnersCount={tier.winners}
+                  gradientFrom={tier.gradientFrom}
+                  gradientTo={tier.gradientTo}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
         <WinnersHistory />
       </div>
