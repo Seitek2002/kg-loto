@@ -16,7 +16,6 @@ export default function ManualCheckPage() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      // Рандомно показываем выигрыш или проигрыш для теста
       const isWin = Math.random() > 0.5;
       setModalState(isWin ? 'win' : 'loss');
     }, 1500);
@@ -59,7 +58,7 @@ export default function ManualCheckPage() {
         </button>
       </div>
 
-      {/* --- МОДАЛКА ПРОИГРЫША (Скрин 1, справа) --- */}
+      {/* --- МОДАЛКА ПРОИГРЫША --- */}
       {modalState === 'loss' && (
         <div className='fixed inset-0 z-50 flex items-center justify-center px-6'>
           <div
@@ -83,7 +82,7 @@ export default function ManualCheckPage() {
                 ОК
               </button>
               <button
-                onClick={() => setModalState('none')} // Или редирект на магазин
+                onClick={() => setModalState('none')}
                 className='flex-1 h-12 rounded-full bg-[#FFD600] text-black font-benzin font-bold text-[10px] uppercase shadow-lg hover:bg-[#FFC000]'
               >
                 Играть
@@ -93,7 +92,7 @@ export default function ManualCheckPage() {
         </div>
       )}
 
-      {/* --- МОДАЛКА ВЫИГРЫША (Скрин 2, слева) --- */}
+      {/* --- МОДАЛКА ВЫИГРЫША --- */}
       {modalState === 'win' && (
         <div className='fixed inset-0 z-50 flex flex-col bg-[#F9F9F9] animate-in slide-in-from-bottom duration-300'>
           {/* Хедер модалки */}
@@ -115,20 +114,17 @@ export default function ManualCheckPage() {
               джекпотам...
             </p>
 
-            {/* Карточка выигрыша */}
             <LotteryCard
               title='НАЗВАНИЕ ЛОТЕРЕИ'
               description='Популярные лотереи привлекают внимание...'
               prize='1 000 000 KGS'
               price={0}
-              gradientFrom='from-pink-100'
-              gradientTo='to-purple-200'
-              theme='dark' // Чтобы текст был черным на светлом градиенте
               time='20:00'
-              // Важно: скрываем кнопку внутри карточки, так как у нас кнопки снаружи
-              // (Либо добавь проп hideButton в LotteryCard, либо используй variant="prize")
+              theme='white'
               variant='prize'
-              status='received'
+              ticketStatus='winning'
+              backgroundId='8'
+              prizeFontId='benzin'
             />
 
             {/* Кнопки действий */}

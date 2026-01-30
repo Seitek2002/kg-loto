@@ -14,8 +14,8 @@ export const QRPrizeCard = ({
 }: QRPrizeCardProps) => {
   return (
     <BaseCard
-      gradientFrom='from-[#a18cd1]'
-      gradientTo='to-[#fbc2eb]'
+      // 🔥 ИСПРАВЛЕНИЕ: Заменили градиенты на backgroundId
+      backgroundId='4' // Используем фиолетовый фон (purple-haze) из конфига
       theme='white' // Текст белый
     >
       {/* Бейдж */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { ArrowLeft, Search, X, Copy, Loader2 } from 'lucide-react';
@@ -51,7 +51,8 @@ const branches = [
   },
 ];
 
-export default function MapPage() {
+// --- ВНУТРЕННИЙ КОМПОНЕНТ С ЛОГИКОЙ ---
+function MapContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -86,11 +87,11 @@ export default function MapPage() {
           onMarkerClick={handleSelectBranch}
         />
         {/* Градиент снизу, чтобы список красиво накладывался */}
-        <div className='absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[400]' />
+        <div className='absolute bottom-0 left-0 right-0 h-64 bg-linear-to-t from-white via-white/80 to-transparent pointer-events-none z-400' />
       </div>
 
       {/* 3. ХЕДЕР (Плавающий) */}
-      <div className='absolute top-0 left-0 right-0 z-[1000] pt-4 px-4 flex items-center justify-center pointer-events-none'>
+      <div className='absolute top-0 left-0 right-0 z-1000 pt-4 px-4 flex items-center justify-center pointer-events-none'>
         <button
           onClick={() => router.back()}
           className='absolute left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md text-[#2D2D2D] active:scale-95 pointer-events-auto hover:bg-gray-50'
@@ -103,7 +104,7 @@ export default function MapPage() {
       </div>
 
       {/* 4. КОНТЕНТ СНИЗУ */}
-      <div className='mt-auto relative z-[1000] flex flex-col gap-4 pb-8'>
+      <div className='mt-auto relative z-1000 flex flex-col gap-4 pb-8'>
         {/* Поиск */}
         <div className='px-4'>
           <div className='relative shadow-xl'>
@@ -157,7 +158,6 @@ export default function MapPage() {
                   onClick={(e) => {
                     e.stopPropagation(); // Чтобы не срабатывал клик по карточке
                     navigator.clipboard.writeText(branch.address);
-                    // Тут можно добавить тост "Скопировано"
                   }}
                   className='w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-[#FFD600] hover:text-black transition-colors'
                 >
@@ -169,5 +169,20 @@ export default function MapPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// --- ОСНОВНОЙ ЭКСПОРТ (ОБЕРТКА SUSPENSE) ---
+export default function MapPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className='w-full h-screen flex items-center justify-center bg-[#E5E5E5]'>
+          <Loader2 className='animate-spin text-gray-400' size={48} />
+        </div>
+      }
+    >
+      <MapContent />
+    </Suspense>
   );
 }
