@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Для редиректов
+import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PrizeTabs } from '@/components/features/prizes/PrizeTabs';
 import { LotteryCard } from '@/components/features/lottery/GameCard';
-import { useUserStore, UserTicket } from '@/store/user'; // Импортируем стор
+import { useUserStore, UserTicket } from '@/store/user';
 
 export default function MyPrizesPage() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function MyPrizesPage() {
   // В реальном проекте у билета было бы поле isReceived: boolean.
   // ДЛЯ ДЕМО: Мы покажем все выигрышные билеты во вкладке "Ожидают",
   // чтобы ты мог протестировать сценарии получения приза.
-  const filteredPrizes = winningTickets.filter((ticket) => {
+  const filteredPrizes = winningTickets.filter(() => {
     if (activeTab === 'waiting') return true;
     if (activeTab === 'received') return false; // Пока пусто в полученных
     return false;
@@ -81,7 +81,7 @@ export default function MyPrizesPage() {
             <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-2xl'>
               🎁
             </div>
-            <p className='text-gray-400 font-rubik text-sm max-w-[200px]'>
+            <p className='text-gray-400 font-rubik text-sm max-w-50'>
               {activeTab === 'received'
                 ? 'Вы еще не получали призов'
                 : 'У вас нет призов, ожидающих получения'}
