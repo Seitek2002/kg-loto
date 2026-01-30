@@ -1,8 +1,10 @@
-import { clsx } from 'clsx';
-import { BaseCard } from '@/components/ui/BaseCard'; // Импортируем BaseCard для фона
-import { FONT_VARIANTS } from '@/config/lottery-styles'; // Импортируем шрифты
+'use client';
 
-// Обновленный интерфейс данных
+import { useRouter } from 'next/navigation';
+import { clsx } from 'clsx';
+import { BaseCard } from '@/components/ui/BaseCard';
+import { FONT_VARIANTS } from '@/config/lottery-styles';
+
 export interface TicketDetailData {
   id: string;
   title: string;
@@ -16,9 +18,8 @@ export interface TicketDetailData {
   drawTime: string;
 
   prizeAmount: string;
-  status: string; // 'winning' | 'losing' | 'pending'
+  status: string;
 
-  // 🔥 НОВЫЕ ПОЛЯ ДИЗАЙНА (Вместо gradientFrom/To)
   backgroundId?: string;
   prizeFontId?: string;
   theme?: 'dark' | 'white';
@@ -29,17 +30,18 @@ interface TicketDetailCardProps {
 }
 
 export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
-  // Настройка цветов текста в зависимости от темы
+  const router = useRouter(); // Инициализируем роутер
+
+  // Настройка цветов
   const isDark = data.theme === 'dark';
   const labelColor = isDark ? 'text-gray-600' : 'text-white/60';
   const valueColor = isDark ? 'text-[#2D2D2D]' : 'text-white';
   const borderColor = isDark ? 'border-gray-300/50' : 'border-white/20';
 
-  // Логика шрифта для приза
   const prizeFontClass =
     FONT_VARIANTS[data.prizeFontId || 'default'] || 'font-benzin';
 
-  // Конфиг статуса
+  // Логика бейджей
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'winning':
@@ -75,7 +77,22 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
 
   const statusConfig = getStatusBadge(data.status);
 
-  // Используем BaseCard для отрисовки фона (картинки)
+  // 🔥 ЛОГИКА КЛИКА ПО КНОПКЕ
+  const handleClaimPrize = () => {
+    // Простая проверка: если в призе есть "KGS", значит это деньги
+    const isMoney =
+      data.prizeAmount.toUpperCase().includes('KGS') ||
+      data.prizeAmount.toUpperCase().includes('СОМ');
+
+    if (isMoney) {
+      // Если деньги -> идем выводить
+      router.push('/scan/withdraw');
+    } else {
+      // Если вещь (iPhone, Машина) -> идем на карту искать филиал
+      router.push('/map?branch=1');
+    }
+  };
+
   return (
     <BaseCard
       backgroundId={data.backgroundId}
@@ -83,7 +100,7 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
       minHeight='auto'
       className='pb-8'
     >
-      {/* --- СТАТУС --- */}
+      {/* СТАТУС */}
       <div
         className={clsx(
           'w-fit flex items-center gap-2 px-3 py-1.5 rounded-full mb-6',
@@ -101,7 +118,7 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
         </span>
       </div>
 
-      {/* --- ЗАГОЛОВОК --- */}
+      {/* ЗАГОЛОВОК */}
       <h2
         className={clsx(
           'text-2xl font-black font-benzin uppercase mb-8 leading-tight',
@@ -111,7 +128,7 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
         {data.title}
       </h2>
 
-      {/* --- ИНФОРМАЦИЯ О БИЛЕТЕ --- */}
+      {/* ИНФОРМАЦИЯ */}
       <div className='flex flex-col gap-4 mb-10'>
         <Row
           label='Номер билета:'
@@ -132,7 +149,6 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
           vColor={valueColor}
         />
 
-        {/* Разделитель */}
         <div className={clsx('h-px w-full my-1', borderColor)} />
 
         <Row
@@ -161,13 +177,13 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
         />
       </div>
 
-      {/* --- ПРИЗ --- */}
+      {/* ПРИЗ */}
       <div className='mb-8'>
         <span
           className={clsx(
             'block text-[40px] leading-none uppercase tracking-tight',
-            'font-black', // Базовая жирность
-            prizeFontClass, // Кастомный шрифт (Rubik, Benzin и т.д.)
+            'font-black',
+            prizeFontClass,
             valueColor,
           )}
         >
@@ -175,9 +191,12 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
         </span>
       </div>
 
-      {/* --- КНОПКА (ТОЛЬКО ДЛЯ ВЫИГРЫШНЫХ) --- */}
+      {/* КНОПКА (С обработчиком onClick) */}
       {data.status === 'winning' && (
-        <button className='w-full h-14 bg-white text-[#2D2D2D] rounded-full font-bold font-benzin uppercase text-xs shadow-lg active:scale-[0.98] transition-transform hover:bg-gray-50'>
+        <button
+          onClick={handleClaimPrize} // 🔥 Подключили функцию
+          className='w-full h-14 bg-white text-[#2D2D2D] rounded-full font-bold font-benzin uppercase text-xs shadow-lg active:scale-[0.98] transition-transform hover:bg-gray-50'
+        >
           ГДЕ ЗАБРАТЬ СВОЙ ВЫИГРЫШ?
         </button>
       )}
@@ -185,7 +204,6 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
   );
 };
 
-// Вспомогательный компонент для строки
 const Row = ({
   label,
   value,
