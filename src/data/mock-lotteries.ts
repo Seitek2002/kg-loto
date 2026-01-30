@@ -9,9 +9,6 @@ export interface PrizeTier {
   gradientTo: string;
 }
 
-// 2. ВОТ ОН - LotteryData.
-// Это описание того, как выглядит объект лотереи.
-// Мы экспортируем его (export), чтобы другие файлы (например, стор) могли его видеть.
 export interface LotteryData {
   id: number;
   title: string;
