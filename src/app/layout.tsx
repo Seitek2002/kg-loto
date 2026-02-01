@@ -41,8 +41,11 @@ const benzin = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'KG Loto',
-  description: 'Лотерея Кыргызстан',
+  title: 'KGLOTO.COM - первый маркетплейс лотерейных билетов в Кыргызстане',
+  description: 'KGLOTO.COM - первый маркетплейс лотерейных билетов в Кыргызстане',
+  icons: {
+    icon: '/favicon.png',
+  }
 };
 
 export default function RootLayout({
