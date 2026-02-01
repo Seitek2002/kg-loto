@@ -12,7 +12,7 @@ export const BestMaterials = () => {
   const articles = useContentStore((state) => state.materials);
 
   return (
-    <section className='mb-16 overflow-hidden'>
+    <section className='my-12 overflow-hidden'>
       {/* Заголовки */}
       <div className='mb-8'>
         <Title>ЛУЧШИЕ МАТЕРИАЛЫ</Title>

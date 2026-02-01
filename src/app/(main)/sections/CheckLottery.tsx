@@ -3,7 +3,7 @@ import { Title } from '@/components/ui/Title';
 
 export const CheckLottery = () => {
   return (
-    <section className='mb-12'>
+    <section className='my-12'>
       <Title>ПРОВЕРКА ЛОТЕРЕИ</Title>
       <Description>
         Популярные лотереи привлекают внимание благодаря крупным джекпотам,

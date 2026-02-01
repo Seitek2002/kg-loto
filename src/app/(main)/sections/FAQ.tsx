@@ -37,7 +37,7 @@ export const FAQ = () => {
   ];
 
   return (
-    <section className='mb-12'>
+    <section className='my-12'>
       {/* Заголовки */}
       <div className='mb-8'>
         <Title>

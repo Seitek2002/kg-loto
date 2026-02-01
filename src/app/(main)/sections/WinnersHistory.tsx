@@ -12,7 +12,7 @@ export const WinnersHistory = () => {
   const winners = useContentStore((state) => state.winners);
 
   return (
-    <section className='mb-12 overflow-hidden'>
+    <section className='my-12 overflow-hidden'>
       <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>
       <Description>
         Популярные лотереи привлекают внимание благодаря крупным джекпотам,

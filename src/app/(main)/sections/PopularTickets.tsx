@@ -10,13 +10,13 @@ export const PopularTickets = () => {
   const lotteries = useContentStore((state) => state.lotteries);
 
   return (
-    <div>
+    <div className='my-12'>
       <Title>Популярные лотереи</Title>
       <Description>
-        Популярные лотереи привлекают внимание благодаря крупным джекпотам...
+        Популярные лотереи привлекают внимание благодаря крупным джекпотам, частым тиражам и удобным условиям участия. Тысячи игроков ежедневно выбирают именно эти розыгрыши, чтобы испытать удачу и побороться за выигрыш.
       </Description>
 
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-4 mt-6'>
         {lotteries.map((loto) => (
           <Link
             key={loto.id}
