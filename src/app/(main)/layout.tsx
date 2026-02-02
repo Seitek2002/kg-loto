@@ -1,6 +1,13 @@
-import { BottomNav } from '@/components/features/navigation/BottomNav';
+// import { BottomNav } from '@/components/features/navigation/BottomNav';
 import { Header } from '@/components/ui/Header';
 import { Footer } from './sections/Footer';
+import dynamic from 'next/dynamic';
+
+const BottomNav = dynamic(() =>
+  import('../../components/features/navigation/BottomNav').then(
+    (mod) => mod.BottomNav,
+  ),
+);
 
 export default function MainLayout({
   children,
@@ -9,9 +16,6 @@ export default function MainLayout({
 }) {
   return (
     <div className='relative min-h-screen bg-gray-50'>
-      {/* Основной контейнер. 
-        pb-20 (80px) нужен, чтобы контент не заезжал под фиксированный BottomNav (высотой 64px)
-      */}
       <Header />
 
       <main className='pb-20 mx-auto bg-white min-h-screen shadow-sm'>
