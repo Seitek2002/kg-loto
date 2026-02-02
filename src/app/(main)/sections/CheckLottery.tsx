@@ -11,7 +11,7 @@ export const CheckLottery = () => {
       </Description>
 
       {/* Форма */}
-      <form className='flex flex-col lg:flex-row gap-6 items-end lg:mt-10'>
+      <form className='flex flex-col lg:flex-row gap-6 lg:items-end lg:mt-10'>
         <div className='flex flex-col gap-2 lg:w-1/3'>
           <label
             htmlFor='draw-number'
