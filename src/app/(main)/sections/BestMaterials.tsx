@@ -5,15 +5,13 @@ import 'swiper/css';
 import { ArticleCard } from '@/components/ui/ArticleCard';
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
-import { useContentStore } from '@/store/content'; // <--- Импорт стора
+import { useContentStore } from '@/store/content';
 
 export const BestMaterials = () => {
-  // Берем данные из стора
   const articles = useContentStore((state) => state.materials);
 
   return (
     <section className='my-12 overflow-hidden'>
-      {/* Заголовки */}
       <div className='mb-8'>
         <Title>ЛУЧШИЕ МАТЕРИАЛЫ</Title>
         <Description>
@@ -22,7 +20,6 @@ export const BestMaterials = () => {
         </Description>
       </div>
 
-      {/* Слайдер */}
       <Swiper
         spaceBetween={16}
         slidesPerView={1.1}
@@ -34,7 +31,6 @@ export const BestMaterials = () => {
       >
         {articles.map((article) => (
           <SwiperSlide key={article.id} className='h-auto'>
-            {/* Передаем все пропсы статьи */}
             <ArticleCard {...article} />
           </SwiperSlide>
         ))}

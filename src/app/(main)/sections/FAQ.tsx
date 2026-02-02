@@ -1,3 +1,5 @@
+'use client';
+
 import { Description } from '@/components/ui/Description';
 import { FAQItem } from '@/components/ui/FAQItem';
 import { Title } from '@/components/ui/Title';
@@ -50,7 +52,8 @@ export const FAQ = () => {
       </div>
 
       {/* Список вопросов */}
-      <div className='flex flex-col'>
+      {/* 🔥 ИЗМЕНЕНИЯ ЗДЕСЬ: Grid layout для lg экранов */}
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {questions.map((item) => (
           <FAQItem
             key={item.id}

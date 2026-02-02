@@ -27,7 +27,7 @@ export function BottomNav() {
   ];
 
   return (
-    <div className='fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between gap-3 max-w-md mx-auto pointer-events-none'>
+    <div className='fixed bottom-6 left-4 right-4 z-50 flex lg:hidden items-center justify-between gap-3 max-w-md mx-auto pointer-events-none'>
       {/* ЛЕВАЯ ЧАСТЬ: Основное меню (Капсула) */}
       <nav className='glass flex-1 pointer-events-auto bg-white/70 border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 p-1 flex justify-between items-center'>
         {navItems.map((item) => {

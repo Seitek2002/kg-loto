@@ -13,12 +13,14 @@ export const FAQItem = ({ question, answer }: FAQItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className='border-b border-gray-100 last:border-none'>
+    // 🔥 ИЗМЕНЕНИЯ: Убрали border-b, добавили bg-white и скругление
+    <div className='bg-white rounded-3xl overflow-hidden transition-shadow hover:shadow-sm'>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='w-full py-6 flex items-center justify-between gap-4 text-left group'
+        // Добавили padding (px-6 или px-8), чтобы текст не прилипал к краям карточки
+        className='w-full py-6 px-6 md:px-8 flex items-center justify-between gap-4 text-left group'
       >
-        <span className='font-benzin font-bold text-sm md:text-base text-[#2D2D2D] uppercase leading-tight'>
+        <span className='font-benzin font-bold text-xs md:text-sm text-[#2D2D2D] uppercase leading-tight'>
           {question}
         </span>
         <span
@@ -27,11 +29,11 @@ export const FAQItem = ({ question, answer }: FAQItemProps) => {
             isOpen ? 'rotate-45' : 'rotate-0',
           )}
         >
-          <Plus size={24} strokeWidth={1.5} />
+          <Plus size={20} strokeWidth={2} />
         </span>
       </button>
 
-      {/* Анимация высоты через CSS Grid */}
+      {/* Анимация высоты */}
       <div
         className={clsx(
           'grid transition-[grid-template-rows] duration-300 ease-in-out',
@@ -39,7 +41,8 @@ export const FAQItem = ({ question, answer }: FAQItemProps) => {
         )}
       >
         <div className='overflow-hidden'>
-          <p className='pb-6 text-sm text-[#6E6E6E] font-rubik leading-relaxed max-w-[90%]'>
+          {/* Добавили padding (px-6 или px-8), чтобы ответ был на одном уровне с вопросом */}
+          <p className='pb-6 px-6 md:px-8 text-sm text-[#6E6E6E] font-rubik leading-relaxed max-w-[95%]'>
             {answer}
           </p>
         </div>

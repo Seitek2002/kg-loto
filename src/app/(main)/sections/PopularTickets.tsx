@@ -16,12 +16,12 @@ export const PopularTickets = () => {
         Популярные лотереи привлекают внимание благодаря крупным джекпотам, частым тиражам и удобным условиям участия. Тысячи игроков ежедневно выбирают именно эти розыгрыши, чтобы испытать удачу и побороться за выигрыш.
       </Description>
 
-      <div className='flex flex-col gap-4 mt-6'>
+      <div className='flex flex-col lg:flex-row flex-wrap justify-between gap-4 mt-6'>
         {lotteries.map((loto) => (
           <Link
             key={loto.id}
             href={`/lottery/${loto.id}`}
-            className='block transition-transform active:scale-[0.98]'
+            className='block lg:w-[49%] transition-transform active:scale-[0.98]'
           >
             <LotteryCard
               title={loto.title}

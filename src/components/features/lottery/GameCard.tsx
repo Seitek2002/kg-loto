@@ -128,12 +128,12 @@ export function LotteryCard({
 
       {/* --- ЗАГОЛОВОК И ОПИСАНИЕ --- */}
       <div className='mb-auto'>
-        <h3 className='text-sm font-black uppercase tracking-wide mb-3 font-benzin opacity-100'>
+        <h3 className='text-sm lg:text-xl font-black uppercase tracking-wide mb-3 font-benzin opacity-100'>
           {title}
         </h3>
         <p
           className={clsx(
-            'text-xs leading-relaxed font-medium font-rubik',
+            'text-xs lg:text-lg leading-relaxed font-medium font-rubik',
             descriptionColor,
           )}
         >
@@ -157,11 +157,11 @@ export function LotteryCard({
       {/* --- КНОПКА ДЕЙСТВИЯ --- */}
       <button
         className={clsx(
-          'w-full rounded-full py-4 px-6 transition-all shadow-lg',
+          'max-w-max rounded-full py-4 px-6 transition-all shadow-lg',
           buttonClass,
         )}
       >
-        <span className='font-extrabold text-xs uppercase'>
+        <span className='font-extrabold text-xs lg:text-base uppercase'>
           {getButtonContent()}
         </span>
       </button>
