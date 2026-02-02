@@ -18,7 +18,7 @@ export default function MainLayout({
     <div className='relative min-h-screen'>
       <Header />
 
-      <main className='pb-20 mx-auto bg-white min-h-screen shadow-sm'>
+      <main className='pb-20 mx-auto min-h-screen shadow-sm'>
         {children}
       </main>
 
