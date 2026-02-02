@@ -29,7 +29,7 @@ export const WinnersHistory = () => {
       >
         {winners.map((winner) => (
           <SwiperSlide key={winner.id}>
-            <div className='relative w-full h-53.25 lg:h-80 rounded-4xl overflow-hidden bg-gray-100'>
+            <div className='relative w-full h-53.25 lg:h-115.5 rounded-4xl overflow-hidden bg-gray-100'>
               {/* Фото победителя */}
               <Image
                 src={winner.image}
