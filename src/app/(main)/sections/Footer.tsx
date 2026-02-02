@@ -53,9 +53,7 @@ export const Footer = () => {
                 className='object-contain object-left'
               />
             </Link>
-            <p className='text-xs text-gray-400 mt-4'>
-              2021-2026 ООО «KGLOTO»
-            </p>
+            <p className='text-xs text-gray-400 mt-4'>2021-2026 ООО «KGLOTO»</p>
           </div>
 
           {/* Колонки с ссылками */}
@@ -97,9 +95,7 @@ export const Footer = () => {
                 </a>
               </div>
               <div>
-                <span className='block text-xs text-gray-400 mb-1'>
-                  Email
-                </span>
+                <span className='block text-xs text-gray-400 mb-1'>Email</span>
                 <a
                   href='mailto:support@kgloto.kg'
                   className='text-sm text-[#2D2D2D] hover:text-[#FFD600]'
@@ -151,9 +147,7 @@ export const Footer = () => {
             </Link>
           </div>
 
-          <div className='font-black text-xl text-[#2D2D2D]'>
-            18+
-          </div>
+          <div className='font-black text-xl text-[#2D2D2D]'>18+</div>
         </div>
       </div>
     </footer>
