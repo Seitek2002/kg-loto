@@ -6,56 +6,50 @@ import { useMemo } from 'react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import {
   TicketDetailCard,
-  TicketDetailData, // Убедись, что этот тип экспортируется из компонента
+  TicketDetailData,
 } from '@/components/features/tickets/TicketDetailCard';
+import { TicketRulesCard } from '@/components/features/tickets/TicketRulesCard';
+import { PopularTickets } from '@/app/(main)/sections/PopularTickets';
 
-// Импортируем наши сторы и базу
 import { useTicketsStore } from '@/store/tickets';
 import { LOTTERIES_DB } from '@/data/mock-lotteries';
+import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
 
 export default function TicketDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  // 1. Ищем купленный билет в сторе пользователя
   const userTicket = useTicketsStore((state) =>
     state.tickets.find((t) => t.id === id),
   );
 
-  // 2. Собираем полные данные для карточки
   const ticketData: TicketDetailData | null = useMemo(() => {
     if (!userTicket) return null;
-
-    // Находим дизайн лотереи (фон, шрифт) по ID лотереи
     const lotteryInfo = LOTTERIES_DB.find((l) => l.id === userTicket.lotteryId);
-
-    // Если вдруг лотерея не найдена, берем дефолтную (чтобы не крашилось)
     const design = lotteryInfo || LOTTERIES_DB[0];
 
-    // ВОЗВРАЩАЕМ ОБЪЕКТ В ФОРМАТЕ, КОТОРЫЙ ЖДЕТ TicketDetailCard
     return {
       id: userTicket.id,
-      title: design.title, // Берем из базы лотерей
-      ticketNumber: userTicket.ticketNumber, // Берем из билета пользователя
+      title: design.title,
+      ticketNumber: userTicket.ticketNumber,
       price: design.price,
       buyDate: userTicket.purchaseDate,
-
-      // Этих данных пока нет в сторе, ставим заглушки или берем из дизайна
       drawId: '000175',
       drawDate: '25 января 2026',
       location: 'г. Бишкек',
       drawTime: design.time,
-
       prizeAmount: design.prize,
       status: userTicket.status,
-
-      // 🔥 Передаем новые параметры фона вместо градиентов
-      // (В TicketDetailCard нужно будет поддержать backgroundId, сейчас поправим и его)
       theme: design.theme,
       backgroundId: design.backgroundId,
       prizeFontId: design.prizeFontId,
     };
   }, [userTicket]);
+
+  const bgImage = ticketData
+    ? BACKGROUND_VARIANTS[ticketData.backgroundId || '1'] ||
+      BACKGROUND_VARIANTS['default']
+    : '';
 
   if (!ticketData) {
     return (
@@ -64,24 +58,46 @@ export default function TicketDetailPage() {
   }
 
   return (
-    <div className='min-h-screen bg-[#F9F9F9] px-4 pt-2 pb-10'>
-      {/* 1. Хедер */}
-      <PageHeader title='БИЛЕТ' />
+    <div className='min-h-screen bg-[#F9F9F9] pt-2 pb-20 overflow-hidden'>
+      <div className='max-w-300 mx-auto px-4'>
+        <div className='mb-6'>
+          <PageHeader title='БИЛЕТ' />
+        </div>
 
-      {/* 2. Карточка */}
-      <div className='mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500'>
-        {/* Передаем собранные данные */}
-        <TicketDetailCard data={ticketData} />
-      </div>
+        <div
+          className='absolute w-full inset-0 h-screen z-0 pointer-events-none hidden lg:block rounded-[40px] opacity-90 blur-md'
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
 
-      {/* 3. Подвал */}
-      <div className='mt-8 text-center'>
-        <p className='text-xs font-bold font-rubik text-[#2D2D2D]'>
-          Правила игры?{' '}
-          <Link href='/rules' className='text-[#FFD600] hover:underline'>
-            Смотреть правила
-          </Link>
-        </p>
+        <div className='relative grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 lg:mt-20'>
+          <div className='relative z-10'>
+            <TicketDetailCard data={ticketData} />
+          </div>
+
+          <div className='relative z-10 h-full'>
+            <TicketRulesCard data={ticketData} />
+          </div>
+        </div>
+
+        <div className='mt-16'>
+          <h3 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-6'>
+            Смотрите также
+          </h3>
+          <PopularTickets />
+        </div>
+
+        <div className='mt-8 text-center lg:hidden'>
+          <p className='text-xs font-bold font-rubik text-[#2D2D2D]'>
+            Правила игры?{' '}
+            <Link href='/rules' className='text-[#FFD600] hover:underline'>
+              Смотреть правила
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

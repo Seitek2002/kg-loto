@@ -11,7 +11,7 @@ export const PageHeader = ({ title }: PageHeaderProps) => {
   const router = useRouter();
 
   return (
-    <div className='relative flex items-center justify-center py-4 mb-2'>
+    <div className='relative flex lg:hidden items-center justify-center py-4 mb-2'>
       {/* Кнопка Назад (абсолютно слева) */}
       <button
         onClick={() => router.back()}

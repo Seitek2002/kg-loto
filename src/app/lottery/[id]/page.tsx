@@ -13,17 +13,14 @@ export default function LotteryDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  // 1. Ищем лотерею в базе
   const lottery = getLotteryById(id);
 
-  // 2. Если ID левый (например /lottery/999) — показываем 404
   if (!lottery) {
     return notFound();
   }
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-10'>
-      {/* Стрелка назад */}
       <div className='absolute top-4 left-4 z-20'>
         <PageHeader title='' />
       </div>
@@ -40,8 +37,7 @@ export default function LotteryDetailPage() {
             <h2 className='text-xs text-gray-500 font-rubik mb-4 uppercase'>
               Призовой фонд лотереи «{lottery.title}»
             </h2>
-            <div className='flex flex-col'>
-              {/* 🔥 ИСПРАВЛЕНИЕ: Добавлен ? перед .map */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {lottery.prizeTiers?.map((tier, idx) => (
                 <PrizeTierCard
                   key={idx}
