@@ -23,7 +23,6 @@ const slides = [
     prize: '500 000 COM',
     price: '200 сом',
   },
-  // Можно добавить сколько угодно слайдов
 ];
 
 export const Hero = () => {
@@ -32,12 +31,12 @@ export const Hero = () => {
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
+        centeredSlides
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         className='h-[80vh] lg:h-screen w-full hero-swiper'
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.id} className='relative w-full h-full pt-20'>
-            {/* ФОН */}
             <div className='absolute inset-0 z-0'>
               <Image
                 src={slide.bg}
@@ -51,9 +50,7 @@ export const Hero = () => {
               <div className='absolute inset-0 bg-black/10' />
             </div>
 
-            {/* КОНТЕНТ */}
-            <div className='relative z-10 flex flex-col items-center justify-start h-full pt-12 text-center'>
-              {/* Логотип (только на мобилках) */}
+            <div className='relative z-10 flex flex-col items-center justify-center h-full pt-12 text-center'>
               <div className='mb-10 w-32 h-auto relative lg:hidden'>
                 <Image
                   src='/logo.png'
@@ -61,11 +58,9 @@ export const Hero = () => {
                   width={140}
                   height={50}
                   className='object-contain drop-shadow-lg'
-                  // Логотип легкий, его можно грузить сразу, но не блокируя LCP
                 />
               </div>
 
-              {/* Заголовки */}
               <div className='flex flex-col gap-1 mb-2 text-xl lg:text-6xl font-benzin leading-tight uppercase font-black'>
                 <h2 className='text-white drop-shadow-md'>{slide.title1}</h2>
                 <h2 className='text-[#FFD600] drop-shadow-md'>
@@ -77,7 +72,6 @@ export const Hero = () => {
                 Суперприз от
               </p>
 
-              {/* Сумма */}
               <h1 className='text-xl lg:text-6xl leading-none font-black text-white uppercase drop-shadow-xl font-benzin mb-10'>
                 {slide.prize}
               </h1>
