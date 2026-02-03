@@ -97,9 +97,8 @@ export function LotteryCard({
       theme={theme}
       className='mb-0'
     >
-      {/* --- ВЕРХНИЙ БЕЙДЖ (Время или Статус) --- */}
       <div className='w-fit mb-4'>
-        {ticketStatus ? (
+        {ticketStatus && (
           <div className={badgeWrapperClass}>
             <div
               className={clsx(
@@ -116,19 +115,19 @@ export function LotteryCard({
               {getStatusConfig(ticketStatus).text}
             </span>
           </div>
-        ) : (
+        )}
+         {/* : (
           <div className={badgeWrapperClass}>
             <Clock size={14} className='text-gray-900' strokeWidth={2.5} />
             <span className='font-bold text-sm tracking-wide text-gray-900'>
               {time}
             </span>
           </div>
-        )}
+        ) */}
       </div>
 
-      {/* --- ЗАГОЛОВОК И ОПИСАНИЕ --- */}
-      <div className='mb-auto'>
-        <h3 className='text-sm lg:text-xl font-black uppercase tracking-wide mb-3 font-benzin opacity-100'>
+      <div className='my-auto'>
+        <h3 className='text-sm lg:text-xl font-black uppercase tracking-wide mb-1 font-benzin opacity-100'>
           {title}
         </h3>
         <p
@@ -141,20 +140,18 @@ export function LotteryCard({
         </p>
       </div>
 
-      {/* --- СУММА ПРИЗА (С КАСТОМНЫМ ШРИФТОМ) --- */}
       <div className={clsx('mt-6 mb-6')}>
         <span
           className={clsx(
-            'block leading-none uppercase tracking-tight drop-shadow-sm text-[32px]',
-            'font-black', // Базовая жирность
-            prizeFontClass, // 🔥 Применяем класс шрифта из конфига (rubik, benzin и т.д.)
+            'block leading-none uppercase tracking-tight drop-shadow-sm text-[28px]',
+            'font-black',
+            prizeFontClass,
           )}
         >
           {prize}
         </span>
       </div>
 
-      {/* --- КНОПКА ДЕЙСТВИЯ --- */}
       <button
         className={clsx(
           'max-w-max rounded-full py-4 px-6 transition-all shadow-lg',

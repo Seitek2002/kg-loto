@@ -17,6 +17,9 @@ export const BACKGROUND_VARIANTS: Record<string, string> = {
   '14': '/card-types/14.jpg',
   '15': '/card-types/15.jpg',
   '16': '/card-types/16.jpg',
+  '17': '/card-types/17.gif',
+  '18': '/card-types/18.gif',
+  '19': '/card-types/19.gif',
 
   default: '/card-types/1.jpg', // Фолбек
 };

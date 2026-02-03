@@ -36,7 +36,7 @@ export const BaseCard = ({
         textColor,
         className,
       )}
-      style={{ minHeight }}
+      style={{ height: minHeight }}
     >
       {/* ФОНОВАЯ КАРТИНКА */}
       {bgPath && (
@@ -45,17 +45,16 @@ export const BaseCard = ({
             src={bgPath}
             alt='card background'
             fill
-            className='object-cover z-0'
-            priority // Важно для LCP, так как это основные элементы
+            className='z-0 object-center object-fill'
+            priority
           />
-          {/* Затемнение, если текст белый, чтобы читалось лучше (опционально) */}
+
           {theme === 'white' && (
             <div className='absolute inset-0 bg-black/10 z-0' />
           )}
         </>
       )}
 
-      {/* Контент поверх фона */}
       <div className='relative z-10 flex flex-col flex-1 h-full'>
         {children}
       </div>

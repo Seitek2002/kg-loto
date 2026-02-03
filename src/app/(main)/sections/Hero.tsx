@@ -9,19 +9,27 @@ import 'swiper/css/pagination';
 const slides = [
   {
     id: 1,
-    bg: '/hero-banner-1.png',
-    title1: 'ВЫИГРЫВАЕТ КАЖДЫЙ',
-    title2: 'ВТОРОЙ БИЛЕТ',
+    bg: '/banners/1.jpg',
+    title1: 'СТАНЬ МИЛЛИОНЕРОМ',
+    title2: 'Призовой фонд 10 000 000 сом',
     prize: '1 000 000 COM',
-    price: '100 сом',
+    price: '200 сом',
   },
   {
     id: 2,
-    bg: '/hero-banner-2.png',
-    title1: 'ЗОЛОТАЯ ЛИХОРАДКА',
-    title2: 'СПЕШИТЕ ВЫИГРАТЬ',
-    prize: '500 000 COM',
-    price: '200 сом',
+    bg: '/banners/2.png',
+    title1: 'ЛЕГКАЯ УДАЧА',
+    title2: 'Призовой фонд 10 000 000 сом',
+    prize: '500 000 СОМ',
+    price: '50 сом',
+  },
+  {
+    id: 3,
+    bg: '/banners/3.jpg',
+    title1: 'ТОПОВЫЕ ГАДЖЕТЫ',
+    title2: '1000 призов ждут тебя',
+    prize: 'НОУТБУК - 3X',
+    price: '100 сом',
   },
 ];
 
@@ -44,13 +52,13 @@ export const Hero = () => {
                 fill
                 className='object-cover'
                 priority={index === 0}
-                fetchPriority={index === 0 ? "high" : "auto"}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
               <div className='absolute inset-0 bg-black/10' />
             </div>
 
-            <div className='relative z-10 flex flex-col items-center justify-center h-full pt-12 text-center'>
+            <div className='relative z-10 flex flex-col items-center lg:justify-center h-full pt-12 text-center'>
               <div className='mb-10 w-32 h-auto relative lg:hidden'>
                 <Image
                   src='/logo.png'
