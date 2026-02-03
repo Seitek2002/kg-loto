@@ -78,12 +78,12 @@ export default function TicketDetailPage() {
             <TicketDetailCard data={ticketData} />
           </div>
 
-          <div className='relative z-10 h-full'>
+          <div className='relative z-10 h-full hidden lg:block'>
             <TicketRulesCard data={ticketData} />
           </div>
         </div>
 
-        <div className='mt-16'>
+        <div className='mt-40 hidden lg:block'>
           <h3 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-6'>
             Смотрите также
           </h3>
