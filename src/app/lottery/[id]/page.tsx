@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Hero } from '@/app/(main)/sections/Hero';
 import { CheckLottery } from '@/app/(main)/sections/CheckLottery';
@@ -9,15 +9,53 @@ import { LotteryConditions } from '@/components/features/lottery/LotteryConditio
 import { PrizeTierCard } from '@/components/features/lottery/PrizeTierCard';
 import { getLotteryById } from '@/data/mock-lotteries';
 
+// 🔥 Импорты стора
+import { useTicketsStore, UserTicket } from '@/store/tickets';
+
 export default function LotteryDetailPage() {
   const params = useParams();
+  const router = useRouter(); // 🔥 Нужен роутер
   const id = params.id as string;
 
   const lottery = getLotteryById(id);
 
+  // 🔥 Достаем билеты и функцию добавления
+  const { tickets, addTicket } = useTicketsStore();
+
   if (!lottery) {
     return notFound();
   }
+
+  // 🔥 ГЛАВНАЯ ЛОГИКА
+  const handleBuyOrViewTicket = () => {
+    const lotteryIdNum = Number(id);
+
+    // 1. Проверяем, есть ли уже билет этой лотереи
+    // (Для упрощения берем первый попавшийся, если их несколько)
+    const existingTicket = tickets.find((t) => t.lotteryId === lotteryIdNum);
+
+    if (existingTicket) {
+      // Если есть -> идем смотреть его
+      router.push(`/tickets/${existingTicket.id}`);
+    } else {
+      // Если нет -> "Покупаем" (Создаем новый)
+      const newTicketId = Date.now().toString(); // Генерируем ID
+
+      const newTicket: UserTicket = {
+        id: newTicketId,
+        lotteryId: lotteryIdNum,
+        status: 'pending', // Пока не разыгран
+        ticketNumber: Math.floor(100000 + Math.random() * 900000).toString(), // Случайный номер
+        purchaseDate: new Date().toLocaleDateString('ru-RU'), // Сегодняшняя дата
+      };
+
+      // Сохраняем в Zustand
+      addTicket(newTicket);
+
+      // Идем смотреть новый билет
+      router.push(`/tickets/${newTicketId}`);
+    }
+  };
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-10'>
@@ -39,15 +77,21 @@ export default function LotteryDetailPage() {
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {lottery.prizeTiers?.map((tier, idx) => (
-                <PrizeTierCard
+                // 🔥 Оборачиваем в div или кнопку для клика
+                <div
                   key={idx}
-                  category={tier.category}
-                  description={tier.description}
-                  amount={tier.amount}
-                  winnersCount={tier.winners}
-                  gradientFrom={tier.gradientFrom}
-                  gradientTo={tier.gradientTo}
-                />
+                  onClick={handleBuyOrViewTicket}
+                  className='cursor-pointer active:scale-[0.98] transition-transform'
+                >
+                  <PrizeTierCard
+                    category={tier.category}
+                    description={tier.description}
+                    amount={tier.amount}
+                    winnersCount={tier.winners}
+                    gradientFrom={tier.gradientFrom}
+                    gradientTo={tier.gradientTo}
+                  />
+                </div>
               ))}
             </div>
           </section>

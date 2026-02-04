@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 
-// Типы оставляем как есть
 export type TicketStatus = 'winning' | 'losing' | 'pending' | 'archive';
 
 export interface UserTicket {
@@ -11,7 +10,6 @@ export interface UserTicket {
   purchaseDate: string;
 }
 
-// Моковые данные (как было)
 const MOCK_USER_TICKETS: UserTicket[] = [
   {
     id: '1',
@@ -40,11 +38,15 @@ interface TicketsStore {
   tickets: UserTicket[];
   filter: TicketStatus | 'all';
   setFilter: (filter: TicketStatus | 'all') => void;
-  // УДАЛИЛИ getFilteredTickets
+  // 🔥 ДОБАВЛЯЕМ МЕТОД ДОБАВЛЕНИЯ БИЛЕТА
+  addTicket: (ticket: UserTicket) => void;
 }
 
 export const useTicketsStore = create<TicketsStore>((set) => ({
   tickets: MOCK_USER_TICKETS,
   filter: 'all',
   setFilter: (filter) => set({ filter }),
+  // 🔥 РЕАЛИЗАЦИЯ
+  addTicket: (ticket) =>
+    set((state) => ({ tickets: [ticket, ...state.tickets] })),
 }));
