@@ -15,7 +15,7 @@ export interface Article {
   description?: string;
   buttonText: string;
   imageSrc?: string;
-  theme: 'dark' | 'light';
+  theme: 'dark' | 'light' | 'blue'; // Добавил 'blue' для разнообразия как на скрине
   buttonAlign: 'left' | 'center';
   descriptionPosition?: 'top' | 'bottom';
 }
@@ -76,32 +76,51 @@ export const MATERIALS_MOCK: Article[] = [
     description:
       'Создавал проекты для лидеров фудтех-рынка: Yami Yami, Даниловский рынок, Marketplace и др.',
     buttonText: 'ЧИТАТЬ ПОЛНОСТЬЮ',
-    theme: 'dark',
+    theme: 'light', // Белый фон
     buttonAlign: 'left',
     descriptionPosition: 'bottom',
   },
   {
     id: 3,
-    title: 'НОВОГОДНИЕ ПОДАРКИ',
+    title: 'ПОКАЗЫВАЕМ ГДЕ ПРИОБРЕСТИ БИЛЕТ',
     description:
-      'Популярные лотереи привлекают внимание благодаря крупным джекпотам и частым тиражам.',
+      'Популярные лотереи привлекают внимание благодаря крупным джекпотам, частым тиражам и удобным условиям участия.',
     buttonText: 'ЧИТАТЬ ПОЛНОСТЬЮ',
     imageSrc:
-      'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop',
-    theme: 'light',
+      'https://images.unsplash.com/photo-1512358958014-b651a7ee1773?q=80&w=800&auto=format&fit=crop', // Подарки/коробки
+    theme: 'blue', // Голубой фон (как на скрине справа)
     buttonAlign: 'center',
     descriptionPosition: 'top',
   },
   {
     id: 4,
-    title: 'СЕКРЕТЫ УСПЕХА',
+    title: '80+ ЧЕЛОВЕК С БОЛЬШИМ ОПЫТОМ',
+    buttonText: 'ПОДРОБНЕЕ',
+    imageSrc:
+      'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=800&auto=format&fit=crop',
+    theme: 'dark',
+    buttonAlign: 'center',
+  },
+  {
+    id: 5,
+    title: 'КАК ПОЛУЧИТЬ ВЫИГРЫШ?',
+    description:
+      'Создавал проекты для лидеров фудтех-рынка: Yami Yami, Даниловский рынок, Marketplace и др.',
+    buttonText: 'ЧИТАТЬ ПОЛНОСТЬЮ',
+    theme: 'light',
+    buttonAlign: 'left',
+    descriptionPosition: 'bottom',
+  },
+  {
+    id: 6,
+    title: 'ПОКАЗЫВАЕМ ГДЕ ПРИОБРЕСТИ БИЛЕТ',
     description:
       'Тысячи игроков ежедневно выбирают именно эти розыгрыши, чтобы испытать удачу.',
     buttonText: 'ЧИТАТЬ ПОЛНОСТЬЮ',
     imageSrc:
-      'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=800&auto=format&fit=crop',
-    theme: 'dark',
-    buttonAlign: 'left',
-    descriptionPosition: 'bottom',
+      'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop',
+    theme: 'blue',
+    buttonAlign: 'center',
+    descriptionPosition: 'top',
   },
 ];

@@ -14,7 +14,7 @@ export interface ArticleCardProps {
   // --- Настройки внешнего вида ---
   // 'dark' = темный текст (для светлых фонов)
   // 'light' = белый текст (для темных/цветных фонов)
-  theme: 'dark' | 'light';
+  theme: 'dark' | 'light' | 'blue';
 
   // Где стоит кнопка?
   buttonAlign: 'center' | 'left';
