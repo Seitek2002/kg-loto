@@ -6,45 +6,50 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const slides = [
-  {
-    id: 1,
-    bg: '/banners/1.jpg',
-    title1: 'СТАНЬ МИЛЛИОНЕРОМ',
-    title2: 'Призовой фонд 10 000 000 сом',
-    prize: '1 000 000 COM',
-    price: '200 сом',
-  },
-  {
-    id: 2,
-    bg: '/banners/2.png',
-    title1: 'ЛЕГКАЯ УДАЧА',
-    title2: 'Призовой фонд 10 000 000 сом',
-    prize: '500 000 СОМ',
-    price: '50 сом',
-  },
-  {
-    id: 3,
-    bg: '/banners/3.jpg',
-    title1: 'ТОПОВЫЕ ГАДЖЕТЫ',
-    title2: '1000 призов ждут тебя',
-    prize: 'НОУТБУК - 3X',
-    price: '100 сом',
-  },
-];
+export interface HeroSlideData {
+  id: number | string;
+  bg: string;
+  title1: string;
+  title2: string;
+  prize: string;
+  price: string | number;
+}
 
-export const Hero = () => {
+interface HeroProps {
+  slides: HeroSlideData[];
+  buttonText?: string;
+  hideButton?: boolean;
+  onButtonClick?: (slideId: number | string) => void;
+}
+
+export const Hero = ({
+  slides,
+  buttonText = 'Играть',
+  hideButton = false,
+  onButtonClick,
+}: HeroProps) => {
+  // Если слайдов нет, ничего не рендерим
+  if (!slides || slides.length === 0) return null;
+
+  const isSingleSlide = slides.length === 1;
+
   return (
     <section className='relative w-full overflow-hidden mx-auto'>
       <Swiper
         modules={[Pagination, Autoplay]}
-        pagination={{ clickable: true }}
+        pagination={isSingleSlide ? false : { clickable: true }} // Если 1 слайд, точки не нужны
         centeredSlides
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        loop={!isSingleSlide} // Если 1 слайд, луп не нужен
+        autoplay={
+          isSingleSlide ? false : { delay: 5000, disableOnInteraction: false }
+        }
         className='h-[80vh] lg:h-screen w-full hero-swiper'
+        // Блокируем свайп, если слайд всего один
+        allowTouchMove={!isSingleSlide}
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.id} className='relative w-full h-full pt-20'>
+            {/* ФОН */}
             <div className='absolute inset-0 z-0'>
               <Image
                 src={slide.bg}
@@ -58,6 +63,7 @@ export const Hero = () => {
               <div className='absolute inset-0 bg-black/10' />
             </div>
 
+            {/* КОНТЕНТ */}
             <div className='relative z-10 flex flex-col items-center lg:justify-center h-full pt-12 text-center'>
               <div className='mb-10 w-32 h-auto relative lg:hidden'>
                 <Image
@@ -84,9 +90,15 @@ export const Hero = () => {
                 {slide.prize}
               </h1>
 
-              <button className='bg-white text-black font-extrabold text-sm lg:text-xl py-4 px-10 rounded-full shadow-xl hover:bg-gray-100 active:scale-95 transition-all uppercase tracking-wide'>
-                Играть • {slide.price}
-              </button>
+              {/* КНОПКА (Условный рендеринг) */}
+              {!hideButton && (
+                <button
+                  onClick={() => onButtonClick?.(slide.id)}
+                  className='bg-white text-black font-extrabold text-sm lg:text-xl py-4 px-10 rounded-full shadow-xl hover:bg-gray-100 active:scale-95 transition-all uppercase tracking-wide'
+                >
+                  {buttonText} • {slide.price}
+                </button>
+              )}
             </div>
           </SwiperSlide>
         ))}

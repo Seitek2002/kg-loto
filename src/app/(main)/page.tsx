@@ -1,4 +1,7 @@
-import { Hero } from './sections/Hero';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { Hero, HeroSlideData } from './sections/Hero';
 import dynamic from 'next/dynamic';
 
 const PopularTickets = dynamic(() =>
@@ -18,10 +21,40 @@ const OurApp = dynamic(() =>
   import('./sections/OurApp').then((mod) => mod.OurApp),
 );
 
+const MAIN_SLIDES: HeroSlideData[] = [
+  {
+    id: 1, // ID лотереи
+    bg: '/banners/1.jpg',
+    title1: 'СТАНЬ МИЛЛИОНЕРОМ',
+    title2: 'Призовой фонд 10 000 000 сом',
+    prize: '1 000 000 COM',
+    price: '200 сом',
+  },
+  {
+    id: 2,
+    bg: '/banners/2.png',
+    title1: 'ЛЕГКАЯ УДАЧА',
+    title2: 'Призовой фонд 10 000 000 сом',
+    prize: '500 000 СОМ',
+    price: '50 сом',
+  },
+  // ...
+];
+
 export default function Home() {
+  const router = useRouter();
+
+  const handleHeroClick = (id: number | string) => {
+    router.push(`/lottery/${id}`);
+  };
+
   return (
     <div>
-      <Hero />
+      <Hero
+        slides={MAIN_SLIDES}
+        onButtonClick={handleHeroClick}
+        buttonText='Играть'
+      />
 
       <div className='px-4 mt-10 xl:max-w-[80%] mx-auto'>
         <PopularTickets />

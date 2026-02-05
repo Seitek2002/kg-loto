@@ -2,57 +2,62 @@
 
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { Hero } from '@/app/(main)/sections/Hero';
+import { Hero, HeroSlideData } from '@/app/(main)/sections/Hero';
 import { CheckLottery } from '@/app/(main)/sections/CheckLottery';
 import { WinnersHistory } from '@/app/(main)/sections/WinnersHistory';
 import { LotteryConditions } from '@/components/features/lottery/LotteryConditions';
 import { PrizeTierCard } from '@/components/features/lottery/PrizeTierCard';
 import { getLotteryById } from '@/data/mock-lotteries';
-
-// 🔥 Импорты стора
 import { useTicketsStore, UserTicket } from '@/store/tickets';
+import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
+
+// 🔥 1. Импортируем нашу карту путей
 
 export default function LotteryDetailPage() {
   const params = useParams();
-  const router = useRouter(); // 🔥 Нужен роутер
+  const router = useRouter();
   const id = params.id as string;
 
   const lottery = getLotteryById(id);
-
-  // 🔥 Достаем билеты и функцию добавления
   const { tickets, addTicket } = useTicketsStore();
 
   if (!lottery) {
     return notFound();
   }
 
-  // 🔥 ГЛАВНАЯ ЛОГИКА
+  // 🔥 2. Получаем правильный путь к файлу (JPG, GIF или PNG)
+  // Если lottery.backgroundId нет в списке, берем 'default'
+  const heroBgImage =
+    BACKGROUND_VARIANTS[lottery.backgroundId] || BACKGROUND_VARIANTS['default'];
+
+  // Формируем слайд
+  const lotterySlide: HeroSlideData[] = [
+    {
+      id: lottery.id,
+      bg: heroBgImage, // Тут теперь полный правильный путь (например, /card-types/18.gif)
+      title1: lottery.heroTitle || 'ВЫИГРЫВАЕТ КАЖДЫЙ',
+      title2: 'ВТОРОЙ БИЛЕТ',
+      prize: lottery.prize,
+      price: `${lottery.price} сом`,
+    },
+  ];
+
   const handleBuyOrViewTicket = () => {
     const lotteryIdNum = Number(id);
-
-    // 1. Проверяем, есть ли уже билет этой лотереи
-    // (Для упрощения берем первый попавшийся, если их несколько)
     const existingTicket = tickets.find((t) => t.lotteryId === lotteryIdNum);
 
     if (existingTicket) {
-      // Если есть -> идем смотреть его
       router.push(`/tickets/${existingTicket.id}`);
     } else {
-      // Если нет -> "Покупаем" (Создаем новый)
-      const newTicketId = Date.now().toString(); // Генерируем ID
-
+      const newTicketId = Date.now().toString();
       const newTicket: UserTicket = {
         id: newTicketId,
         lotteryId: lotteryIdNum,
-        status: 'pending', // Пока не разыгран
-        ticketNumber: Math.floor(100000 + Math.random() * 900000).toString(), // Случайный номер
-        purchaseDate: new Date().toLocaleDateString('ru-RU'), // Сегодняшняя дата
+        status: 'pending',
+        ticketNumber: Math.floor(100000 + Math.random() * 900000).toString(),
+        purchaseDate: new Date().toLocaleDateString('ru-RU'),
       };
-
-      // Сохраняем в Zustand
       addTicket(newTicket);
-
-      // Идем смотреть новый билет
       router.push(`/tickets/${newTicketId}`);
     }
   };
@@ -63,11 +68,14 @@ export default function LotteryDetailPage() {
         <PageHeader title='' />
       </div>
 
-      <Hero />
+      <Hero
+        slides={lotterySlide}
+        buttonText='Купить билет'
+        onButtonClick={handleBuyOrViewTicket}
+      />
 
       <div className='px-4 mt-8 flex flex-col gap-2'>
         <CheckLottery />
-
         <LotteryConditions />
 
         {lottery.prizeTiers && lottery.prizeTiers.length > 0 && (
@@ -77,7 +85,6 @@ export default function LotteryDetailPage() {
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {lottery.prizeTiers?.map((tier, idx) => (
-                // 🔥 Оборачиваем в div или кнопку для клика
                 <div
                   key={idx}
                   onClick={handleBuyOrViewTicket}
