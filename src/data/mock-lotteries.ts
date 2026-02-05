@@ -33,7 +33,7 @@ export const LOTTERIES_DB: LotteryData[] = [
     id: 1,
     title: 'Космический Старт',
     description: 'Классическая лотерея. Главный приз ждет тебя!',
-    prize: '1 000 000 ⃀',
+    prize: '1 000 000 С',
     price: 100,
     time: '20:00',
     theme: 'white',
@@ -46,14 +46,14 @@ export const LOTTERIES_DB: LotteryData[] = [
     prizeTiers: [
       {
         category: 'Джекпот',
-        amount: '1 000 000 ⃀',
+        amount: '1 000 000 С',
         winners: 1,
         gradientFrom: 'from-blue-500',
         gradientTo: 'to-indigo-600',
       },
       {
         category: '2 место',
-        amount: '100 000 ⃀',
+        amount: '100 000 С',
         winners: 5,
         gradientFrom: 'from-blue-400',
         gradientTo: 'to-blue-500',
@@ -66,7 +66,7 @@ export const LOTTERIES_DB: LotteryData[] = [
     id: 2,
     title: 'Золотая Лихорадка',
     description: 'Максимальный денежный выигрыш этой недели.',
-    prize: '500 000 ⃀',
+    prize: '500 000 С',
     price: 200,
     time: '12:30',
     theme: 'dark',
@@ -78,14 +78,14 @@ export const LOTTERIES_DB: LotteryData[] = [
     prizeTiers: [
       {
         category: 'Золото',
-        amount: '500 000 ⃀',
+        amount: '500 000 С',
         winners: 1,
         gradientFrom: 'from-yellow-400',
         gradientTo: 'to-orange-500',
       },
       {
         category: 'Серебро',
-        amount: '50 000 ⃀',
+        amount: '50 000 С',
         winners: 10,
         gradientFrom: 'from-yellow-200',
         gradientTo: 'to-yellow-400',
@@ -117,7 +117,7 @@ export const LOTTERIES_DB: LotteryData[] = [
       },
       {
         category: 'Утешительный',
-        amount: '5 000 ⃀',
+        amount: '5 000 С',
         winners: 50,
         gradientFrom: 'from-lime-200',
         gradientTo: 'to-green-300',
@@ -258,7 +258,7 @@ export const LOTTERIES_DB: LotteryData[] = [
     id: 8,
     title: 'Розовая Пантера',
     description: 'Мгновенные розыгрыши каждый час.',
-    prize: '50 000 ⃀',
+    prize: '50 000 С',
     price: 40,
     time: '14:45',
     theme: 'white',
@@ -270,7 +270,7 @@ export const LOTTERIES_DB: LotteryData[] = [
     prizeTiers: [
       {
         category: 'Главный приз',
-        amount: '50 000 ⃀',
+        amount: '50 000 С',
         winners: 1,
         gradientFrom: 'from-pink-500',
         gradientTo: 'to-rose-500',

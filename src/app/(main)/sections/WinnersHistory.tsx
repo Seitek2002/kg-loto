@@ -13,7 +13,7 @@ export const WinnersHistory = () => {
   const winners = useContentStore((state) => state.winners);
 
   return (
-    <section className='my-12 relative'>
+    <section className='my-12 relative overflow-hidden'>
       {/* ЗАГОЛОВОК И КНОПКА (Desktop) */}
       <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
         <div className='max-w-2xl'>

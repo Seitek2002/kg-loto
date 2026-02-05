@@ -6,7 +6,7 @@ export interface Winner {
   city: string;
   prize: string;
   image: string;
-  lotteryBadge: string; // Новое поле для бейджа (например "ОНОЙ", "LUCKY DROP")
+  lotteryBadge: 'оной' | 'мен миллионер' | 'уйго белек'; // Ключи для фильтрации
 }
 
 export interface Article {
@@ -24,39 +24,75 @@ export interface Article {
 export const WINNERS_MOCK: Winner[] = [
   {
     id: 1,
-    name: 'Александр',
+    name: 'АЛЕКСАНДР',
     city: 'Бишкек',
     prize: '1 000 000 KGS',
     image:
-      'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=600&auto=format&fit=crop',
-    lotteryBadge: 'ОНОЙ', // Как на скрине
+      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'оной',
   },
   {
     id: 2,
-    name: 'Айпери',
-    city: 'Ош',
-    prize: 'IPHONE 16 PRO', // Техника
+    name: 'МАРСЕЛЬ',
+    city: 'Бишкек',
+    prize: '60 000 KGS',
     image:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop',
-    lotteryBadge: 'TECHNO',
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'мен миллионер',
   },
   {
     id: 3,
-    name: 'Максим',
-    city: 'Каракол',
-    prize: 'ZEEKR 001', // Машина
+    name: 'АЙГЕРИМ',
+    city: 'Бишкек',
+    prize: '150 000 KGS',
     image:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop',
-    lotteryBadge: 'АВТО-ДРАЙВ',
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'уйго белек',
   },
   {
     id: 4,
-    name: 'Елена',
+    name: 'ДЖАСМИН',
     city: 'Бишкек',
+    prize: '1 000 000 KGS',
+    image:
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'оной',
+  },
+  {
+    id: 5,
+    name: 'ЭРМЕК',
+    city: 'Ош',
+    prize: '200 000 KGS',
+    image:
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'мен миллионер',
+  },
+  {
+    id: 6,
+    name: 'СВЕТЛАНА',
+    city: 'Кант',
+    prize: 'iPhone 15',
+    image:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'уйго белек',
+  },
+  {
+    id: 7,
+    name: 'БАКЫТ',
+    city: 'Нарын',
     prize: '500 000 KGS',
     image:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=600&auto=format&fit=crop',
-    lotteryBadge: 'LUCKY DROP',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'оной',
+  },
+  {
+    id: 8,
+    name: 'ГУЛЬЗАТ',
+    city: 'Бишкек',
+    prize: '100 000 KGS',
+    image:
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=800&auto=format&fit=crop',
+    lotteryBadge: 'мен миллионер',
   },
 ];
 

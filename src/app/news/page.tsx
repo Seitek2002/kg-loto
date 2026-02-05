@@ -2,15 +2,19 @@
 
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
-import { ArticleCard } from '@/components/ui/ArticleCard'; // Твой компонент карточки
+import { ArticleCard } from '@/components/ui/ArticleCard';
 // import { MATERIALS_MOCK } from '@/data/mock-materials';
-// import { PageHeader } from '@/components/ui/PageHeader'; // Для кнопки "Назад" (опционально)
+// import { PageHeader } from '@/components/ui/PageHeader';
 import { MATERIALS_MOCK } from '@/data/mock-content';
+import { Header } from '@/components/ui/Header';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 export default function NewsPage() {
   return (
     <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
-      <div className='max-w-350 mx-auto px-4'>
+      <Header theme='dark' />
+      <PageHeader title='Новости' />
+      <div className='max-w-350 mx-auto px-4 lg:mt-20'>
         {/* Хедер страницы */}
         <div className='mb-10 max-w-3xl'>
           {/* Если нужна стрелка назад, можно раскомментировать PageHeader */}
