@@ -11,8 +11,6 @@ import { getLotteryById } from '@/data/mock-lotteries';
 import { useTicketsStore, UserTicket } from '@/store/tickets';
 import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
 
-// 🔥 1. Импортируем нашу карту путей
-
 export default function LotteryDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -25,16 +23,13 @@ export default function LotteryDetailPage() {
     return notFound();
   }
 
-  // 🔥 2. Получаем правильный путь к файлу (JPG, GIF или PNG)
-  // Если lottery.backgroundId нет в списке, берем 'default'
   const heroBgImage =
     BACKGROUND_VARIANTS[lottery.backgroundId] || BACKGROUND_VARIANTS['default'];
 
-  // Формируем слайд
   const lotterySlide: HeroSlideData[] = [
     {
       id: lottery.id,
-      bg: heroBgImage, // Тут теперь полный правильный путь (например, /card-types/18.gif)
+      bg: heroBgImage,
       title1: lottery.heroTitle || 'ВЫИГРЫВАЕТ КАЖДЫЙ',
       title2: 'ВТОРОЙ БИЛЕТ',
       prize: lottery.prize,
