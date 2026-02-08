@@ -1,14 +1,14 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Star } from 'lucide-react';
+// import { Star } from 'lucide-react';
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
 import { useWinners } from '@/hooks/useWinners'; // Наш новый простой хук
-import 'swiper/css';
 import { WinnerCard } from '@/components/ui/WinnerCard';
+import 'swiper/css';
 
 export const WinnersHistory = () => {
   const { data: allWinners, isLoading } = useWinners();

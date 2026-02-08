@@ -27,3 +27,16 @@ export interface Winner {
   image: string | null; // В схеме nullable: true
   lotteryBadge: string; // "ОНОЙ", "LUCKY DROP" и т.д.
 }
+
+export interface SliderItem {
+  id: number;
+  title: string;       // "СТАНЬ МИЛЛИОНЕРОМ"
+  subtitle: string;    // "Призовой фонд 10 000 000 сом"
+  prizeText: string;   // "1 000 000 СОМ"
+  image: string;       // URL картинки
+  buttonText: string;  // "Играть"
+  buttonPrice: number; // 100
+  buttonLabel: string; // "ИГРАТЬ • 100 СОМ"
+  buttonUrl: string;   // Ссылка (может быть пустой)
+}
+
