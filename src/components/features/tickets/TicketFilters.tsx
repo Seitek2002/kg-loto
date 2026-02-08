@@ -7,7 +7,7 @@ const filters = [
   { label: 'Все билеты', value: 'all' },
   { label: 'Выигрышные', value: 'winning' },
   { label: 'Проигрышные', value: 'losing' },
-  { label: 'Не проверенные', value: 'pending' },
+  { label: 'В ожидании', value: 'pending' },
 ];
 
 export const TicketFilters = () => {

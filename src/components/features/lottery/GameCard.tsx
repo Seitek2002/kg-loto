@@ -66,7 +66,7 @@ export function LotteryCard({
         };
       case 'pending':
         return {
-          text: 'не проверен',
+          text: 'В ожидании',
           dot: 'bg-blue-400',
           textCol: 'text-blue-500',
         };
@@ -116,7 +116,7 @@ export function LotteryCard({
             </span>
           </div>
         )}
-         {/* : (
+        {/* : (
           <div className={badgeWrapperClass}>
             <Clock size={14} className='text-gray-900' strokeWidth={2.5} />
             <span className='font-bold text-sm tracking-wide text-gray-900'>

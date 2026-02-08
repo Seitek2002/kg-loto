@@ -60,7 +60,7 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
         };
       case 'pending':
         return {
-          text: 'НЕ ПРОВЕРЕН',
+          text: 'В ожидании',
           bg: 'bg-blue-100',
           textCol: 'text-blue-500',
           dot: 'bg-blue-500',
