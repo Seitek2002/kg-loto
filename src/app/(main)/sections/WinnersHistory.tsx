@@ -6,15 +6,19 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Star } from 'lucide-react';
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
-import { useContentStore } from '@/store/content';
+import { useWinners } from '@/hooks/useWinners'; // Наш новый простой хук
 import 'swiper/css';
+import { WinnerCard } from '@/components/ui/WinnerCard';
 
 export const WinnersHistory = () => {
-  const winners = useContentStore((state) => state.winners);
+  const { data: allWinners, isLoading } = useWinners();
+
+  const winners = allWinners?.slice(0, 6) || [];
+
+  if (isLoading) return null;
 
   return (
     <section className='my-12 relative overflow-hidden'>
-      {/* ЗАГОЛОВОК И КНОПКА (Desktop) */}
       <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
         <div className='max-w-2xl'>
           <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>
@@ -24,7 +28,6 @@ export const WinnersHistory = () => {
           </Description>
         </div>
 
-        {/* Кнопка для Desktop (справа сверху) */}
         <Link
           href='/winners'
           className='hidden lg:inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] hover:bg-gray-50 transition-colors shadow-sm'
@@ -33,7 +36,6 @@ export const WinnersHistory = () => {
         </Link>
       </div>
 
-      {/* СЛАЙДЕР */}
       <Swiper
         spaceBetween={8}
         slidesPerView={2.1}
@@ -44,9 +46,9 @@ export const WinnersHistory = () => {
       >
         {winners.map((winner) => (
           <SwiperSlide key={winner.id}>
-            <div className='relative w-full h-53.25 lg:h-115.5 rounded-4xl overflow-hidden bg-gray-100'>
+            {/* <div className='relative w-full h-53.25 lg:h-115.5 rounded-4xl overflow-hidden bg-gray-100'>
               <Image
-                src={winner.image}
+                src={winner.image || '/placeholder-winner.jpg'}
                 alt={winner.name}
                 fill
                 className='object-cover'
@@ -72,12 +74,12 @@ export const WinnersHistory = () => {
                   {winner.prize}
                 </span>
               </div>
-            </div>
+            </div> */}
+            <WinnerCard key={winner.id} winner={winner} />
           </SwiperSlide>
         ))}
       </Swiper>
 
-      {/* КНОПКА (Mobile - снизу) */}
       <div className='mt-8 lg:hidden'>
         <Link
           href='/winners'

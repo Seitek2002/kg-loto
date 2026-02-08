@@ -19,3 +19,11 @@ export interface Lottery {
   time?: string;
 }
 
+export interface Winner {
+  id: number;
+  name: string;
+  city: string;
+  prize: string;
+  image: string | null; // В схеме nullable: true
+  lotteryBadge: string; // "ОНОЙ", "LUCKY DROP" и т.д.
+}
