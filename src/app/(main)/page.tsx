@@ -1,5 +1,11 @@
 import { api } from '@/lib/api';
-import { SliderItem, ApiResponse, NewsItem } from '@/types/api';
+import {
+  SliderItem,
+  ApiResponse,
+  NewsItem,
+  QAItem,
+  LotteryItem,
+} from '@/types/api';
 import { Hero, HeroSlideData } from './sections/Hero';
 import { BestMaterials } from './sections/BestMaterials';
 import { CheckLottery } from './sections/CheckLottery';
@@ -22,7 +28,7 @@ const FALLBACK_SLIDES: HeroSlideData[] = [
   },
 ];
 
-// 1. Функция получения Слайдера
+// 1. Slider
 async function getSliderData(): Promise<HeroSlideData[]> {
   try {
     const { data } = await api.get<ApiResponse<SliderItem[]>>('/slider/');
@@ -43,37 +49,60 @@ async function getSliderData(): Promise<HeroSlideData[]> {
   }
 }
 
-// 2. Функция получения Новостей
+// 2. News
 async function getNewsData(): Promise<NewsItem[]> {
   try {
-    // В swagger нет параметров пагинации в get запросе, но обычно новости берут limit=5 или типа того.
-    // Если API отдает все, то просто берем все.
     const { data } = await api.get<ApiResponse<NewsItem[]>>('/news/');
     return data.data || [];
   } catch (error) {
     console.error('News Error:', error);
-    return []; // Возвращаем пустой массив при ошибке
+    return [];
+  }
+}
+
+// 3. FAQ 🔥
+async function getFAQData(): Promise<QAItem[]> {
+  try {
+    const { data } = await api.get<ApiResponse<QAItem[]>>('/qa/');
+    return data.data || [];
+  } catch (error) {
+    console.error('FAQ Error:', error);
+    return [];
+  }
+}
+
+// 4. Lotteries 🔥
+async function getLotteriesData(): Promise<LotteryItem[]> {
+  try {
+    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
+    return data.data || [];
+  } catch (error) {
+    console.error('Lotteries Error:', error);
+    return [];
   }
 }
 
 export default async function Home() {
-  // 🔥 3. Параллельный запрос данных (Самый быстрый способ)
-  // Мы запускаем оба запроса одновременно и ждем, пока выполнятся оба
-  const [slides, news] = await Promise.all([getSliderData(), getNewsData()]);
+  const [slides, news, faq, lotteries] = await Promise.all([
+    getSliderData(),
+    getNewsData(),
+    getFAQData(),
+    getLotteriesData(),
+  ]);
 
   return (
     <div>
       <Hero slides={slides} />
 
       <div className='px-4 mt-10 xl:max-w-[80%] mx-auto'>
-        <PopularTickets />
+        <PopularTickets lotteries={lotteries} />
         <CheckLottery />
         <WinnersHistory />
 
-        {/* 🔥 4. Передаем новости пропсом */}
         <BestMaterials articles={news} />
 
-        <FAQ />
+        <FAQ questions={faq} />
+
         <OurApp />
       </div>
 

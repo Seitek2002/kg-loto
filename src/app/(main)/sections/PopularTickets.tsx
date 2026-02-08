@@ -4,35 +4,20 @@ import Link from 'next/link';
 import { LotteryCard } from '@/components/features/lottery/GameCard';
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
+import { LotteryItem } from '@/types/api'; // Импорт типа
 
-import { useLotteries } from '@/hooks/useLotteries';
+interface PopularTicketsProps {
+  lotteries: LotteryItem[];
+}
 
 const formatTime = (time: string) => {
+  if (!time) return '00:00';
   return time.split(':').slice(0, 2).join(':');
 };
 
-export const PopularTickets = () => {
-  const { data: lotteries, isLoading, isError } = useLotteries();
-  // const lotteries = useContentStore((state) => state.lotteries);
-
-  if (isLoading) {
-    return (
-      <div className='my-12 animate-pulse'>
-        <div className='h-8 bg-gray-200 w-1/3 mb-4 rounded'></div>
-        <div className='h-4 bg-gray-200 w-2/3 mb-8 rounded'></div>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
-          <div className='h-64 bg-gray-200 rounded-3xl'></div>
-          <div className='h-64 bg-gray-200 rounded-3xl'></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className='my-12 text-red-500'>Не удалось загрузить лотереи</div>
-    );
-  }
+export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
+  // Если лотерей нет, можно не рендерить ничего или показать заглушку
+  if (!lotteries || lotteries.length === 0) return null;
 
   return (
     <div className='my-12'>
@@ -45,7 +30,7 @@ export const PopularTickets = () => {
       </Description>
 
       <div className='flex flex-col lg:flex-row flex-wrap justify-between gap-4 mt-6'>
-        {lotteries?.map((loto) => (
+        {lotteries.map((loto) => (
           <Link
             key={loto.id}
             href={`/lottery/${loto.id}`}
@@ -53,13 +38,24 @@ export const PopularTickets = () => {
           >
             <LotteryCard
               title={loto.title}
-              description={loto.description}
-              prize={loto.prize}
-              price={+loto.price}
-              time={formatTime(loto?.time || '00:00')}
+              // В API списка лотерей поле может называться subtitle
+              description={loto.subtitle || ''}
+              prize={loto.prizeText}
+              price={loto.buttonPrice}
+              time={formatTime(loto.drawTime)}
               theme={loto.theme}
-              backgroundId={loto.backgroundId || '1'}
-              prizeFontId={loto.prizeFontId || 'benzin'}
+              // API возвращает полный URL картинки ("https://.../bg.jpg").
+              // А LotteryCard ждет backgroundId ("1", "2").
+              // Нам нужно научить LotteryCard принимать полный URL.
+              // Пока передадим backgroundId как '1' (заглушка),
+              // но добавим новый проп backgroundImage, если ты обновишь GameCard.
+              backgroundId={'1'}
+              // Либо передадим URL в backgroundId, если GameCard умеет это обрабатывать (мы это делали ранее через конфиг)
+
+              // Если LotteryCard принимает backgroundImage URL:
+              // backgroundImage={loto.backgroundImage}
+
+              prizeFontId={'benzin'} // Хардкод или маппинг
             />
           </Link>
         ))}

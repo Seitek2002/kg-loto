@@ -19,6 +19,22 @@ export interface Lottery {
   time?: string;
 }
 
+export interface LotteryItem {
+  id: number;
+  title: string;
+  description: string; // В Swagger этого поля нет в списке, но оно нужно для карточки. Возможно оно называется `subtitle` или его нет.
+  // Если в API списка нет описания, придется или убрать его, или использовать заглушку.
+  // Судя по твоему скриншоту Swagger, там есть: title, subtitle, prizeText, drawTime и т.д.
+  // Давай ориентироваться на скриншот:
+  subtitle?: string; 
+  prizeText: string;
+  buttonPrice: number;
+  drawTime: string;
+  theme: 'white' | 'dark';
+  backgroundImage: string; // Тут полный URL, а не ID
+  fontFile: string | null;
+}
+
 export interface Winner {
   id: number;
   name: string;
@@ -49,4 +65,10 @@ export interface NewsItem {
   publishedAt: string;
   theme: 'dark' | 'light';
   descriptionPosition: 'none' | 'top' | 'bottom';
+}
+
+export interface QAItem {
+  id: number;
+  question: string;
+  answer: string;
 }

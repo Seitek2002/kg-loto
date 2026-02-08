@@ -3,35 +3,63 @@
 import { Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 import { BaseCard } from '@/components/ui/BaseCard';
-import { FONT_VARIANTS } from '@/config/lottery-styles'; // Убедись, что создал этот файл
+import { FONT_VARIANTS } from '@/config/lottery-styles';
 
-// Типы статусов
+// --- ТИПЫ ---
 type CardStatus = 'winning' | 'losing' | 'pending' | 'archive';
+type CardVariant = 'lottery' | 'prize';
 
 interface LotteryCardProps {
-  // Основные данные
+  // Контент
   title: string;
-  description: string;
-  price?: number;
+  description?: string;
   prize: string;
-  time?: string;
+  price?: number; // Цена (для покупки)
+  time?: string; // Время тиража
 
+  // Дизайн
   backgroundId?: string;
   prizeFontId?: string;
-
   theme?: 'white' | 'dark';
 
-  // Логика состояния
+  // Состояние (для уже купленных билетов)
   ticketStatus?: CardStatus;
-  variant?: 'lottery' | 'prize';
+  variant?: CardVariant;
 }
+
+// --- КОНФИГ СТАТУСОВ ---
+const STATUS_CONFIG: Record<
+  CardStatus,
+  { text: string; dot: string; textCol: string }
+> = {
+  winning: {
+    text: 'ВЫИГРЫШ',
+    dot: 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]',
+    textCol: 'text-green-600',
+  },
+  losing: {
+    text: 'БЕЗ ВЫИГРЫША',
+    dot: 'bg-red-500',
+    textCol: 'text-red-500',
+  },
+  pending: {
+    text: 'ОЖИДАЕТ ТИРАЖА',
+    dot: 'bg-blue-500 animate-pulse',
+    textCol: 'text-blue-500',
+  },
+  archive: {
+    text: 'АРХИВ',
+    dot: 'bg-gray-400',
+    textCol: 'text-gray-500',
+  },
+};
 
 export function LotteryCard({
   title,
   description,
   price,
   prize,
-  time = '14:56',
+  time,
 
   backgroundId,
   prizeFontId = 'default',
@@ -41,127 +69,114 @@ export function LotteryCard({
   variant = 'lottery',
 }: LotteryCardProps) {
   const isDark = theme === 'dark';
-  const descriptionColor = isDark ? 'text-gray-700' : 'text-white/90';
-  const buttonClass = isDark
-    ? 'bg-gray-900 text-white hover:bg-gray-800'
-    : 'bg-white text-gray-900 hover:bg-gray-50';
 
-  // 2. Выбор шрифта для приза из конфига
-  const prizeFontClass = FONT_VARIANTS[prizeFontId] || FONT_VARIANTS['default'];
-
-  // 3. Конфигурация бейджей статуса
-  const getStatusConfig = (status: CardStatus) => {
-    switch (status) {
-      case 'winning':
-        return {
-          text: 'выигрышный',
-          dot: 'bg-green-500',
-          textCol: 'text-green-600',
-        };
-      case 'losing':
-        return {
-          text: 'проигрышный',
-          dot: 'bg-red-500',
-          textCol: 'text-red-500',
-        };
-      case 'pending':
-        return {
-          text: 'В ожидании',
-          dot: 'bg-blue-400',
-          textCol: 'text-blue-500',
-        };
-      case 'archive':
-        return { text: 'архив', dot: 'bg-gray-400', textCol: 'text-gray-500' };
-      default:
-        return { text: '', dot: '', textCol: '' };
-    }
+  // Цветовые схемы в зависимости от темы
+  const colors = {
+    title: isDark ? 'text-[#1F1F1F]' : 'text-white',
+    desc: isDark ? 'text-[#4B4B4B]' : 'text-white/80',
+    prize: isDark ? 'text-[#1F1F1F]' : 'text-white drop-shadow-md',
+    button: isDark
+      ? 'bg-[#1F1F1F] text-white hover:bg-black'
+      : 'bg-white text-[#1F1F1F] hover:bg-gray-100',
   };
 
-  const badgeWrapperClass =
-    'flex items-center gap-2 bg-white/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20';
+  // Получаем конфиг статуса, если он есть
+  const statusConfig = ticketStatus ? STATUS_CONFIG[ticketStatus] : null;
 
-  // 4. Логика текста на кнопке
-  const getButtonContent = () => {
+  // Текст кнопки
+  const getButtonText = () => {
     if (variant === 'prize') {
-      if (ticketStatus === 'winning') return 'ЗАБРАТЬ ВЫИГРЫШ';
-      if (ticketStatus === 'pending') return 'ОЖИДАЕТ ТИРАЖА';
-      if (ticketStatus === 'losing') return 'К СОЖАЛЕНИЮ, МИМО';
-      return 'ПОДРОБНЕЕ';
+      if (ticketStatus === 'winning') return 'ЗАБРАТЬ ПРИЗ';
+      if (ticketStatus === 'losing') return 'ПОДРОБНЕЕ';
+      return 'СМОТРЕТЬ БИЛЕТ';
     }
-    return `Играть • ${price} сом`;
+    return price ? `ИГРАТЬ • ${price} с` : 'ИГРАТЬ';
   };
 
   return (
     <BaseCard
-      backgroundId={backgroundId} // Передаем ID фона в BaseCard
+      backgroundId={backgroundId}
       theme={theme}
-      className='mb-0'
+      className='h-full min-h-[320px] flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl group'
     >
-      <div className='w-fit mb-4'>
-        {ticketStatus && (
-          <div className={badgeWrapperClass}>
-            <div
-              className={clsx(
-                'w-2 h-2 rounded-full',
-                getStatusConfig(ticketStatus).dot,
-              )}
-            />
+      {/* --- ВЕРХНЯЯ ЧАСТЬ: Статус или Время --- */}
+      <div className='flex justify-between items-start mb-4'>
+        {/* Если есть статус (купленный билет) */}
+        {statusConfig ? (
+          <div className='flex items-center gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/40'>
+            <div className={clsx('w-2 h-2 rounded-full', statusConfig.dot)} />
             <span
               className={clsx(
-                'text-[10px] font-bold uppercase font-benzin',
-                getStatusConfig(ticketStatus).textCol,
+                'text-[10px] font-bold font-benzin uppercase',
+                statusConfig.textCol,
               )}
             >
-              {getStatusConfig(ticketStatus).text}
+              {statusConfig.text}
             </span>
           </div>
+        ) : (
+          // Если статуса нет (карточка покупки), показываем время тиража
+          time && (
+            <></>
+            // <div className='flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm'>
+            //   <Clock size={12} className='text-black' strokeWidth={3} />
+            //   <span className='text-[10px] font-bold font-benzin text-black'>
+            //     {time}
+            //   </span>
+            // </div>
+          )
         )}
-        {/* : (
-          <div className={badgeWrapperClass}>
-            <Clock size={14} className='text-gray-900' strokeWidth={2.5} />
-            <span className='font-bold text-sm tracking-wide text-gray-900'>
-              {time}
-            </span>
-          </div>
-        ) */}
       </div>
 
-      <div className='my-auto'>
-        <h3 className='text-sm lg:text-xl font-black uppercase tracking-wide mb-1 font-benzin opacity-100'>
-          {title}
-        </h3>
-        <p
+      {/* --- СРЕДНЯЯ ЧАСТЬ: Инфо --- */}
+      <div className='flex flex-col gap-1 mb-6'>
+        <h3
           className={clsx(
-            'text-xs lg:text-lg leading-relaxed font-medium font-rubik',
-            descriptionColor,
+            'text-xl font-black font-benzin uppercase leading-tight',
+            colors.title,
           )}
         >
-          {description}
-        </p>
+          {title}
+        </h3>
+        {description && (
+          <p
+            className={clsx(
+              'text-xs font-medium font-rubik leading-relaxed max-w-[90%]',
+              colors.desc,
+            )}
+          >
+            {description}
+          </p>
+        )}
       </div>
 
-      <div className={clsx('mt-6 mb-6')}>
+      {/* --- ПРИЗ (Самое крупное) --- */}
+      <div className='mb-8'>
         <span
           className={clsx(
-            'block leading-none uppercase tracking-tight drop-shadow-sm text-[28px]',
-            'font-black',
-            prizeFontClass,
+            'block leading-none uppercase tracking-tight break-words',
+            // Если шрифт не задан, ставим размер по дефолту
+            prizeFontId === 'default' ? 'text-4xl' : '',
+            colors.prize,
+            FONT_VARIANTS[prizeFontId] || FONT_VARIANTS['default'],
           )}
         >
           {prize}
         </span>
       </div>
 
-      <button
-        className={clsx(
-          'max-w-max rounded-full py-4 px-6 transition-all shadow-lg',
-          buttonClass,
-        )}
-      >
-        <span className='font-extrabold text-xs lg:text-base uppercase'>
-          {getButtonContent()}
-        </span>
-      </button>
+      {/* --- КНОПКА --- */}
+      <div className='mt-auto'>
+        <button
+          className={clsx(
+            'w-auto px-8 py-4 rounded-full shadow-lg transition-transform active:scale-95',
+            'font-benzin font-bold text-xs uppercase tracking-wider',
+            colors.button,
+          )}
+        >
+          {getButtonText()}
+        </button>
+      </div>
     </BaseCard>
   );
 }
