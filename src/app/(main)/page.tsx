@@ -1,20 +1,15 @@
+import { api } from '@/lib/api';
+import { SliderItem, ApiResponse, NewsItem } from '@/types/api';
+import { Hero, HeroSlideData } from './sections/Hero';
 import { BestMaterials } from './sections/BestMaterials';
 import { CheckLottery } from './sections/CheckLottery';
 import { FAQ } from './sections/FAQ';
-import { Hero, HeroSlideData } from './sections/Hero';
 import { OurApp } from './sections/OurApp';
 import { PopularTickets } from './sections/PopularTickets';
 import { WinnersHistory } from './sections/WinnersHistory';
 
-import { api } from '@/lib/api';
-import { SliderItem, ApiResponse } from '@/types/api';
-
-// 🔥 Настройка кэширования (ISR)
-// Страница будет пересобираться раз в 10 минут (600 сек).
-// Это замена staleTime из React Query.
 export const revalidate = 600;
 
-// Запасные слайды
 const FALLBACK_SLIDES: HeroSlideData[] = [
   {
     id: 'fallback-1',
@@ -27,18 +22,12 @@ const FALLBACK_SLIDES: HeroSlideData[] = [
   },
 ];
 
-// Функция получения данных (выполняется на сервере)
+// 1. Функция получения Слайдера
 async function getSliderData(): Promise<HeroSlideData[]> {
   try {
-    // Делаем запрос
     const { data } = await api.get<ApiResponse<SliderItem[]>>('/slider/');
+    if (!data.data || data.data.length === 0) return FALLBACK_SLIDES;
 
-    // Если данных нет или массив пустой - возвращаем fallback
-    if (!data.data || data.data.length === 0) {
-      return FALLBACK_SLIDES;
-    }
-
-    // Маппим данные сервера в формат Hero
     return data.data.map((item) => ({
       id: item.id,
       bg: item.image,
@@ -46,36 +35,44 @@ async function getSliderData(): Promise<HeroSlideData[]> {
       title2: item.subtitle,
       prize: item.prizeText,
       price: item.buttonPrice,
-      buttonLabel: item.buttonLabel, // Используем готовый лейбл
+      buttonLabel: item.buttonLabel,
     }));
   } catch (error) {
-    console.error('Ошибка загрузки слайдера:', error);
-    return FALLBACK_SLIDES; // При ошибке показываем заглушку
+    console.error('Slider Error:', error);
+    return FALLBACK_SLIDES;
   }
 }
 
-// 🔥 Компонент теперь async
+// 2. Функция получения Новостей
+async function getNewsData(): Promise<NewsItem[]> {
+  try {
+    // В swagger нет параметров пагинации в get запросе, но обычно новости берут limit=5 или типа того.
+    // Если API отдает все, то просто берем все.
+    const { data } = await api.get<ApiResponse<NewsItem[]>>('/news/');
+    return data.data || [];
+  } catch (error) {
+    console.error('News Error:', error);
+    return []; // Возвращаем пустой массив при ошибке
+  }
+}
+
 export default async function Home() {
-  // Ждем данные прямо тут (на сервере)
-  const slides = await getSliderData();
+  // 🔥 3. Параллельный запрос данных (Самый быстрый способ)
+  // Мы запускаем оба запроса одновременно и ждем, пока выполнятся оба
+  const [slides, news] = await Promise.all([getSliderData(), getNewsData()]);
 
   return (
     <div>
-      {/* Hero - это клиентский компонент ('use client'), 
-         но мы передаем ему данные, полученные на сервере.
-         onButtonClick убрали, так как роутер на сервере не работает.
-         Логику клика лучше перенести внутрь Hero или передать ID строкой.
-      */}
-      <Hero
-        slides={slides}
-        // buttonText не нужен, так как есть buttonLabel
-      />
+      <Hero slides={slides} />
 
       <div className='px-4 mt-10 xl:max-w-[80%] mx-auto'>
         <PopularTickets />
         <CheckLottery />
         <WinnersHistory />
-        <BestMaterials />
+
+        {/* 🔥 4. Передаем новости пропсом */}
+        <BestMaterials articles={news} />
+
         <FAQ />
         <OurApp />
       </div>
