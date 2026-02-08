@@ -23,7 +23,7 @@ export const CheckLottery = () => {
             id='draw-number'
             type='text'
             placeholder='YT-2637-23'
-            className='w-full lg:text-xl py-7 px-10 rounded-full lg:rounded-r-none bg-white text-sm text-gray-900 placeholder:text-gray-400 border-none outline-none focus:ring-2 focus:ring-gray-200 transition-all font-rubik'
+            className='w-full lg:text-xl p-4 lg:py-7 lg:px-10 rounded-full lg:rounded-r-none bg-white text-sm text-gray-900 placeholder:text-gray-400 border-none outline-none focus:ring-2 focus:ring-gray-200 transition-all font-rubik'
           />
         </div>
 
@@ -38,7 +38,7 @@ export const CheckLottery = () => {
             id='ticket-number'
             type='text'
             placeholder='YT2357912'
-            className='w-full lg:text-xl py-7 px-10 rounded-full lg:rounded-none bg-white text-sm text-gray-900 placeholder:text-gray-400 border-none outline-none focus:ring-2 focus:ring-gray-200 transition-all font-rubik'
+            className='w-full lg:text-xl p-4 lg:py-7 lg:px-10 rounded-full lg:rounded-none bg-white text-sm text-gray-900 placeholder:text-gray-400 border-none outline-none focus:ring-2 focus:ring-gray-200 transition-all font-rubik'
           />
         </div>
 
