@@ -1,14 +1,17 @@
+import { Description } from "@/components/ui/Description";
+import { Title } from "@/components/ui/Title";
+
 export const LotteryConditions = () => {
   return (
     <section className='mb-12'>
-      <h2 className='text-sm font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
+      <Title>
         УСЛОВИЯ УЧАСТИЯ:
-      </h2>
-      <p className='text-xs text-gray-500 font-rubik mb-4 leading-relaxed'>
+      </Title>
+      <Description>
         Приобретая лотерейный билет, участник подтверждает согласие на
         предоставление своих контактных данных и принимает условия получения
         информационно-рекламных сообщений от Организатора.
-      </p>
+      </Description>
       <ul className='flex flex-col gap-3 pl-4'>
         <li className='text-xs text-[#2D2D2D] font-bold font-rubik list-decimal marker:font-black'>
           Лицам младше 18-ти лет запрещено приобретать лотерейные билеты.

@@ -20,7 +20,7 @@ export const PrizeTierCard = ({
   return (
     <div
       className={clsx(
-        'w-full p-5 rounded-4xl flex items-center justify-between shadow-lg mb-4 bg-linear-to-r',
+        'w-full md:h-full p-5 rounded-4xl flex items-center justify-between shadow-lg mb-4 bg-linear-to-r',
         gradientFrom,
         gradientTo,
       )}
@@ -34,7 +34,7 @@ export const PrizeTierCard = ({
             {description}
           </span>
         )}
-        <span className='text-2xl font-black font-benzin uppercase tracking-tight'>
+        <span className='text-xl font-black font-benzin uppercase tracking-tight'>
           {amount}
         </span>
       </div>
