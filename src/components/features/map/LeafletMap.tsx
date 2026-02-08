@@ -44,6 +44,7 @@ export default function LeafletMap({
   onMarkerClick,
 }: LeafletMapProps) {
   const activeBranch = branches.find((b) => b.id === activeId);
+  
   const centerPosition: [number, number] = activeBranch
     ? [activeBranch.lat, activeBranch.lng]
     : [42.8746, 74.5698]; // Центр Бишкека по дефолту

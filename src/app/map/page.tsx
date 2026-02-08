@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import { ArrowLeft, Search, X, Copy, Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
-// 🔥 Динамический импорт карты (чтобы не падало на сервере)
 const MapComponent = dynamic(
   () => import('@/components/features/map/LeafletMap'),
   {

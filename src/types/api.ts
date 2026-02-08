@@ -26,7 +26,7 @@ export interface LotteryItem {
   // Если в API списка нет описания, придется или убрать его, или использовать заглушку.
   // Судя по твоему скриншоту Swagger, там есть: title, subtitle, prizeText, drawTime и т.д.
   // Давай ориентироваться на скриншот:
-  subtitle?: string; 
+  subtitle?: string;
   prizeText: string;
   buttonPrice: number;
   drawTime: string;
@@ -72,3 +72,12 @@ export interface QAItem {
   question: string;
   answer: string;
 }
+
+export interface BranchItem {
+  id: number;
+  name: string;
+  address: string;
+  lat: string; // API отдает координаты строками! "42.8755"
+  lng: string;
+}
+

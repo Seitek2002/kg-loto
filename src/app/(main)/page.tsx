@@ -5,6 +5,7 @@ import {
   NewsItem,
   QAItem,
   LotteryItem,
+  BranchItem,
 } from '@/types/api';
 import { Hero, HeroSlideData } from './sections/Hero';
 import { BestMaterials } from './sections/BestMaterials';
@@ -13,6 +14,7 @@ import { FAQ } from './sections/FAQ';
 import { OurApp } from './sections/OurApp';
 import { PopularTickets } from './sections/PopularTickets';
 import { WinnersHistory } from './sections/WinnersHistory';
+import { WhereToBuy } from './sections/WhereToBuy';
 
 export const revalidate = 600;
 
@@ -82,12 +84,23 @@ async function getLotteriesData(): Promise<LotteryItem[]> {
   }
 }
 
+async function getBranchesData(): Promise<BranchItem[]> {
+  try {
+    const { data } = await api.get<ApiResponse<BranchItem[]>>('/branches/');
+    return data.data || [];
+  } catch (error) {
+    console.error('Branches Error:', error);
+    return [];
+  }
+}
+
 export default async function Home() {
-  const [slides, news, faq, lotteries] = await Promise.all([
+  const [slides, news, faq, lotteries, branches] = await Promise.all([
     getSliderData(),
     getNewsData(),
     getFAQData(),
     getLotteriesData(),
+    getBranchesData(),
   ]);
 
   return (
@@ -100,6 +113,7 @@ export default async function Home() {
         <WinnersHistory />
 
         <BestMaterials articles={news} />
+        <WhereToBuy branches={branches} />
 
         <FAQ questions={faq} />
 
