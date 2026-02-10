@@ -120,7 +120,7 @@ export const Hero = ({
         ))}
       </Swiper>
 
-      <div className='absolute bottom-0 left-0 right-0 z-20 h-30 bg-gradient-to-t from-white via-white/30 to-transparent pointer-events-none' />
+      <div className='absolute bottom-0 left-0 right-0 z-20 h-30 bg-linear-to-t from-white via-white/30 to-transparent pointer-events-none' />
 
       <style jsx global>{`
         .hero-swiper .swiper-pagination-bullet {

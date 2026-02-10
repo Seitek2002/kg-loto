@@ -3,15 +3,24 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { clsx } from 'clsx';
+import { useState } from 'react';
+import { AuthModal } from '../features/modal/AuthModal';
 
 interface HeaderProps {
   theme?: 'light' | 'dark';
 }
 
 export const Header = ({ theme = 'light' }: HeaderProps) => {
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
+
+  const openAuth = (mode: 'login' | 'register') => {
+    setAuthMode(mode);
+    setIsAuthOpen(true);
+  };
+
   const isDark = theme === 'dark';
 
-  // Базовые стили для ссылок меню
   const navLinkClass = clsx(
     'text-xs font-bold uppercase font-benzin transition-colors',
     isDark
@@ -19,13 +28,11 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
       : 'text-white/80 hover:text-white', // Белый текст (для темного фона)
   );
 
-  // Стили для переключателя языка
   const langBtnClass = clsx(
     'text-xs font-bold uppercase font-benzin flex items-center gap-1',
     isDark ? 'text-[#2D2D2D]' : 'text-white',
   );
 
-  // Стили для кнопки "Регистрация" (инвертируем цвета)
   const regBtnClass = clsx(
     'px-6 py-2.5 rounded-full text-[10px] font-black font-benzin uppercase transition-colors',
     isDark
@@ -57,25 +64,28 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
         </Link>
       </nav>
 
-      {/* ЯЗЫК И ВХОД (Справа) */}
       <div className='flex items-center gap-4'>
-        {/* Переключатель языка */}
         <button className={langBtnClass}>
           RU <span className='text-[10px]'>▼</span>
         </button>
 
-        {/* Кнопки */}
-        <Link href='/register' className={regBtnClass}>
+        <button className={regBtnClass} onClick={() => openAuth('register')}>
           Регистрация
-        </Link>
+        </button>
 
-        {/* Кнопка "Войти" остается желтой в обоих вариантах */}
-        <Link
-          href='/login'
+        <button
+          onClick={() => openAuth('login')}
           className='bg-[#FFD600] text-[#2D2D2D] px-6 py-2.5 rounded-full text-[10px] font-black font-benzin uppercase hover:bg-[#FFC000] transition-colors'
         >
           Войти
-        </Link>
+        </button>
+
+        <AuthModal
+          key={authMode}
+          isOpen={isAuthOpen}
+          onClose={() => setIsAuthOpen(false)}
+          initialStep={authMode}
+        />
       </div>
     </header>
   );
