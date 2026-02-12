@@ -1,4 +1,6 @@
 // src/store/auth.ts
+import { AuthService } from '@/services/auth';
+import { UserProfile } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -6,14 +8,13 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   isAuth: boolean;
-  user: {
-    fullName: string | null;
-    phone: string | null;
-  };
+
+  user: UserProfile | null; // Обновим тип
+  fetchUser: () => Promise<void>; // Действие для загрузки
 
   // Действия
   setTokens: (access: string, refresh: string) => void;
-  setUser: (user: { fullName: string; phone: string }) => void;
+  setUser: (user: UserProfile) => void;
   logout: () => void;
 }
 
@@ -23,9 +24,15 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       isAuth: false,
-      user: {
-        fullName: null,
-        phone: null,
+      user: null,
+
+      fetchUser: async () => {
+        try {
+          const { data } = await AuthService.getMe();
+          set({ user: data.data });
+        } catch (error) {
+          console.error('Failed to fetch user', error);
+        }
       },
 
       setTokens: (access, refresh) =>
@@ -38,7 +45,7 @@ export const useAuthStore = create<AuthState>()(
           accessToken: null,
           refreshToken: null,
           isAuth: false,
-          user: { fullName: null, phone: null },
+          user: null,
         }),
     }),
     {

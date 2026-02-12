@@ -54,7 +54,7 @@ export const Hero = ({
         autoplay={
           isSingleSlide ? false : { delay: 5000, disableOnInteraction: false }
         }
-        className='h-[80vh] lg:h-screen w-full hero-swiper'
+        className='h-[80vh] lg:h-[120vh] w-full hero-swiper'
         allowTouchMove={!isSingleSlide}
       >
         {slides.map((slide, index) => (

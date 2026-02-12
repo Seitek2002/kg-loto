@@ -1,10 +1,12 @@
 // src/services/auth.ts
 import { api } from '@/lib/api';
+import { ApiResponse } from '@/types/api';
 import {
   LoginData,
   AuthResponse,
   RegisterData,
   VerifyData,
+  UserProfile,
 } from '@/types/auth';
 
 export const AuthService = {
@@ -23,6 +25,7 @@ export const AuthService = {
     return api.post('/auth/verify/', data);
   },
 
-  // 4. Получение профиля (если есть такой эндпоинт, добавь сюда)
-  // async getProfile() { ... }
+  async getMe() {
+    return api.get<ApiResponse<UserProfile>>('/users/me/'); // Проверь URL в Swagger!
+  },
 };

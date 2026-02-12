@@ -23,3 +23,11 @@ export interface AuthResponse {
     refreshToken: string;
   };
 }
+
+export interface UserProfile {
+  id: number;
+  fullName: string;
+  phoneNumber: string;
+  balance?: number; // Если есть
+  avatar?: string;
+}

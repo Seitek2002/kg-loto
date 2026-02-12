@@ -45,7 +45,7 @@ export const Footer = () => {
       <div className='max-w-350 mx-auto px-8'>
         <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-16'>
           <div className='lg:col-span-2 flex flex-col justify-between'>
-            <Link href='/' className='relative w-32 h-10 mb-4'>
+            <Link href='/' className='relative w-45.25 h-19.5 mb-4'>
               <Image
                 src='/logo.png'
                 alt='KGLOTO'
@@ -53,7 +53,7 @@ export const Footer = () => {
                 className='object-contain object-left'
               />
             </Link>
-            <p className='text-xs text-gray-400 mt-4'>2021-2026 ООО «KGLOTO»</p>
+            <p className='text-xs font-medium text-[#6E6E6E] mt-4'>2021-2026 ООО «KGLOTO»</p>
           </div>
 
           {/* Колонки с ссылками */}
