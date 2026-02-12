@@ -5,10 +5,8 @@ import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
 
 interface BaseCardProps {
   children: ReactNode;
-  backgroundId?: string; // Приходит с бека (например "red-gradient")
-  imageSrc?: string; // Для обратной совместимости (если картинка задана url)
-
-  // Старые градиенты можно оставить как fallback, или удалить
+  backgroundId?: string; // Локальный ID (fallback)
+  imageSrc?: string; // 🔥 Ссылка с сервера (приоритет)
   className?: string;
   minHeight?: string;
   theme?: 'dark' | 'white';
@@ -24,14 +22,17 @@ export const BaseCard = ({
 }: BaseCardProps) => {
   const textColor = theme === 'dark' ? 'text-[#2D2D2D]' : 'text-white';
 
-  const bgPath = backgroundId
-    ? BACKGROUND_VARIANTS[backgroundId] || BACKGROUND_VARIANTS['default']
-    : imageSrc;
+  // 🔥 ЛОГИКА ИЗМЕНЕНА: Сначала проверяем imageSrc, потом backgroundId
+  const bgPath = imageSrc
+    ? imageSrc
+    : backgroundId
+      ? BACKGROUND_VARIANTS[backgroundId] || BACKGROUND_VARIANTS['default']
+      : null;
 
   return (
     <div
       className={clsx(
-        'relative w-full rounded-4xl p-6 flex flex-col shadow-xl overflow-hidden',
+        'relative w-full rounded-[32px] p-6 flex flex-col shadow-xl overflow-hidden', // поправил rounded-4xl на стандартный rounded-[32px] если tailwind ругается
         !bgPath && 'bg-gray-200',
         textColor,
         className,
@@ -45,8 +46,9 @@ export const BaseCard = ({
             src={bgPath}
             alt='card background'
             fill
-            className='z-0 object-center object-fill'
+            className='z-0 object-cover' // object-cover лучше заполняет контейнер
             priority
+            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw' // Оптимизация загрузки
           />
 
           {theme === 'white' && (

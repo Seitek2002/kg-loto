@@ -6,6 +6,8 @@ import { Description } from '@/components/ui/Description';
 import { WinnerCard } from '@/components/ui/WinnerCard';
 import { clsx } from 'clsx';
 import { useWinners } from '@/hooks/useWinners';
+import { Header } from '@/components/ui/Header';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 const FILTER_OPTIONS = [
   { label: 'Оной', value: 'оной' },
@@ -56,7 +58,9 @@ export default function WinnersPage() {
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
-      <div className='max-w-[1400px] mx-auto px-4'>
+      <Header theme='dark' />
+      <PageHeader title='' />
+      <div className='max-w-[1400px] mx-auto px-4 lg:mt-20'>
         <div className='mb-6 max-w-3xl'>
           <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>
           <Description>

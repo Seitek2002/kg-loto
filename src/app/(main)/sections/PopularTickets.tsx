@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { LotteryCard } from '@/components/features/lottery/GameCard';
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
-import { LotteryItem } from '@/types/api'; // Импорт типа
+import { LotteryItem } from '@/types/api';
 
 interface PopularTicketsProps {
   lotteries: LotteryItem[];
@@ -16,7 +16,6 @@ const formatTime = (time: string) => {
 };
 
 export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
-  // Если лотерей нет, можно не рендерить ничего или показать заглушку
   if (!lotteries || lotteries.length === 0) return null;
 
   return (
@@ -24,9 +23,7 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
       <Title>Популярные лотереи</Title>
       <Description>
         Популярные лотереи привлекают внимание благодаря крупным джекпотам,
-        частым тиражам и удобным условиям участия. Тысячи игроков ежедневно
-        выбирают именно эти розыгрыши, чтобы испытать удачу и побороться за
-        выигрыш.
+        частым тиражам и удобным условиям участия.
       </Description>
 
       <div className='flex flex-col lg:flex-row flex-wrap justify-between gap-4 mt-6'>
@@ -38,24 +35,17 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
           >
             <LotteryCard
               title={loto.title}
-              // В API списка лотерей поле может называться subtitle
               description={loto.subtitle || ''}
               prize={loto.prizeText}
               price={loto.buttonPrice}
               time={formatTime(loto.drawTime)}
               theme={loto.theme}
-              // API возвращает полный URL картинки ("https://.../bg.jpg").
-              // А LotteryCard ждет backgroundId ("1", "2").
-              // Нам нужно научить LotteryCard принимать полный URL.
-              // Пока передадим backgroundId как '1' (заглушка),
-              // но добавим новый проп backgroundImage, если ты обновишь GameCard.
-              backgroundId={'1'}
-              // Либо передадим URL в backgroundId, если GameCard умеет это обрабатывать (мы это делали ранее через конфиг)
+              // 🔥 ПЕРЕДАЕМ КАРТИНКУ С СЕРВЕРА
+              backgroundImage={loto.backgroundImage}
+              // Если вдруг картинки нет, можно передать дефолтный ID
+              // backgroundId={'1'}
 
-              // Если LotteryCard принимает backgroundImage URL:
-              // backgroundImage={loto.backgroundImage}
-
-              prizeFontId={'benzin'} // Хардкод или маппинг
+              prizeFontId={'benzin'}
             />
           </Link>
         ))}

@@ -81,3 +81,28 @@ export interface BranchItem {
   lng: string;
 }
 
+export interface PrizeTier {
+  id: number;
+  category: string; // например "ДЖЕКПОТ"
+  amount: string; // например "1 000 000 с"
+  winners: number; // количество победителей
+  description: string; // описание
+  gradientFrom: string; // цвет градиента
+  gradientTo: string; // цвет градиента
+}
+
+export interface LotteryDetail {
+  id: number;
+  title: string;
+  subtitle: string;
+  prizeText: string;
+  buttonText: string;
+  buttonPrice: number;
+  buttonLabel: string;
+  drawTime: string;
+  theme: 'white' | 'dark';
+  backgroundImage: string; // Полный URL картинки
+  font: string; // "benzin"
+  heroTitle: string; // Заголовок для баннера
+  prizeTiers: PrizeTier[]; // 🔥 Массив призов
+}

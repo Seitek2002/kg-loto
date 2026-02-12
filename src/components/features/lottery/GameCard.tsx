@@ -1,6 +1,5 @@
 'use client';
 
-import { Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 import { BaseCard } from '@/components/ui/BaseCard';
 import { FONT_VARIANTS } from '@/config/lottery-styles';
@@ -9,50 +8,41 @@ import { FONT_VARIANTS } from '@/config/lottery-styles';
 type CardStatus = 'winning' | 'losing' | 'pending' | 'archive';
 type CardVariant = 'lottery' | 'prize';
 
-interface LotteryCardProps {
-  // Контент
-  title: string;
-  description?: string;
-  prize: string;
-  price?: number; // Цена (для покупки)
-  time?: string; // Время тиража
-
-  // Дизайн
-  backgroundId?: string;
-  prizeFontId?: string;
-  theme?: 'white' | 'dark';
-
-  // Состояние (для уже купленных билетов)
-  ticketStatus?: CardStatus;
-  variant?: CardVariant;
-}
-
-// --- КОНФИГ СТАТУСОВ ---
+// Конфиг статусов оставляем как есть...
 const STATUS_CONFIG: Record<
   CardStatus,
   { text: string; dot: string; textCol: string }
 > = {
+  // ... твой код конфига ...
   winning: {
     text: 'ВЫИГРЫШ',
     dot: 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]',
     textCol: 'text-green-600',
   },
-  losing: {
-    text: 'БЕЗ ВЫИГРЫША',
-    dot: 'bg-red-500',
-    textCol: 'text-red-500',
-  },
+  losing: { text: 'БЕЗ ВЫИГРЫША', dot: 'bg-red-500', textCol: 'text-red-500' },
   pending: {
     text: 'ОЖИДАЕТ ТИРАЖА',
     dot: 'bg-blue-500 animate-pulse',
     textCol: 'text-blue-500',
   },
-  archive: {
-    text: 'АРХИВ',
-    dot: 'bg-gray-400',
-    textCol: 'text-gray-500',
-  },
+  archive: { text: 'АРХИВ', dot: 'bg-gray-400', textCol: 'text-gray-500' },
 };
+
+interface LotteryCardProps {
+  title: string;
+  description?: string;
+  prize: string;
+  price?: number;
+  time?: string;
+
+  backgroundId?: string;
+  backgroundImage?: string; // 🔥 Добавили проп для URL
+  prizeFontId?: string;
+  theme?: 'white' | 'dark';
+
+  ticketStatus?: CardStatus;
+  variant?: CardVariant;
+}
 
 export function LotteryCard({
   title,
@@ -62,6 +52,7 @@ export function LotteryCard({
   time,
 
   backgroundId,
+  backgroundImage, // 🔥 Получаем URL
   prizeFontId = 'default',
   theme = 'white',
 
@@ -70,7 +61,6 @@ export function LotteryCard({
 }: LotteryCardProps) {
   const isDark = theme === 'dark';
 
-  // Цветовые схемы в зависимости от темы
   const colors = {
     title: isDark ? 'text-[#1F1F1F]' : 'text-white',
     desc: isDark ? 'text-[#4B4B4B]' : 'text-white/80',
@@ -80,10 +70,8 @@ export function LotteryCard({
       : 'bg-white text-[#1F1F1F] hover:bg-gray-100',
   };
 
-  // Получаем конфиг статуса, если он есть
   const statusConfig = ticketStatus ? STATUS_CONFIG[ticketStatus] : null;
 
-  // Текст кнопки
   const getButtonText = () => {
     if (variant === 'prize') {
       if (ticketStatus === 'winning') return 'ЗАБРАТЬ ПРИЗ';
@@ -96,12 +84,14 @@ export function LotteryCard({
   return (
     <BaseCard
       backgroundId={backgroundId}
+      imageSrc={backgroundImage} // 🔥 Передаем URL в BaseCard
       theme={theme}
       className='h-full min-h-[320px] flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl group'
     >
-      {/* --- ВЕРХНЯЯ ЧАСТЬ: Статус или Время --- */}
+      {/* ... Весь остальной код верстки без изменений ... */}
+
+      {/* ВЕРХНЯЯ ЧАСТЬ */}
       <div className='flex justify-between items-start mb-4'>
-        {/* Если есть статус (купленный билет) */}
         {statusConfig ? (
           <div className='flex items-center gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/40'>
             <div className={clsx('w-2 h-2 rounded-full', statusConfig.dot)} />
@@ -115,20 +105,11 @@ export function LotteryCard({
             </span>
           </div>
         ) : (
-          // Если статуса нет (карточка покупки), показываем время тиража
-          time && (
-            <></>
-            // <div className='flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm'>
-            //   <Clock size={12} className='text-black' strokeWidth={3} />
-            //   <span className='text-[10px] font-bold font-benzin text-black'>
-            //     {time}
-            //   </span>
-            // </div>
-          )
+          time && <></>
         )}
       </div>
 
-      {/* --- СРЕДНЯЯ ЧАСТЬ: Инфо --- */}
+      {/* СРЕДНЯЯ ЧАСТЬ */}
       <div className='flex flex-col gap-1 mb-6'>
         <h3
           className={clsx(
@@ -150,12 +131,11 @@ export function LotteryCard({
         )}
       </div>
 
-      {/* --- ПРИЗ (Самое крупное) --- */}
+      {/* ПРИЗ */}
       <div className='mb-8'>
         <span
           className={clsx(
             'block leading-none uppercase tracking-tight break-words',
-            // Если шрифт не задан, ставим размер по дефолту
             prizeFontId === 'default' ? 'text-4xl' : '',
             colors.prize,
             FONT_VARIANTS[prizeFontId] || FONT_VARIANTS['default'],
@@ -165,7 +145,7 @@ export function LotteryCard({
         </span>
       </div>
 
-      {/* --- КНОПКА --- */}
+      {/* КНОПКА */}
       <div className='mt-auto'>
         <button
           className={clsx(

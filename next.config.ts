@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'crm.kgloto.com',
+        pathname: '/**',
       }
     ],
     minimumCacheTTL: 60,

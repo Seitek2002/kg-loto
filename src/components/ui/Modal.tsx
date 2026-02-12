@@ -23,12 +23,10 @@ export const Modal = ({
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  // 1. Ждем монтирования на клиенте (чтобы работал createPortal)
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 2. Управление анимацией и видимостью
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
@@ -44,7 +42,6 @@ export const Modal = ({
     }
   }, [isOpen]);
 
-  // 3. Закрытие по клавише Escape
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -63,17 +60,14 @@ export const Modal = ({
     };
   }, [isOpen, handleKeyDown]);
 
-  // Если компонент еще не смонтирован на клиенте - не рендерим
   if (!mounted) return null;
 
-  // Если модалка закрыта и анимация завершилась - не рендерим
   if (!isOpen && !isVisible) return null;
 
   return createPortal(
     <div
       className={clsx(
         'fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6',
-        // Анимация контейнера (появление/исчезновение)
         isOpen ? 'pointer-events-auto' : 'pointer-events-none',
       )}
       role='dialog'

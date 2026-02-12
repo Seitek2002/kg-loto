@@ -103,6 +103,8 @@ export default async function Home() {
     getBranchesData(),
   ]);
 
+  console.log(lotteries);
+
   return (
     <div>
       <Hero slides={slides} />
