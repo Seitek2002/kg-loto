@@ -1,19 +1,30 @@
+// src/lib/api.ts
 import axios from 'axios';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://crm.kgloto.com/api/v1';
+import { useAuthStore } from '@/store/auth';
 
 export const api = axios.create({
-  baseURL: API_URL,
+  baseURL: 'https://crm.kgloto.com/api/v1',
   headers: {
     'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
 });
 
 api.interceptors.request.use((config) => {
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const token = useAuthStore.getState().accessToken;
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().logout();
+    }
+    return Promise.reject(error);
+  },
+);

@@ -13,7 +13,6 @@ interface BestMaterialsProps {
 }
 
 export const BestMaterials = ({ articles }: BestMaterialsProps) => {
-  // Если новостей нет, можно скрыть секцию или показать заглушку
   if (!articles || articles.length === 0) return null;
 
   return (
