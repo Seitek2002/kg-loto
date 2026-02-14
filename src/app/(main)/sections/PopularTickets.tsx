@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LotteryCard } from '@/components/features/lottery/GameCard';
+import { LotteryCard } from '@/components/features/lottery/LotteryCard';
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
 import { LotteryItem } from '@/types/api';
@@ -10,12 +10,37 @@ interface PopularTicketsProps {
   lotteries: LotteryItem[];
 }
 
+const MOCK_LOTTIE_CARDS = [
+  {
+    id: 'test-1',
+    title: 'ТЕСТ АНИМАЦИИ 1',
+    subtitle: 'Анимация .lottie',
+    prizeText: '1 000 000 с',
+    buttonPrice: 150,
+    drawTime: '12:00',
+    theme: 'white' as const,
+    lottieSrc: '/animations/1.lottie', // Путь к файлу в public/animations
+  },
+  {
+    id: 'test-2',
+    title: 'ТЕСТ АНИМАЦИИ 2',
+    subtitle: 'Анимация .json',
+    prizeText: 'АВТОМОБИЛЬ',
+    buttonPrice: 200,
+    drawTime: '18:00',
+    theme: 'white' as const,
+    lottieSrc: '/animations/3.json', // Путь к файлу в public/animations
+  }
+];
+
 const formatTime = (time: string) => {
   if (!time) return '00:00';
   return time.split(':').slice(0, 2).join(':');
 };
 
 export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
+  const displayLotteries = [...MOCK_LOTTIE_CARDS, ...(lotteries || [])] as any[];
+
   if (!lotteries || lotteries.length === 0) return null;
 
   return (
@@ -27,7 +52,7 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
       </Description>
 
       <div className='flex flex-col lg:flex-row flex-wrap justify-between gap-4 mt-6'>
-        {lotteries.map((loto) => (
+        {displayLotteries.map((loto) => (
           <Link
             key={loto.id}
             href={`/lottery/${loto.id}`}
@@ -40,11 +65,8 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
               price={loto.buttonPrice}
               time={formatTime(loto.drawTime)}
               theme={loto.theme}
-              // 🔥 ПЕРЕДАЕМ КАРТИНКУ С СЕРВЕРА
+              lottieSrc={loto.lottieSrc}
               backgroundImage={loto.backgroundImage}
-              // Если вдруг картинки нет, можно передать дефолтный ID
-              // backgroundId={'1'}
-
               prizeFontId={'benzin'}
             />
           </Link>

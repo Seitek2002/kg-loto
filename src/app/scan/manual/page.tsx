@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { LotteryCard } from '@/components/features/lottery/GameCard';
+import { LotteryCard } from '@/components/features/lottery/LotteryCard';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
 export default function ManualCheckPage() {

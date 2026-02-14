@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { TicketFilters } from '@/components/features/tickets/TicketFilters';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { useTicketsStore } from '@/store/tickets';
-import { LotteryCard } from '@/components/features/lottery/GameCard';
+import { LotteryCard } from '@/components/features/lottery/LotteryCard';
 import { LOTTERIES_DB } from '@/data/mock-lotteries';
 
 export default function TicketsPage() {

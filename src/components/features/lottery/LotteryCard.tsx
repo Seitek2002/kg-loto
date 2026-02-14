@@ -36,7 +36,8 @@ interface LotteryCardProps {
   time?: string;
 
   backgroundId?: string;
-  backgroundImage?: string; // 🔥 Добавили проп для URL
+  backgroundImage?: string;
+  lottieSrc?: string;
   prizeFontId?: string;
   theme?: 'white' | 'dark';
 
@@ -52,7 +53,8 @@ export function LotteryCard({
   time,
 
   backgroundId,
-  backgroundImage, // 🔥 Получаем URL
+  backgroundImage,
+  lottieSrc,
   prizeFontId = 'default',
   theme = 'white',
 
@@ -84,9 +86,10 @@ export function LotteryCard({
   return (
     <BaseCard
       backgroundId={backgroundId}
-      imageSrc={backgroundImage} // 🔥 Передаем URL в BaseCard
+      imageSrc={backgroundImage}
+      lottieSrc={lottieSrc}
       theme={theme}
-      className='h-full min-h-[320px] flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl group'
+      className='h-full min-h-80 flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl group'
     >
       {/* ... Весь остальной код верстки без изменений ... */}
 
@@ -135,7 +138,7 @@ export function LotteryCard({
       <div className='mb-8'>
         <span
           className={clsx(
-            'block leading-none uppercase tracking-tight break-words',
+            'block leading-none uppercase tracking-tight wrap-break-word',
             prizeFontId === 'default' ? 'text-4xl' : '',
             colors.prize,
             FONT_VARIANTS[prizeFontId] || FONT_VARIANTS['default'],

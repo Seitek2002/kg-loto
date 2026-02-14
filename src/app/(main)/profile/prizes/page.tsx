@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PrizeTabs } from '@/components/features/prizes/PrizeTabs';
-import { LotteryCard } from '@/components/features/lottery/GameCard';
+import { LotteryCard } from '@/components/features/lottery/LotteryCard';
 import { useUserStore, UserTicket } from '@/store/user';
 
 export default function MyPrizesPage() {
