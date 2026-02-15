@@ -42,9 +42,7 @@ export const FAQItem = ({ question, answer }: FAQItemProps) => {
       >
         <div className='overflow-hidden'>
           {/* Добавили padding (px-6 или px-8), чтобы ответ был на одном уровне с вопросом */}
-          <p className='pb-6 px-6 md:px-8 text-sm text-[#6E6E6E] font-rubik leading-relaxed max-w-[95%]'>
-            {answer}
-          </p>
+          <p className='pb-6 px-6 md:px-8 text-sm text-[#6E6E6E] font-rubik leading-relaxed max-w-[95%]' dangerouslySetInnerHTML={{ __html: answer }} />
         </div>
       </div>
     </div>
