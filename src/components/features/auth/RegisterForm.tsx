@@ -161,6 +161,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
             type='text'
             placeholder='123456789101'
             maxLength={14}
+            autoComplete='username'
             className={inputClass(!!errors.inn)}
           />
           {errors.inn && (
@@ -180,6 +181,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
               placeholder='••••••••••••••'
+              autoComplete='new-password'
               className={inputClass(!!errors.password)}
             />
             <button
@@ -207,6 +209,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
               {...register('passwordConfirm')}
               type={showConfirmPassword ? 'text' : 'password'}
               placeholder='••••••••••••••'
+              autoComplete='new-password'
               className={inputClass(!!errors.passwordConfirm)}
             />
             <button
