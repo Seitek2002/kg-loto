@@ -55,6 +55,7 @@ export const BestMaterials = ({ articles }: BestMaterialsProps) => {
               theme={article.theme}
               buttonText='ЧИТАТЬ'
               buttonAlign='left'
+              href={'/news/' + article.slug}
             />
           </SwiperSlide>
         ))}

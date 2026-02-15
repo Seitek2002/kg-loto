@@ -3,18 +3,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { clsx } from 'clsx';
-import { FileText } from 'lucide-react'; // 🔥 Иконка для заглушки
+import { FileText } from 'lucide-react';
 
 export interface ArticleCardProps {
   id?: number | string;
   title: string;
   description?: string;
   buttonText: string;
-  imageSrc?: string | null; // Разрешаем null
+  imageSrc?: string | null;
   theme: 'dark' | 'light' | 'blue';
   buttonAlign?: 'center' | 'left';
   descriptionPosition?: 'top' | 'bottom';
-  href?: string; // Добавил href для ссылки
+  href?: string;
 }
 
 export const ArticleCard = ({
@@ -25,26 +25,24 @@ export const ArticleCard = ({
   theme,
   buttonAlign = 'left',
   descriptionPosition = 'bottom',
-  href = '#',
+  href = '#', // По умолчанию никуда не ведет, пока не передашь проп
 }: ArticleCardProps) => {
-  // Определяем цвета в зависимости от темы
-  const isDarkText = theme === 'dark'; // Для белого фона
+  const isDarkText = theme === 'dark';
   const titleColor = isDarkText ? 'text-[#1F1F1F]' : 'text-white';
   const descColor = isDarkText ? 'text-[#4B4B4B]' : 'text-white/90';
 
-  // Цвет кнопки
   const btnClass = isDarkText
     ? 'bg-[#F0F0F0] text-black hover:bg-[#E5E5E5]'
     : 'bg-white text-black hover:bg-white/90';
 
-  // Проверяем наличие картинки
   const hasImage = imageSrc && imageSrc.length > 0;
 
   return (
-    <div
+    // 🔥 ТЕПЕРЬ ВСЯ КАРТОЧКА — ЭТО ССЫЛКА (Добавил класс group для анимации)
+    <Link
+      href={href}
       className={clsx(
-        'relative w-full h-[460px] rounded-[32px] p-8 flex flex-col justify-between overflow-hidden border border-gray-100/50 shadow-sm transition-transform hover:scale-[1.01]',
-        // Фон карточки, если картинки нет
+        'relative w-full h-[460px] rounded-[32px] p-8 flex flex-col justify-between overflow-hidden border border-gray-100/50 shadow-sm transition-transform hover:scale-[1.01] block group cursor-pointer',
         !hasImage && theme === 'dark' && 'bg-white',
         !hasImage && theme === 'light' && 'bg-[#2D2D2D]',
         !hasImage && theme === 'blue' && 'bg-[#6F51FF]',
@@ -61,22 +59,19 @@ export const ArticleCard = ({
               className='object-cover'
               sizes='(max-width: 768px) 100vw, 33vw'
             />
-            {/* Легкое затемнение для белого текста */}
             {theme !== 'dark' && (
               <div className='absolute inset-0 bg-black/20' />
             )}
           </>
         ) : (
-          // 🔥 СТИЛЬНЫЙ ПЛЕЙСХОЛДЕР
           <div
             className={clsx(
               'w-full h-full flex items-center justify-center',
-              // Градиенты для разных тем
-              theme === 'dark' && 'bg-gradient-to-br from-gray-50 to-gray-100', // Светлый фон
+              theme === 'dark' && 'bg-gradient-to-br from-gray-50 to-gray-100',
               theme === 'light' &&
-                'bg-gradient-to-br from-[#2D2D2D] to-[#1F1F1F]', // Темный фон
+                'bg-gradient-to-br from-[#2D2D2D] to-[#1F1F1F]',
               theme === 'blue' &&
-                'bg-gradient-to-br from-[#6F51FF] to-[#5842CC]', // Синий фон
+                'bg-gradient-to-br from-[#6F51FF] to-[#5842CC]',
             )}
           >
             <FileText
@@ -92,8 +87,6 @@ export const ArticleCard = ({
       </div>
 
       {/* 2. КОНТЕНТ (Z-10 поверх фона) */}
-
-      {/* ВЕРХНЯЯ ЧАСТЬ */}
       <div className='relative z-10 flex flex-col gap-4'>
         <h3
           className={clsx(
@@ -116,7 +109,6 @@ export const ArticleCard = ({
         )}
       </div>
 
-      {/* НИЖНЯЯ ЧАСТЬ */}
       <div
         className={clsx(
           'relative z-10 flex flex-col gap-6',
@@ -134,18 +126,18 @@ export const ArticleCard = ({
           </p>
         )}
 
-        <Link href={href} className='w-full sm:w-auto'>
-          <button
-            className={clsx(
-              'px-8 py-4 rounded-full font-benzin font-bold text-xs uppercase tracking-wider shadow-lg transition-all active:scale-95',
-              btnClass,
-              'w-full sm:w-auto',
-            )}
-          >
-            {buttonText}
-          </button>
-        </Link>
+        {/* 🔥 ИМИТАЦИЯ КНОПКИ (Так как внешняя обертка уже является ссылкой <a>) */}
+        {/* Обрати внимание на group-active:scale-95, она сжимается при клике на ЛЮБОЕ место карточки */}
+        <div
+          className={clsx(
+            'px-8 py-4 rounded-full font-benzin font-bold text-xs uppercase tracking-wider shadow-lg transition-all group-active:scale-95 text-center',
+            btnClass,
+            'w-full sm:w-auto',
+          )}
+        >
+          {buttonText}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };

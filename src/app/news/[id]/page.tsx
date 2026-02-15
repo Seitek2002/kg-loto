@@ -1,45 +1,84 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronRight } from 'lucide-react';
+import { notFound } from 'next/navigation';
+import { ChevronRight, ImageIcon } from 'lucide-react';
 
-import { ArticleCard } from '@/components/ui/ArticleCard'; // Карточка для сайдбара
+import { ArticleCard } from '@/components/ui/ArticleCard';
+import { api } from '@/lib/api';
+import { ApiResponse, NewsItem } from '@/types/api';
 import { Header } from '@/components/ui/Header';
 
-const MOCK_NEWS = {
-  title: '«НАЦИОНАЛЬНАЯ ЛОТЕРЕЯ» РАЗЫГРАЛА 5 МИЛЛИОНОВ РУБЛЕЙ',
-  date: '13 ЯНВАРЯ, 2025 г.',
-  image: '/banner-news.jpg', // Замени на свой плейсхолдер
-  content: `
-    <p>Россиянин выиграл 5 миллионов рублей в акции «Второй шанс. Рождественская сказка» от «Национальной Лотереи». Обладатель главного приза, купивший билет «Мечталлион» онлайн, пока не обратился за выигрышем.</p>
-    <p>Помимо главного денежного приза, в рамках акции были разыграны 100 призов по 50 тысяч рублей, а также годовые подписки на 40 ближайших тиражей лотереи «Мечталлион».</p>
-    <p>Итоги акции были подведены в прямом эфире 10 января на официальном сайте. Акция приняла всероссийский масштаб, дав всем, кто приобрёл и зарегистрировал новогодний билет, дополнительный шанс на удачу.</p>
-    <p>«Акция "Второй шанс: Рождественская сказка" — это подарок для всех участников новогоднего тиража нашей флагманской лотереи...» — отметили в пресс-службе оператора лотерей.</p>
-  `,
-};
+interface NewsDetailsPageProps {
+  params: Promise<{ id: string }>; // id или slug из URL
+}
 
-const MOCK_OTHER_ARTICLES = [
-  {
-    id: 1,
-    title: '80+ человек с большим опытом в Foodtech и Horeca',
-    theme: 'dark' as const,
-  },
-  {
-    id: 2,
-    title: 'Показываем где приобрести билет',
-    theme: 'light' as const,
-  },
-];
+// 1. Запрос конкретной новости по id/slug
+async function getNewsDetail(id: string): Promise<NewsItem | null> {
+  try {
+    const { data } = await api.get<ApiResponse<NewsItem>>(`/news/${id}/`);
+    return data.data;
+  } catch (error) {
+    console.error(`Error fetching news ${id}:`, error);
+    return null;
+  }
+}
 
-export default function NewsDetailsPage() {
+// 2. Запрос списка новостей для сайдбара
+async function getNewsData(): Promise<NewsItem[]> {
+  try {
+    const { data } = await api.get<ApiResponse<NewsItem[]>>('/news/');
+    return data.data || [];
+  } catch (error) {
+    console.error('News Error:', error);
+    return [];
+  }
+}
+
+export default async function NewsDetailsPage({
+  params,
+}: NewsDetailsPageProps) {
+  const { id } = await params;
+
+  // Запускаем оба запроса параллельно
+  const [article, allNews] = await Promise.all([
+    getNewsDetail(id),
+    getNewsData(),
+  ]);
+
+  // Если новость не найдена
+  if (!article) {
+    return notFound();
+  }
+
+  // Фильтруем "Другие материалы": убираем текущую новость по ID и берем 2 штуки
+  const otherArticles = allNews
+    .filter((item) => String(item.id) !== String(id))
+    .slice(0, 2);
+
+  // 🔥 ИСПОЛЬЗУЕМ publishedAt ДЛЯ ДАТЫ
+  const formattedDate = article.publishedAt
+    ? new Date(article.publishedAt).toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : '';
+
+  // 🔥 ПОДСТРАХОВКА ДЛЯ КОНТЕНТА:
+  // Если детальный запрос присылает fullText/content - берем его, иначе берем shortText
+  const htmlContent =
+    (article as any).fullText ||
+    (article as any).content ||
+    article.shortText ||
+    '';
+
   return (
     <div className='min-h-screen bg-[#F5F5F5] font-rubik'>
       <Header theme='dark' />
 
-      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-28 pb-20'>
+      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-56 pb-20'>
         {/* 1. ХЛЕБНЫЕ КРОШКИ */}
-        <nav className='flex items-center gap-2 text-[10px] sm:text-xs font-bold font-benzin text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
+        <nav className='flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
           <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
             Главная
           </Link>
@@ -49,39 +88,46 @@ export default function NewsDetailsPage() {
           </Link>
           <ChevronRight size={14} className='shrink-0' />
           <span className='text-[#2D2D2D] truncate max-w-[200px] sm:max-w-none'>
-            Национальная лотерея...
+            {article.title}
           </span>
         </nav>
 
         {/* 2. ЗАГОЛОВОК И ДАТА */}
         <h1 className='text-2xl sm:text-3xl lg:text-[40px] font-black font-benzin text-[#2D2D2D] uppercase leading-tight mb-4 max-w-4xl'>
-          {MOCK_NEWS.title}
+          {article.title}
         </h1>
         <div className='text-xs font-bold font-rubik text-gray-500 uppercase mb-8 lg:mb-12'>
-          {MOCK_NEWS.date}
+          {formattedDate}
+        </div>
+
+        <div className='w-full aspect-video relative rounded-3xl overflow-hidden mb-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-100'>
+          {article.image ? (
+            <Image
+              src={article.image}
+              alt={article.title}
+              fill
+              className='object-cover'
+              priority
+            />
+          ) : (
+            /* 🔥 СТИЛЬНАЯ ЗАГЛУШКА (Если картинки нет) */
+            <div className='flex flex-col items-center justify-center text-gray-300'>
+              <ImageIcon size={80} strokeWidth={1} />
+              <span className='mt-4 font-benzin font-black text-2xl tracking-widest opacity-40 uppercase'>
+                Kgloto
+              </span>
+            </div>
+          )}
         </div>
 
         {/* 3. ОСНОВНАЯ СЕТКА (ЛЕВАЯ ЧАСТЬ - КОНТЕНТ, ПРАВАЯ - САЙДБАР) */}
         <div className='flex flex-col lg:flex-row gap-8 lg:gap-12 items-start'>
-          {/* --- ЛЕВАЯ КОЛОНКА (70%) --- */}
+          {/* --- ЛЕВАЯ КОЛОНКА (65%) --- */}
           <div className='w-full lg:w-[65%] flex flex-col shrink-0'>
-            {/* Главное изображение новости */}
-            <div className='w-full aspect-video bg-gray-200 relative rounded-3xl overflow-hidden mb-8'>
-              {/* Если картинки нет, будет просто серый квадрат. Замени src на реальный */}
-              {MOCK_NEWS.image && (
-                <Image
-                  src={MOCK_NEWS.image}
-                  alt='News Cover'
-                  fill
-                  className='object-cover'
-                />
-              )}
-            </div>
-
             {/* 🔥 HTML КОНТЕНТ */}
             <div
               className='html-content text-sm sm:text-base text-[#4B4B4B] leading-relaxed'
-              dangerouslySetInnerHTML={{ __html: MOCK_NEWS.content }}
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
           </div>
 
@@ -95,18 +141,30 @@ export default function NewsDetailsPage() {
               регулярно рассказываем о том, что важно знать.
             </p>
 
-            {/* Карточки других новостей */}
+            {/* Карточки других новостей из API */}
             <div className='flex flex-col gap-4'>
-              {MOCK_OTHER_ARTICLES.map((article) => (
-                <ArticleCard
-                  key={article.id}
-                  id={article.id}
-                  title={article.title}
-                  buttonText='ПОДРОБНЕЕ'
-                  theme={article.theme}
-                  href={`/news/${article.id}`}
-                />
-              ))}
+              {otherArticles.length > 0 ? (
+                otherArticles.map((item) => (
+                  <div key={item.id} className='h-[300px]'>
+                    <ArticleCard
+                      id={item.id}
+                      title={item.title}
+                      imageSrc={item.image}
+                      buttonText='ПОДРОБНЕЕ'
+                      theme={
+                        item.theme === 'dark' || item.theme === 'light'
+                          ? item.theme
+                          : 'dark'
+                      }
+                      href={`/news/${item.slug || item.id}`} // Используем slug для ссылки, если он есть
+                    />
+                  </div>
+                ))
+              ) : (
+                <span className='text-xs text-gray-400'>
+                  Нет других материалов
+                </span>
+              )}
             </div>
 
             <Link
