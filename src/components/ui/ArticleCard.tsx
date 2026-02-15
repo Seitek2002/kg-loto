@@ -25,7 +25,7 @@ export const ArticleCard = ({
   theme,
   buttonAlign = 'left',
   descriptionPosition = 'bottom',
-  href = '#', // По умолчанию никуда не ведет, пока не передашь проп
+  href = '#',
 }: ArticleCardProps) => {
   const isDarkText = theme === 'dark';
   const titleColor = isDarkText ? 'text-[#1F1F1F]' : 'text-white';
@@ -38,11 +38,10 @@ export const ArticleCard = ({
   const hasImage = imageSrc && imageSrc.length > 0;
 
   return (
-    // 🔥 ТЕПЕРЬ ВСЯ КАРТОЧКА — ЭТО ССЫЛКА (Добавил класс group для анимации)
     <Link
       href={href}
       className={clsx(
-        'relative w-full h-[460px] rounded-[32px] p-8 flex flex-col justify-between overflow-hidden border border-gray-100/50 shadow-sm transition-transform hover:scale-[1.01] block group cursor-pointer',
+        'relative w-full h-115 rounded-4xl p-8 flex flex-col justify-between overflow-hidden border border-gray-100/50 shadow-sm transition-transform hover:scale-[1.01] group cursor-pointer',
         !hasImage && theme === 'dark' && 'bg-white',
         !hasImage && theme === 'light' && 'bg-[#2D2D2D]',
         !hasImage && theme === 'blue' && 'bg-[#6F51FF]',
@@ -67,11 +66,11 @@ export const ArticleCard = ({
           <div
             className={clsx(
               'w-full h-full flex items-center justify-center',
-              theme === 'dark' && 'bg-gradient-to-br from-gray-50 to-gray-100',
+              theme === 'dark' && 'bg-linear-to-br from-gray-50 to-gray-100',
               theme === 'light' &&
-                'bg-gradient-to-br from-[#2D2D2D] to-[#1F1F1F]',
+                'bg-linear-to-br from-[#2D2D2D] to-[#1F1F1F]',
               theme === 'blue' &&
-                'bg-gradient-to-br from-[#6F51FF] to-[#5842CC]',
+                'bg-linear-to-br from-[#6F51FF] to-[#5842CC]',
             )}
           >
             <FileText

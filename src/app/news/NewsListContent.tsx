@@ -32,11 +32,11 @@ export const NewsListContent = ({ initialNews }: NewsListContentProps) => {
   };
 
   return (
-    <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
+    <div className='min-h-screen bg-[#F9F9F9] pt-40 pb-20'>
       <Header theme='dark' />
-      {/* Возможно Header уже есть в layout, проверь это */}
+
       <PageHeader title='Новости' />
-      <div className='max-w-[1400px] mx-auto px-4 lg:mt-20'>
+      <div className='max-w-350 mx-auto px-4 lg:mt-20'>
         <div className='mb-10 max-w-3xl'>
           <Title>ВСЕ МАТЕРИАЛЫ</Title>
           <Description>
@@ -48,7 +48,7 @@ export const NewsListContent = ({ initialNews }: NewsListContentProps) => {
         {/* СЕТКА КАРТОЧЕК */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr'>
           {visibleNews.map((article) => (
-            <div key={article.id} className='h-full min-h-[420px]'>
+            <div key={article.id} className='h-full min-h-105'>
               <ArticleCard
                 id={article.id}
                 title={article.title}
@@ -57,8 +57,7 @@ export const NewsListContent = ({ initialNews }: NewsListContentProps) => {
                 theme={article.theme}
                 buttonText='ЧИТАТЬ'
                 buttonAlign='left'
-                // Важно: добавить href для перехода на детальную страницу
-                // href={`/news/${article.slug}`}
+                href={`/news/${article.slug}`}
               />
             </div>
           ))}
