@@ -60,7 +60,7 @@ export const WhereToBuy = ({ branches }: WhereToBuyProps) => {
   if (mapBranches.length === 0) return null;
 
   return (
-    <section className='my-20 relative'>
+    <section className='my-20 relative' id='map'>
       <div className='mb-8 max-w-2xl'>
         <Title>ГДЕ ПРИОБРЕСТИ БИЛЕТЫ</Title>
         <Description>
@@ -69,7 +69,7 @@ export const WhereToBuy = ({ branches }: WhereToBuyProps) => {
         </Description>
       </div>
 
-      <div className='relative w-full h-[400px] lg:h-[500px] rounded-[40px] overflow-hidden shadow-sm border border-gray-100'>
+      <div className='relative w-full h-100 lg:h-125 rounded-[40px] overflow-hidden shadow-sm border border-gray-100'>
         <LeafletMap
           branches={mapBranches}
           activeId={activeId}
@@ -77,7 +77,7 @@ export const WhereToBuy = ({ branches }: WhereToBuyProps) => {
         />
 
         {activeBranch && (
-          <div className='absolute bottom-6 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-[400]'>
+          <div className='absolute bottom-6 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-400'>
             <div className='bg-white/90 backdrop-blur-md px-6 py-4 rounded-3xl shadow-xl border border-white/50 flex flex-col items-center text-center lg:flex-row lg:text-left gap-2 lg:gap-4 max-w-xl mx-auto'>
               <span className='text-gray-400 text-[10px] lg:text-xs font-bold font-benzin uppercase tracking-wide whitespace-nowrap'>
                 Лотереи {activeBranch.name} по адресу:

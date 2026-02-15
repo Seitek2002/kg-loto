@@ -30,7 +30,7 @@ export const Footer = async () => {
     },
     {
       title: 'Покупки',
-      links: [{ name: 'Карта продаж', href: '/map' }],
+      links: [{ name: 'Карта продаж', href: '#map' }],
     },
     {
       title: 'Информация',
