@@ -9,10 +9,9 @@ import { ApiResponse, NewsItem } from '@/types/api';
 import { Header } from '@/components/ui/Header';
 
 interface NewsDetailsPageProps {
-  params: Promise<{ id: string }>; // id или slug из URL
+  params: Promise<{ id: string }>;
 }
 
-// 1. Запрос конкретной новости по id/slug
 async function getNewsDetail(id: string): Promise<NewsItem | null> {
   try {
     const { data } = await api.get<ApiResponse<NewsItem>>(`/news/${id}/`);
@@ -23,7 +22,6 @@ async function getNewsDetail(id: string): Promise<NewsItem | null> {
   }
 }
 
-// 2. Запрос списка новостей для сайдбара
 async function getNewsData(): Promise<NewsItem[]> {
   try {
     const { data } = await api.get<ApiResponse<NewsItem[]>>('/news/');
@@ -39,23 +37,19 @@ export default async function NewsDetailsPage({
 }: NewsDetailsPageProps) {
   const { id } = await params;
 
-  // Запускаем оба запроса параллельно
   const [article, allNews] = await Promise.all([
     getNewsDetail(id),
     getNewsData(),
   ]);
 
-  // Если новость не найдена
   if (!article) {
     return notFound();
   }
 
-  // Фильтруем "Другие материалы": убираем текущую новость по ID и берем 2 штуки
   const otherArticles = allNews
     .filter((item) => String(item.id) !== String(id))
     .slice(0, 2);
 
-  // 🔥 ИСПОЛЬЗУЕМ publishedAt ДЛЯ ДАТЫ
   const formattedDate = article.publishedAt
     ? new Date(article.publishedAt).toLocaleDateString('ru-RU', {
         day: 'numeric',
@@ -64,19 +58,13 @@ export default async function NewsDetailsPage({
       })
     : '';
 
-  // 🔥 ПОДСТРАХОВКА ДЛЯ КОНТЕНТА:
-  // Если детальный запрос присылает fullText/content - берем его, иначе берем shortText
-  const htmlContent =
-    (article as any).fullText ||
-    (article as any).content ||
-    article.shortText ||
-    '';
+  const htmlContent = article.content || article.shortText || '';
 
   return (
     <div className='min-h-screen bg-[#F5F5F5] font-rubik'>
       <Header theme='dark' />
 
-      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-56 pb-20'>
+      <main className='max-w-300 mx-auto px-4 lg:px-8 pt-56 pb-20'>
         {/* 1. ХЛЕБНЫЕ КРОШКИ */}
         <nav className='flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
           <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
@@ -87,7 +75,7 @@ export default async function NewsDetailsPage({
             Новости
           </Link>
           <ChevronRight size={14} className='shrink-0' />
-          <span className='text-[#2D2D2D] truncate max-w-[200px] sm:max-w-none'>
+          <span className='text-[#2D2D2D] truncate max-w-50 sm:max-w-none'>
             {article.title}
           </span>
         </nav>
@@ -100,7 +88,7 @@ export default async function NewsDetailsPage({
           {formattedDate}
         </div>
 
-        <div className='w-full aspect-video relative rounded-3xl overflow-hidden mb-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-100'>
+        <div className='w-full aspect-video relative rounded-3xl overflow-hidden mb-8 flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-200 border border-gray-100'>
           {article.image ? (
             <Image
               src={article.image}
@@ -145,7 +133,7 @@ export default async function NewsDetailsPage({
             <div className='flex flex-col gap-4'>
               {otherArticles.length > 0 ? (
                 otherArticles.map((item) => (
-                  <div key={item.id} className='h-[300px]'>
+                  <div key={item.id} className='h-75'>
                     <ArticleCard
                       id={item.id}
                       title={item.title}

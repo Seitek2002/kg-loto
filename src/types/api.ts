@@ -61,6 +61,7 @@ export interface NewsItem {
   title: string;
   slug: string;
   shortText: string;
+  content: string;
   image: string | null;
   publishedAt: string;
   theme: 'dark' | 'light';
