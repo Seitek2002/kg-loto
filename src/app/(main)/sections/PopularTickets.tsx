@@ -30,7 +30,7 @@ const MOCK_LOTTIE_CARDS = [
     drawTime: '18:00',
     theme: 'white' as const,
     lottieSrc: '/animations/3.json', // Путь к файлу в public/animations
-  }
+  },
 ];
 
 const formatTime = (time: string) => {
@@ -39,7 +39,7 @@ const formatTime = (time: string) => {
 };
 
 export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
-  const displayLotteries = [...MOCK_LOTTIE_CARDS, ...(lotteries || [])] as any[];
+  const displayLotteries = [...MOCK_LOTTIE_CARDS, ...(lotteries || [])] as any;
 
   if (!lotteries || lotteries.length === 0) return null;
 

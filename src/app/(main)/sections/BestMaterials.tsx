@@ -17,7 +17,6 @@ export const BestMaterials = ({ articles }: BestMaterialsProps) => {
 
   return (
     <section className='my-12 relative overflow-hidden'>
-      {/* ХЕДЕР С КНОПКОЙ */}
       <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
         <div className='max-w-2xl'>
           <Title>ЛУЧШИЕ МАТЕРИАЛЫ</Title>
@@ -35,7 +34,6 @@ export const BestMaterials = ({ articles }: BestMaterialsProps) => {
         </Link>
       </div>
 
-      {/* СЛАЙДЕР */}
       <Swiper
         spaceBetween={16}
         slidesPerView={1.1}
@@ -61,7 +59,6 @@ export const BestMaterials = ({ articles }: BestMaterialsProps) => {
         ))}
       </Swiper>
 
-      {/* КНОПКА (Mobile) */}
       <div className='mt-8 lg:hidden'>
         <Link
           href='/news'

@@ -14,7 +14,7 @@ export const FAQ = ({ questions }: FAQProps) => {
   if (!questions || questions.length === 0) return null;
 
   return (
-    <section className='my-12'>
+    <section className='my-12' id='faq'>
       {/* Заголовки */}
       <div className='mb-8'>
         <Title>

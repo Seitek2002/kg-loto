@@ -1,45 +1,57 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
+import { api } from '@/lib/api';
+import { ApiResponse, LotteryItem } from '@/types/api';
 
-const footerSections = [
-  {
-    title: 'Лотереи',
-    links: [
-      { name: 'Оной', href: '#' },
-      { name: 'Уйго белек', href: '#' },
-      { name: 'Мен миллионер', href: '#' },
-    ],
-  },
-  {
-    title: 'Покупки',
-    links: [
-      { name: 'Подарить билет', href: '#' },
-      { name: 'Карта продаж', href: '/map' },
-    ],
-  },
-  {
-    title: 'Информация',
-    links: [
-      { name: 'Проверить билет', href: '/scan/manual' },
-      { name: 'Победители', href: '/winners' },
-      { name: 'Как получить выигрыш', href: '/rules' },
-      { name: 'Вопросы и ответы', href: '/faq' },
-    ],
-  },
-  {
-    title: 'Компания',
-    links: [
-      { name: 'О компании', href: '/about' },
-      { name: 'Контакты', href: '#' },
-      { name: 'Обратная связь', href: '#' },
-      { name: 'Новости', href: '#' },
-    ],
-  },
-];
+// Запрашиваем лотереи прямо в Footer (выполняется на сервере)
+async function getFooterLotteries(): Promise<LotteryItem[]> {
+  try {
+    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
+    return data.data || [];
+  } catch (error) {
+    console.error('Footer Lotteries Error:', error);
+    return [];
+  }
+}
 
-export const Footer = () => {
+export const Footer = async () => {
+  const lotteries = await getFooterLotteries();
+
+  const footerSections = [
+    {
+      title: 'Лотереи',
+      links:
+        lotteries.length > 0
+          ? lotteries.map((loto) => ({
+              name: loto.title,
+              href: `/lottery/${loto.id}`,
+            }))
+          : [{ name: 'Нет доступных лотерей', href: '#' }],
+    },
+    {
+      title: 'Покупки',
+      links: [{ name: 'Карта продаж', href: '/map' }],
+    },
+    {
+      title: 'Информация',
+      links: [
+        { name: 'Проверить билет', href: '#check' },
+        { name: 'Победители', href: '/winners' },
+        { name: 'Как получить выигрыш', href: '/rules' },
+        { name: 'Вопросы и ответы', href: '#faq' },
+      ],
+    },
+    {
+      title: 'Компания',
+      links: [
+        { name: 'О компании', href: '/about' },
+        { name: 'Контакты', href: '#' },
+        { name: 'Обратная связь', href: '#' },
+        { name: 'Новости', href: '/news' },
+      ],
+    },
+  ];
+
   return (
     <footer className='hidden md:block bg-[#F9F9F9] pt-16 pb-8 border-t border-gray-200 text-[#2D2D2D] font-rubik'>
       <div className='max-w-350 mx-auto px-8'>
@@ -53,7 +65,9 @@ export const Footer = () => {
                 className='object-contain object-left'
               />
             </Link>
-            <p className='text-xs font-medium text-[#6E6E6E] mt-4'>2021-2026 ООО «KGLOTO»</p>
+            <p className='text-xs font-medium text-[#6E6E6E] mt-4'>
+              2021-2026 ООО «KGLOTO»
+            </p>
           </div>
 
           {/* Колонки с ссылками */}
@@ -114,17 +128,16 @@ export const Footer = () => {
           {/* QR Код */}
           <div className='flex items-center gap-4'>
             <div className='text-right hidden lg:block'>
-              <p className='text-xs text-gray-500 max-w-[100px]'>
+              <p className='text-xs text-gray-500 max-w-25'>
                 Скачайте наше приложение
               </p>
             </div>
-            <div className='w-20 h-20 bg-white p-2 rounded-lg shadow-sm'>
+            <div className='w-20 h-20 bg-white p-2 rounded-lg shadow-sm relative'>
               <Image
                 src='/qr.svg'
                 alt='QR App'
-                width={80}
-                height={80}
-                className='w-full h-full object-contain'
+                fill
+                className='object-contain p-1'
               />
             </div>
           </div>
@@ -146,12 +159,9 @@ export const Footer = () => {
               Договор-оферта для участников лотерей
             </Link>
           </div>
-
           <div className='font-black text-xl text-[#2D2D2D]'>18+</div>
         </div>
       </div>
     </footer>
   );
 };
-
-// https://www.youtube.com/shorts/anhwDGMpJB0

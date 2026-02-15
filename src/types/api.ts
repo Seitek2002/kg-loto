@@ -31,8 +31,9 @@ export interface LotteryItem {
   buttonPrice: number;
   drawTime: string;
   theme: 'white' | 'dark';
-  backgroundImage: string; // Тут полный URL, а не ID
+  backgroundImage: string;
   fontFile: string | null;
+  lottieSrc: string;
 }
 
 export interface Winner {
