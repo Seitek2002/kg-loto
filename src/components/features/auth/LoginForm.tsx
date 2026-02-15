@@ -35,7 +35,7 @@ export const LoginForm = ({
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      phoneNumber: '', // Можно предустановить +996
+      phoneNumber: '',
       password: '',
     },
   });
@@ -63,8 +63,10 @@ export const LoginForm = ({
 
   // 3. Обработчик отправки
   const onSubmit = (data: LoginSchema) => {
-    // Небольшая нормализация номера перед отправкой, если юзер ввел без +
-    let phone = data.phoneNumber;
+    // Убираем пробелы, если юзер их ввел
+    let phone = data.phoneNumber.replace(/\s+/g, '');
+
+    // Подставляем +996, если юзер ввел только 9 цифр
     if (!phone.startsWith('+')) {
       phone = `+996${phone.replace(/^0+/, '')}`; // Убираем начальный 0 если есть
     }
@@ -75,18 +77,25 @@ export const LoginForm = ({
     });
   };
 
+  // Вспомогательный класс для инпутов (как в регистрации)
+  const inputClass = (hasError: boolean) =>
+    clsx(
+      'w-full bg-[#F5F5F5] rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+      hasError ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-[#FFD600]',
+    );
+
   return (
     <>
-      <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
+      <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-2'>
         Вход
       </h2>
-      <p className='text-xs font-rubik font-medium text-gray-400 mb-8'>
+      <p className='text-xs font-rubik font-medium text-gray-400 mb-6'>
         Войдите в аккаунт для продолжения работы
       </p>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className='space-y-3 mb-6 text-left'
+        className='space-y-4 mb-8 text-left font-rubik'
       >
         {/* Ошибка сервера (общая) */}
         {errors.root && (
@@ -96,82 +105,91 @@ export const LoginForm = ({
         )}
 
         {/* Телефон */}
-        <div className='relative'>
-          <div className='absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2'>
+        <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            Номер телефона
+          </label>
+          <div className='relative'>
+            <div className='absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs font-bold'>
               +996
+            </div>
+            <input
+              {...register('phoneNumber')}
+              type='tel'
+              placeholder='500 111 000'
+              className={clsx(
+                'w-full bg-[#F5F5F5] rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+                errors.phoneNumber
+                  ? 'ring-2 ring-red-500 bg-red-50'
+                  : 'focus:ring-[#FFD600]',
+              )}
+            />
           </div>
-          <input
-            {...register('phoneNumber')}
-            type='tel'
-            placeholder=' (___) __-__-__'
-            className={clsx(
-              'w-full bg-[#F5F5F5] rounded-2xl pl-14 pr-5 py-4 font-bold font-rubik text-sm text-[#2D2D2D] placeholder:text-gray-400 outline-none focus:ring-2 transition-all',
-              errors.phoneNumber
-                ? 'ring-2 ring-red-500 bg-red-50'
-                : 'focus:ring-[#FFD600]',
-            )}
-          />
           {errors.phoneNumber && (
-            <span className='text-[10px] text-red-500 ml-2'>
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
               {errors.phoneNumber.message}
-            </span>
+            </p>
           )}
         </div>
 
         {/* Пароль */}
-        <div className='relative'>
-          <input
-            {...register('password')}
-            type={showPassword ? 'text' : 'password'}
-            placeholder='Пароль'
-            className={clsx(
-              'w-full bg-[#F5F5F5] rounded-2xl px-5 py-4 font-bold font-rubik text-sm text-[#2D2D2D] placeholder:text-gray-400 outline-none focus:ring-2 transition-all',
-              errors.password
-                ? 'ring-2 ring-red-500 bg-red-50'
-                : 'focus:ring-[#FFD600]',
-            )}
-          />
-          <button
-            type='button'
-            onClick={() => setShowPassword(!showPassword)}
-            className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
-        </div>
-        {errors.password && (
-          <span className='text-[10px] text-red-500 ml-2'>
-            {errors.password.message}
-          </span>
-        )}
-
-        <div className='flex items-center gap-2 mt-2'>
-          <input
-            type='checkbox'
-            id='remember'
-            className='accent-[#FFD600] w-4 h-4'
-          />
-          <label
-            htmlFor='remember'
-            className='text-xs font-bold font-rubik text-[#2D2D2D]'
-          >
-            Запомнить меня
+        <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            Пароль
           </label>
+          <div className='relative'>
+            <input
+              {...register('password')}
+              type={showPassword ? 'text' : 'password'}
+              placeholder='••••••••••••••'
+              className={inputClass(!!errors.password)}
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+          {errors.password && (
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {/* Чекбокс и Забыли пароль */}
+        <div className='flex items-center justify-between mt-2 pt-1'>
+          <div className='flex items-center gap-2'>
+            <input
+              type='checkbox'
+              id='remember'
+              className='accent-[#FFD600] w-4 h-4 rounded cursor-pointer shrink-0'
+            />
+            <label
+              htmlFor='remember'
+              className='text-[10px] font-bold font-rubik text-[#2D2D2D] cursor-pointer'
+            >
+              Запомнить меня
+            </label>
+          </div>
           <button
             type='button'
             onClick={onForgotPasswordClick}
-            className='ml-auto text-xs font-bold font-rubik text-[#FFD600] hover:underline'
+            className='text-[10px] font-bold font-rubik text-[#FFD600] hover:underline'
           >
             Забыли пароль?
           </button>
         </div>
       </form>
 
+      {/* Кнопки */}
       <div className='flex gap-3'>
         <button
           type='button'
           onClick={onRegisterClick}
-          className='flex-1 bg-white border border-gray-200 text-[#2D2D2D] font-bold font-rubik uppercase py-3 rounded-full hover:bg-gray-50 transition-colors text-xs'
+          className='flex-1 bg-white border border-gray-200 text-[#2D2D2D] font-bold font-rubik uppercase py-4 rounded-full hover:bg-gray-50 transition-colors text-[10px]'
         >
           Регистрация
         </button>
@@ -179,7 +197,7 @@ export const LoginForm = ({
         <button
           onClick={handleSubmit(onSubmit)}
           disabled={mutation.isPending}
-          className='flex-1 bg-[#FFD600] text-[#2D2D2D] font-black font-rubik uppercase py-3 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-xs flex justify-center items-center'
+          className='flex-[1.5] bg-[#FFD600] text-[#2D2D2D] font-black font-rubik uppercase py-4 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-[10px] flex justify-center items-center'
         >
           {mutation.isPending ? (
             <Loader2 className='animate-spin' size={16} />

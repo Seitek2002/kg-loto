@@ -77,7 +77,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
   // Вспомогательный класс для инпутов
   const inputClass = (hasError: boolean) =>
     clsx(
-      'w-full bg-[#F5F5F5] rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all',
+      'w-full bg-[#F5F5F5] rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
       hasError ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-[#FFD600]',
     );
 
@@ -92,7 +92,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
-        className='space-y-3 mb-6 text-left font-rubik'
+        className='space-y-4 mb-6 text-left font-rubik'
       >
         {/* Общая ошибка */}
         {errors.root && (
@@ -102,38 +102,50 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
         )}
 
         {/* Телефон */}
-        <div className='relative'>
-          <div className='absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2'>
-            +996
+        <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            Номер телефона
+          </label>
+          <div className='relative'>
+            <div className='absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs font-bold'>
+              {/* <div className='w-4 h-4 rounded-full overflow-hidden relative border border-gray-200 flex items-center justify-center bg-red-500 text-[6px] text-white font-bold'>
+                KG
+              </div>
+              <span className='text-[8px] text-[#2D2D2D]'>▼</span> */}
+              +996
+            </div>
+            <input
+              {...register('phoneNumber')}
+              type='tel'
+              placeholder='500 111 000'
+              className={clsx(
+                'w-full bg-[#F5F5F5] rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+                errors.phoneNumber
+                  ? 'ring-2 ring-red-500 bg-red-50'
+                  : 'focus:ring-[#FFD600]',
+              )}
+            />
           </div>
-          <input
-            {...register('phoneNumber')}
-            type='tel'
-            placeholder=' (___) __-__-__'
-            className={clsx(
-              'w-full bg-[#F5F5F5] rounded-2xl pl-14 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all',
-              errors.phoneNumber
-                ? 'ring-2 ring-red-500 bg-red-50'
-                : 'focus:ring-[#FFD600]',
-            )}
-          />
+          {errors.phoneNumber && (
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
+              {errors.phoneNumber.message}
+            </p>
+          )}
         </div>
-        {errors.phoneNumber && (
-          <p className='text-[10px] text-red-500 ml-2'>
-            {errors.phoneNumber.message}
-          </p>
-        )}
 
         {/* ФИО */}
         <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            Введите ФИО
+          </label>
           <input
             {...register('fullName')}
             type='text'
-            placeholder='Введите ФИО'
+            placeholder='Алексеева Александра Александровна'
             className={inputClass(!!errors.fullName)}
           />
           {errors.fullName && (
-            <p className='text-[10px] text-red-500 ml-2'>
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
               {errors.fullName.message}
             </p>
           )}
@@ -141,108 +153,130 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
 
         {/* ИНН */}
         <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            ИНН
+          </label>
           <input
             {...register('inn')}
             type='text'
-            placeholder='ИНН (необязательно)'
+            placeholder='123456789101'
             maxLength={14}
             className={inputClass(!!errors.inn)}
           />
           {errors.inn && (
-            <p className='text-[10px] text-red-500 ml-2'>
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
               {errors.inn.message}
             </p>
           )}
         </div>
 
         {/* Пароль */}
-        <div className='relative'>
-          <input
-            {...register('password')}
-            type={showPassword ? 'text' : 'password'}
-            placeholder='Пароль'
-            className={inputClass(!!errors.password)}
-          />
-          <button
-            type='button'
-            onClick={() => setShowPassword(!showPassword)}
-            className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
-          >
-            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-          </button>
+        <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            Пароль
+          </label>
+          <div className='relative'>
+            <input
+              {...register('password')}
+              type={showPassword ? 'text' : 'password'}
+              placeholder='••••••••••••••'
+              className={inputClass(!!errors.password)}
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+          {errors.password && (
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
+              {errors.password.message}
+            </p>
+          )}
         </div>
-        {errors.password && (
-          <p className='text-[10px] text-red-500 ml-2'>
-            {errors.password.message}
-          </p>
-        )}
 
         {/* Повтор пароля */}
-        <div className='relative'>
-          <input
-            {...register('passwordConfirm')}
-            type={showConfirmPassword ? 'text' : 'password'}
-            placeholder='Повторите пароль'
-            className={inputClass(!!errors.passwordConfirm)}
-          />
-          <button
-            type='button'
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
-          >
-            {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-          </button>
+        <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            Повторите пароль
+          </label>
+          <div className='relative'>
+            <input
+              {...register('passwordConfirm')}
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder='••••••••••••••'
+              className={inputClass(!!errors.passwordConfirm)}
+            />
+            <button
+              type='button'
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
+            >
+              {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+          {errors.passwordConfirm && (
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
+              {errors.passwordConfirm.message}
+            </p>
+          )}
         </div>
-        {errors.passwordConfirm && (
-          <p className='text-[10px] text-red-500 ml-2'>
-            {errors.passwordConfirm.message}
-          </p>
-        )}
 
-        {/* Чекбокс (Условия) */}
-        <div className='mt-2'>
-          <div className='flex items-start gap-2 text-left'>
+        {/* Чекбокс (Условия) - Адаптировано под дизайн */}
+        <div className='pt-2'>
+          <div className='flex items-start gap-3 text-left'>
             <input
               {...register('terms')}
               type='checkbox'
               id='terms'
-              className='accent-[#FFD600] w-4 h-4 mt-0.5'
+              className='accent-[#FFD600] w-5 h-5 mt-0.5 rounded shrink-0 cursor-pointer'
             />
-            <label
-              htmlFor='terms'
-              className='text-[10px] font-medium font-rubik text-gray-500 leading-tight'
-            >
-              Мне есть 18 лет. <br />
-              Согласен с{' '}
-              <a href='#' className='underline hover:text-[#FFD600]'>
-                офертой
-              </a>{' '}
-              /{' '}
-              <a href='#' className='underline hover:text-[#FFD600]'>
-                правилами
-              </a>
-            </label>
+            <div className='flex flex-col gap-1'>
+              <label
+                htmlFor='terms'
+                className='text-xs font-bold font-rubik text-[#2D2D2D] cursor-pointer'
+              >
+                Мне есть 18 лет
+              </label>
+              <span className='text-[10px] font-medium font-rubik text-gray-500 leading-tight'>
+                Согласен с{' '}
+                <a href='#' className='underline hover:text-[#FFD600]'>
+                  офертой
+                </a>{' '}
+                /{' '}
+                <a href='#' className='underline hover:text-[#FFD600]'>
+                  правилами
+                </a>{' '}
+                /{' '}
+                <a href='#' className='underline hover:text-[#FFD600]'>
+                  политикой конфиденциальности
+                </a>
+              </span>
+            </div>
           </div>
           {errors.terms && (
-            <p className='text-[10px] text-red-500 ml-6 mt-1'>
+            <p className='text-[10px] text-red-500 ml-8 mt-1'>
               {errors.terms.message}
             </p>
           )}
         </div>
       </form>
 
+      {/* Кнопки */}
       <div className='flex gap-3'>
         <button
           type='button'
           onClick={onLoginClick}
-          className='flex-1 bg-white border border-gray-200 text-[#2D2D2D] font-bold font-rubik uppercase py-3 rounded-full hover:bg-gray-50 transition-colors text-[10px]'
+          className='flex-1 bg-white border border-gray-200 text-[#2D2D2D] font-bold font-rubik uppercase py-4 rounded-full hover:bg-gray-50 transition-colors text-[10px]'
         >
           Уже есть аккаунт?
         </button>
         <button
           onClick={handleSubmit(onFormSubmit)}
           disabled={mutation.isPending}
-          className='flex-[1.5] bg-[#FFD600] text-[#2D2D2D] font-black font-rubik uppercase py-3 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-[10px] flex justify-center items-center'
+          className='flex-[1.5] bg-[#FFD600] text-[#2D2D2D] font-black font-rubik uppercase py-4 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-[10px] flex justify-center items-center'
         >
           {mutation.isPending ? (
             <Loader2 className='animate-spin' size={16} />
