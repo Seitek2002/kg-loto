@@ -10,6 +10,8 @@ import { clsx } from 'clsx';
 import { AuthService } from '@/services/auth';
 import { useAuthStore } from '@/store/auth';
 import { loginSchema, LoginSchema } from '@/lib/schemas';
+import { Title } from '@/components/ui/Title';
+import { Description } from '@/components/ui/Description';
 
 interface LoginFormProps {
   onRegisterClick: () => void;
@@ -80,22 +82,20 @@ export const LoginForm = ({
   // Вспомогательный класс для инпутов (как в регистрации)
   const inputClass = (hasError: boolean) =>
     clsx(
-      'w-full bg-[#F5F5F5] rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+      'w-full bg-white rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
       hasError ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-[#FFD600]',
     );
 
   return (
     <>
-      <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-2'>
-        Вход
-      </h2>
-      <p className='text-xs font-rubik font-medium text-gray-400 mb-6'>
-        Войдите в аккаунт для продолжения работы
-      </p>
+      <div className='text-left w-full'>
+        <Title>Вход</Title>
+        <Description>Войдите в аккаунт для продолжения работы</Description>
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className='space-y-4 mb-8 text-left font-rubik'
+        className='space-y-4 mb-8 text-left font-rubik w-full'
       >
         {/* Ошибка сервера (общая) */}
         {errors.root && (
@@ -118,7 +118,7 @@ export const LoginForm = ({
               type='tel'
               placeholder='500 111 000'
               className={clsx(
-                'w-full bg-[#F5F5F5] rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+                'w-full bg-white rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
                 errors.phoneNumber
                   ? 'ring-2 ring-red-500 bg-red-50'
                   : 'focus:ring-[#FFD600]',
@@ -185,7 +185,7 @@ export const LoginForm = ({
       </form>
 
       {/* Кнопки */}
-      <div className='flex gap-3'>
+      <div className='flex gap-3 w-full'>
         <button
           type='button'
           onClick={onRegisterClick}

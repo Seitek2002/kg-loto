@@ -9,6 +9,8 @@ import { clsx } from 'clsx';
 
 import { AuthService } from '@/services/auth';
 import { registerSchema, RegisterSchema } from '@/lib/schemas';
+import { Title } from '@/components/ui/Title';
+import { Description } from '@/components/ui/Description';
 
 interface RegisterFormProps {
   onLoginClick: () => void;
@@ -77,18 +79,16 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
   // Вспомогательный класс для инпутов
   const inputClass = (hasError: boolean) =>
     clsx(
-      'w-full bg-[#F5F5F5] rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+      'w-full bg-white rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
       hasError ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-[#FFD600]',
     );
 
   return (
     <>
-      <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-2'>
-        Регистрация
-      </h2>
-      <p className='text-xs font-rubik font-medium text-gray-400 mb-6'>
-        Зарегистрируйтесь, чтобы продолжить
-      </p>
+      <div className='text-left w-full'>
+        <Title>Регистрация</Title>
+        <Description>Зарегистрируйтесь, чтобы продолжить</Description>
+      </div>
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
@@ -119,7 +119,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
               type='tel'
               placeholder='500 111 000'
               className={clsx(
-                'w-full bg-[#F5F5F5] rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+                'w-full bg-white rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
                 errors.phoneNumber
                   ? 'ring-2 ring-red-500 bg-red-50'
                   : 'focus:ring-[#FFD600]',
@@ -268,7 +268,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
       </form>
 
       {/* Кнопки */}
-      <div className='flex gap-3'>
+      <div className='flex gap-3 w-full'>
         <button
           type='button'
           onClick={onLoginClick}
