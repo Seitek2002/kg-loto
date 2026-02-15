@@ -10,7 +10,7 @@ interface FAQProps {
 }
 
 export const FAQ = ({ questions }: FAQProps) => {
-  // Если вопросов нет, скрываем секцию
+
   if (!questions || questions.length === 0) return null;
 
   return (
@@ -31,8 +31,6 @@ export const FAQ = ({ questions }: FAQProps) => {
           <FAQItem
             key={item.id}
             question={item.question}
-            // API возвращает HTML в answer (судя по скриншоту <div>...</div>)
-            // FAQItem должен уметь это обрабатывать или просто рендерить как строку
             answer={item.answer}
           />
         ))}
