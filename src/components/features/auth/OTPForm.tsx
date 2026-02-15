@@ -7,6 +7,8 @@ import { clsx } from 'clsx';
 
 import { AuthService } from '@/services/auth';
 import { useAuthStore } from '@/store/auth';
+import { Title } from '@/components/ui/Title';
+import { Description } from '@/components/ui/Description';
 
 interface OTPFormProps {
   phoneNumber: string;
@@ -112,13 +114,19 @@ export const OTPForm = ({
 
   return (
     <>
-      <h2 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-2'>
-        Код подтверждения
+      {/* <h2 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-2'>
+        
       </h2>
       <p className='text-xs font-rubik font-medium text-gray-400 mb-6 px-4'>
-        Мы отправили код на ваш номер <br />
-        <span className='text-[#2D2D2D] font-bold'>{phoneNumber}</span>
-      </p>
+        
+      </p> */}
+      <div className='text-left w-full'>
+        <Title>Код подтверждения</Title>
+        <Description>
+          Мы отправили код на ваш номер <br />
+          <span className='text-[#2D2D2D] font-bold'>{phoneNumber}</span>
+        </Description>
+      </div>
 
       {/* Инпуты */}
       <div className='flex justify-center gap-3 mb-4'>
@@ -134,7 +142,7 @@ export const OTPForm = ({
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             className={clsx(
-              'w-12 h-12 rounded-xl bg-[#F5F5F5] text-center font-black font-benzin text-xl focus:ring-2 outline-none transition-all',
+              'w-12 h-12 rounded-xl bg-white text-center font-black font-benzin text-xl focus:ring-2 outline-none transition-all',
               error ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-[#FFD600]',
             )}
           />
@@ -164,17 +172,17 @@ export const OTPForm = ({
         )}
       </div>
 
-      <div className='flex gap-3'>
+      <div className='flex gap-3 w-full'>
         <button
           onClick={onBack}
-          className='flex-1 bg-white border border-gray-200 text-[#2D2D2D] font-bold font-benzin uppercase py-3 rounded-full hover:bg-gray-50 transition-colors text-xs'
+          className='flex-1 bg-white border border-gray-200 text-[#2D2D2D] font-bold uppercase py-3 rounded-full hover:bg-gray-50 transition-colors text-xs'
         >
           Назад
         </button>
         <button
           onClick={handleSubmit}
           disabled={verifyMutation.isPending}
-          className='flex-1 bg-[#FFD600] text-[#2D2D2D] font-black font-benzin uppercase py-3 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-xs flex justify-center items-center'
+          className='flex-1 bg-[#FFD600] text-[#2D2D2D] font-black uppercase py-3 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-xs flex justify-center items-center'
         >
           {verifyMutation.isPending ? (
             <Loader2 className='animate-spin' size={16} />

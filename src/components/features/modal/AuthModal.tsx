@@ -52,7 +52,7 @@ export const AuthModal = ({ isOpen, onClose, initialStep }: AuthModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className='max-w-120'>
-      <div className='p-8 pt-10'>
+      <div className='p-8 pt-10 bg-[#f5f5f5]'>
         {step === 'login' && (
           <LoginForm
             onRegisterClick={() => setStep('register')}

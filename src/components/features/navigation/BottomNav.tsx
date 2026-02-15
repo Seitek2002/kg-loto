@@ -4,16 +4,14 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Star, Ticket, User, ScanLine } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useAuthStore } from '@/store/auth'; // 🔥 Подключаем стор
+import { useAuthStore } from '@/store/auth';
 
 export function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
 
-  // 🔥 Достаем статус авторизации
   const { isAuth } = useAuthStore();
 
-  // Добавили флаг protected: true для тех страниц, куда нельзя без входа
   const navItems = [
     {
       label: 'Лотереи',
@@ -23,7 +21,7 @@ export function BottomNav() {
     },
     {
       label: 'Билеты',
-      href: '/profile/tickets', // Уточнил путь, исходя из твоего меню в шапке
+      href: '/tickets',
       icon: Ticket,
       protected: true,
     },
@@ -41,14 +39,9 @@ export function BottomNav() {
     isProtected: boolean,
   ) => {
     if (isProtected && !isAuth) {
-      e.preventDefault(); // Останавливаем переход по ссылке
+      e.preventDefault();
 
-      // Выбери один из вариантов:
-      // Вариант А: Перекинуть на отдельную страницу авторизации
       router.push('/login');
-
-      // Вариант Б: Если у тебя модалка управляется через URL (например /?auth=login)
-      // router.push('/?auth=login');
     }
   };
 
