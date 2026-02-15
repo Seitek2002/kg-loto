@@ -1,14 +1,29 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { Bell, Bookmark, Info, Shield, LogOut } from 'lucide-react';
+import { useEffect } from 'react';
+import { Bell, Bookmark, Info, Shield, LogOut, User } from 'lucide-react'; // Добавили User
 import { ProfileMenuItem } from '@/components/features/profile/ProfileMenuItem';
-import { useUserStore } from '@/store/user'; // <--- Импорт стора
+import { useUserStore } from '@/store/user';
 
 export default function ProfilePage() {
-  // Получаем данные пользователя
-  const user = useUserStore((state) => state.user);
+  const { user, fetchUser, isLoading } = useUserStore();
+
+  // Запрашиваем данные пользователя при монтировании компонента, если их еще нет
+  useEffect(() => {
+    if (!user) {
+      fetchUser();
+    }
+  }, [user, fetchUser]);
+
+  // Можно показывать лоадер, пока данные не загрузились
+  if (isLoading || !user) {
+    return (
+      <div className='min-h-screen bg-[#F9F9F9] flex items-center justify-center font-rubik text-sm text-gray-400'>
+        Загрузка профиля...
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-32'>
@@ -23,30 +38,27 @@ export default function ProfilePage() {
       </div>
 
       <div className='px-4 flex flex-col gap-6'>
-        {/* --- КАРТОЧКА ПОЛЬЗОВАТЕЛЯ (ТЕПЕРЬ ДИНАМИЧЕСКАЯ) --- */}
+        {/* --- КАРТОЧКА ПОЛЬЗОВАТЕЛЯ --- */}
         <Link href='/profile/edit'>
           <div className='bg-white p-4 rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.99] transition-transform'>
             <div className='flex items-center gap-4'>
-              {/* Аватар из стора */}
-              <div className='relative w-14 h-14 rounded-full overflow-hidden bg-gray-200'>
-                <Image
-                  src={user.avatar}
-                  alt={user.name}
-                  fill
-                  className='object-cover'
-                />
+              {/* 🔥 ЗАГЛУШКА АВАТАРКИ ИЗ LUCIDE-REACT */}
+              <div className='w-14 h-14 rounded-full bg-[#F5F5F5] flex items-center justify-center text-gray-400 shrink-0 border border-gray-100'>
+                <User size={28} strokeWidth={1.5} />
               </div>
 
-              {/* Инфо из стора */}
-              <div>
+              {/* Инфо из сервера */}
+              <div className='flex flex-col overflow-hidden'>
                 <h3 className='text-sm font-black font-benzin text-[#2D2D2D] mb-1'>
-                  {user.name}
+                  {user.fullName}
                 </h3>
-                <p className='text-xs text-gray-400 font-rubik'>{user.email}</p>
+                <p className='text-xs text-gray-400 font-rubik'>
+                  {user.phoneNumber}
+                </p>
               </div>
             </div>
 
-            <div className='text-gray-300'>
+            <div className='text-gray-300 ml-2'>
               <span className='text-xl'>›</span>
             </div>
           </div>
@@ -57,7 +69,7 @@ export default function ProfilePage() {
           <ProfileMenuItem
             icon={Bookmark}
             label='Мои призы'
-            href='/profile/prizes' // <--- Сюда мы пойдем дальше
+            href='/profile/prizes'
           />
           <ProfileMenuItem icon={Info} label='Помощь' href='/help' />
           <ProfileMenuItem

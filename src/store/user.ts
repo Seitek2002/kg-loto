@@ -1,3 +1,4 @@
+import { api } from '@/lib/api';
 import { create } from 'zustand';
 
 export type WinType = 'money' | 'item' | null;
@@ -19,6 +20,15 @@ export interface UserTicket {
   backgroundId: string;
   prizeFontId: string;
   theme: 'dark' | 'white';
+}
+
+export interface UserData {
+  id: number;
+  phoneNumber: string;
+  fullName: string;
+  inn: string;
+  isActive: boolean;
+  isPhoneVerified: boolean;
 }
 
 // МОКОВЫЕ ДАННЫЕ
@@ -70,25 +80,31 @@ const MOCK_MY_TICKETS: UserTicket[] = [
 ];
 
 interface UserState {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
+  user: UserData | null;
+  isLoading: boolean;
   myTickets: UserTicket[];
 
   // Действия
+  fetchUser: () => Promise<void>;
   addTicket: (ticket: UserTicket) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
-  user: {
-    name: 'Santana Lopez', // Можешь поменять на любое имя
-    email: 'santanalopez@gmail.com',
-    avatar:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop',
-  },
+  user: null,
+  isLoading: false,
   myTickets: MOCK_MY_TICKETS,
+
+  // 🔥 Функция для получения данных пользователя с сервера
+  fetchUser: async () => {
+    set({ isLoading: true });
+    try {
+      const { data } = await api.get('/users/me/');
+      set({ user: data.data, isLoading: false });
+    } catch (error) {
+      console.error('Ошибка при загрузке профиля:', error);
+      set({ isLoading: false });
+    }
+  },
 
   addTicket: (ticket) =>
     set((state) => ({
