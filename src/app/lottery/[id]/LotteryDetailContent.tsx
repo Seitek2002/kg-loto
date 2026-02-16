@@ -8,26 +8,24 @@ import { WinnersHistory } from '@/app/(main)/sections/WinnersHistory';
 import { LotteryConditions } from '@/components/features/lottery/LotteryConditions';
 import { PrizeTierCard } from '@/components/features/lottery/PrizeTierCard';
 import { useTicketsStore, UserTicket } from '@/store/tickets';
-import { LotteryDetail } from '@/types/api'; // 🔥 Импорт типа
+import { LotteryDetail, Winner } from '@/types/api'; // 🔥 Импорт Winner
 import { Header } from '@/components/ui/Header';
 
 interface ContentProps {
   lottery: LotteryDetail; // Данные с сервера
+  winners: Winner[]; // 🔥 Добавили проп для победителей
 }
 
-export const LotteryDetailContent = ({ lottery }: ContentProps) => {
+export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
   const router = useRouter();
   const { tickets, addTicket } = useTicketsStore();
 
-  // Формируем слайд для Hero на основе данных API
   const lotterySlide: HeroSlideData[] = [
     {
       id: lottery.id,
-      // API возвращает полный URL, используем его напрямую.
-      // Если URL нет, ставим заглушку.
       bg: lottery.backgroundImage || '/banners/1.jpg',
       title1: lottery.heroTitle || lottery.title || 'ВЫИГРЫВАЕТ КАЖДЫЙ',
-      title2: lottery.subtitle || '', // Если есть подзаголовок
+      title2: lottery.subtitle || '',
       prize: lottery.prizeText,
       price: `${lottery.buttonPrice} сом`,
       buttonLabel: lottery.buttonLabel || `КУПИТЬ • ${lottery.buttonPrice} сом`,
@@ -67,11 +65,8 @@ export const LotteryDetailContent = ({ lottery }: ContentProps) => {
 
       <div className='px-4 mt-8 flex flex-col gap-2'>
         <CheckLottery />
-
-        {/* Условия лотереи (пока статика, если API не отдает условия) */}
         <LotteryConditions />
 
-        {/* Секция с призами (рендерим, только если они есть) */}
         {lottery.prizeTiers && lottery.prizeTiers.length > 0 && (
           <section className='mb-12'>
             <h2 className='text-xs text-gray-500 font-rubik mb-4 uppercase'>
@@ -98,7 +93,7 @@ export const LotteryDetailContent = ({ lottery }: ContentProps) => {
           </section>
         )}
 
-        <WinnersHistory />
+        <WinnersHistory winners={winners} />
       </div>
     </div>
   );

@@ -1,15 +1,12 @@
 'use client';
 
-// import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Star } from 'lucide-react';
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
-import { useWinners } from '@/hooks/useWinners'; // Наш новый простой хук
 import { WinnerCard } from '@/components/ui/WinnerCard';
 import 'swiper/css';
-import { Winner } from '@/data/mock-content';
+import { Winner } from '@/types/api';
 
 interface WinnersHistoryProps {
   winners: Winner[];

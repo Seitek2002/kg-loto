@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
-import { ApiResponse, LotteryDetail } from '@/types/api';
+import { ApiResponse, LotteryDetail, PaginatedResult } from '@/types/api';
 import { LotteryDetailContent } from './LotteryDetailContent';
+import { Winner } from '@/data/mock-content';
 
 // 🔥 ВАЖНО: В Next.js 15 params - это Promise
 interface PageProps {
@@ -11,7 +12,9 @@ interface PageProps {
 // Функция получения данных одной лотереи
 async function getLotteryData(id: string): Promise<LotteryDetail | null> {
   try {
-    const { data } = await api.get<ApiResponse<LotteryDetail>>(`/lotteries/${id}/`);
+    const { data } = await api.get<ApiResponse<LotteryDetail>>(
+      `/lotteries/${id}/`,
+    );
     return data.data;
   } catch (error) {
     console.error(`Error fetching lottery ${id}:`, error);
@@ -19,13 +22,24 @@ async function getLotteryData(id: string): Promise<LotteryDetail | null> {
   }
 }
 
+async function getWinnersData(): Promise<Winner[]> {
+  try {
+    const { data } =
+      await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/');
+    return data.data.results || [];
+  } catch (error) {
+    return [];
+  }
+}
+
 export default async function LotteryDetailPage({ params }: PageProps) {
   // 🔥 1. Сначала ждем разрешения промиса params
   const { id } = await params;
 
-  // 2. Теперь id у нас есть ("1"), делаем запрос
-  const lottery = await getLotteryData(id);
-  console.log(lottery);
+  const [lottery, winners] = await Promise.all([
+    getLotteryData(id),
+    getWinnersData(),
+  ]);
 
   // 3. Если лотерея не найдена или ошибка API — показываем 404
   if (!lottery) {
@@ -33,5 +47,5 @@ export default async function LotteryDetailPage({ params }: PageProps) {
   }
 
   // 4. Рендерим клиентский контент
-  return <LotteryDetailContent lottery={lottery} />;
+  return <LotteryDetailContent lottery={lottery} winners={winners} />;
 }
