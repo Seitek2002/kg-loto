@@ -50,7 +50,6 @@ export function LotteryCard({
   description,
   price,
   prize,
-  time,
 
   backgroundId,
   backgroundImage,
@@ -89,13 +88,13 @@ export function LotteryCard({
       imageSrc={backgroundImage}
       lottieSrc={lottieSrc}
       theme={theme}
-      className='h-full min-h-80 flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl group'
+      className='h-full min-h-60 lg:min-h-80 flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl group'
     >
       {/* ... Весь остальной код верстки без изменений ... */}
 
       {/* ВЕРХНЯЯ ЧАСТЬ */}
-      <div className='flex justify-between items-start mb-4'>
-        {statusConfig ? (
+      <div className='flex justify-between items-start'>
+        {statusConfig && (
           <div className='flex items-center gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/40'>
             <div className={clsx('w-2 h-2 rounded-full', statusConfig.dot)} />
             <span
@@ -107,8 +106,6 @@ export function LotteryCard({
               {statusConfig.text}
             </span>
           </div>
-        ) : (
-          time && <></>
         )}
       </div>
 
@@ -149,7 +146,7 @@ export function LotteryCard({
       </div>
 
       {/* КНОПКА */}
-      <div className='mt-auto'>
+      <div className='mt-4 lg:mt-auto'>
         <button
           className={clsx(
             'w-auto px-8 py-4 rounded-full shadow-lg transition-transform active:scale-95',

@@ -29,7 +29,7 @@ export const BaseCard = ({
   imageSrc,
   lottieSrc,
   className,
-  minHeight = '320px',
+  minHeight = '200px',
   theme = 'dark',
 }: BaseCardProps) => {
   const textColor = theme === 'dark' ? 'text-[#2D2D2D]' : 'text-white';
@@ -52,7 +52,7 @@ export const BaseCard = ({
     >
       {/* 🔥 2. НОВЫЙ LOTTIE ПЛЕЕР С SVG РЕНДЕРОМ */}
       {lottieSrc ? (
-        <div className='absolute top-0 right-0 z-0 h-full'>
+        <div className='absolute inset-0 z-0 h-full'>
           <LottiePlayer
             src={lottieSrc}
             loop
