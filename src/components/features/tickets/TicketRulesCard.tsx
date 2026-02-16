@@ -6,7 +6,6 @@ import { clsx } from 'clsx';
 import { TicketDetailData } from './TicketDetailCard';
 
 export const TicketRulesCard = ({ data }: { data: TicketDetailData }) => {
-  // Настройка цветов (такая же, как в TicketDetailCard)
   const isDark = data.theme === 'dark';
   const labelColor = isDark ? 'text-gray-600' : 'text-white/60';
   const valueColor = isDark ? 'text-[#2D2D2D]' : 'text-white';
@@ -14,9 +13,9 @@ export const TicketRulesCard = ({ data }: { data: TicketDetailData }) => {
 
   return (
     <BaseCard
-      backgroundId={data.backgroundId} // Тот же фон, что у билета
+      backgroundId={data.backgroundId}
       theme={data.theme}
-      className='h-full flex flex-col' // Растягиваем на всю высоту
+      className='h-full flex flex-col'
     >
       {/* Заголовок */}
       <h2

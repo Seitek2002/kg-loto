@@ -46,6 +46,8 @@ export default async function LotteryDetailPage({ params }: PageProps) {
     return notFound();
   }
 
+  console.log(lottery);
+
   // 4. Рендерим клиентский контент
   return <LotteryDetailContent lottery={lottery} winners={winners} />;
 }
