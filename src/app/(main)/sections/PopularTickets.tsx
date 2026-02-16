@@ -14,12 +14,12 @@ const MOCK_LOTTIE_CARDS = [
   {
     id: 'test-1',
     title: 'ТЕСТ АНИМАЦИИ 1',
-    subtitle: 'Анимация .lottie',
+    subtitle: 'Анимация .json',
     prizeText: '1 000 000 с',
     buttonPrice: 150,
     drawTime: '12:00',
     theme: 'white' as const,
-    lottieSrc: '/animations/1.lottie', // Путь к файлу в public/animations
+    lottieSrc: '/animations/1.json', // Путь к файлу в public/animations
   },
   {
     id: 'test-2',
@@ -30,6 +30,16 @@ const MOCK_LOTTIE_CARDS = [
     drawTime: '18:00',
     theme: 'white' as const,
     lottieSrc: '/animations/3.json', // Путь к файлу в public/animations
+  },
+  {
+    id: 'test-3',
+    title: 'ТЕСТ АНИМАЦИИ 3',
+    subtitle: 'Анимация .json',
+    prizeText: 'АВТОМОБИЛЬ',
+    buttonPrice: 200,
+    drawTime: '18:00',
+    theme: 'white' as const,
+    lottieSrc: '/animations/2.json', // Путь к файлу в public/animations
   },
 ];
 

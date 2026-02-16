@@ -1,15 +1,18 @@
-// src/components/ui/BaseCard.tsx
+'use client';
+
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import { clsx } from 'clsx';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'; // 🔥 Импорт Lottie плеера
+
+// 🔥 1. ИМПОРТИРУЕМ НОВЫЙ ПЛЕЕР
+import { Player } from '@lottiefiles/react-lottie-player';
 import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
 
 interface BaseCardProps {
   children: ReactNode;
   backgroundId?: string;
   imageSrc?: string;
-  lottieSrc?: string; // 🔥 Новый проп для анимации
+  lottieSrc?: string;
   className?: string;
   minHeight?: string;
   theme?: 'dark' | 'white';
@@ -26,9 +29,11 @@ export const BaseCard = ({
 }: BaseCardProps) => {
   const textColor = theme === 'dark' ? 'text-[#2D2D2D]' : 'text-white';
 
-  const bgPath = imageSrc 
-    ? imageSrc 
-    : (backgroundId ? BACKGROUND_VARIANTS[backgroundId] || BACKGROUND_VARIANTS['default'] : null);
+  const bgPath = imageSrc
+    ? imageSrc
+    : backgroundId
+      ? BACKGROUND_VARIANTS[backgroundId] || BACKGROUND_VARIANTS['default']
+      : null;
 
   return (
     <div
@@ -40,18 +45,22 @@ export const BaseCard = ({
       )}
       style={{ height: minHeight }}
     >
-      {/* 🔥 1. АНИМАЦИЯ (Приоритет) */}
+      {/* 🔥 2. НОВЫЙ LOTTIE ПЛЕЕР С SVG РЕНДЕРОМ */}
       {lottieSrc ? (
-        <div className="absolute inset-0 z-0">
-          <DotLottieReact
+        <div className='absolute inset-0 z-0'>
+          <Player
             src={lottieSrc}
             loop
             autoplay
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            renderer='svg' // <--- Вместо canvas используем svg
+            style={{ width: '100%', height: '100%' }}
+            rendererSettings={{
+              preserveAspectRatio: 'xMidYMid slice', // Это аналог object-fit: cover для Lottie
+            }}
           />
         </div>
       ) : (
-        /* 2. СТАТИЧНАЯ КАРТИНКА (Если нет анимации) */
+        /* СТАТИЧНАЯ КАРТИНКА (Если нет анимации) */
         bgPath && (
           <>
             <Image
@@ -60,7 +69,7 @@ export const BaseCard = ({
               fill
               className='z-0 object-cover'
               priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             />
           </>
         )
