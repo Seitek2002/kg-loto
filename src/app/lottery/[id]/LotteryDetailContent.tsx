@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { PageHeader } from '@/components/ui/PageHeader';
+// import { PageHeader } from '@/components/ui/PageHeader';
 import { Hero, HeroSlideData } from '@/app/(main)/sections/Hero';
 import { CheckLottery } from '@/app/(main)/sections/CheckLottery';
 import { WinnersHistory } from '@/app/(main)/sections/WinnersHistory';
