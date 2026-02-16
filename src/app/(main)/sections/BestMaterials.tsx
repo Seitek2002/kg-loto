@@ -13,7 +13,9 @@ interface BestMaterialsProps {
 }
 
 export const BestMaterials = ({ articles }: BestMaterialsProps) => {
-  if (!articles || articles.length === 0) return null;
+  if (!articles || articles?.length === 0) return null;
+
+  console.log(articles);
 
   return (
     <section className='my-12 relative overflow-hidden'>

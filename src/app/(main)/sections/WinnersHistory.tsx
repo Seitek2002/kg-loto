@@ -9,13 +9,16 @@ import { Description } from '@/components/ui/Description';
 import { useWinners } from '@/hooks/useWinners'; // Наш новый простой хук
 import { WinnerCard } from '@/components/ui/WinnerCard';
 import 'swiper/css';
+import { Winner } from '@/data/mock-content';
 
-export const WinnersHistory = () => {
-  const { data: allWinners, isLoading } = useWinners();
+interface WinnersHistoryProps {
+  winners: Winner[];
+}
 
-  const winners = allWinners?.slice(0, 6) || [];
+export const WinnersHistory = ({ winners }: WinnersHistoryProps) => {
+  const displayWinners = winners?.slice(0, 6) || [];
 
-  if (isLoading) return null;
+  if (!displayWinners || displayWinners.length === 0) return null;
 
   return (
     <section className='my-12 relative overflow-hidden'>

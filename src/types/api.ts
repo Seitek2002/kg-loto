@@ -6,6 +6,37 @@ export interface ApiResponse<T> {
   errors: any[];
 }
 
+// 🔥 НОВЫЙ ТИП ДЛЯ ПАГИНАЦИИ
+export interface PaginatedResult<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+// --- ОСТАЛЬНЫЕ ТИПЫ ---
+
+export interface NewsItem {
+  id: number;
+  title: string;
+  slug: string;
+  shortText: string;
+  content?: string; // На случай если на детальной странице приходит content
+  image: string | null;
+  publishedAt: string;
+  theme: 'dark' | 'light';
+  descriptionPosition: 'none' | 'top' | 'bottom';
+}
+
+export interface Winner {
+  id: number;
+  name: string;
+  city: string;
+  prize: string;
+  image: string | null;
+  lotteryBadge: string;
+}
+
 export interface Lottery {
   id: number;
   title: string;
@@ -55,18 +86,6 @@ export interface SliderItem {
   buttonPrice: number; // 100
   buttonLabel: string; // "ИГРАТЬ • 100 СОМ"
   buttonUrl: string; // Ссылка (может быть пустой)
-}
-
-export interface NewsItem {
-  id: number;
-  title: string;
-  slug: string;
-  shortText: string;
-  content: string;
-  image: string | null;
-  publishedAt: string;
-  theme: 'dark' | 'light';
-  descriptionPosition: 'none' | 'top' | 'bottom';
 }
 
 export interface QAItem {

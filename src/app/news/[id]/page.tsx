@@ -5,7 +5,7 @@ import { ChevronRight, ImageIcon } from 'lucide-react';
 
 import { ArticleCard } from '@/components/ui/ArticleCard';
 import { api } from '@/lib/api';
-import { ApiResponse, NewsItem } from '@/types/api';
+import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { Header } from '@/components/ui/Header';
 
 interface NewsDetailsPageProps {
@@ -24,8 +24,10 @@ async function getNewsDetail(id: string): Promise<NewsItem | null> {
 
 async function getNewsData(): Promise<NewsItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<NewsItem[]>>('/news/');
-    return data.data || [];
+    const { data } =
+      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/');
+
+    return data.data.results || [];
   } catch (error) {
     console.error('News Error:', error);
     return [];

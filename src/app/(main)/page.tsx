@@ -6,6 +6,7 @@ import {
   QAItem,
   LotteryItem,
   BranchItem,
+  PaginatedResult,
 } from '@/types/api';
 import { Hero, HeroSlideData } from './sections/Hero';
 import { BestMaterials } from './sections/BestMaterials';
@@ -15,6 +16,7 @@ import { OurApp } from './sections/OurApp';
 import { PopularTickets } from './sections/PopularTickets';
 import { WinnersHistory } from './sections/WinnersHistory';
 import { WhereToBuy } from './sections/WhereToBuy';
+import { Winner } from '@/data/mock-content';
 
 export const revalidate = 600;
 
@@ -54,8 +56,9 @@ async function getSliderData(): Promise<HeroSlideData[]> {
 // 2. News
 async function getNewsData(): Promise<NewsItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<NewsItem[]>>('/news/');
-    return data.data || [];
+    const { data } =
+      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/');
+    return data.data.results || [];
   } catch (error) {
     console.error('News Error:', error);
     return [];
@@ -94,13 +97,24 @@ async function getBranchesData(): Promise<BranchItem[]> {
   }
 }
 
+async function getWinnersData(): Promise<Winner[]> {
+  try {
+    const { data } = await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/');
+    return data.data.results || [];
+  } catch (error) {
+    console.error('Winners Error:', error);
+    return [];
+  }
+}
+
 export default async function Home() {
-  const [slides, news, faq, lotteries, branches] = await Promise.all([
+  const [slides, news, faq, lotteries, branches, winners] = await Promise.all([
     getSliderData(),
     getNewsData(),
     getFAQData(),
     getLotteriesData(),
     getBranchesData(),
+    getWinnersData(),
   ]);
 
   return (
@@ -110,7 +124,7 @@ export default async function Home() {
       <div className='px-4 mt-10 xl:max-w-[80%] mx-auto'>
         <PopularTickets lotteries={lotteries} />
         <CheckLottery />
-        <WinnersHistory />
+        <WinnersHistory winners={winners} />
 
         <BestMaterials articles={news} />
         <WhereToBuy branches={branches} />
