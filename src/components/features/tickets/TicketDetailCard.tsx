@@ -97,7 +97,6 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
     <BaseCard
       backgroundId={data.backgroundId}
       theme={data.theme}
-      minHeight='auto'
       className='pb-8'
     >
       {/* СТАТУС */}

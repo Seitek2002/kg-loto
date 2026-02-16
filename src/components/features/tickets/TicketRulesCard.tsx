@@ -16,7 +16,6 @@ export const TicketRulesCard = ({ data }: { data: TicketDetailData }) => {
     <BaseCard
       backgroundId={data.backgroundId} // Тот же фон, что у билета
       theme={data.theme}
-      minHeight='auto'
       className='h-full flex flex-col' // Растягиваем на всю высоту
     >
       {/* Заголовок */}
