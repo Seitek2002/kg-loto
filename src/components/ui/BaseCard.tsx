@@ -10,7 +10,7 @@ import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
 
 const LottiePlayer = dynamic(
   () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
-  { ssr: false }
+  { ssr: false },
 );
 
 interface BaseCardProps {

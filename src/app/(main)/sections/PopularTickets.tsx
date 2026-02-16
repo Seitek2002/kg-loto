@@ -49,7 +49,10 @@ const formatTime = (time: string) => {
 };
 
 export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
-  const displayLotteries = [...MOCK_LOTTIE_CARDS, ...(lotteries || [])] as LotteryItem[];
+  const displayLotteries = [
+    ...MOCK_LOTTIE_CARDS,
+    ...(lotteries || []),
+  ] as LotteryItem[];
 
   if (!lotteries || lotteries.length === 0) return null;
 
