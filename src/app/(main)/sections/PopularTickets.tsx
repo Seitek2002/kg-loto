@@ -61,12 +61,12 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
         частым тиражам и удобным условиям участия.
       </Description>
 
-      <div className='flex flex-col lg:flex-row flex-wrap justify-between gap-4 mt-6'>
+      <div className='flex justify-stretch flex-wrap gap-4 mt-6'>
         {displayLotteries.map((loto) => (
           <Link
             key={loto.id}
             href={`/lottery/${loto.id}`}
-            className='block lg:w-[49%] transition-transform active:scale-[0.98]'
+            className='block w-full md:w-[48%] transition-transform active:scale-[0.98]'
           >
             <LotteryCard
               title={loto.title}

@@ -88,7 +88,7 @@ export function LotteryCard({
       imageSrc={backgroundImage}
       lottieSrc={lottieSrc}
       theme={theme}
-      className='h-full min-h-60 lg:min-h-80 flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl group'
+      className=' flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl '
     >
       {/* ... Весь остальной код верстки без изменений ... */}
 
@@ -132,7 +132,7 @@ export function LotteryCard({
       </div>
 
       {/* ПРИЗ */}
-      <div className='mb-8'>
+      <div className='mb-6 lg:mb-8'>
         <span
           className={clsx(
             'block leading-none uppercase tracking-tight wrap-break-word',
@@ -146,7 +146,7 @@ export function LotteryCard({
       </div>
 
       {/* КНОПКА */}
-      <div className='mt-4 lg:mt-auto'>
+      <div className='mt-auto lg:mt-auto'>
         <button
           className={clsx(
             'w-auto px-8 py-4 rounded-full shadow-lg transition-transform active:scale-95',

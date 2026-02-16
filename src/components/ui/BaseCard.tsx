@@ -19,8 +19,9 @@ interface BaseCardProps {
   imageSrc?: string;
   lottieSrc?: string;
   className?: string;
-  minHeight?: string;
+  // minHeight?: string;
   theme?: 'dark' | 'white';
+  aspectRatio?: string;
 }
 
 export const BaseCard = ({
@@ -29,8 +30,8 @@ export const BaseCard = ({
   imageSrc,
   lottieSrc,
   className,
-  minHeight = '200px',
   theme = 'dark',
+  aspectRatio = '4/3',
 }: BaseCardProps) => {
   const textColor = theme === 'dark' ? 'text-[#2D2D2D]' : 'text-white';
 
@@ -43,22 +44,22 @@ export const BaseCard = ({
   return (
     <div
       className={clsx(
-        'relative w-full rounded-4xl p-6 flex flex-col shadow-xl overflow-hidden',
+        'relative w-full rounded-4xl flex flex-col shadow-xl overflow-hidden',
         !bgPath && !lottieSrc && 'bg-gray-200',
         textColor,
         className,
       )}
-      style={{ height: minHeight }}
+      style={{ aspectRatio }}
     >
       {/* 🔥 2. НОВЫЙ LOTTIE ПЛЕЕР С SVG РЕНДЕРОМ */}
       {lottieSrc ? (
-        <div className='absolute inset-0 z-0 h-full'>
+        <div className='absolute top-0 right-0 z-0 w-full'>
           <LottiePlayer
             src={lottieSrc}
             loop
             autoplay
             renderer='svg' // <--- Вместо canvas используем svg
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: '100%', height: 'auto' }}
             rendererSettings={{
               preserveAspectRatio: 'xMidYMid slice', // Это аналог object-fit: cover для Lottie
             }}
