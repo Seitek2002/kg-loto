@@ -20,3 +20,7 @@
   /* Обязательно: overflow-hidden, чтобы SVG фильтр не вылезал за скругления */
   overflow: hidden; 
 }
+
+.lf-player-container {
+  height: 100%;
+}

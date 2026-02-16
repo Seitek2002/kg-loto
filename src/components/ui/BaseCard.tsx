@@ -52,7 +52,7 @@ export const BaseCard = ({
     >
       {/* 🔥 2. НОВЫЙ LOTTIE ПЛЕЕР С SVG РЕНДЕРОМ */}
       {lottieSrc ? (
-        <div className='absolute inset-0 z-0'>
+        <div className='absolute top-0 right-0 z-0 h-full'>
           <LottiePlayer
             src={lottieSrc}
             loop
