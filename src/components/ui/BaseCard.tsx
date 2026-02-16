@@ -4,9 +4,14 @@ import Image from 'next/image';
 import { ReactNode } from 'react';
 import { clsx } from 'clsx';
 
-// 🔥 1. ИМПОРТИРУЕМ НОВЫЙ ПЛЕЕР
-import { Player } from '@lottiefiles/react-lottie-player';
+// import { Player } from '@lottiefiles/react-lottie-player';
+import dynamic from 'next/dynamic';
 import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
+
+const LottiePlayer = dynamic(
+  () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
+  { ssr: false }
+);
 
 interface BaseCardProps {
   children: ReactNode;
@@ -48,7 +53,7 @@ export const BaseCard = ({
       {/* 🔥 2. НОВЫЙ LOTTIE ПЛЕЕР С SVG РЕНДЕРОМ */}
       {lottieSrc ? (
         <div className='absolute inset-0 z-0'>
-          <Player
+          <LottiePlayer
             src={lottieSrc}
             loop
             autoplay

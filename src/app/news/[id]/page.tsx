@@ -27,7 +27,7 @@ async function getNewsData(): Promise<NewsItem[]> {
     const { data } =
       await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/');
 
-    return data.data.results || [];
+    return data.data.results || []; // Здесь уже всё ВЕРНО!
   } catch (error) {
     console.error('News Error:', error);
     return [];

@@ -1,11 +1,13 @@
 import { api } from '@/lib/api';
-import { ApiResponse, NewsItem } from '@/types/api';
+import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { NewsListContent } from './NewsListContent';
 
 async function getAllNews(): Promise<NewsItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<NewsItem[]>>('/news/');
-    return data.data || [];
+    const { data } =
+      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/');
+
+    return data.data.results || [];
   } catch (error) {
     console.error('Error fetching news page:', error);
     return [];
