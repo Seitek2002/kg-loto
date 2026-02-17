@@ -46,7 +46,7 @@ export const Footer = async () => {
       links: [
         { name: 'О компании', href: '/about' },
         { name: 'Контакты', href: '#' },
-        { name: 'Обратная связь', href: '#' },
+        { name: 'Обратная связь', href: 'tel:+996312440107' },
         { name: 'Новости', href: '/news' },
       ],
     },
