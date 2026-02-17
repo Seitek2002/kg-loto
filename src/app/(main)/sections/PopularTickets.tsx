@@ -33,8 +33,7 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
 
           // 🔥 2. Проверяем, является ли это анимацией (.json или .lottie)
           const isAnimation =
-            bgUrl.toLowerCase().endsWith('.json') ||
-            bgUrl.toLowerCase().endsWith('.lottie');
+            bgUrl.toLowerCase().endsWith('.json');
 
           return (
             <Link
@@ -49,7 +48,6 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
                 price={loto.buttonPrice}
                 time={formatTime(loto.drawTime)}
                 theme={loto.theme}
-                // 🔥 3. Раскидываем ссылку в нужный пропс карточки
                 lottieSrc={isAnimation ? bgUrl : undefined}
                 backgroundImage={!isAnimation ? bgUrl : undefined}
               />
