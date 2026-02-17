@@ -10,50 +10,12 @@ interface PopularTicketsProps {
   lotteries: LotteryItem[];
 }
 
-const MOCK_LOTTIE_CARDS = [
-  {
-    id: 'test-1',
-    title: 'ТЕСТ АНИМАЦИИ 1',
-    subtitle: 'Анимация .json',
-    prizeText: '1 000 000 с',
-    buttonPrice: 150,
-    drawTime: '12:00',
-    theme: 'white' as const,
-    lottieSrc: '/animations/1.json', // Путь к файлу в public/animations
-  },
-  {
-    id: 'test-2',
-    title: 'ТЕСТ АНИМАЦИИ 2',
-    subtitle: 'Анимация .json',
-    prizeText: 'АВТОМОБИЛЬ',
-    buttonPrice: 200,
-    drawTime: '18:00',
-    theme: 'white' as const,
-    lottieSrc: '/animations/3.json', // Путь к файлу в public/animations
-  },
-  {
-    id: 'test-3',
-    title: 'ТЕСТ АНИМАЦИИ 3',
-    subtitle: 'Анимация .json',
-    prizeText: 'АВТОМОБИЛЬ',
-    buttonPrice: 200,
-    drawTime: '18:00',
-    theme: 'white' as const,
-    lottieSrc: '/animations/2.json', // Путь к файлу в public/animations
-  },
-];
-
 const formatTime = (time: string) => {
   if (!time) return '00:00';
   return time.split(':').slice(0, 2).join(':');
 };
 
 export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
-  const displayLotteries = [
-    ...MOCK_LOTTIE_CARDS,
-    ...(lotteries || []),
-  ] as LotteryItem[];
-
   if (!lotteries || lotteries.length === 0) return null;
 
   return (
@@ -65,25 +27,35 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
       </Description>
 
       <div className='flex justify-stretch flex-wrap gap-4 mt-6'>
-        {displayLotteries.map((loto) => (
-          <Link
-            key={loto.id}
-            href={`/lottery/${loto.id}`}
-            className='block w-full md:w-[48%] transition-transform active:scale-[0.98]'
-          >
-            <LotteryCard
-              title={loto.title}
-              description={loto.subtitle || ''}
-              prize={loto.prizeText}
-              price={loto.buttonPrice}
-              time={formatTime(loto.drawTime)}
-              theme={loto.theme}
-              lottieSrc={loto.lottieSrc}
-              backgroundImage={loto.backgroundImage}
-              prizeFontId={'benzin'}
-            />
-          </Link>
-        ))}
+        {lotteries.map((loto) => {
+          // 🔥 1. Берем ссылку из базы
+          const bgUrl = loto.backgroundImage || '';
+
+          // 🔥 2. Проверяем, является ли это анимацией (.json или .lottie)
+          const isAnimation =
+            bgUrl.toLowerCase().endsWith('.json') ||
+            bgUrl.toLowerCase().endsWith('.lottie');
+
+          return (
+            <Link
+              key={loto.id}
+              href={`/lottery/${loto.id}`}
+              className='block w-full md:w-[48%] transition-transform active:scale-[0.98]'
+            >
+              <LotteryCard
+                title={loto.title}
+                description={loto.subtitle || ''}
+                prize={loto.prizeText}
+                price={loto.buttonPrice}
+                time={formatTime(loto.drawTime)}
+                theme={loto.theme}
+                // 🔥 3. Раскидываем ссылку в нужный пропс карточки
+                lottieSrc={isAnimation ? bgUrl : undefined}
+                backgroundImage={!isAnimation ? bgUrl : undefined}
+              />
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

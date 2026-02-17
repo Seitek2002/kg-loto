@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { clsx } from 'clsx';
 import { useState, useRef, useEffect } from 'react';
 import { AuthModal } from '@/components/features/modal/AuthModal';
+// 🔥 1. Импортируем новую модалку
+import { CheckTicketModal } from '@/components/features/modal/CheckTicketModal';
 import { useAuthStore } from '@/store/auth';
 import {
   User,
@@ -23,8 +25,9 @@ type ProfileView = 'menu' | 'personal' | 'tickets';
 
 export const Header = ({ theme = 'light' }: HeaderProps) => {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  // 🔥 2. Стейт для модалки проверки билета
+  const [isCheckOpen, setIsCheckOpen] = useState(false);
 
-  // Стейты для выпадашки профиля
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [profileView, setProfileView] = useState<ProfileView>('menu');
 
@@ -58,7 +61,6 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
       : 'bg-white text-[#2D2D2D] hover:bg-gray-100',
   );
 
-  // Закрытие меню при клике вне его области
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -66,7 +68,6 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsProfileMenuOpen(false);
-        // Возвращаем на главный экран меню через небольшую задержку (чтобы не было резкого скачка при закрытии)
         setTimeout(() => setProfileView('menu'), 200);
       }
     };
@@ -111,22 +112,26 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
             >
               Регистрация
             </button>
-
             <button
               onClick={() => openAuth('login')}
-              className='bg-[#FFD600] text-[#2D2D2D] px-6 py-2.5 rounded-full text-[10px] font-black font-benzin uppercase hover:bg-[#FFC000] transition-colors'
+              className='bg-[#FFD600] text-[#2D2D2D] px-6 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-[#FFC000] transition-colors'
             >
               Войти
             </button>
           </>
         ) : (
           <div className='flex items-center gap-3 animate-in fade-in'>
-            {/* Имя и Баланс (слева от аватарки) */}
+            {/* 🔥 3. Вешаем onClick на кнопку ПРОВЕРИТЬ */}
             <div className='hidden sm:flex flex-col text-right'>
-              <span className='text-sm py-3 px-6 font-medium bg-[#FCC400] rounded-full cursor-pointer'>ПРОВЕРИТЬ</span>
+              <button
+                onClick={() => setIsCheckOpen(true)}
+                className='text-xs py-3 px-6 font-bold uppercase text-[#2D2D2D] bg-[#FFD600] hover:bg-[#FFC000] rounded-full cursor-pointer transition-colors active:scale-95 shadow-sm'
+              >
+                ПРОВЕРИТЬ
+              </button>
             </div>
 
-            {/* 🔥 КОНТЕЙНЕР АВАТАРКИ И УМНОЙ ВЫПАДАШКИ */}
+            {/* КОНТЕЙНЕР АВАТАРКИ И УМНОЙ ВЫПАДАШКИ */}
             <div className='relative' ref={dropdownRef}>
               <button
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
@@ -137,11 +142,10 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
 
               {/* УМНОЕ ОКНО ПРОФИЛЯ */}
               {isProfileMenuOpen && (
+                // ... (Твой код профиля остается без изменений)
                 <div className='absolute right-0 mt-3 w-80 bg-white rounded-3xl shadow-2xl border border-gray-100 p-5 flex flex-col z-50 text-[#2D2D2D] overflow-hidden transition-all'>
-                  {/* --- ЭКРАН 1: ГЛАВНОЕ МЕНЮ --- */}
                   {profileView === 'menu' && (
                     <div className='flex flex-col animate-in fade-in slide-in-from-left-2'>
-                      {/* Шапка меню (Игрок) */}
                       <div className='flex items-center gap-4 mb-4'>
                         <div className='w-12 h-12 rounded-full bg-[#F5F5F5] flex items-center justify-center shrink-0'>
                           <User size={24} className='text-gray-400' />
@@ -155,34 +159,28 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                           </span>
                         </div>
                       </div>
-
                       <div className='h-px bg-gray-100 my-2' />
-
-                      {/* Внутренние переключатели */}
                       <button
                         onClick={() => setProfileView('personal')}
                         className='flex items-center justify-between py-3 px-2 hover:bg-gray-50 rounded-xl transition-colors'
                       >
                         <div className='flex items-center gap-3 text-xs font-bold font-rubik'>
-                          <Settings size={18} className='text-gray-400' />
+                          <Settings size={18} className='text-gray-400' />{' '}
                           Личные данные
                         </div>
                         <ChevronRight size={16} className='text-gray-400' />
                       </button>
-
                       <button
                         onClick={() => setProfileView('tickets')}
                         className='flex items-center justify-between py-3 px-2 hover:bg-gray-50 rounded-xl transition-colors'
                       >
                         <div className='flex items-center gap-3 text-xs font-bold font-rubik'>
-                          <Ticket size={18} className='text-gray-400' />
-                          Мои билеты
+                          <Ticket size={18} className='text-gray-400' /> Мои
+                          билеты
                         </div>
                         <ChevronRight size={16} className='text-gray-400' />
                       </button>
-
                       <div className='h-px bg-gray-100 my-2' />
-
                       <button
                         onClick={() => {
                           logout();
@@ -190,13 +188,11 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                         }}
                         className='flex items-center gap-3 py-3 px-2 hover:bg-red-50 rounded-xl transition-colors text-xs font-bold font-rubik text-red-500 text-left'
                       >
-                        <LogOut size={18} />
-                        Выйти
+                        <LogOut size={18} /> Выйти
                       </button>
                     </div>
                   )}
 
-                  {/* --- ЭКРАН 2: ЛИЧНЫЕ ДАННЫЕ --- */}
                   {profileView === 'personal' && (
                     <div className='flex flex-col animate-in fade-in slide-in-from-right-2'>
                       <button
@@ -208,7 +204,6 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                       <h3 className='text-sm font-black font-benzin uppercase mb-4'>
                         Личные данные
                       </h3>
-
                       <div className='space-y-3 text-xs font-rubik'>
                         <div className='bg-[#F5F5F5] p-3 rounded-xl flex flex-col'>
                           <span className='text-[10px] text-gray-400 mb-1'>
@@ -230,7 +225,6 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                     </div>
                   )}
 
-                  {/* --- ЭКРАН 3: МОИ БИЛЕТЫ --- */}
                   {profileView === 'tickets' && (
                     <div className='flex flex-col animate-in fade-in slide-in-from-right-2'>
                       <button
@@ -242,7 +236,6 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                       <h3 className='text-sm font-black font-benzin uppercase mb-4'>
                         Мои билеты
                       </h3>
-
                       <div className='flex flex-col items-center justify-center py-8 text-center'>
                         <Ticket size={32} className='text-gray-300 mb-2' />
                         <span className='text-xs font-medium font-rubik text-gray-400'>
@@ -262,6 +255,12 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
           isOpen={isAuthOpen}
           onClose={() => setIsAuthOpen(false)}
           initialStep={authMode}
+        />
+
+        {/* 🔥 4. Рендерим модалку проверки билета */}
+        <CheckTicketModal
+          isOpen={isCheckOpen}
+          onClose={() => setIsCheckOpen(false)}
         />
       </div>
     </header>
