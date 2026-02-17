@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { clsx } from 'clsx';
 import { useState, useRef, useEffect } from 'react';
 import { AuthModal } from '@/components/features/modal/AuthModal';
-// 🔥 1. Импортируем новую модалку
 import { CheckTicketModal } from '@/components/features/modal/CheckTicketModal';
 import { useAuthStore } from '@/store/auth';
 import {
@@ -55,7 +54,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
   );
 
   const regBtnClass = clsx(
-    'px-6 py-2.5 rounded-full text-[10px] font-black font-benzin uppercase transition-colors',
+    'px-6 py-2.5 rounded-full text-[10px] font-black uppercase transition-colors',
     isDark
       ? 'bg-[#2D2D2D] text-white hover:bg-black'
       : 'bg-white text-[#2D2D2D] hover:bg-gray-100',
