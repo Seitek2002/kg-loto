@@ -54,10 +54,10 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
   );
 
   const regBtnClass = clsx(
-    'px-6 py-2.5 rounded-full text-[10px] font-black uppercase transition-colors',
+    'px-6 py-2.5 rounded-full text-[10px] font-black uppercase transition-colors cursor-pointer',
     isDark
       ? 'bg-[#2D2D2D] text-white hover:bg-black'
-      : 'bg-white text-[#2D2D2D] hover:bg-gray-100',
+      : 'bg-white text-[#2D2D2D] hover:bg-gray-200',
   );
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
         <Link href='/' className={navLinkClass}>
           Главная
         </Link>
-        <Link href='#instant' className={navLinkClass}>
+        <Link href='/#instant' className={navLinkClass}>
           Моментальные
         </Link>
         <Link href='/draws' className={navLinkClass}>
@@ -113,7 +113,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
             </button>
             <button
               onClick={() => openAuth('login')}
-              className='bg-[#FFD600] text-[#2D2D2D] px-6 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-[#FFC000] transition-colors'
+              className='bg-[#FFD600] cursor-pointer text-[#2D2D2D] px-6 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-[#FFC000] transition-colors'
             >
               Войти
             </button>

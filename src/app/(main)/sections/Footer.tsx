@@ -30,15 +30,15 @@ export const Footer = async () => {
     },
     {
       title: 'Покупки',
-      links: [{ name: 'Карта продаж', href: '#map' }],
+      links: [{ name: 'Карта продаж', href: '/#map' }],
     },
     {
       title: 'Информация',
       links: [
-        { name: 'Проверить билет', href: '#check' },
+        { name: 'Проверить билет', href: '/#check' },
         { name: 'Победители', href: '/winners' },
         { name: 'Как получить выигрыш', href: '/rules' },
-        { name: 'Вопросы и ответы', href: '#faq' },
+        { name: 'Вопросы и ответы', href: '/#faq' },
       ],
     },
     {
