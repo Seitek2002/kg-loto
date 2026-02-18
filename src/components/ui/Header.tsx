@@ -76,7 +76,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
 
   return (
     <header className='hidden font-rubik lg:flex w-full items-center justify-between px-8 absolute top-0 left-0 z-50 bg-transparent'>
-      <Link href='/' className='relative w-[232px] h-[100px]'>
+      <Link href='/' className='relative w-58 h-25'>
         <Image src='/logo.png' alt='KGLOTO' fill className='object-contain' />
       </Link>
 
