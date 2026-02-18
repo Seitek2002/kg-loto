@@ -101,7 +101,7 @@ export const Hero = ({
                 </div>
               )}
 
-              <div className='relative z-10 flex flex-col items-center lg:justify-center h-full lg:pt-12 text-center px-4'>
+              <div className='relative z-10 flex flex-col items-center justify-center h-full lg:pt-12 text-center px-4'>
                 <div className='mb-10 w-32 h-auto relative lg:hidden'>
                   <Image
                     src='/logo.png'
