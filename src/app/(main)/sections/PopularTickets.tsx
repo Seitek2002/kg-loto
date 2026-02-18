@@ -28,10 +28,8 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
 
       <div className='flex justify-stretch flex-wrap gap-4 mt-6'>
         {lotteries.map((loto) => {
-          // 🔥 1. Берем ссылку из базы
           const bgUrl = loto.backgroundImage || '';
 
-          // 🔥 2. Проверяем, является ли это анимацией (.json или .lottie)
           const isAnimation =
             bgUrl.toLowerCase().endsWith('.json');
 

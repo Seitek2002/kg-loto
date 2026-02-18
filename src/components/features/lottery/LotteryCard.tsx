@@ -113,7 +113,7 @@ export function LotteryCard({
       <div className='flex flex-col gap-1 mb-6'>
         <h3
           className={clsx(
-            'text-xl font-black font-benzin uppercase leading-tight',
+            'text-sm md:text-xl font-black font-benzin uppercase leading-tight',
             colors.title,
           )}
         >
@@ -122,7 +122,7 @@ export function LotteryCard({
         {description && (
           <p
             className={clsx(
-              'text-xs font-medium font-rubik leading-relaxed max-w-[90%]',
+              'text-xs font-medium font-rubik leading-tight md:leading-relaxed max-w-[90%]',
               colors.desc,
             )}
           >
@@ -132,11 +132,11 @@ export function LotteryCard({
       </div>
 
       {/* ПРИЗ */}
-      <div className='mb-6 lg:mb-8'>
+      <div className='mb-2 lg:mb-8'>
         <span
           className={clsx(
-            'block leading-none uppercase tracking-tight wrap-break-word',
-            prizeFontId === 'default' ? 'text-4xl' : '',
+            'block leading-none uppercase tracking-tight wrap-break-word text-sm',
+            prizeFontId === 'default' ? 'md:text-2xl lg:text-4xl' : '',
             colors.prize,
             FONT_VARIANTS[prizeFontId] || FONT_VARIANTS['default'],
           )}
