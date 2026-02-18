@@ -84,7 +84,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
         <Link href='/' className={navLinkClass}>
           Главная
         </Link>
-        <Link href='/instant' className={navLinkClass}>
+        <Link href='#instant' className={navLinkClass}>
           Моментальные
         </Link>
         <Link href='/draws' className={navLinkClass}>

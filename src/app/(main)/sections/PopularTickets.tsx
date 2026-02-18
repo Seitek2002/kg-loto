@@ -19,7 +19,7 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
   if (!lotteries || lotteries.length === 0) return null;
 
   return (
-    <div className='my-12'>
+    <div className='my-12' id='instant'>
       <Title>Популярные лотереи</Title>
       <Description>
         Популярные лотереи привлекают внимание благодаря крупным джекпотам,
