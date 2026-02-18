@@ -10,6 +10,7 @@ import { PrizeTierCard } from '@/components/features/lottery/PrizeTierCard';
 import { useTicketsStore, UserTicket } from '@/store/tickets';
 import { LotteryDetail, Winner } from '@/types/api'; // 🔥 Импорт Winner
 import { Header } from '@/components/ui/Header';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 interface ContentProps {
   lottery: LotteryDetail; // Данные с сервера
@@ -55,6 +56,9 @@ export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-10'>
       <Header theme='light' />
+      <div className="sticky pl-2 top-4 z-10 h-0">
+        <PageHeader title='' />
+      </div>
 
       <Hero
         slides={lotterySlide}

@@ -12,7 +12,6 @@ export function BottomNav() {
   const router = useRouter();
   const { isAuth } = useAuthStore();
 
-  // 🔥 Стейт для определения iOS
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
@@ -65,8 +64,8 @@ export function BottomNav() {
       {/* ЛЕВАЯ ЧАСТЬ: Основное меню (Капсула) */}
       <nav
         className={clsx(
-          'flex-1 pointer-events-auto bg-white/70 border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 p-1 flex justify-between items-center',
-          isIOS ? 'backdrop-blur-xl' : 'glass', // 🔥 Динамический класс
+          'flex-1 pointer-events-auto border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 p-1 flex justify-between items-center',
+          isIOS ? 'backdrop-blur-sm bg-white/50' : 'glass bg-white/70',
         )}
       >
         {navItems.map((item) => {
@@ -98,7 +97,6 @@ export function BottomNav() {
         })}
       </nav>
 
-      {/* ПРАВАЯ ЧАСТЬ: Кнопка Сканера (Круг) */}
       <Link
         href='/scan'
         onClick={(e) => handleProtectedClick(e, true)}
