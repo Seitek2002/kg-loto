@@ -18,7 +18,7 @@ export const PrizeTierCard = ({
   backgroundImage,
 }: PrizeTierCardProps) => {
   return (
-    <div className='relative w-full md:h-full p-5 rounded-[32px] md:flex items-center justify-between shadow-lg mb-4 overflow-hidden bg-gray-900'>
+    <div className='relative w-full md:h-full p-5 rounded-4xl md:flex items-center justify-between shadow-lg mb-4 overflow-hidden bg-gray-900'>
       {backgroundImage && (
         <Image
           src={backgroundImage}
