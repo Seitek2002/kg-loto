@@ -22,6 +22,10 @@ export const registerSchema = z
       .length(14, 'ИНН должен содержать ровно 14 цифр')
       .optional()
       .or(z.literal('')),
+    birthYear: z
+      .string()
+      .min(4, 'Введите 4 цифры (например, 1990)')
+      .regex(/^\d{4}$/, 'Только цифры'),
     password: z.string().min(6, 'Минимум 6 символов'),
     passwordConfirm: z.string().min(6, 'Минимум 6 символов'),
     terms: z.boolean().refine((val) => val === true, {

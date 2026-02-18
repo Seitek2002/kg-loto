@@ -9,6 +9,7 @@ export interface RegisterData {
   inn?: string;
   password?: string;
   passwordConfirm?: string;
+  birth_year?: number;
 }
 
 export interface VerifyData {

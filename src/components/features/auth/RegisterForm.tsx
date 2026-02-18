@@ -33,6 +33,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
       phoneNumber: '',
       fullName: '',
       inn: '',
+      birthYear: '',
       password: '',
       passwordConfirm: '',
       terms: false,
@@ -50,7 +51,10 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
       const errorData = error.response?.data;
 
       if (errorData?.errors) {
-        setError('root', { message: 'Ошибка валидации данных' });
+        // 🔥 Улучшенный текст ошибки для пользователя
+        setError('root', {
+          message: 'Пожалуйста, проверьте правильность заполнения всех полей.',
+        });
       } else {
         setError('root', {
           message:
@@ -71,6 +75,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
       phoneNumber: phone,
       fullName: data.fullName,
       inn: data.inn || undefined,
+      birth_year: Number(data.birthYear), // 🔥 Передаем на бэкенд в формате числа (как требует API)
       password: data.password,
       passwordConfirm: data.passwordConfirm,
     });
@@ -79,7 +84,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
   // Вспомогательный класс для инпутов
   const inputClass = (hasError: boolean) =>
     clsx(
-      'w-full bg-white rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+      'w-full bg-[#F5F5F5] rounded-2xl px-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
       hasError ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-[#FFD600]',
     );
 
@@ -108,10 +113,6 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
           </label>
           <div className='relative'>
             <div className='absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs font-bold'>
-              {/* <div className='w-4 h-4 rounded-full overflow-hidden relative border border-gray-200 flex items-center justify-center bg-red-500 text-[6px] text-white font-bold'>
-                KG
-              </div>
-              <span className='text-[8px] text-[#2D2D2D]'>▼</span> */}
               +996
             </div>
             <input
@@ -119,7 +120,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
               type='tel'
               placeholder='500 111 000'
               className={clsx(
-                'w-full bg-white rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
+                'w-full bg-[#F5F5F5] rounded-2xl pl-12 pr-5 py-3.5 font-bold font-rubik text-xs text-[#2D2D2D] outline-none focus:ring-2 transition-all placeholder:text-gray-400 placeholder:font-medium',
                 errors.phoneNumber
                   ? 'ring-2 ring-red-500 bg-red-50'
                   : 'focus:ring-[#FFD600]',
@@ -167,6 +168,25 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
           {errors.inn && (
             <p className='text-[10px] text-red-500 ml-2 mt-1'>
               {errors.inn.message}
+            </p>
+          )}
+        </div>
+
+        {/* 🔥 НОВОЕ ПОЛЕ: Год рождения */}
+        <div>
+          <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
+            Год рождения
+          </label>
+          <input
+            {...register('birthYear')}
+            type='text'
+            placeholder='2002'
+            maxLength={4}
+            className={inputClass(!!errors.birthYear)}
+          />
+          {errors.birthYear && (
+            <p className='text-[10px] text-red-500 ml-2 mt-1'>
+              {errors.birthYear.message}
             </p>
           )}
         </div>
@@ -227,7 +247,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
           )}
         </div>
 
-        {/* Чекбокс (Условия) - Адаптировано под дизайн */}
+        {/* Чекбокс (Условия) */}
         <div className='pt-2'>
           <div className='flex items-start gap-3 text-left'>
             <input
