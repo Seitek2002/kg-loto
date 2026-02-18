@@ -22,7 +22,7 @@ export interface HeroSlideData {
   price?: string | number;
   buttonLabel?: string;
 
-  backgroundImage: string;
+  backgroundImage?: string;
 }
 
 interface HeroProps {
@@ -42,8 +42,6 @@ export const Hero = ({
   if (!slides || slides.length === 0) return null;
 
   const isSingleSlide = slides.length === 1;
-
-  console.log(slides);
 
   const handleDefaultClick = (id: number | string) => {
     if (onButtonClick) {

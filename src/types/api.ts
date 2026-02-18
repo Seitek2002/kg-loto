@@ -2,8 +2,8 @@
 
 export interface ApiResponse<T> {
   data: T;
-  meta: Record<string, any>;
-  errors: any[];
+  meta: Record<string, unknown>;
+  errors: unknown[];
 }
 
 // 🔥 НОВЫЙ ТИП ДЛЯ ПАГИНАЦИИ
@@ -108,8 +108,7 @@ export interface PrizeTier {
   amount: string; // например "1 000 000 с"
   winners: number; // количество победителей
   description: string; // описание
-  gradientFrom: string; // цвет градиента
-  gradientTo: string; // цвет градиента
+  backgroundImage?: string;
 }
 
 export interface LotteryDetail {

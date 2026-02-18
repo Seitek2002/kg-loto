@@ -53,10 +53,12 @@ export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
     }
   };
 
+  console.log(lottery);
+
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-10'>
       <Header theme='light' />
-      <div className="sticky pl-2 top-4 z-10 h-0">
+      <div className='sticky pl-2 top-4 z-10 h-0'>
         <PageHeader title='' />
       </div>
 
@@ -87,8 +89,7 @@ export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
                     description={tier.description}
                     amount={tier.amount}
                     winnersCount={tier.winners}
-                    gradientFrom={tier.gradientFrom}
-                    gradientTo={tier.gradientTo}
+                    backgroundImage={tier.backgroundImage} // 🔥 Передаем ссылку на картинку
                   />
                 </div>
               ))}
