@@ -4,16 +4,13 @@ import { clsx } from 'clsx';
 import { BaseCard } from '@/components/ui/BaseCard';
 import { FONT_VARIANTS } from '@/config/lottery-styles';
 
-// --- ТИПЫ ---
 type CardStatus = 'winning' | 'losing' | 'pending' | 'archive';
 type CardVariant = 'lottery' | 'prize';
 
-// Конфиг статусов оставляем как есть...
 const STATUS_CONFIG: Record<
   CardStatus,
   { text: string; dot: string; textCol: string }
 > = {
-  // ... твой код конфига ...
   winning: {
     text: 'ВЫИГРЫШ',
     dot: 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]',
