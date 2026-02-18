@@ -149,7 +149,7 @@ export function LotteryCard({
       <div className='mt-auto lg:mt-auto'>
         <button
           className={clsx(
-            'w-auto px-8 py-4 rounded-full shadow-lg transition-transform active:scale-95',
+            'w-auto px-6 py-3 md:px-8 md:py-4 rounded-full shadow-lg transition-transform active:scale-95',
             'font-benzin font-bold text-xs uppercase tracking-wider',
             colors.button,
           )}
