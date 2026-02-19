@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
 import { ArticleCard } from '@/components/ui/ArticleCard';
-import { Header } from '@/components/ui/Header'; // Если Header у тебя общий, убедись в пути
+import { Header } from '@/components/ui/Header';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { NewsItem } from '@/types/api';
 
@@ -12,19 +12,15 @@ interface NewsListContentProps {
   initialNews: NewsItem[];
 }
 
-const ITEMS_PER_PAGE = 6; // Сколько показывать за раз
+const ITEMS_PER_PAGE = 6;
 
 export const NewsListContent = ({ initialNews }: NewsListContentProps) => {
-  // Состояние для пагинации (сколько сейчас показано)
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
-  // Если новостей нет вообще
   if (!initialNews) return null;
 
-  // Текущие видимые новости
   const visibleNews = initialNews.slice(0, visibleCount);
 
-  // Есть ли еще новости, которые можно показать?
   const hasMore = visibleCount < initialNews.length;
 
   const handleLoadMore = () => {
@@ -32,11 +28,14 @@ export const NewsListContent = ({ initialNews }: NewsListContentProps) => {
   };
 
   return (
-    <div className='min-h-screen bg-[#F9F9F9] pt-40 pb-20'>
+    <div className='min-h-screen bg-[#F9F9F9] pt-0 pb-20'>
       <Header theme='dark' />
 
-      <PageHeader title='Новости' />
-      <div className='max-w-350 mx-auto px-4 lg:mt-20'>
+      <div className='px-4'>
+        <PageHeader title='Новости' />
+      </div>
+
+      <div className='max-w-350 mx-auto pt-4 lg:pt-20 px-4 lg:mt-20'>
         <div className='mb-10 max-w-3xl'>
           <Title>ВСЕ МАТЕРИАЛЫ</Title>
           <Description>

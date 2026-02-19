@@ -11,6 +11,7 @@ import {
   NewsItem,
   PaginatedResult,
 } from '@/types/api';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 // Запрос за лотереями (по твоей функции)
 async function getLotteriesData(): Promise<LotteryItem[]> {
@@ -45,9 +46,13 @@ export default async function AboutPage() {
     <div className='min-h-screen bg-[#F9F9F9] font-rubik'>
       <Header theme='dark' />
 
-      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-32 pb-20 overflow-hidden'>
+      <div className="px-4">
+        <PageHeader title='О компании' />
+      </div>
+
+      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-8 lg:pt-32 pb-20 overflow-hidden'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
-        <nav className='flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
+        <nav className='hidden lg:flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
           <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
             Главная
           </Link>

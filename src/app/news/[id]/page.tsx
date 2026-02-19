@@ -7,6 +7,7 @@ import { api } from '@/lib/api';
 import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { Header } from '@/components/ui/Header';
 import { OtherMaterialsSlider } from '@/components/features/news/OtherMaterialsSlider';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 interface NewsDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -66,10 +67,14 @@ export default async function NewsDetailsPage({
     <div className='min-h-screen bg-[#F5F5F5] font-rubik'>
       <Header theme='dark' />
 
+      <div className='px-4 pt-4'>
+        <PageHeader title='' />
+      </div>
+
       {/* overflow-hidden предотвращает появление горизонтального скролла от слайдера */}
-      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-56 pb-20 overflow-hidden'>
+      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-10 lg:pt-56 pb-20 overflow-hidden'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
-        <nav className='flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
+        <nav className='hidden lg:flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
           <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
             Главная
           </Link>

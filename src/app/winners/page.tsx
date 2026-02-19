@@ -57,10 +57,14 @@ export default function WinnersPage() {
   const isAllSelected = selectedFilters.length === 0;
 
   return (
-    <div className='min-h-screen bg-[#F9F9F9] pt-24 pb-20'>
+    <div className='min-h-screen bg-[#F9F9F9] pb-20'>
       <Header theme='dark' />
-      <PageHeader title='' />
-      <div className='max-w-350 mx-auto px-4 lg:mt-20'>
+
+      <div className='px-4'>
+        <PageHeader title='Победители' />
+      </div>
+
+      <div className='max-w-350 mx-auto pt-4 lg:pt-20 px-4 lg:mt-20'>
         <div className='mb-6 max-w-3xl'>
           <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>
           <Description>
