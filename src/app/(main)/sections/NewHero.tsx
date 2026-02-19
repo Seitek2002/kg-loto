@@ -207,7 +207,7 @@ const NewHero = () => {
                     {/* Аватарка/иконка лотереи */}
                     <div className='w-5 h-5 rounded overflow-hidden relative'>
                       <Image
-                        src='https://images.unsplash.com/photo-1513689620023-e18e38cb3c68?q=80&w=100&auto=format&fit=crop'
+                        src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100'
                         alt={winner.lottery}
                         fill
                         className='object-cover'
