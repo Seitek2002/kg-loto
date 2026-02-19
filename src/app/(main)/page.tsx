@@ -17,6 +17,7 @@ import { PopularTickets } from './sections/PopularTickets';
 import { WinnersHistory } from './sections/WinnersHistory';
 import { WhereToBuy } from './sections/WhereToBuy';
 import { Winner } from '@/data/mock-content';
+import NewHero from './sections/NewHero';
 
 export const revalidate = 600;
 
@@ -32,7 +33,6 @@ const FALLBACK_SLIDES: HeroSlideData[] = [
   },
 ];
 
-// 1. Slider
 async function getSliderData(): Promise<HeroSlideData[]> {
   try {
     const { data } = await api.get<ApiResponse<SliderItem[]>>('/slider/');
@@ -53,7 +53,6 @@ async function getSliderData(): Promise<HeroSlideData[]> {
   }
 }
 
-// 2. News
 async function getNewsData(): Promise<NewsItem[]> {
   try {
     const { data } =
@@ -65,7 +64,6 @@ async function getNewsData(): Promise<NewsItem[]> {
   }
 }
 
-// 3. FAQ 🔥
 async function getFAQData(): Promise<QAItem[]> {
   try {
     const { data } = await api.get<ApiResponse<QAItem[]>>('/qa/');
@@ -76,7 +74,6 @@ async function getFAQData(): Promise<QAItem[]> {
   }
 }
 
-// 4. Lotteries 🔥
 async function getLotteriesData(): Promise<LotteryItem[]> {
   try {
     const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
@@ -119,7 +116,8 @@ export default async function Home() {
 
   return (
     <div>
-      <Hero slides={slides} />
+      {/* <Hero slides={slides} /> */}
+      <NewHero />
 
       <div className='px-4 mt-10 xl:max-w-[80%] mx-auto'>
         <PopularTickets lotteries={lotteries} />

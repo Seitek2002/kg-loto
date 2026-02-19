@@ -42,6 +42,7 @@ export const OurApp = () => {
           alt='Mobile App'
           fill
           className='object-cover object-left'
+          sizes='50vw'
           priority
         />
       </div>
