@@ -83,8 +83,10 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
             Горячая линия 996 312 44 01 07
           </a>
           <div>
-            <button className='cursor-pointer'>Проверить билет</button>
-            <button className='cursor-pointer ml-4'>Получить выигрыш</button>
+            <Link href='/#check' className='cursor-pointer'>
+              Проверить билет
+            </Link>
+            <Link href='/#check' className='cursor-pointer ml-4'>Получить выигрыш</Link>
           </div>
         </div>
         <div className='hidden py-3 font-rubik lg:flex w-full items-center justify-between px-8 bg-[#F56400]'>
