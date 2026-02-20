@@ -32,13 +32,14 @@ const HERO_SLIDES = [
   },
 ];
 
+// 🔥 ДОБАВЛЕНЫ ССЫЛКИ НА ЛОГОТИПЫ
 const RECENT_WINNERS = [
   {
     id: 1,
     date: 'Сегодня',
     amount: '700',
     currency: 'С',
-    lottery: 'Сумма фортуны',
+    logo: '/lotteries-logo/1.png',
     isYellow: false,
   },
   {
@@ -46,7 +47,7 @@ const RECENT_WINNERS = [
     date: 'Сегодня',
     amount: '7 105 000',
     currency: 'С',
-    lottery: 'Добрые дела',
+    logo: '/lotteries-logo/2.png',
     isYellow: false,
   },
   {
@@ -54,7 +55,7 @@ const RECENT_WINNERS = [
     date: 'Вчера',
     amount: '700 000',
     currency: 'С',
-    lottery: 'Добрые дела',
+    logo: '/lotteries-logo/3.png',
     isYellow: true,
   },
   {
@@ -62,7 +63,7 @@ const RECENT_WINNERS = [
     date: 'Вчера',
     amount: '3 000',
     currency: 'С',
-    lottery: 'Великолепная',
+    logo: '/lotteries-logo/1.png',
     isYellow: false,
   },
   {
@@ -70,7 +71,7 @@ const RECENT_WINNERS = [
     date: 'Вчера',
     amount: '6 700',
     currency: 'С',
-    lottery: 'Слова и мы',
+    logo: '/lotteries-logo/2.png',
     isYellow: true,
   },
   {
@@ -78,7 +79,7 @@ const RECENT_WINNERS = [
     date: 'Сегодня',
     amount: '15 000',
     currency: 'С',
-    lottery: 'Мечталлион',
+    logo: '/lotteries-logo/3.png',
     isYellow: false,
   },
   {
@@ -86,7 +87,7 @@ const RECENT_WINNERS = [
     date: 'Вчера',
     amount: '50 000',
     currency: 'С',
-    lottery: 'Удача',
+    logo: '/lotteries-logo/1.png',
     isYellow: false,
   },
 ];
@@ -110,20 +111,20 @@ const NewHero = () => {
       {/* ======================= */}
       {/* HERO */}
       {/* ======================= */}
-      <section className='max-w-[1200px] mx-auto px-4 relative mb-16'>
+      <section className='max-w-300 mx-auto px-4 relative mb-16'>
         <Swiper
           modules={[Navigation, Autoplay]}
           navigation={{
             prevEl: '.hero-prev',
             nextEl: '.hero-next',
           }}
-          className='rounded-[32px] md:rounded-[40px] overflow-hidden shadow-lg'
+          className='rounded-4xl md:rounded-[40px] overflow-hidden shadow-lg'
         >
           {HERO_SLIDES.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div
                 ref={heroRef}
-                className='relative w-full aspect-[4/3] md:aspect-[21/9] flex items-center touch-none'
+                className='relative w-full aspect-4/3 md:aspect-21/9 flex items-center touch-none'
                 onPointerMove={handlePointerMove}
               >
                 <div className='absolute inset-0 w-full h-full z-0 select-none pointer-events-none'>
@@ -169,7 +170,7 @@ const NewHero = () => {
       {/* ======================= */}
       {/* WINNERS */}
       {/* ======================= */}
-      <section className='max-w-[1200px] mx-auto px-4 relative'>
+      <section className='max-w-300 mx-auto px-4 relative'>
         <h2 className='text-2xl md:text-3xl font-black font-benzin uppercase text-[#1C2035] mb-8'>
           Недавние победители
         </h2>
@@ -192,41 +193,39 @@ const NewHero = () => {
             {RECENT_WINNERS.map((winner, idx) => (
               <SwiperSlide
                 key={`${winner.id}-${idx}`}
-                className='!w-[260px] md:!w-[280px] py-2'
+                className='w-65! md:w-70! py-2'
               >
                 <div
                   className={clsx(
-                    'bg-white rounded-[24px] p-6 flex flex-col items-center justify-center gap-4 text-center border shadow-sm transition-transform hover:-translate-y-1',
+                    // 🔥 ДОБАВЛЕНЫ relative и overflow-hidden
+                    'relative bg-white rounded-3xl p-6 flex flex-col items-center justify-center gap-4 text-center border shadow-sm transition-transform hover:-translate-y-1 overflow-hidden min-h-35',
                     winner.isYellow ? 'border-[#FFD600]' : 'border-gray-200',
                   )}
                 >
-                  <span className='text-xs font-bold text-[#1C2035]'>
+                  {/* 🔥 ФОНОВЫЙ ЛОГОТИП */}
+                  <div className='absolute inset-0 z-0 pointer-events-none opacity-10 flex items-center justify-center p-4'>
+                    <Image
+                      src={winner.logo}
+                      alt='Lottery Logo'
+                      fill
+                      className='object-contain scale-110' // scale-110 делает водяной знак чуть крупнее
+                    />
+                  </div>
+
+                  {/* Контент поверх логотипа (z-10) */}
+                  <span className='relative z-10 text-xs font-bold text-[#1C2035]'>
                     {winner.date}
                   </span>
 
                   <div
                     className={clsx(
-                      'text-3xl font-black font-benzin tracking-tight flex items-end gap-1',
+                      'relative z-10 text-3xl font-black font-benzin tracking-tight flex items-end gap-1',
                       winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]',
                     )}
                   >
                     {winner.amount}
                     <span className='text-xl underline decoration-2 underline-offset-4 mb-0.5'>
                       {winner.currency}
-                    </span>
-                  </div>
-
-                  <div className='flex items-center gap-2 mt-2'>
-                    <div className='w-5 h-5 rounded overflow-hidden relative'>
-                      <Image
-                        src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100'
-                        alt={winner.lottery}
-                        fill
-                        className='object-cover'
-                      />
-                    </div>
-                    <span className='text-[10px] font-bold text-gray-400 uppercase'>
-                      {winner.lottery}
                     </span>
                   </div>
                 </div>
