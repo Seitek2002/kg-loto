@@ -54,6 +54,7 @@ const NewHero = () => {
             prevEl: '.hero-prev',
             nextEl: '.hero-next',
           }}
+          allowTouchMove={false}
           className='rounded-[32px] md:rounded-[40px] overflow-hidden shadow-lg'
         >
           {HERO_SLIDES.map((slide) => (
