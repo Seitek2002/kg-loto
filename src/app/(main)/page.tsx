@@ -119,7 +119,7 @@ export default async function Home() {
       {/* <Hero slides={slides} /> */}
       <NewHero />
 
-      <div className='px-4 mt-10 xl:max-w-[80%] mx-auto'>
+      <div className='mt-10 max-w-300 mx-auto px-4'>
         <PopularTickets lotteries={lotteries} />
         <CheckLottery />
         <WinnersHistory winners={winners} />
