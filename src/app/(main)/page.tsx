@@ -1,6 +1,5 @@
 import { api } from '@/lib/api';
 import {
-  SliderItem,
   ApiResponse,
   NewsItem,
   QAItem,
@@ -8,7 +7,6 @@ import {
   BranchItem,
   PaginatedResult,
 } from '@/types/api';
-import { Hero, HeroSlideData } from './sections/Hero';
 import { BestMaterials } from './sections/BestMaterials';
 import { CheckLottery } from './sections/CheckLottery';
 import { FAQ } from './sections/FAQ';
@@ -18,40 +16,9 @@ import { WinnersHistory } from './sections/WinnersHistory';
 import { WhereToBuy } from './sections/WhereToBuy';
 import { Winner } from '@/data/mock-content';
 import NewHero from './sections/NewHero';
+import UnderHero from './sections/UnderHero';
 
 export const revalidate = 600;
-
-const FALLBACK_SLIDES: HeroSlideData[] = [
-  {
-    id: 'fallback-1',
-    bg: '/banners/1.jpg',
-    title1: 'СТАНЬ МИЛЛИОНЕРОМ',
-    title2: 'Призовой фонд 10 000 000 сом',
-    prize: '1 000 000 СОМ',
-    price: '200 сом',
-    buttonLabel: 'ИГРАТЬ • 200 СОМ',
-  },
-];
-
-async function getSliderData(): Promise<HeroSlideData[]> {
-  try {
-    const { data } = await api.get<ApiResponse<SliderItem[]>>('/slider/');
-    if (!data.data || data.data.length === 0) return FALLBACK_SLIDES;
-
-    return data.data.map((item) => ({
-      id: item.id,
-      bg: item.image,
-      title1: item.title,
-      title2: item.subtitle,
-      prize: item.prizeText,
-      price: item.buttonPrice,
-      buttonLabel: item.buttonLabel,
-    }));
-  } catch (error) {
-    console.error('Slider Error:', error);
-    return FALLBACK_SLIDES;
-  }
-}
 
 async function getNewsData(): Promise<NewsItem[]> {
   try {
@@ -96,7 +63,8 @@ async function getBranchesData(): Promise<BranchItem[]> {
 
 async function getWinnersData(): Promise<Winner[]> {
   try {
-    const { data } = await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/');
+    const { data } =
+      await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/');
     return data.data.results || [];
   } catch (error) {
     console.error('Winners Error:', error);
@@ -105,8 +73,7 @@ async function getWinnersData(): Promise<Winner[]> {
 }
 
 export default async function Home() {
-  const [slides, news, faq, lotteries, branches, winners] = await Promise.all([
-    getSliderData(),
+  const [news, faq, lotteries, branches, winners] = await Promise.all([
     getNewsData(),
     getFAQData(),
     getLotteriesData(),
@@ -118,6 +85,7 @@ export default async function Home() {
     <div>
       {/* <Hero slides={slides} /> */}
       <NewHero />
+      <UnderHero />
 
       <div className='mt-10 max-w-300 mx-auto px-4'>
         <PopularTickets lotteries={lotteries} />
