@@ -116,20 +116,10 @@ export function LotteryCard({
         >
           {title}
         </h3>
-        {description && (
-          <p
-            className={clsx(
-              'text-xs font-medium font-rubik leading-tight md:leading-relaxed max-w-[90%]',
-              colors.desc,
-            )}
-          >
-            {description}
-          </p>
-        )}
       </div>
 
       {/* ПРИЗ */}
-      <div className='mb-2 lg:mb-8'>
+      {/* <div className='mb-2 lg:mb-8'>
         <span
           className={clsx(
             'block leading-none uppercase tracking-tight wrap-break-word text-sm',
@@ -140,7 +130,7 @@ export function LotteryCard({
         >
           {prize}
         </span>
-      </div>
+      </div> */}
 
       {/* КНОПКА */}
       <div className='mt-auto lg:mt-auto'>
