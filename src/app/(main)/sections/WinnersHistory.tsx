@@ -47,35 +47,6 @@ export const WinnersHistory = ({ winners }: WinnersHistoryProps) => {
       >
         {winners.map((winner) => (
           <SwiperSlide key={winner.id}>
-            {/* <div className='relative w-full h-53.25 lg:h-115.5 rounded-4xl overflow-hidden bg-gray-100'>
-              <Image
-                src={winner.image || '/placeholder-winner.jpg'}
-                alt={winner.name}
-                fill
-                className='object-cover'
-              />
-
-              <div className='absolute top-3 left-3 bg-white rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm z-10'>
-                <Star size={10} className='fill-[#6F51FF] text-[#6F51FF]' />{' '}
-                <span className='text-[10px] font-black font-benzin uppercase text-[#6F51FF] tracking-wide'>
-                  {winner.lotteryBadge}
-                </span>
-              </div>
-
-              <div className='absolute bottom-4 left-4 right-4 bg-white/30 backdrop-blur-md border border-white/20 rounded-3xl p-4 flex flex-col items-center text-center shadow-sm'>
-                <div className='flex flex-col mb-2'>
-                  <h3 className='text-xs font-black text-[#2D2D2D] font-benzin uppercase mb-0.5'>
-                    {winner.name}
-                  </h3>
-                  <p className='text-xs text-[#4B4B4B] font-rubik font-medium'>
-                    {winner.city}
-                  </p>
-                </div>
-                <span className='text-sm lg:text-base font-black text-black font-benzin tracking-tight leading-tight'>
-                  {winner.prize}
-                </span>
-              </div>
-            </div> */}
             <WinnerCard key={winner.id} winner={winner} />
           </SwiperSlide>
         ))}

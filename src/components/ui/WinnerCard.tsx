@@ -1,13 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { Star, User } from 'lucide-react'; // 🔥 Добавляем иконку User
-import { Winner } from '@/types/api'; // Или откуда ты берешь тип
+import { Star, User } from 'lucide-react';
+import { Winner } from '@/types/api';
 // import { clsx } from 'clsx';
 
 export const WinnerCard = ({ winner }: { winner: Winner }) => {
   // Проверяем, есть ли валидная ссылка на изображение
   const hasImage = winner.image && winner.image.length > 0;
+
+  console.log(winner);
 
   return (
     <div className='relative w-full aspect-4/5 rounded-4xl overflow-hidden bg-white shadow-sm border border-gray-100'>
@@ -29,11 +31,15 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
       )}
 
       {/* Бейдж лотереи (сверху слева) */}
-      <div className='absolute top-3 left-3 bg-white rounded-full px-2.5 py-1.5 flex items-center gap-1.5 shadow-sm z-10'>
+      {/* <div className='absolute top-3 left-3 bg-white rounded-full px-2.5 py-1.5 flex items-center gap-1.5 shadow-sm z-10'>
         <Star size={10} className='fill-[#6F51FF] text-[#6F51FF]' />
         <span className='text-[10px] font-black font-benzin uppercase text-[#6F51FF] tracking-wide leading-none pt-0.5'>
           {winner.lotteryBadge}
         </span>
+      </div> */}
+
+      <div>
+        <Image className='absolute top-2 left-2' width={105} height={59} src={'/lotteries-logo/1.png'} alt={''} />
       </div>
 
       {/* Информация (снизу) */}
