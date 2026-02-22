@@ -36,7 +36,7 @@ interface LotteryCardProps {
   backgroundImage?: string;
   lottieSrc?: string;
   prizeFontId?: string;
-  theme?: 'white' | 'dark';
+  theme?: 'white' | 'dark' | string;
 
   ticketStatus?: CardStatus;
   variant?: CardVariant;

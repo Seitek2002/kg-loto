@@ -18,7 +18,7 @@ interface BaseCardProps {
   lottieSrc?: string;
   className?: string;
   aspectRatio?: string;
-  theme?: 'dark' | 'white';
+  theme?: 'dark' | 'white' | string;
 }
 
 export const BaseCard = ({

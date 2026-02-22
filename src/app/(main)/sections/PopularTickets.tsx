@@ -32,7 +32,19 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
           title: 'Лотерея ДАСТАН',
           subtitle: 'Приходите позже',
           backgroundImage: '/animations/3.json',
-          buttonPrice: 300
+          buttonPrice: 300,
+          drawTime: '00:00',
+          prizeText: '1 000 000 ₽',
+          theme: 'white',
+        }, {
+          id: '10',
+          title: 'ЛЕГЕнДАРНАЯ ЛОТЕРЕЯ',
+          subtitle: 'Приходите позже',
+          backgroundImage: '/animations/4.json',
+          buttonPrice: 300,
+          drawTime: '00:00',
+          prizeText: '1 000 000 ₽',
+          theme: 'white',
         }].map((loto) => {
           const bgUrl = loto.backgroundImage || '';
 
