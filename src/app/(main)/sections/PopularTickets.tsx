@@ -27,7 +27,13 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
       </Description>
 
       <div className='flex justify-stretch flex-wrap gap-4 mt-6'>
-        {lotteries.map((loto) => {
+        {[...lotteries, {
+          id: '0',
+          title: 'Лотерея ДАСТАН',
+          subtitle: 'Приходите позже',
+          backgroundImage: '/animations/3.json',
+          buttonPrice: 300
+        }].map((loto) => {
           const bgUrl = loto.backgroundImage || '';
 
           const isAnimation =
