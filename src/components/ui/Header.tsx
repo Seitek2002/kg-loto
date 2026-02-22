@@ -89,7 +89,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
             <Link href='/#check' className='cursor-pointer ml-4'>Получить выигрыш</Link>
           </div>
         </div>
-        <div className='hidden py-3 font-rubik lg:flex w-full items-center justify-between px-8 bg-[#F56400]'>
+        <div className='hidden py-3 font-rubik lg:flex w-full items-center justify-between px-8 bg-white'>
           <Link href='/' className='relative w-58 h-25'>
             <Image
               src='/logo.png'

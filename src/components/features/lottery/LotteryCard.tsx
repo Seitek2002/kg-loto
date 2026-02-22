@@ -44,14 +44,11 @@ interface LotteryCardProps {
 
 export function LotteryCard({
   title,
-  description,
   price,
-  prize,
 
   backgroundId,
   backgroundImage,
   lottieSrc,
-  prizeFontId = 'default',
   theme = 'white',
 
   ticketStatus,

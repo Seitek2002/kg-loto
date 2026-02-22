@@ -16,7 +16,7 @@ export default function MainLayout({
 }) {
   return (
     <div className='relative min-h-screen'>
-      <Header />
+      <Header theme='dark' />
 
       <main className='pb-20 mx-auto min-h-screen shadow-sm'>
         {children}

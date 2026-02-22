@@ -47,7 +47,7 @@ const NewHero = () => {
 
   return (
     <div className='w-full bg-[#FFFBF4] pt-6 pb-20 font-rubik overflow-hidden'>
-      <section className='max-w-[1200px] mx-auto px-4 relative mb-16'>
+      <section className='max-w-300 mx-auto px-4 relative mb-16'>
         <Swiper
           modules={[Navigation]}
           navigation={{
@@ -55,13 +55,13 @@ const NewHero = () => {
             nextEl: '.hero-next',
           }}
           allowTouchMove={false}
-          className='rounded-[32px] md:rounded-[40px] overflow-hidden shadow-lg'
+          className='rounded-4xl md:rounded-[40px] overflow-hidden shadow-lg'
         >
           {HERO_SLIDES.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div
                 ref={heroRef}
-                className='relative w-full aspect-[4/3] md:aspect-[21/9] flex items-center touch-none'
+                className='relative w-full aspect-4/3 md:aspect-21/9 flex items-center touch-none'
                 onPointerMove={handlePointerMove}
               >
                 <div className='absolute inset-0 w-full h-full z-0 select-none pointer-events-none'>
