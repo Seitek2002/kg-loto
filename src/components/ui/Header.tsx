@@ -78,16 +78,15 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
     <>
       <header>
         <div className='bg-[#0B1F3B] flex justify-between text-white py-3 px-8'>
-          <div></div>
+          <Link href='/about'>
+            О компании
+          </Link>
           <a href='tel:996312440107' className='flex'>
             Горячая линия 996 312 44 01 07
           </a>
-          <div>
-            <Link href='/#check' className='cursor-pointer'>
-              Проверить билет
-            </Link>
-            <Link href='/#check' className='cursor-pointer ml-4'>Получить выигрыш</Link>
-          </div>
+          <Link href='/#check' className='cursor-pointer'>
+            Проверить билет
+          </Link>
         </div>
         <div className='hidden py-3 font-rubik lg:flex w-full items-center justify-between px-8 bg-white'>
           <Link href='/' className='relative w-58 h-25'>
