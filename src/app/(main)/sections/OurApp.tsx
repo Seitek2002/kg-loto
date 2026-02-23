@@ -3,11 +3,38 @@
 import { Title } from '@/components/ui/Title';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 export const OurApp = () => {
+  // 1. Создаем ссылку на контейнер секции, чтобы отслеживать скролл относительно него
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // 2. Получаем прогресс скролла конкретно для этой секции
+  // offset: ['start end', 'end start'] означает:
+  // Начало анимации: когда верх секции появляется внизу экрана (start end)
+  // Конец анимации: когда низ секции уходит за верх экрана (end start)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  // 3. Преобразуем прогресс скролла (от 0 до 1) в значения смещения по Y
+  // Телефон будет двигаться от +50px вниз до -50px вверх во время прокрутки
+  const yParallax = useTransform(scrollYProgress, [0, 1], [80, -80]);
+
+  // Добавим легкий параллакс и для текста, чтобы он двигался в противоположную сторону
+  const yTextParallax = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+
   return (
-    <section className='hidden md:flex relative w-full bg-white rounded-[40px] overflow-hidden min-h-125 items-center'>
-      <div className='relative z-10 w-[55%] pl-16 py-16 flex flex-col h-full justify-center'>
+    <section
+      ref={sectionRef}
+      className='hidden md:flex relative w-full bg-white rounded-[40px] overflow-hidden min-h-125 items-center my-12' // Добавил my-12 для отступов
+    >
+      <motion.div
+        style={{ y: yTextParallax }} // Применяем легкий параллакс к текстовому блоку
+        className='relative z-10 w-[55%] pl-16 py-16 flex flex-col h-full justify-center'
+      >
         <Title>скачайте наше приложение</Title>
 
         <div className='max-w-md mb-12 text-xs lg:text-xl text-[#6E6E6E] my-3'>
@@ -34,17 +61,24 @@ export const OurApp = () => {
           <StoreButton type='appstore' />
           <StoreButton type='googleplay' />
         </div>
-      </div>
+      </motion.div>
 
-      <div className='absolute top-0 right-0 bottom-0 w-[50%] h-full pointer-events-none'>
-        <Image
-          src='/our-app.png'
-          alt='Mobile App'
-          fill
-          className='object-cover object-left'
-          sizes='50vw'
-          priority
-        />
+      <div className='absolute top-0 right-0 bottom-0 w-[50%] h-full pointer-events-none flex items-center justify-center'>
+        {/* 🔥 Обернули картинку в motion.div и применили значение yParallax */}
+        <motion.div
+          style={{ y: yParallax }}
+          // Увеличиваем высоту картинки (h-[120%]), чтобы при смещении вверх/вниз не было видно обрезанных краев
+          className='relative w-full h-[120%]'
+        >
+          <Image
+            src='/our-app.png'
+            alt='Mobile App'
+            fill
+            className='object-cover object-left'
+            sizes='50vw'
+            priority
+          />
+        </motion.div>
       </div>
     </section>
   );
@@ -56,7 +90,7 @@ const StoreButton = ({ type }: { type: 'appstore' | 'googleplay' }) => {
   return (
     <Link
       href='#'
-      className='flex items-center gap-3 bg-[#1E1E1E] text-white px-6 py-3 rounded-full hover:bg-black transition-colors min-w-[180px]'
+      className='flex items-center gap-3 bg-[#1E1E1E] text-white px-6 py-3 rounded-full hover:bg-black active:scale-95 transition-all min-w-[180px] shadow-md' // Добавил active:scale-95 и shadow-md
     >
       {isApple ? (
         <svg className='w-6 h-6 fill-current' viewBox='0 0 24 24'>
@@ -70,7 +104,7 @@ const StoreButton = ({ type }: { type: 'appstore' | 'googleplay' }) => {
 
       <div className='flex flex-col'>
         <span className='text-[9px] uppercase font-rubik text-gray-400 leading-none'>
-          {isApple ? 'Скачайте с' : 'Скачайте с'}
+          Скачайте с
         </span>
         <span className='text-[13px] font-bold font-benzin uppercase leading-tight mt-1'>
           {isApple ? 'App Store' : 'Google Play'}
