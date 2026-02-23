@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
-import CheckResultModal from '@/components/features/modal/CheckResultModal';
+import CheckResultModal from '@/components/features/modal/CheckResultModal'; // Убедись, что путь правильный
+import { MagneticButton } from '@/components/ui/MagneticButton'; // 🔥 Добавили магнитную кнопку
 
 export const CheckLottery = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -39,24 +40,27 @@ export const CheckLottery = () => {
           >
             Номер билета
           </label>
+          {/* 🔥 Эффект фокуса уже встроен через focus:ring-[#FFD600], но можно добавить shadow */}
           <input
             id='draw-number'
             type='text'
             value={ticketNumber}
             onChange={(e) => setTicketNumber(e.target.value)}
             placeholder='Например: 200'
-            className='w-full lg:text-xl p-4 lg:py-7 lg:px-10 rounded-full lg:rounded-r-none bg-white text-sm text-gray-900 placeholder:text-gray-400 border-none outline-none focus:ring-2 focus:ring-[#FFD600] transition-all font-rubik'
+            className='w-full lg:text-xl p-4 lg:py-7 lg:px-10 rounded-full lg:rounded-r-none bg-white text-sm text-gray-900 placeholder:text-gray-400 border-none outline-none focus:ring-2 focus:ring-[#FFD600] focus:shadow-lg transition-all duration-300 font-rubik'
           />
         </div>
 
-        {/* Кнопка */}
-        <button
-          type='submit'
-          disabled={!ticketNumber.trim()}
-          className='mt-4 cursor-pointer lg:rounded-l-none lg:mt-0 lg:text-xl w-full lg:w-1/2 h-11.5 lg:h-auto lg:py-7 bg-[#262626] text-white rounded-full font-bold text-xs uppercase tracking-wider hover:bg-black active:scale-[0.98] transition-all shadow-lg disabled:opacity-70 disabled:active:scale-100'
-        >
-          Проверить
-        </button>
+        {/* 🔥 Обернули кнопку в MagneticButton */}
+        <MagneticButton className='w-full lg:w-1/2 mt-4 lg:mt-0'>
+          <button
+            type='submit'
+            disabled={!ticketNumber.trim()}
+            className='cursor-pointer lg:rounded-l-none lg:text-xl w-full h-11.5 lg:h-auto lg:py-7 bg-[#262626] text-white rounded-full font-bold text-xs uppercase tracking-wider hover:bg-black active:scale-[0.98] transition-all shadow-lg disabled:opacity-70 disabled:active:scale-100'
+          >
+            Проверить
+          </button>
+        </MagneticButton>
       </form>
 
       {/* Модалка */}
