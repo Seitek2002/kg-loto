@@ -1,13 +1,18 @@
-'use client';
-
 import Link from 'next/link';
 import { LotteryCard } from '@/components/features/lottery/LotteryCard';
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
-import { LotteryItem } from '@/types/api';
+import { ApiResponse, LotteryItem } from '@/types/api';
+import { api } from '@/lib/api';
 
-interface PopularTicketsProps {
-  lotteries: LotteryItem[];
+async function getLotteriesData(): Promise<LotteryItem[]> {
+  try {
+    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
+    return data.data || [];
+  } catch (error) {
+    console.error('Lotteries Error:', error);
+    return [];
+  }
 }
 
 const formatTime = (time: string) => {
@@ -15,7 +20,9 @@ const formatTime = (time: string) => {
   return time.split(':').slice(0, 2).join(':');
 };
 
-export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
+export const PopularTickets = async () => {
+  const lotteries = await getLotteriesData();
+
   if (!lotteries || lotteries.length === 0) return null;
 
   return (
@@ -27,29 +34,32 @@ export const PopularTickets = ({ lotteries }: PopularTicketsProps) => {
       </Description>
 
       <div className='flex justify-stretch flex-wrap gap-4 mt-6'>
-        {[...lotteries, {
-          id: '0',
-          title: 'Лотерея ДАСТАН',
-          subtitle: 'Приходите позже',
-          backgroundImage: '/animations/3.json',
-          buttonPrice: 300,
-          drawTime: '00:00',
-          prizeText: '1 000 000 ₽',
-          theme: 'white',
-        }, {
-          id: '10',
-          title: 'ЛЕГЕнДАРНАЯ ЛОТЕРЕЯ',
-          subtitle: 'Приходите позже',
-          backgroundImage: '/animations/4.json',
-          buttonPrice: 300,
-          drawTime: '00:00',
-          prizeText: '1 000 000 ₽',
-          theme: 'white',
-        }].map((loto) => {
+        {[
+          ...lotteries,
+          {
+            id: '0',
+            title: 'Лотерея ДАСТАН',
+            subtitle: 'Приходите позже',
+            backgroundImage: '/animations/3.json',
+            buttonPrice: 300,
+            drawTime: '00:00',
+            prizeText: '1 000 000 ₽',
+            theme: 'white',
+          },
+          {
+            id: '10',
+            title: 'ЛЕГЕнДАРНАЯ ЛОТЕРЕЯ',
+            subtitle: 'Приходите позже',
+            backgroundImage: '/animations/4.json',
+            buttonPrice: 300,
+            drawTime: '00:00',
+            prizeText: '1 000 000 ₽',
+            theme: 'white',
+          },
+        ].map((loto) => {
           const bgUrl = loto.backgroundImage || '';
 
-          const isAnimation =
-            bgUrl.toLowerCase().endsWith('.json');
+          const isAnimation = bgUrl.toLowerCase().endsWith('.json');
 
           return (
             <Link

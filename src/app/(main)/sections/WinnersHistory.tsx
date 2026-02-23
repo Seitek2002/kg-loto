@@ -1,65 +1,23 @@
-'use client';
+import { ApiResponse, PaginatedResult, Winner } from '@/types/api';
+import { api } from '@/lib/api';
+import { WinnersHistoryClient } from './WinnersHistoryClient';
 
-import Link from 'next/link';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Title } from '@/components/ui/Title';
-import { Description } from '@/components/ui/Description';
-import { WinnerCard } from '@/components/ui/WinnerCard';
-import 'swiper/css';
-import { Winner } from '@/types/api';
-
-interface WinnersHistoryProps {
-  winners: Winner[];
+// Запрос остается здесь (на сервере)
+async function getWinnersData(): Promise<Winner[]> {
+  try {
+    const { data } =
+      await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/');
+    return data.data.results || [];
+  } catch (error) {
+    console.error('Winners Error:', error);
+    return [];
+  }
 }
 
-export const WinnersHistory = ({ winners }: WinnersHistoryProps) => {
-  const displayWinners = winners?.slice(0, 6) || [];
+// Серверный компонент (может быть async)
+export const WinnersHistory = async () => {
+  const winners = await getWinnersData();
 
-  if (!displayWinners || displayWinners.length === 0) return null;
-
-  return (
-    <section className='my-12 relative overflow-hidden'>
-      <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
-        <div className='max-w-2xl'>
-          <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>
-          <Description>
-            Популярные лотереи привлекают внимание благодаря крупным джекпотам,
-            частым тиражам и удобным условиям участия.
-          </Description>
-        </div>
-
-        <Link
-          href='/winners'
-          className='hidden lg:inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] hover:bg-gray-50 transition-colors shadow-sm'
-        >
-          Все победители
-        </Link>
-      </div>
-
-      <Swiper
-        spaceBetween={16}
-        slidesPerView={1.1}
-        breakpoints={{
-          640: { slidesPerView: 2.2 },
-          1024: { slidesPerView: 3.2 },
-        }}
-        className='overflow-visible!'
-      >
-        {winners.map((winner) => (
-          <SwiperSlide key={winner.id}>
-            <WinnerCard key={winner.id} winner={winner} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-
-      <div className='mt-8 lg:hidden'>
-        <Link
-          href='/winners'
-          className='flex w-full items-center justify-center py-4 bg-white rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] shadow-md active:scale-95 transition-transform'
-        >
-          Все победители
-        </Link>
-      </div>
-    </section>
-  );
+  // Передаем данные в клиентскую часть
+  return <WinnersHistoryClient winners={winners} />;
 };

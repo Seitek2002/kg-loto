@@ -1,15 +1,21 @@
-'use client';
-
 import { Description } from '@/components/ui/Description';
 import { FAQItem } from '@/components/ui/FAQItem';
 import { Title } from '@/components/ui/Title';
-import { QAItem } from '@/types/api'; // Импорт типа
+import { api } from '@/lib/api';
+import { ApiResponse, QAItem } from '@/types/api'; // Импорт типа
 
-interface FAQProps {
-  questions: QAItem[];
+async function getFAQData(): Promise<QAItem[]> {
+  try {
+    const { data } = await api.get<ApiResponse<QAItem[]>>('/qa/');
+    return data.data || [];
+  } catch (error) {
+    console.error('FAQ Error:', error);
+    return [];
+  }
 }
 
-export const FAQ = ({ questions }: FAQProps) => {
+export const FAQ = async () => {
+  const questions = await getFAQData();
 
   if (!questions || questions.length === 0) return null;
 
