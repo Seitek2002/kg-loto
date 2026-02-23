@@ -9,6 +9,7 @@ import { WhereToBuy } from './sections/WhereToBuy';
 import NewHero from './sections/NewHero';
 import UnderHero from './sections/UnderHero';
 import { Preloader } from '@/components/ui/Preloader';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 export const revalidate = 600;
 
@@ -17,7 +18,6 @@ const BlockSkeleton = () => (
 );
 
 export default function Home() {
-
   return (
     <>
       <Preloader />
@@ -31,25 +31,37 @@ export default function Home() {
           <PopularTickets />
         </Suspense>
 
-        <CheckLottery />
+        <ScrollReveal direction='up'>
+          <CheckLottery />
+        </ScrollReveal>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <WinnersHistory />
+          <ScrollReveal direction="left">
+            <WinnersHistory />
+          </ScrollReveal>
         </Suspense>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <BestMaterials />
+          <ScrollReveal direction="right">
+            <BestMaterials />
+          </ScrollReveal>
         </Suspense>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <WhereToBuy />
+          <ScrollReveal direction="up">
+            <WhereToBuy />
+          </ScrollReveal>
         </Suspense>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <FAQ />
+          <ScrollReveal direction="up">
+            <FAQ />
+          </ScrollReveal>
         </Suspense>
 
-        <OurApp />
+        <ScrollReveal direction="up">
+          <OurApp />
+        </ScrollReveal>
       </div>
 
       <div className='h-8' />
