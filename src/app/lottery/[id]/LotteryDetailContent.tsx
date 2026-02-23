@@ -53,11 +53,9 @@ export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
     }
   };
 
-  console.log(lottery);
-
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-10'>
-      <Header theme='light' />
+      <Header theme='dark' />
       <div className='sticky pl-2 top-4 z-10 h-0'>
         <PageHeader title='' />
       </div>
@@ -81,7 +79,7 @@ export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
               {lottery.prizeTiers.map((tier) => (
                 <div
                   key={tier.id}
-                  onClick={handleBuyOrViewTicket}
+                  onClick={() => router.push(`/tickets/${tier.id}`)}
                   className='cursor-pointer active:scale-[0.98] transition-transform'
                 >
                   <PrizeTierCard

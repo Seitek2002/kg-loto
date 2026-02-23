@@ -18,7 +18,7 @@ interface PageProps {
 
 export default async function TicketDetailPage({ params }: PageProps) {
   // 1. Получаем ID из параметров (на сервере это просто пропсы)
-  const { id } = params;
+  const { id } = await params;
 
   // 2. Загружаем популярные лотереи
   const popularLotteries = await getLotteriesData();
