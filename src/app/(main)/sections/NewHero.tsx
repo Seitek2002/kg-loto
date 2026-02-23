@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef } from 'react';
+import { motion } from 'framer-motion'; // 🔥 Импортируем Framer Motion
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -59,39 +60,63 @@ const NewHero = () => {
         >
           {HERO_SLIDES.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <div
-                ref={heroRef}
-                className='relative w-full aspect-4/3 md:aspect-21/9 flex items-center touch-none'
-                onPointerMove={handlePointerMove}
-              >
-                <div className='absolute inset-0 w-full h-full z-0 select-none pointer-events-none'>
-                  {/* Передняя картинка */}
-                  <Image
-                    src={slide.imageFront}
-                    alt='Hero Front'
-                    fill
-                    className='object-cover'
-                    priority={slide.id === 1}
-                  />
-
-                  {/* Задняя картинка с маской */}
-                  <div className='absolute inset-0 w-full h-full reveal-layer'>
+              {/* 🔥 Используем функцию с isActive, чтобы знать, когда запускать анимацию */}
+              {({ isActive }) => (
+                <div
+                  ref={heroRef}
+                  // Добавили overflow-hidden, чтобы анимация масштаба не выходила за рамки
+                  className='relative w-full aspect-4/3 md:aspect-21/9 flex items-center touch-none overflow-hidden'
+                  // Оставляем эффект рентгена только для первого слайда (как ты просил ранее)
+                  onPointerMove={handlePointerMove}
+                >
+                  {/* 🔥 АНИМИРУЕМ КОНТЕЙНЕР С КАРТИНКАМИ (Эффект Scale) */}
+                  <motion.div
+                    initial={{ scale: 1.15 }}
+                    animate={{ scale: isActive ? 1 : 1.15 }}
+                    transition={{ duration: 1.5, ease: [0.25, 1, 0.5, 1] }}
+                    className='absolute inset-0 w-full h-full z-0 select-none pointer-events-none'
+                  >
+                    {/* Передняя картинка */}
                     <Image
-                      src={slide.imageBack}
-                      alt='Hero Back'
+                      src={slide.imageFront}
+                      alt='Hero Front'
                       fill
                       className='object-cover'
                       priority={slide.id === 1}
                     />
+
+                    {/* Задняя картинка с маской (Рентген) */}
+                    <div className='absolute inset-0 w-full h-full reveal-layer'>
+                      <Image
+                        src={slide.imageBack}
+                        alt='Hero Back'
+                        fill
+                        className='object-cover'
+                        priority={slide.id === 1}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* 🔥 АНИМИРУЕМ ТЕКСТ (Эффект Fade Up) */}
+                  <div className='relative z-10 pl-8 md:pl-16 max-w-2xl pointer-events-none'>
+                    <motion.h1
+                      initial={{ opacity: 0, y: 40 }}
+                      animate={{
+                        opacity: isActive ? 1 : 0,
+                        y: isActive ? 0 : 40,
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        delay: isActive ? 0.3 : 0, // Задержка 0.3s после переключения слайда
+                        ease: [0.76, 0, 0.24, 1],
+                      }}
+                      className='text-3xl md:text-5xl lg:text-6xl font-black font-benzin text-white uppercase leading-[1.1] whitespace-pre-line drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]'
+                    >
+                      {slide.title}
+                    </motion.h1>
                   </div>
                 </div>
-
-                {/* <div className='relative z-10 pl-8 md:pl-16 max-w-2xl pointer-events-none'>
-                  <h1 className='text-3xl md:text-5xl lg:text-6xl font-black font-benzin text-white uppercase leading-[1.1] whitespace-pre-line drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]'>
-                    {slide.title}
-                  </h1>
-                </div> */}
-              </div>
+              )}
             </SwiperSlide>
           ))}
         </Swiper>
