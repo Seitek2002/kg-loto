@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'; // 🔥 Импортируем Framer Mo
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
+import { MagneticButton } from '@/components/ui/MagneticButton';
 
 // --- МОКОВЫЕ ДАННЫЕ ---
 
@@ -114,6 +115,26 @@ const NewHero = () => {
                     >
                       {slide.title}
                     </motion.h1>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 40 }}
+                      animate={{
+                        opacity: isActive ? 1 : 0,
+                        y: isActive ? 0 : 40,
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        delay: isActive ? 0.4 : 0, // Появляется чуть позже заголовка
+                        ease: [0.76, 0, 0.24, 1],
+                      }}
+                      className='inline-block pointer-events-auto' // Возвращаем pointer-events-auto, чтобы кнопка кликалась!
+                    >
+                      <MagneticButton>
+                        <button className='px-8 py-4 bg-[#FFD600] text-[#2D2D2D] rounded-full font-benzin font-bold text-sm uppercase shadow-lg hover:scale-105 transition-transform'>
+                          ИГРАТЬ СЕЙЧАС
+                        </button>
+                      </MagneticButton>
+                    </motion.div>
                   </div>
                 </div>
               )}
