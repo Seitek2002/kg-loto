@@ -17,6 +17,7 @@ import { WhereToBuy } from './sections/WhereToBuy';
 import { Winner } from '@/data/mock-content';
 import NewHero from './sections/NewHero';
 import UnderHero from './sections/UnderHero';
+import { Preloader } from '@/components/ui/Preloader';
 
 export const revalidate = 600;
 
@@ -82,7 +83,9 @@ export default async function Home() {
   ]);
 
   return (
-    <div>
+    <>
+      <Preloader />
+
       {/* <Hero slides={slides} /> */}
       <NewHero />
       <UnderHero />
@@ -101,6 +104,6 @@ export default async function Home() {
       </div>
 
       <div className='h-8' />
-    </div>
+    </>
   );
 }
