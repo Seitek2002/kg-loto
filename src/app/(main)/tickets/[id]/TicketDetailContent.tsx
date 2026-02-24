@@ -23,7 +23,6 @@ interface TicketDetailContentProps {
 
 export const TicketDetailContent = ({
   id,
-  popularLotteries,
 }: TicketDetailContentProps) => {
   const userTicket = useTicketsStore((state) =>
     state.tickets.find((t) => t.id === id),
@@ -94,7 +93,7 @@ export const TicketDetailContent = ({
             Смотрите также
           </h3>
           {/* 🔥 Передаем данные в PopularTickets */}
-          <PopularTickets lotteries={popularLotteries} />
+          <PopularTickets />
         </div>
 
         <div className='mt-8 text-center lg:hidden'>

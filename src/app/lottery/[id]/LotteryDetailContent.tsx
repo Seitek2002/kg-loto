@@ -17,7 +17,7 @@ interface ContentProps {
   winners: Winner[]; // 🔥 Добавили проп для победителей
 }
 
-export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
+export const LotteryDetailContent = ({ lottery }: ContentProps) => {
   const router = useRouter();
   const { tickets, addTicket } = useTicketsStore();
 
@@ -95,7 +95,7 @@ export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
           </section>
         )}
 
-        <WinnersHistory winners={winners} />
+        <WinnersHistory />
       </div>
     </div>
   );
