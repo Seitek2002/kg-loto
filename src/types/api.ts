@@ -1,12 +1,15 @@
 // src/types/api.ts
 
+// ==========================================
+// 1. БАЗОВЫЕ ТИПЫ (ОТВЕТЫ API)
+// ==========================================
+
 export interface ApiResponse<T> {
   data: T;
   meta: Record<string, unknown>;
-  errors: unknown[];
+  errors?: unknown[]; // Сделал опциональным, так как при 200 OK его может не быть
 }
 
-// 🔥 НОВЫЙ ТИП ДЛЯ ПАГИНАЦИИ
 export interface PaginatedResult<T> {
   count: number;
   next: string | null;
@@ -14,16 +17,176 @@ export interface PaginatedResult<T> {
   results: T[];
 }
 
-// --- ОСТАЛЬНЫЕ ТИПЫ ---
+// ==========================================
+// 2. ПОЛЬЗОВАТЕЛЬ, АВТОРИЗАЦИЯ И ПРОФИЛЬ
+// ==========================================
+
+export interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface KGLotteryProfile {
+  email?: string;
+  username?: string;
+  deviceId?: string;
+  firstName?: string;
+  lastName?: string;
+  middleName?: string;
+  avatar?: string;
+  passportNumber?: string;
+  sex?: boolean;
+  citizenship?: string;
+  dateOfBirth?: string; // Формат YYYY-MM-DD
+  issuedBy?: string;
+  issueDate?: string; // Формат YYYY-MM-DD
+  validUntil?: string; // Формат YYYY-MM-DD
+  address?: string;
+  passportFrontScan?: string;
+  passportBackScan?: string;
+  confirmedAge18?: boolean;
+}
+
+export interface User {
+  id: number;
+  phoneNumber: string;
+  fullName: string;
+  inn: string;
+  isActive: boolean;
+  isPhoneVerified: boolean;
+  // Бэкенд может отдавать профиль строкой (JSON), либо объектом.
+  // Мы будем парсить его в объект, поэтому ставим тип интерфейса.
+  kglotteryProfile: KGLotteryProfile | null;
+}
+
+// ==========================================
+// 3. OTP КОДЫ (СМС)
+// ==========================================
+
+export interface OtpSendResponse {
+  transactionId: string;
+  message: string;
+  status: string;
+}
+
+export interface OtpVerifyResponse {
+  verified: boolean;
+  message: string;
+  status: string;
+  // Если purpose === 'register', бэкенд возвращает токены
+  accessToken?: string;
+  refreshToken?: string;
+}
+
+// ==========================================
+// 4. ЛОТЕРЕИ И БИЛЕТЫ
+// ==========================================
+
+export interface LotteryItem {
+  id: number;
+  title: string;
+  subtitle?: string;
+  prizeText: string;
+  buttonPrice: number | null;
+  drawTime: string;
+  theme: 'white' | 'dark';
+  backgroundImage: string;
+  fontFile?: string | null;
+  lottieSrc?: string;
+}
+
+export interface PrizeTier {
+  id: number;
+  category: string;
+  amount: string;
+  winners: number;
+  description: string | null;
+  backgroundImage?: string;
+}
+
+export interface LotteryDetail {
+  id: number;
+  title: string;
+  subtitle: string;
+  prizeText: string;
+  buttonText: string;
+  buttonPrice: number | null;
+  buttonLabel: string;
+  drawTime: string;
+  theme: 'white' | 'dark';
+  backgroundImage: string;
+  font: string;
+  heroTitle: string | null;
+  prizeTiers: PrizeTier[];
+}
+
+export interface CombinationCheckResult {
+  isWinning: boolean;
+  combinationId: number;
+  message: string;
+  prizeType?: string;
+  prizeAmount?: string;
+  prizeProduct?: string | null;
+}
+
+// ==========================================
+// 5. ВЫВОД СРЕДСТВ
+// ==========================================
+
+export type WithdrawalMethod = 'mbank' | 'visa' | 'elcart';
+export type WithdrawalStatus =
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'rejected';
+
+export interface Withdrawal {
+  id: string; // UUID
+  ticketId: number;
+  ticketShortId: string;
+  method: WithdrawalMethod;
+  accountNumber: string;
+  amount: string; // Строка формата decimal ("1000.00")
+  status: WithdrawalStatus;
+  rejectionReason: string | null;
+  createdAt: string;
+}
+
+export interface WithdrawalCreateRequest {
+  ticketId: string; // UUID внешнего билета
+  method: WithdrawalMethod;
+  accountNumber: string;
+  amount: string;
+}
+
+// ==========================================
+// 6. КОНТЕНТ (СЛАЙДЕРЫ, НОВОСТИ, FAQ)
+// ==========================================
+
+export interface SliderItem {
+  id: number;
+  title: string;
+  subtitle: string;
+  prizeText: string;
+  image: string;
+  imageMobile: string | null;
+  imageLayer: string | null;
+  imageMobileLayer: string | null;
+  hasAnimation: boolean;
+  buttonText: string;
+  buttonPrice: number | null;
+  buttonLabel: string;
+  buttonUrl: string;
+}
 
 export interface NewsItem {
   id: number;
   title: string;
   slug: string;
   shortText: string;
-  content?: string; // На случай если на детальной странице приходит content
+  content?: string;
   image: string | null;
-  publishedAt: string;
+  publishedAt: string | null;
   theme: 'dark' | 'light';
   descriptionPosition: 'none' | 'top' | 'bottom';
 }
@@ -35,57 +198,17 @@ export interface Winner {
   prize: string;
   image: string | null;
   lotteryBadge: string;
+  lotteryPhoto?: string;
 }
 
-export interface Lottery {
+export interface RecentWinner {
   id: number;
-  title: string;
-  description: string;
-  prize: string;
-  price: string;
-  drawTime: string;
-  theme: 'white' | 'dark';
-  backgroundId: string;
-  prizeFontId: string;
-  time?: string;
-}
-
-export interface LotteryItem {
-  id: number;
-  title: string;
-  description: string; // В Swagger этого поля нет в списке, но оно нужно для карточки. Возможно оно называется `subtitle` или его нет.
-  // Если в API списка нет описания, придется или убрать его, или использовать заглушку.
-  // Судя по твоему скриншоту Swagger, там есть: title, subtitle, prizeText, drawTime и т.д.
-  // Давай ориентироваться на скриншот:
-  subtitle?: string;
-  prizeText: string;
-  buttonPrice: number;
-  drawTime: string;
-  theme: 'white' | 'dark';
-  backgroundImage: string;
-  fontFile: string | null;
-  lottieSrc: string;
-}
-
-export interface Winner {
-  id: number;
-  name: string;
-  city: string;
-  prize: string;
-  image: string | null; // В схеме nullable: true
-  lotteryBadge: string; // "ОНОЙ", "LUCKY DROP" и т.д.
-}
-
-export interface SliderItem {
-  id: number;
-  title: string; // "СТАНЬ МИЛЛИОНЕРОМ"
-  subtitle: string; // "Призовой фонд 10 000 000 сом"
-  prizeText: string; // "1 000 000 СОМ"
-  image: string; // URL картинки
-  buttonText: string; // "Играть"
-  buttonPrice: number; // 100
-  buttonLabel: string; // "ИГРАТЬ • 100 СОМ"
-  buttonUrl: string; // Ссылка (может быть пустой)
+  lotteryPhoto: string;
+  lotteryLogo: string;
+  winnerName: string;
+  winAmount: string;
+  winDate: string;
+  category: string;
 }
 
 export interface QAItem {
@@ -98,31 +221,6 @@ export interface BranchItem {
   id: number;
   name: string;
   address: string;
-  lat: string; // API отдает координаты строками! "42.8755"
+  lat: string;
   lng: string;
-}
-
-export interface PrizeTier {
-  id: number;
-  category: string; // например "ДЖЕКПОТ"
-  amount: string; // например "1 000 000 с"
-  winners: number; // количество победителей
-  description: string; // описание
-  backgroundImage?: string;
-}
-
-export interface LotteryDetail {
-  id: number;
-  title: string;
-  subtitle: string;
-  prizeText: string;
-  buttonText: string;
-  buttonPrice: number;
-  buttonLabel: string;
-  drawTime: string;
-  theme: 'white' | 'dark';
-  backgroundImage: string; // Полный URL картинки
-  font: string; // "benzin"
-  heroTitle: string; // Заголовок для баннера
-  prizeTiers: PrizeTier[]; // 🔥 Массив призов
 }
