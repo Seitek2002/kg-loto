@@ -1,6 +1,6 @@
 // src/store/auth.ts
 import { AuthService } from '@/services/auth';
-import { UserProfile } from '@/types/auth';
+import { User } from '@/types/api';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -9,12 +9,11 @@ interface AuthState {
   refreshToken: string | null;
   isAuth: boolean;
 
-  user: UserProfile | null; // Обновим тип
-  fetchUser: () => Promise<void>; // Действие для загрузки
+  user: User | null;
+  fetchUser: () => Promise<void>;
 
-  // Действия
   setTokens: (access: string, refresh: string) => void;
-  setUser: (user: UserProfile) => void;
+  setUser: (user: User) => void;
   logout: () => void;
 }
 
@@ -29,7 +28,22 @@ export const useAuthStore = create<AuthState>()(
       fetchUser: async () => {
         try {
           const { data } = await AuthService.getMe();
-          set({ user: data.data });
+          const userData = data.data;
+
+          // 🔥 ХАК: Если бэкенд прислал профиль строкой (JSON), парсим его в объект
+          if (
+            userData.kglotteryProfile &&
+            typeof userData.kglotteryProfile === 'string'
+          ) {
+            try {
+              userData.kglotteryProfile = JSON.parse(userData.kglotteryProfile);
+            } catch (parseError) {
+              console.error('Ошибка парсинга kglotteryProfile:', parseError);
+              userData.kglotteryProfile = null;
+            }
+          }
+
+          set({ user: userData });
         } catch (error) {
           console.error('Failed to fetch user', error);
         }
