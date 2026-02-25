@@ -7,7 +7,7 @@ const toCamelCase = (str: string) =>
 
 const toSnakeCase = (str: string) =>
   str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
-o
+
 const isPlainObject = (obj: any): boolean => {
   return (
     obj !== null &&
