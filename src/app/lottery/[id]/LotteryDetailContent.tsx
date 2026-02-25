@@ -2,15 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 // import { PageHeader } from '@/components/ui/PageHeader';
-import { Hero, HeroSlideData } from '@/app/(main)/sections/Hero';
 import { CheckLottery } from '@/widgets/CheckLottery';
-import { WinnersHistory } from '@/app/(main)/sections/WinnersHistory';
 import { LotteryConditions } from '@/components/features/lottery/LotteryConditions';
 import { PrizeTierCard } from '@/components/features/lottery/PrizeTierCard';
 import { useTicketsStore, UserTicket } from '@/store/tickets';
 import { LotteryDetail, Winner } from '@/types/api'; // 🔥 Импорт Winner
 import { Header } from '@/components/ui/Header';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { WinnersHistory } from '@/widgets/WinnersHistory';
+import { Hero, HeroSlideData } from '@/widgets/Hero';
 
 interface ContentProps {
   lottery: LotteryDetail; // Данные с сервера
