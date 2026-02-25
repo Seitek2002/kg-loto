@@ -1,6 +1,6 @@
 import { ApiResponse, LotteryItem } from '@/types/api';
 import { api } from '@/lib/api';
-import { PopularTicketsClient } from './PopularTicketsClient'; // Импортируем UI
+import { PopularTicketsClient } from './client'; // Импортируем UI
 
 async function getLotteriesData(): Promise<LotteryItem[]> {
   try {

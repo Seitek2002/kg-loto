@@ -71,7 +71,7 @@ export const WhereToBuyClient = ({ branches }: WhereToBuyClientProps) => {
         />
 
         {activeBranch && (
-          <div className='absolute bottom-6 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-[400]'>
+          <div className='absolute bottom-6 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-400'>
             <div className='bg-white/90 backdrop-blur-md px-6 py-4 rounded-3xl shadow-xl border border-white/50 flex flex-col items-center text-center lg:flex-row lg:text-left gap-2 lg:gap-4 max-w-xl mx-auto'>
               <span className='text-gray-400 text-[10px] lg:text-xs font-bold font-benzin uppercase tracking-wide whitespace-nowrap'>
                 Лотереи {activeBranch.name} по адресу:

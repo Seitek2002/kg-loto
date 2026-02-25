@@ -1,6 +1,6 @@
 import { api } from '@/lib/api';
 import { ApiResponse, BranchItem } from '@/types/api';
-import { WhereToBuyClient } from './WhereToBuyClient'; // 🔥 Импортируем наш клиентский UI
+import { WhereToBuyClient } from './client'; // 🔥 Импортируем наш клиентский UI
 
 async function getBranchesData(): Promise<BranchItem[]> {
   try {

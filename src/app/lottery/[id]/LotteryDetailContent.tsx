@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 // import { PageHeader } from '@/components/ui/PageHeader';
 import { Hero, HeroSlideData } from '@/app/(main)/sections/Hero';
-import { CheckLottery } from '@/app/(main)/sections/CheckLottery';
+import { CheckLottery } from '@/widgets/CheckLottery';
 import { WinnersHistory } from '@/app/(main)/sections/WinnersHistory';
 import { LotteryConditions } from '@/components/features/lottery/LotteryConditions';
 import { PrizeTierCard } from '@/components/features/lottery/PrizeTierCard';

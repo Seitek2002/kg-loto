@@ -1,6 +1,6 @@
 // import { BottomNav } from '@/components/features/navigation/BottomNav';
 import { Header } from '@/components/ui/Header';
-import { Footer } from './sections/Footer';
+import { Footer } from '../../widgets/Footer';
 import dynamic from 'next/dynamic';
 
 const BottomNav = dynamic(() =>
@@ -18,9 +18,7 @@ export default function MainLayout({
     <div className='relative min-h-screen'>
       <Header theme='dark' />
 
-      <main className='pb-20 mx-auto min-h-screen shadow-sm'>
-        {children}
-      </main>
+      <main className='pb-20 mx-auto min-h-screen shadow-sm'>{children}</main>
 
       <BottomNav />
       <Footer />

@@ -1,6 +1,6 @@
 import { api } from '@/lib/api';
 import { ApiResponse } from '@/types/api';
-import { NewHeroClient, SliderItem } from './NewHeroClient';
+import { NewHeroClient, SliderItem } from './client';
 
 // Функция для получения данных слайдера
 async function getHeroSlides(): Promise<SliderItem[]> {

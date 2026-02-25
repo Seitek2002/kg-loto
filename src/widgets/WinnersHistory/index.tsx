@@ -1,6 +1,6 @@
 import { ApiResponse, PaginatedResult, Winner } from '@/types/api';
 import { api } from '@/lib/api';
-import { WinnersHistoryClient } from './WinnersHistoryClient';
+import { WinnersHistoryClient } from './client';
 
 // Запрос остается здесь (на сервере)
 async function getWinnersData(): Promise<Winner[]> {

@@ -9,7 +9,7 @@ import {
   TicketDetailData,
 } from '@/components/features/tickets/TicketDetailCard';
 import { TicketRulesCard } from '@/components/features/tickets/TicketRulesCard';
-import { PopularTickets } from '@/app/(main)/sections/PopularTickets';
+import { PopularTickets } from '@/widgets/PopularTickets';
 
 import { useTicketsStore } from '@/store/tickets';
 import { LOTTERIES_DB } from '@/data/mock-lotteries';
@@ -21,9 +21,7 @@ interface TicketDetailContentProps {
   popularLotteries: LotteryItem[]; // 🔥 Принимаем данные с сервера
 }
 
-export const TicketDetailContent = ({
-  id,
-}: TicketDetailContentProps) => {
+export const TicketDetailContent = ({ id }: TicketDetailContentProps) => {
   const userTicket = useTicketsStore((state) =>
     state.tickets.find((t) => t.id === id),
   );

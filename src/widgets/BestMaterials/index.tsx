@@ -1,6 +1,6 @@
 import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { api } from '@/lib/api';
-import { BestMaterialsClient } from './BestMaterialsClient';
+import { BestMaterialsClient } from './client';
 
 async function getNewsData(): Promise<NewsItem[]> {
   try {

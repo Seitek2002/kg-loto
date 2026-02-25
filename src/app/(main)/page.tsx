@@ -1,15 +1,15 @@
-import { Suspense } from 'react';
-import { BestMaterials } from './sections/BestMaterials';
-import { CheckLottery } from './sections/CheckLottery';
-import { FAQ } from './sections/FAQ';
-import { OurApp } from './sections/OurApp';
-import { PopularTickets } from './sections/PopularTickets';
-import { WinnersHistory } from './sections/WinnersHistory';
-import { WhereToBuy } from './sections/WhereToBuy';
-import NewHero from './sections/NewHero';
-import UnderHero from './sections/UnderHero';
 import { Preloader } from '@/components/ui/Preloader';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { BestMaterials } from '@/widgets/BestMaterials';
+import { CheckLottery } from '@/widgets/CheckLottery';
+import { FAQ } from '@/widgets/FAQ';
+import NewHero from '@/widgets/NewHero';
+import { OurApp } from '@/widgets/OurApp';
+import { PopularTickets } from '@/widgets/PopularTickets';
+import UnderHero from '@/widgets/UnderHero';
+import { WhereToBuy } from '@/widgets/WhereToBuy';
+import { WinnersHistory } from '@/widgets/WinnersHistory';
+import { Suspense } from 'react';
 
 export const revalidate = 600;
 
@@ -36,30 +36,30 @@ export default function Home() {
         </ScrollReveal>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <ScrollReveal direction="left">
+          <ScrollReveal direction='left'>
             <WinnersHistory />
           </ScrollReveal>
         </Suspense>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <ScrollReveal direction="right">
+          <ScrollReveal direction='right'>
             <BestMaterials />
           </ScrollReveal>
         </Suspense>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <ScrollReveal direction="up">
+          <ScrollReveal direction='up'>
             <WhereToBuy />
           </ScrollReveal>
         </Suspense>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <ScrollReveal direction="up">
+          <ScrollReveal direction='up'>
             <FAQ />
           </ScrollReveal>
         </Suspense>
 
-        <ScrollReveal direction="up">
+        <ScrollReveal direction='up'>
           <OurApp />
         </ScrollReveal>
       </div>
