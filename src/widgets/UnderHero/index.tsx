@@ -98,8 +98,8 @@ const UnderHero = () => {
               <div
                 className={clsx(
                   // 🔥 ДОБАВЛЕНЫ relative и overflow-hidden
-                  'relative bg-white rounded-3xl p-6 flex flex-col items-center justify-center gap-4 text-center border shadow-sm transition-transform hover:-translate-y-1 overflow-hidden min-h-35',
-                  winner.isYellow ? 'border-[#FFD600]' : 'border-gray-200',
+                  'relative bg-[url("/ticket-bg.svg")] bg-no-repeat bg-center px-6 flex flex-col items-center justify-center gap-4 text-center transition-transform hover:-translate-y-1 overflow-hidden min-h-[186px]',
+                  winner.isYellow ? '' : '',
                 )}
               >
                 {/* 🔥 ФОНОВЫЙ ЛОГОТИП */}
@@ -112,14 +112,9 @@ const UnderHero = () => {
                   />
                 </div>
 
-                {/* Контент поверх логотипа (z-10) */}
-                <span className='relative z-10 text-xs font-bold text-[#1C2035]'>
-                  {winner.date}
-                </span>
-
                 <div
                   className={clsx(
-                    'relative z-10 text-3xl font-black font-benzin tracking-tight flex items-end gap-1',
+                    'relative z-10 text-3xl font-black font-benzin tracking-tight flex items-end gap-1 mt-auto',
                     winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]',
                   )}
                 >
@@ -127,6 +122,11 @@ const UnderHero = () => {
                   <span className='text-xl underline decoration-2 underline-offset-4 mb-0.5'>
                     {winner.currency}
                   </span>
+                </div>
+
+                {/* Контент поверх логотипа (z-10) */}
+                <div className='relative w-full py-2.5 z-10 text-xs mt-auto font-bold text-[#1C2035] border-t-[3px] border-black border-dotted'>
+                  {winner.date}
                 </div>
               </div>
             </SwiperSlide>
