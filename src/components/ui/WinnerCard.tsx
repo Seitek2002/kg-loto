@@ -31,23 +31,24 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
         </div>
       )}
 
-      {/* Бейдж лотереи (сверху слева) */}
-      {/* <div className='absolute top-3 left-3 bg-white rounded-full px-2.5 py-1.5 flex items-center gap-1.5 shadow-sm z-10'>
-        <Star size={10} className='fill-[#6F51FF] text-[#6F51FF]' />
-        <span className='text-[10px] font-black font-benzin uppercase text-[#6F51FF] tracking-wide leading-none pt-0.5'>
-          {winner.lotteryBadge}
-        </span>
-      </div> */}
-
-      <div>
-        <Image
-          className='absolute top-2 left-2'
-          width={105}
-          height={59}
-          src={'/lotteries-logo/1.png'}
-          alt={''}
-        />
-      </div>
+      {winner.lotteryPhoto ? (
+        <div>
+          <Image
+            className='absolute top-2 left-2'
+            width={105}
+            height={59}
+            src={winner.lotteryPhoto}
+            alt={''}
+          />
+        </div>
+      ) : (
+        <div className='absolute top-3 left-3 bg-white rounded-full px-2.5 py-1.5 flex items-center gap-1.5 shadow-sm z-10'>
+          <Star size={10} className='fill-[#6F51FF] text-[#6F51FF]' />
+          <span className='text-[10px] font-black font-benzin uppercase text-[#6F51FF] tracking-wide leading-none pt-0.5'>
+            {winner.lotteryBadge}
+          </span>
+        </div>
+      )}
 
       {/* Информация (снизу) */}
       <div className='absolute bottom-3 left-3 right-3'>
