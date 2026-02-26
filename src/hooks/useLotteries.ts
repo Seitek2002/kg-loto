@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import { Lottery, ApiResponse } from '@/types/api';
+import { LotteryData } from '@/data/mock-lotteries';
+import { ApiResponse } from '@/types/api';
 
-const fetchLotteries = async (): Promise<Lottery[]> => {
-  const { data } = await api.get<ApiResponse<Lottery[]>>('/lotteries/');
+const fetchLotteries = async (): Promise<LotteryData[]> => {
+  const { data } = await api.get<ApiResponse<LotteryData[]>>('/lotteries/');
   return data.data;
 };
 

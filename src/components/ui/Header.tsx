@@ -171,11 +171,6 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                               <span className='text-sm font-black font-benzin uppercase truncate'>
                                 {user?.fullName || 'Игрок'}
                               </span>
-                              <span className='text-xs font-bold font-rubik text-[#FFD600]'>
-                                {user?.balance
-                                  ? `${user.balance} сом`
-                                  : '0 сом'}
-                              </span>
                             </div>
                           </div>
                           <div className='h-px bg-gray-100 my-2' />

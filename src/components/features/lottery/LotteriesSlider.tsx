@@ -57,7 +57,7 @@ export const LotteriesSlider = ({ lotteries }: LotteriesSliderProps) => {
                   title={loto.title}
                   description={loto.subtitle || ''}
                   prize={loto.prizeText}
-                  price={loto.buttonPrice}
+                  price={loto.buttonPrice || undefined}
                   time={formatTime(loto.drawTime)}
                   theme={loto.theme}
                   lottieSrc={isAnimation ? bgUrl : undefined}

@@ -1,13 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query'; // Добавляем мутацию сюда
+import { useMutation } from '@tanstack/react-query';
 import { Modal } from '@/components/ui/Modal';
 import { LoginForm } from '@/components/features/auth/LoginForm';
 import { RegisterForm } from '@/components/features/auth/RegisterForm';
 import { OTPForm } from '@/components/features/auth/OTPForm';
-import { AuthService } from '@/services/auth';
-import { RegisterSchema } from '@/lib/schemas'; // Импортируем тип
+import { AuthService, RegisterData } from '@/services/auth'; // 🔥 Импортируем RegisterData вместо RegisterSchema
 
 type AuthStep = 'login' | 'register' | 'otp';
 
@@ -20,7 +19,8 @@ interface AuthModalProps {
 export const AuthModal = ({ isOpen, onClose, initialStep }: AuthModalProps) => {
   const [step, setStep] = useState<AuthStep>(initialStep);
 
-  const [registerData, setRegisterData] = useState<RegisterSchema | null>(null);
+  // 🔥 Храним уже готовые для бэкенда данные (RegisterData)
+  const [registerData, setRegisterData] = useState<RegisterData | null>(null);
 
   const resendMutation = useMutation({
     mutationFn: AuthService.register,
@@ -30,23 +30,16 @@ export const AuthModal = ({ isOpen, onClose, initialStep }: AuthModalProps) => {
     onError: (e) => console.error(e),
   });
 
-  const handleRegisterSuccess = (data: RegisterSchema) => {
+  // 🔥 Принимаем RegisterData (телефон и ФИО уже отформатированы в RegisterForm)
+  const handleRegisterSuccess = (data: RegisterData) => {
     setRegisterData(data);
     setStep('otp');
   };
 
   const handleResend = () => {
     if (registerData) {
-      let phone = registerData.phoneNumber;
-      if (!phone.startsWith('+')) {
-        phone = `+996${phone.replace(/^0+/, '')}`;
-      }
-
-      resendMutation.mutate({
-        ...registerData,
-        phoneNumber: phone,
-        inn: registerData.inn || undefined,
-      });
+      // 🔥 Данные уже в идеальном формате, просто отправляем их заново!
+      resendMutation.mutate(registerData);
     }
   };
 
@@ -73,8 +66,8 @@ export const AuthModal = ({ isOpen, onClose, initialStep }: AuthModalProps) => {
             phoneNumber={registerData.phoneNumber}
             onBack={() => setStep('register')}
             onSuccess={onClose}
-            onResend={handleResend} // 🔥 Передаем функцию
-            isResending={resendMutation.isPending} // 🔥 Передаем состояние загрузки
+            onResend={handleResend}
+            isResending={resendMutation.isPending}
           />
         )}
       </div>

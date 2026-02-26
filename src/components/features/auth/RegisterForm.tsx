@@ -7,14 +7,15 @@ import { useMutation } from '@tanstack/react-query';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { clsx } from 'clsx';
 
-import { AuthService } from '@/services/auth';
+import { AuthService, RegisterData } from '@/services/auth'; // 🔥 Импортируем RegisterData
 import { registerSchema, RegisterSchema } from '@/lib/schemas';
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
 
 interface RegisterFormProps {
   onLoginClick: () => void;
-  onSubmit: (data: RegisterSchema) => void;
+  // 🔥 Изменили тип на RegisterData, так как мы будем передавать готовые для API данные дальше
+  onSubmit: (data: RegisterData) => void; 
 }
 
 export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
@@ -44,14 +45,14 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
   const mutation = useMutation({
     mutationFn: AuthService.register,
     onSuccess: (_, variables) => {
-      onSubmit(variables as RegisterSchema);
+      // 🔥 Теперь variables имеет тип RegisterData, и мы передаем его без ошибок
+      onSubmit(variables);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       const errorData = error.response?.data;
 
       if (errorData?.errors) {
-        // 🔥 Улучшенный текст ошибки для пользователя
         setError('root', {
           message: 'Пожалуйста, проверьте правильность заполнения всех полей.',
         });
@@ -71,11 +72,20 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
       phone = `+996${phone.replace(/^0+/, '')}`;
     }
 
+    // 🔥 Разбиваем единое ФИО на Фамилию, Имя и Отчество
+    const nameParts = data.fullName.trim().split(/\s+/);
+    const lastName = nameParts[0] || '';
+    const firstName = nameParts[1] || '';
+    const middleName = nameParts.length > 2 ? nameParts.slice(2).join(' ') : '';
+
     mutation.mutate({
       phoneNumber: phone,
-      fullName: data.fullName,
-      inn: data.inn || undefined,
-      birth_year: Number(data.birthYear), // 🔥 Передаем на бэкенд в формате числа (как требует API)
+      lastName,
+      firstName,
+      middleName,
+      inn: data.inn || '', 
+      // 🔥 Передаем в camelCase! Наш Interceptor сам превратит его в birth_year перед отправкой
+      birthYear: Number(data.birthYear), 
       password: data.password,
       passwordConfirm: data.passwordConfirm,
     });
@@ -160,7 +170,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
           <input
             {...register('inn')}
             type='text'
-            placeholder='123456789101'
+            placeholder='12345678910111'
             maxLength={14}
             autoComplete='username'
             className={inputClass(!!errors.inn)}
@@ -172,7 +182,7 @@ export const RegisterForm = ({ onLoginClick, onSubmit }: RegisterFormProps) => {
           )}
         </div>
 
-        {/* 🔥 НОВОЕ ПОЛЕ: Год рождения */}
+        {/* Год рождения */}
         <div>
           <label className='block text-[10px] font-bold text-[#2D2D2D] mb-1.5 pl-1'>
             Год рождения

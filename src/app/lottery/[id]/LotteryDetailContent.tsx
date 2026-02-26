@@ -84,7 +84,7 @@ export const LotteryDetailContent = ({ lottery }: ContentProps) => {
                 >
                   <PrizeTierCard
                     category={tier.category}
-                    description={tier.description}
+                    description={tier.description || ''}
                     amount={tier.amount}
                     winnersCount={tier.winners}
                     backgroundImage={tier.backgroundImage} // 🔥 Передаем ссылку на картинку

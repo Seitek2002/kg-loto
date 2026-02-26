@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { LoginForm } from '@/components/features/auth/LoginForm';
 import { RegisterForm } from '@/components/features/auth/RegisterForm';
 import { OTPForm } from '@/components/features/auth/OTPForm';
-import { RegisterSchema } from '@/lib/schemas';
+import { RegisterData } from '@/services/auth'; // 🔥 Изменили импорт
 
 type AuthStep = 'login' | 'register' | 'otp' | 'forgot-password';
 
@@ -21,7 +21,8 @@ export default function LoginPage() {
     router.push('/profile');
   };
 
-  const handleRegisterSubmit = (data: RegisterSchema) => {
+  // 🔥 Поменяли тип принимаемых данных на RegisterData
+  const handleRegisterSubmit = (data: RegisterData) => {
     setPhoneForOtp(data.phoneNumber);
     setStep('otp');
   };
