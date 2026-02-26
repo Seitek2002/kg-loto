@@ -9,10 +9,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
 
-// 🔥 ДОБАВЛЕНЫ ССЫЛКИ НА ЛОГОТИПЫ
 const RECENT_WINNERS = [
   {
     id: 1,
+    name: 'Азамат Д.',
     date: 'Сегодня',
     amount: '700',
     currency: 'С',
@@ -21,6 +21,7 @@ const RECENT_WINNERS = [
   },
   {
     id: 2,
+    name: 'Айнура С.',
     date: 'Сегодня',
     amount: '7 105 000',
     currency: 'С',
@@ -29,6 +30,7 @@ const RECENT_WINNERS = [
   },
   {
     id: 3,
+    name: 'Бектур А.',
     date: 'Вчера',
     amount: '700 000',
     currency: 'С',
@@ -37,6 +39,7 @@ const RECENT_WINNERS = [
   },
   {
     id: 4,
+    name: 'Нурлан К.',
     date: 'Вчера',
     amount: '3 000',
     currency: 'С',
@@ -45,6 +48,7 @@ const RECENT_WINNERS = [
   },
   {
     id: 5,
+    name: 'Гульзат М.',
     date: 'Вчера',
     amount: '6 700',
     currency: 'С',
@@ -53,6 +57,7 @@ const RECENT_WINNERS = [
   },
   {
     id: 6,
+    name: 'Руслан Т.',
     date: 'Сегодня',
     amount: '15 000',
     currency: 'С',
@@ -61,6 +66,7 @@ const RECENT_WINNERS = [
   },
   {
     id: 7,
+    name: 'Эрмек Б.',
     date: 'Вчера',
     amount: '50 000',
     currency: 'С',
@@ -114,14 +120,19 @@ const UnderHero = () => {
 
                 <div
                   className={clsx(
-                    'relative z-10 text-3xl font-black font-benzin tracking-tight flex items-end gap-1 mt-auto',
+                    'relative z-10 text-3xl font-black font-rubik tracking-tight flex flex-col gap-1 mt-auto',
                     winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]',
                   )}
                 >
-                  {winner.amount}
-                  <span className='text-xl underline decoration-2 underline-offset-4 mb-0.5'>
-                    {winner.currency}
+                  <span className='text-base mb-3'>
+                    {winner.name}
                   </span>
+                  <div>
+                    {winner.amount}
+                    <span className='text-xl underline decoration-2 underline-offset-4 mb-0.5'>
+                      {winner.currency}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Контент поверх логотипа (z-10) */}
