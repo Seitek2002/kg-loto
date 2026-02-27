@@ -124,9 +124,7 @@ const UnderHero = () => {
                     winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]',
                   )}
                 >
-                  <span className='text-base mb-3'>
-                    {winner.name}
-                  </span>
+                  <span className='text-base mb-3 text-[#1C2035] font-medium'>{winner.date}</span>
                   <div>
                     {winner.amount}
                     <span className='text-xl underline decoration-2 underline-offset-4 mb-0.5'>
@@ -136,8 +134,8 @@ const UnderHero = () => {
                 </div>
 
                 {/* Контент поверх логотипа (z-10) */}
-                <div className='relative w-full py-2.5 z-10 text-xs mt-auto font-bold text-[#1C2035] border-t-[3px] border-black border-dotted'>
-                  {winner.date}
+                <div className='relative w-full py-2.5 z-10 text-xs mt-auto text-[#1C2035] border-t-[2px] border-[#4b4b4b92] border-dashed'>
+                  {winner.name}
                 </div>
               </div>
             </SwiperSlide>

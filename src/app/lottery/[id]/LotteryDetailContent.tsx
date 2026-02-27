@@ -9,15 +9,15 @@ import { useTicketsStore, UserTicket } from '@/store/tickets';
 import { LotteryDetail, Winner } from '@/types/api'; // 🔥 Импорт Winner
 import { Header } from '@/components/ui/Header';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { WinnersHistory } from '@/widgets/WinnersHistory';
 import { Hero, HeroSlideData } from '@/widgets/Hero';
+import { WinnersHistoryClient } from '@/widgets/WinnersHistory/client';
 
 interface ContentProps {
   lottery: LotteryDetail; // Данные с сервера
   winners: Winner[]; // 🔥 Добавили проп для победителей
 }
 
-export const LotteryDetailContent = ({ lottery }: ContentProps) => {
+export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
   const router = useRouter();
   const { tickets, addTicket } = useTicketsStore();
 
@@ -95,7 +95,8 @@ export const LotteryDetailContent = ({ lottery }: ContentProps) => {
           </section>
         )}
 
-        <WinnersHistory />
+        {/* <WinnersHistory /> */}
+        <WinnersHistoryClient winners={winners} />
       </div>
     </div>
   );
