@@ -104,7 +104,7 @@ const UnderHero = () => {
               <div
                 className={clsx(
                   // 🔥 ДОБАВЛЕНЫ relative и overflow-hidden
-                  'relative bg-[url("/ticket-bg.svg")] bg-no-repeat bg-center px-6 flex flex-col items-center justify-center gap-4 text-center transition-transform hover:-translate-y-1 overflow-hidden min-h-[186px]',
+                  'relative bg-[url("/ticket-bg.svg")] bg-contain bg-no-repeat bg-center px-6 flex flex-col items-center justify-center gap-4 text-center transition-transform hover:-translate-y-1 overflow-hidden min-h-[186px]',
                   winner.isYellow ? '' : '',
                 )}
               >
