@@ -1,4 +1,4 @@
-import { Preloader } from '@/components/ui/Preloader';
+// import { Preloader } from '@/components/ui/Preloader';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { BestMaterials } from '@/widgets/BestMaterials';
 import { CheckLottery } from '@/widgets/CheckLottery';
@@ -20,7 +20,6 @@ const BlockSkeleton = () => (
 export default function Home() {
   return (
     <>
-      <Preloader />
 
       <NewHero />
       <UnderHero />
