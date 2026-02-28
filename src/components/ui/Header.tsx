@@ -17,7 +17,7 @@ import {
   ChevronLeft,
   Menu,
   X,
-  ChevronDown
+  ChevronDown,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -91,41 +91,64 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
 
   return (
     <>
-      <header className="relative z-50">
+      <header className='relative z-50'>
         {/* ========================================================= */}
         {/* DESKTOP HEADER (Скрыт на мобилках) */}
         {/* ========================================================= */}
         <div className='hidden lg:flex bg-[#0B1F3B] justify-between text-white py-3 px-8 text-xs font-rubik'>
-          <Link href='/about' className="hover:underline">О компании</Link>
+          <Link href='/about' className='hover:underline'>
+            О компании
+          </Link>
           <a href='tel:996312440107' className='flex hover:underline'>
             Горячая линия 996 312 44 01 07
           </a>
-          <button onClick={() => setIsCheckOpen(true)} className='cursor-pointer hover:underline'>
+          <button
+            onClick={() => setIsCheckOpen(true)}
+            className='cursor-pointer hover:underline'
+          >
             Проверить билет
           </button>
         </div>
 
         <div className='hidden lg:flex py-3 font-rubik w-full items-center justify-between px-8 bg-white shadow-sm relative z-20'>
           <Link href='/' className='relative w-32 h-12'>
-            <Image src='/logo.png' alt='KGLOTO' fill className='object-contain' />
+            <Image
+              src='/logo.png'
+              alt='KGLOTO'
+              fill
+              className='object-contain'
+            />
           </Link>
 
           <nav className='flex items-center gap-10'>
-            <Link href='/' className={navLinkClass}>Главная</Link>
-            <Link href='/#instant' className={navLinkClass}>Моментальные</Link>
-            <Link href='/draws' className={navLinkClass}>Тиражные</Link>
-            <Link href='/winners' className={navLinkClass}>Победители</Link>
-            <Link href='/about' className={navLinkClass}>О компании</Link>
+            <Link href='/' className={navLinkClass}>
+              Главная
+            </Link>
+            <Link href='/#instant' className={navLinkClass}>
+              Моментальные
+            </Link>
+            <Link href='/draws' className={navLinkClass}>
+              Тиражные
+            </Link>
+            <Link href='/winners' className={navLinkClass}>
+              Победители
+            </Link>
+            <Link href='/about' className={navLinkClass}>
+              О компании
+            </Link>
           </nav>
 
           <div className='flex items-center gap-4'>
-            <button className="text-xs font-black uppercase flex items-center gap-1 text-[#2D2D2D]">
+            <button className='text-xs font-black uppercase flex items-center gap-1 text-[#2D2D2D]'>
               RU <ChevronDown size={14} />
             </button>
 
             {!isAuth ? (
               <>
-                <button className={regBtnClass} onClick={() => openAuth('register')}>
+                <button
+                  className={regBtnClass}
+                  onClick={() => openAuth('register')}
+                >
                   Регистрация
                 </button>
                 <button
@@ -173,7 +196,8 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                             className='flex items-center justify-between py-3 px-2 hover:bg-gray-50 rounded-xl transition-colors'
                           >
                             <div className='flex items-center gap-3 text-xs font-bold font-rubik'>
-                              <Settings size={18} className='text-gray-400' /> Личные данные
+                              <Settings size={18} className='text-gray-400' />{' '}
+                              Личные данные
                             </div>
                             <ChevronRight size={16} className='text-gray-400' />
                           </button>
@@ -182,7 +206,8 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                             className='flex items-center justify-between py-3 px-2 hover:bg-gray-50 rounded-xl transition-colors'
                           >
                             <div className='flex items-center gap-3 text-xs font-bold font-rubik'>
-                              <Ticket size={18} className='text-gray-400' /> Мои билеты
+                              <Ticket size={18} className='text-gray-400' /> Мои
+                              билеты
                             </div>
                             <ChevronRight size={16} className='text-gray-400' />
                           </button>
@@ -200,31 +225,51 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
                       )}
                       {profileView === 'personal' && (
                         <div className='flex flex-col animate-in fade-in slide-in-from-right-2'>
-                          <button onClick={() => setProfileView('menu')} className='flex items-center gap-2 text-xs font-bold font-rubik text-gray-400 hover:text-[#2D2D2D] mb-4 transition-colors w-fit'>
+                          <button
+                            onClick={() => setProfileView('menu')}
+                            className='flex items-center gap-2 text-xs font-bold font-rubik text-gray-400 hover:text-[#2D2D2D] mb-4 transition-colors w-fit'
+                          >
                             <ChevronLeft size={16} /> Назад
                           </button>
-                          <h3 className='text-sm font-black font-benzin uppercase mb-4'>Личные данные</h3>
+                          <h3 className='text-sm font-black font-benzin uppercase mb-4'>
+                            Личные данные
+                          </h3>
                           <div className='space-y-3 text-xs font-rubik'>
                             <div className='bg-[#F5F5F5] p-3 rounded-xl flex flex-col'>
-                              <span className='text-[10px] text-gray-400 mb-1'>ФИО</span>
-                              <span className='font-bold'>{user?.fullName || 'Не указано'}</span>
+                              <span className='text-[10px] text-gray-400 mb-1'>
+                                ФИО
+                              </span>
+                              <span className='font-bold'>
+                                {user?.fullName || 'Не указано'}
+                              </span>
                             </div>
                             <div className='bg-[#F5F5F5] p-3 rounded-xl flex flex-col'>
-                              <span className='text-[10px] text-gray-400 mb-1'>Номер телефона</span>
-                              <span className='font-bold'>{user?.phoneNumber || 'Не указан'}</span>
+                              <span className='text-[10px] text-gray-400 mb-1'>
+                                Номер телефона
+                              </span>
+                              <span className='font-bold'>
+                                {user?.phoneNumber || 'Не указан'}
+                              </span>
                             </div>
                           </div>
                         </div>
                       )}
                       {profileView === 'tickets' && (
                         <div className='flex flex-col animate-in fade-in slide-in-from-right-2'>
-                          <button onClick={() => setProfileView('menu')} className='flex items-center gap-2 text-xs font-bold font-rubik text-gray-400 hover:text-[#2D2D2D] mb-4 transition-colors w-fit'>
+                          <button
+                            onClick={() => setProfileView('menu')}
+                            className='flex items-center gap-2 text-xs font-bold font-rubik text-gray-400 hover:text-[#2D2D2D] mb-4 transition-colors w-fit'
+                          >
                             <ChevronLeft size={16} /> Назад
                           </button>
-                          <h3 className='text-sm font-black font-benzin uppercase mb-4'>Мои билеты</h3>
+                          <h3 className='text-sm font-black font-benzin uppercase mb-4'>
+                            Мои билеты
+                          </h3>
                           <div className='flex flex-col items-center justify-center py-8 text-center'>
                             <Ticket size={32} className='text-gray-300 mb-2' />
-                            <span className='text-xs font-medium font-rubik text-gray-400'>У вас пока нет активных билетов</span>
+                            <span className='text-xs font-medium font-rubik text-gray-400'>
+                              У вас пока нет активных билетов
+                            </span>
                           </div>
                         </div>
                       )}
@@ -239,23 +284,50 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
         {/* ========================================================= */}
         {/* MOBILE HEADER (Скрыт на ПК) */}
         {/* ========================================================= */}
-        <div className={clsx(
-          "flex lg:hidden items-center justify-between px-4 py-3 transition-colors duration-300 z-50 relative",
-          isMobileMenuOpen ? "bg-[#f9f9f9]" : (isDark ? "bg-[#0B1F3B]" : "bg-[#f9f9f9]")
-        )}>
-          <Link href='/' className='relative w-24 h-10' onClick={() => setIsMobileMenuOpen(false)}>
-            <Image src='/logo.png' alt='KGLOTO' fill className='object-contain object-left' />
+        <div
+          className={clsx(
+            'flex lg:hidden items-center justify-between px-4 py-3 transition-colors duration-300 z-50 relative',
+            isMobileMenuOpen
+              ? 'bg-[#f9f9f9]'
+              : isDark
+                ? 'bg-[#0B1F3B]'
+                : 'bg-[#f9f9f9]',
+          )}
+        >
+          <Link
+            href='/'
+            className='relative w-24 h-10'
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <Image
+              src='/logo.png'
+              alt='KGLOTO'
+              fill
+              className='object-contain object-left'
+            />
           </Link>
 
-          <div className="flex items-center gap-4">
-            <button className={clsx("text-xs font-black uppercase flex items-center gap-1", isMobileMenuOpen || !isDark ? "text-[#2D2D2D]" : "text-white")}>
+          <div className='flex items-center gap-4'>
+            <button
+              className={clsx(
+                'text-xs font-black uppercase flex items-center gap-1',
+                isMobileMenuOpen || !isDark ? 'text-[#2D2D2D]' : 'text-white',
+              )}
+            >
               РУ <ChevronDown size={14} />
             </button>
-            <button 
+            <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={clsx("p-1", isMobileMenuOpen || !isDark ? "text-[#2D2D2D]" : "text-white")}
+              className={clsx(
+                'p-1',
+                isMobileMenuOpen || !isDark ? 'text-[#2D2D2D]' : 'text-white',
+              )}
             >
-              {isMobileMenuOpen ? <X size={28} strokeWidth={2} /> : <Menu size={28} strokeWidth={2} />}
+              {isMobileMenuOpen ? (
+                <X size={28} strokeWidth={2} />
+              ) : (
+                <Menu size={28} strokeWidth={2} />
+              )}
             </button>
           </div>
         </div>
@@ -265,111 +337,215 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
         {/* ========================================================= */}
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-x-0 top-[64px] bottom-0 z-[100] bg-black/40 backdrop-blur-sm flex flex-col pb-24 overflow-y-auto"
+              className='fixed inset-x-0 top-[64px] bottom-0 z-[100] bg-black/40 backdrop-blur-sm flex flex-col pb-24 overflow-y-auto'
             >
               {/* Белая карточка меню (как на скриншоте) */}
-              <div className="m-4 bg-white rounded-[24px] p-5 shadow-2xl flex flex-col gap-4 font-rubik">
-                
+              <div className='m-4 bg-white rounded-[24px] p-5 shadow-2xl flex flex-col gap-4 font-rubik'>
                 {/* Если юзер авторизован - показываем профиль */}
                 {isAuth && user ? (
-                  <div className="bg-[#F5F5F5] rounded-2xl p-4 flex items-center justify-between cursor-pointer" onClick={() => { setIsMobileMenuOpen(false); router.push('/profile'); }}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden shrink-0">
+                  <Link
+                    href={'/profile'}
+                    className='bg-[#F5F5F5] rounded-2xl p-4 flex items-center justify-between cursor-pointer'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className='flex items-center gap-3'>
+                      <div className='w-10 h-10 bg-gray-300 rounded-full overflow-hidden shrink-0'>
                         {user.kglotteryProfile?.avatar ? (
-                          <img src={user.kglotteryProfile.avatar} alt="avatar" className="w-full h-full object-cover" />
+                          <img
+                            src={user.kglotteryProfile.avatar}
+                            alt='avatar'
+                            className='w-full h-full object-cover'
+                          />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500"><User size={20}/></div>
+                          <div className='w-full h-full flex items-center justify-center bg-gray-200 text-gray-500'>
+                            <User size={20} />
+                          </div>
                         )}
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-[#2D2D2D] leading-tight">{user.fullName || 'Игрок'}</span>
-                        <span className="text-[10px] font-medium text-gray-500">{user.kglotteryProfile?.email || user.phoneNumber}</span>
+                      <div className='flex flex-col'>
+                        <span className='text-sm font-bold text-[#2D2D2D] leading-tight'>
+                          {user.fullName || 'Игрок'}
+                        </span>
+                        <span className='text-[10px] font-medium text-gray-500'>
+                          {user.kglotteryProfile?.email || user.phoneNumber}
+                        </span>
                       </div>
                     </div>
-                    <ChevronRight size={20} className="text-gray-400" />
-                  </div>
+                    <ChevronRight size={20} className='text-gray-400' />
+                  </Link>
                 ) : null}
 
                 {/* Навигация */}
-                <div className="flex flex-col">
+                <div className='flex flex-col'>
                   {/* Аккордеон: Моментальные */}
-                  <div className="flex flex-col border-b border-gray-100 last:border-0">
-                    <button 
-                      onClick={() => toggleAccordion('instant')} 
-                      className="flex items-center justify-between py-4 text-[13px] font-bold text-[#2D2D2D] uppercase"
+                  <div className='flex flex-col border-b border-gray-100 last:border-0'>
+                    <button
+                      onClick={() => toggleAccordion('instant')}
+                      className='flex items-center justify-between py-4 text-[13px] font-bold text-[#2D2D2D] uppercase'
                     >
                       Моментальные билеты
-                      <ChevronDown size={18} className={clsx("transition-transform text-gray-400", openAccordion === 'instant' && "rotate-180")} />
+                      <ChevronDown
+                        size={18}
+                        className={clsx(
+                          'transition-transform text-gray-400',
+                          openAccordion === 'instant' && 'rotate-180',
+                        )}
+                      />
                     </button>
                     <AnimatePresence>
                       {openAccordion === 'instant' && (
-                        <motion.div 
+                        <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="flex flex-col gap-3 pb-3 pl-4 overflow-hidden"
+                          className='flex flex-col gap-3 pb-3 pl-4 overflow-hidden'
                         >
-                          <Link href="/#instant" onClick={() => setIsMobileMenuOpen(false)} className="text-sm text-gray-600 font-medium">Мен миллионер</Link>
-                          <Link href="/#instant" onClick={() => setIsMobileMenuOpen(false)} className="text-sm text-gray-600 font-medium">Оной</Link>
-                          <Link href="/#instant" onClick={() => setIsMobileMenuOpen(false)} className="text-sm text-gray-600 font-medium">Уйго белек</Link>
+                          <Link
+                            href='/#instant'
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className='text-sm text-gray-600 font-medium'
+                          >
+                            Мен миллионер
+                          </Link>
+                          <Link
+                            href='/#instant'
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className='text-sm text-gray-600 font-medium'
+                          >
+                            Оной
+                          </Link>
+                          <Link
+                            href='/#instant'
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className='text-sm text-gray-600 font-medium'
+                          >
+                            Уйго белек
+                          </Link>
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
 
                   {/* Обычные ссылки */}
-                  <Link href="/#check" onClick={() => {setIsMobileMenuOpen(false); setIsCheckOpen(true)}} className="py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100">Проверить билет</Link>
-                  <Link href="/winners" onClick={() => setIsMobileMenuOpen(false)} className="py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100">Победители</Link>
-                  <Link href="/draws" onClick={() => setIsMobileMenuOpen(false)} className="py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100">Тиражные билеты</Link>
-                  <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100">О компании</Link>
+                  <Link
+                    href='/#check'
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsCheckOpen(true);
+                    }}
+                    className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                  >
+                    Проверить билет
+                  </Link>
+                  <Link
+                    href='/winners'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                  >
+                    Победители
+                  </Link>
+                  <Link
+                    href='/draws'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                  >
+                    Тиражные билеты
+                  </Link>
+                  <Link
+                    href='/about'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                  >
+                    О компании
+                  </Link>
 
                   {/* Аккордеон: Контакты */}
-                  <div className="flex flex-col border-b border-gray-100">
-                    <button 
-                      onClick={() => toggleAccordion('contacts')} 
-                      className="flex items-center justify-between py-4 text-[13px] font-bold text-[#2D2D2D] uppercase"
+                  <div className='flex flex-col border-b border-gray-100'>
+                    <button
+                      onClick={() => toggleAccordion('contacts')}
+                      className='flex items-center justify-between py-4 text-[13px] font-bold text-[#2D2D2D] uppercase'
                     >
                       Контакты
-                      <ChevronDown size={18} className={clsx("transition-transform text-gray-400", openAccordion === 'contacts' && "rotate-180")} />
+                      <ChevronDown
+                        size={18}
+                        className={clsx(
+                          'transition-transform text-gray-400',
+                          openAccordion === 'contacts' && 'rotate-180',
+                        )}
+                      />
                     </button>
                     <AnimatePresence>
                       {openAccordion === 'contacts' && (
-                        <motion.div 
+                        <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="flex flex-col gap-3 pb-3 pl-4 overflow-hidden"
+                          className='flex flex-col gap-3 pb-3 pl-4 overflow-hidden'
                         >
-                          <a href="tel:996312440107" className="text-sm text-gray-600 font-medium">996 312 44 01 07</a>
-                          <a href="mailto:support@kgloto.kg" className="text-sm text-gray-600 font-medium">support@kgloto.kg</a>
-                          <Link href="/map" onClick={() => setIsMobileMenuOpen(false)} className="text-sm text-gray-600 font-medium">Карта продаж</Link>
+                          <a
+                            href='tel:996312440107'
+                            className='text-sm text-gray-600 font-medium'
+                          >
+                            996 312 44 01 07
+                          </a>
+                          <a
+                            href='mailto:support@kgloto.kg'
+                            className='text-sm text-gray-600 font-medium'
+                          >
+                            support@kgloto.kg
+                          </a>
+                          <Link
+                            href='/map'
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className='text-sm text-gray-600 font-medium'
+                          >
+                            Карта продаж
+                          </Link>
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
 
-                  <Link href="/gift" onClick={() => setIsMobileMenuOpen(false)} className="py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100">Подарить билет</Link>
-                  <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100">Новости</Link>
-                  <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="py-4 text-[13px] font-bold text-[#2D2D2D] uppercase">Вопросы и ответы</Link>
+                  <Link
+                    href='/gift'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                  >
+                    Подарить билет
+                  </Link>
+                  <Link
+                    href='/news'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                  >
+                    Новости
+                  </Link>
+                  <Link
+                    href='/faq'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase'
+                  >
+                    Вопросы и ответы
+                  </Link>
                 </div>
 
                 {/* Если юзер НЕ авторизован - показываем кнопки */}
                 {!isAuth && (
-                  <div className="flex gap-3 mt-4 pt-2">
-                    <button 
+                  <div className='flex gap-3 mt-4 pt-2'>
+                    <button
                       onClick={() => openAuth('register')}
-                      className="flex-1 bg-[#4A4A4A] text-white py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform"
+                      className='flex-1 bg-[#4A4A4A] text-white py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform'
                     >
                       Регистрация
                     </button>
-                    <button 
+                    <button
                       onClick={() => openAuth('login')}
-                      className="flex-1 bg-[#FFD600] text-[#2D2D2D] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)]"
+                      className='flex-1 bg-[#FFD600] text-[#2D2D2D] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
                     >
                       Войти
                     </button>
@@ -379,7 +555,6 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
             </motion.div>
           )}
         </AnimatePresence>
-
       </header>
 
       {/* Модалки оставляем вне хидера, чтобы они рендерились поверх всего */}
