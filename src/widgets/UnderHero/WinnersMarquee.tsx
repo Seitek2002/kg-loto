@@ -73,7 +73,7 @@ const TearableTicket = ({
       </div>
 
       <div className='relative z-10 text-center'>
-        <div className='text-base font-medium'>{winner.name}</div>
+        <div className='text-base font-medium text-[#4b4b4b]'>{winner.name}</div>
 
         <div
           className={clsx(
@@ -85,7 +85,7 @@ const TearableTicket = ({
           <span className='text-2xl underline'>{winner.currency}</span>
         </div>
 
-        <div className='text-sm font-medium'>{winner.date}</div>
+        <div className='text-sm font-medium text-[#4b4b4b]'>{winner.date}</div>
       </div>
     </div>
   );
