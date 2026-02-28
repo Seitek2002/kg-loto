@@ -2,9 +2,8 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react'; // 🔥 Добавили useRef
 
-// Вынесли тип, чтобы TS не ругался
 export interface WinnerType {
   id: number;
   name: string;
@@ -19,23 +18,28 @@ const TearableTicket = ({
   winner,
   isActive,
   onClick,
+  audioRefs, // 🔥 Принимаем ref
 }: {
   winner: WinnerType;
   isActive: boolean;
   onClick: () => void;
+  audioRefs: React.MutableRefObject<HTMLAudioElement[]>; // 🔥 Изменили тип на MutableRefObject
 }) => {
   const [bgIndex, setBgIndex] = useState(0);
 
-  const playRipSound = useCallback(() => {
-    const randomSoundIndex = Math.floor(Math.random() * 4) + 1;
-    const audioPath = `/paper-rip/paper-rip-${randomSoundIndex}.mp3`;
-    const audio = new Audio(audioPath);
-    audio.volume = 0.5;
+  const playRipSound = () => {
+    if (audioRefs.current.length === 0) return;
 
-    audio.play().catch((error) => {
-      console.warn('Audio playback failed:', error);
+    const randomIndex = Math.floor(Math.random() * 4);
+    const originalAudio = audioRefs.current[randomIndex];
+
+    const soundClone = originalAudio.cloneNode() as HTMLAudioElement;
+    soundClone.volume = 0.3;
+
+    soundClone.play().catch((error) => {
+      console.warn('Audio playback failed (usually iOS restriction):', error);
     });
-  }, []);
+  };
 
   const handleClick = () => {
     setBgIndex(Math.floor(Math.random() * 4) + 1);
@@ -54,7 +58,7 @@ const TearableTicket = ({
       )}
     >
       <Image
-        src={`/tickets/ticket-${bgIndex}.png`}
+        src={`/tickets/ticket-${bgIndex}.png`} // Не забудь потом вернуть .svg, если дизайнер скинет вектор
         alt='ticket'
         fill
         className='object-contain pointer-events-none'
@@ -87,10 +91,22 @@ const TearableTicket = ({
   );
 };
 
-// Главный клиентский компонент, который принимает данные от сервера
 export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
   const duplicated = [...winners, ...winners];
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  // 🔥 ЗАМЕНЯЕМ useState НА useRef.
+  // Теперь массив лежит "в тени" и не вызывает лишних перерисовок.
+  const audioRefs = useRef<HTMLAudioElement[]>([]);
+
+  useEffect(() => {
+    // Просто записываем загруженные файлы в свойство .current
+    audioRefs.current = [1, 2, 3, 4].map((i) => {
+      const audio = new Audio(`/paper-rip/paper-rip-${i}.mp3`);
+      audio.preload = 'auto';
+      return audio;
+    });
+  }, []); // Пустой массив зависимостей теперь полностью легален и не вызывает ворнингов
 
   return (
     <div className='overflow-hidden relative'>
@@ -107,6 +123,7 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
               winner={winner}
               isActive={activeIndex === idx}
               onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
+              audioRefs={audioRefs} // Передаем объект ref целиком
             />
           </div>
         ))}
@@ -116,9 +133,11 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
         .marquee {
           animation: scroll 30s linear infinite;
         }
+
         .marquee:hover {
           animation-play-state: paused;
         }
+
         @keyframes scroll {
           from {
             transform: translateX(0);
