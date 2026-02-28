@@ -2,12 +2,7 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
-import { Autoplay, FreeMode } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/free-mode';
+import { useState, useCallback } from 'react';
 
 const RECENT_WINNERS = [
   {
@@ -75,84 +70,138 @@ const RECENT_WINNERS = [
   },
 ];
 
-const UnderHero = () => {
+const TearableTicket = ({
+  winner,
+  isActive,
+  onClick,
+}: {
+  winner: (typeof RECENT_WINNERS)[number];
+  isActive: boolean;
+  onClick: () => void;
+}) => {
+  const [bgIndex, setBgIndex] = useState(0);
+
+  // 🔥 Функция для проигрывания рандомного звука
+  const playRipSound = useCallback(() => {
+    // 1. Выбираем случайное число от 1 до 4
+    const randomSoundIndex = Math.floor(Math.random() * 4) + 1;
+    // 2. Формируем путь к файлу (согласно твоему скрину структуры папок)
+    const audioPath = `/paper-rip/paper-rip-${randomSoundIndex}.mp3`;
+
+    // 3. Создаем объект Audio и запускаем
+    const audio = new Audio(audioPath);
+
+    // Слегка уменьшаем громкость, чтобы звук не "бил" по ушам
+    audio.volume = 0.5;
+
+    // Запускаем звук (игнорируем ошибки, если браузер блокирует автоплей до взаимодействия)
+    audio.play().catch((error) => {
+      console.warn('Audio playback failed:', error);
+    });
+  }, []);
+
+  const handleClick = () => {
+    // Меняем фон на один из рваных (от 1 до 4)
+    setBgIndex(Math.floor(Math.random() * 4) + 1);
+
+    // Проигрываем звук ТОЛЬКО если билет еще не оторван (чтобы не спамить звуком при повторном клике на активный билет)
+    if (!isActive) {
+      playRipSound();
+    }
+
+    onClick();
+  };
+
   return (
-    <section className='max-w-300 mx-auto px-4 relative'>
+    <div
+      onClick={handleClick}
+      className={clsx(
+        'relative flex items-center justify-center w-full h-full cursor-pointer transition-transform duration-300 transform-gpu',
+        isActive ? 'scale-105' : 'scale-100',
+      )}
+    >
+      <Image
+        src={`/tickets/ticket-${bgIndex}.png`}
+        alt='ticket'
+        fill
+        className='object-contain pointer-events-none'
+      />
+
+      <div className='absolute inset-0 opacity-10 pointer-events-none'>
+        <img
+          src={winner.logo}
+          alt='logo'
+          className='w-full h-full object-contain'
+        />
+      </div>
+
+      <div className='relative z-10 text-center'>
+        <div className='text-sm font-bold'>{winner.date}</div>
+
+        <div
+          className={clsx(
+            'text-4xl font-black flex items-end justify-center gap-1',
+            winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]',
+          )}
+        >
+          {winner.amount}
+          <span className='text-2xl underline'>{winner.currency}</span>
+        </div>
+
+        <div className='text-sm font-bold'>{winner.name}</div>
+      </div>
+    </div>
+  );
+};
+
+const UnderHero = () => {
+  const duplicated = [...RECENT_WINNERS, ...RECENT_WINNERS];
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  return (
+    <section className='max-w-300 mx-auto px-4 relative mt-12 overflow-hidden'>
       <h2 className='text-2xl md:text-3xl font-black font-benzin uppercase text-[#1C2035] mb-8'>
         Недавние победители
       </h2>
 
-      <div className='relative'>
-        <Swiper
-          modules={[Autoplay, FreeMode]}
-          freeMode={true}
-          speed={10000}
-          autoplay={{
-            delay: 0,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          }}
-          slidesPerView={'auto'}
-          spaceBetween={16}
-          className='winners-marquee'
-        >
-          {RECENT_WINNERS.map((winner, idx) => (
-            <SwiperSlide
-              key={`${winner.id}-${idx}`}
-              className='w-65! md:w-70! py-2'
+      <div className='overflow-hidden relative'>
+        <div className='marquee flex'>
+          {duplicated.map((winner, idx) => (
+            <div
+              key={idx}
+              className={clsx(
+                'transition-all duration-300 flex-shrink-0 h-[149px]',
+                activeIndex === idx ? 'min-w-[320px]' : 'min-w-[272px]',
+              )}
             >
-              <div
-                className={clsx(
-                  // 🔥 ДОБАВЛЕНЫ relative и overflow-hidden
-                  'relative bg-[url("/ticket-bg.svg")] bg-contain bg-no-repeat bg-center px-6 flex flex-col items-center justify-center gap-4 text-center transition-transform hover:-translate-y-1 overflow-hidden min-h-[186px]',
-                  winner.isYellow ? '' : '',
-                )}
-              >
-                {/* 🔥 ФОНОВЫЙ ЛОГОТИП */}
-                <div className='absolute inset-0 z-0 pointer-events-none opacity-10 flex items-center justify-center p-4'>
-                  <Image
-                    src={winner.logo}
-                    alt='Lottery Logo'
-                    fill
-                    className='object-contain scale-110' // scale-110 делает водяной знак чуть крупнее
-                  />
-                </div>
-
-                <div
-                  className={clsx(
-                    'relative z-10 text-3xl font-black font-rubik tracking-tight flex flex-col gap-1 mt-auto',
-                    winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]',
-                  )}
-                >
-                  <span className='text-base mb-3 text-[#1C2035] font-medium'>{winner.date}</span>
-                  <div>
-                    {winner.amount}
-                    <span className='text-xl underline decoration-2 underline-offset-4 mb-0.5'>
-                      {winner.currency}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Контент поверх логотипа (z-10) */}
-                <div className='relative w-full py-2.5 z-10 text-xs mt-auto text-[#1C2035] border-t-[2px] border-[#4b4b4b92] border-dashed'>
-                  {winner.name}
-                </div>
-              </div>
-            </SwiperSlide>
+              <TearableTicket
+                winner={winner}
+                isActive={activeIndex === idx}
+                onClick={() => setActiveIndex(idx)} // Если хочешь, чтобы повторный клик возвращал билет на место: setActiveIndex(activeIndex === idx ? null : idx)
+              />
+            </div>
           ))}
-        </Swiper>
+        </div>
       </div>
 
-      {/* CSS */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          .winners-marquee .swiper-wrapper {
-            transition-timing-function: linear !important;
+      <style jsx>{`
+        .marquee {
+          animation: scroll 30s linear infinite;
+        }
+
+        .marquee:hover {
+          animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
           }
-        `,
-        }}
-      />
+          to {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
     </section>
   );
 };
