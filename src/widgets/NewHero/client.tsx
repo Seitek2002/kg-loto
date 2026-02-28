@@ -180,7 +180,7 @@ export const NewHeroClient = ({ slides }: NewHeroClientProps) => {
               {({ isActive }) => (
                 <div
                   className={clsx(
-                    'relative w-full aspect-[4/3] md:aspect-[3/2] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl touch-none transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]',
+                    'relative max-w-[80%] aspect-[4/3] md:aspect-[3/2] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl touch-none transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]',
                     isActive
                       ? 'scale-100 opacity-100'
                       : 'scale-[0.8] opacity-60 blur-[2px]',
@@ -229,34 +229,37 @@ export const NewHeroClient = ({ slides }: NewHeroClientProps) => {
                     )}
                   </div>
 
-                  <div
-                    className={clsx(
-                      'absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-700 delay-300',
-                      isActive ? 'opacity-100' : 'opacity-0',
-                    )}
-                  >
-                    {slide.title && slide.title !== 'o' && (
-                      <h1 className='text-3xl md:text-5xl lg:text-6xl font-black font-benzin text-white leading-tight drop-shadow-md mb-2'>
-                        {slide.title}
-                      </h1>
-                    )}
+                  {/* 🔥 Обернули весь текстовый блок и градиент в проверку !slide.hasAnimation */}
+                  {!slide.hasAnimation && (
+                    <div
+                      className={clsx(
+                        'absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-700 delay-300',
+                        isActive ? 'opacity-100' : 'opacity-0',
+                      )}
+                    >
+                      {slide.title && slide.title !== 'o' && (
+                        <h1 className='text-3xl md:text-5xl lg:text-6xl font-black font-benzin text-white leading-tight drop-shadow-md mb-2'>
+                          {slide.title}
+                        </h1>
+                      )}
 
-                    {slide.subtitle && (
-                      <p className='text-lg md:text-xl font-bold font-rubik text-gray-200 drop-shadow-md mb-4'>
-                        {slide.subtitle}
-                      </p>
-                    )}
+                      {slide.subtitle && (
+                        <p className='text-lg md:text-xl font-bold font-rubik text-gray-200 drop-shadow-md mb-4'>
+                          {slide.subtitle}
+                        </p>
+                      )}
 
-                    {slide.buttonLabel && (
-                      <div className='inline-block pointer-events-auto mt-2'>
-                        <MagneticButton>
-                          <button className='px-8 py-4 bg-[#FFD600] text-[#2D2D2D] rounded-full font-benzin font-bold text-sm shadow-lg hover:scale-105 transition-transform'>
-                            {slide.buttonLabel}
-                          </button>
-                        </MagneticButton>
-                      </div>
-                    )}
-                  </div>
+                      {slide.buttonLabel && (
+                        <div className='inline-block pointer-events-auto mt-2'>
+                          <MagneticButton>
+                            <button className='px-8 py-4 bg-[#FFD600] text-[#2D2D2D] rounded-full font-benzin font-bold text-sm shadow-lg hover:scale-105 transition-transform'>
+                              {slide.buttonLabel}
+                            </button>
+                          </MagneticButton>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </SwiperSlide>
