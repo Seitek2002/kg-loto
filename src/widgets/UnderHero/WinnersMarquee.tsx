@@ -131,7 +131,7 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
 
       <style jsx>{`
         .marquee {
-          animation: scroll 30s linear infinite;
+          animation: scroll 10s linear infinite;
         }
 
         .marquee:hover {
