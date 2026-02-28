@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react'; // 🔥 Добавили useRef
+import { useState, useEffect, useRef } from 'react';
 
 export interface WinnerType {
   id: number;
@@ -14,16 +14,22 @@ export interface WinnerType {
   isYellow: boolean;
 }
 
+// 🔥 Вспомогательная функция для парсинга суммы из строки "10 000" в число 10000
+const parseAmount = (amountStr: string) => {
+  // Убираем все пробелы и преобразуем в число
+  return Number(amountStr.replace(/\s+/g, ''));
+};
+
 const TearableTicket = ({
   winner,
   isActive,
   onClick,
-  audioRefs, // 🔥 Принимаем ref
+  audioRefs,
 }: {
   winner: WinnerType;
   isActive: boolean;
   onClick: () => void;
-  audioRefs: React.MutableRefObject<HTMLAudioElement[]>; // 🔥 Изменили тип на MutableRefObject
+  audioRefs: React.MutableRefObject<HTMLAudioElement[]>;
 }) => {
   const [bgIndex, setBgIndex] = useState(0);
 
@@ -49,6 +55,17 @@ const TearableTicket = ({
     onClick();
   };
 
+  // 🔥 Вычисляем числовое значение суммы
+  const numericAmount = parseAmount(winner.amount);
+  
+  // 🔥 Определяем цвет на основе ТЗ дизайнера
+  // Если меньше 10000 -> серый (#4b4b4b)
+  // Иначе -> желтый или оранжевый в зависимости от isYellow
+  const amountColorClass = 
+    numericAmount < 10000 
+      ? 'text-[#4b4b4b]' 
+      : (winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]');
+
   return (
     <div
       onClick={handleClick}
@@ -58,10 +75,10 @@ const TearableTicket = ({
       )}
     >
       <Image
-        src={`/tickets/ticket-${bgIndex}.png`} // Не забудь потом вернуть .svg, если дизайнер скинет вектор
+        src={`/tickets/ticket-${bgIndex}.png`}
         alt='ticket'
         fill
-        className='object-contain pointer-events-none'
+        className='object-cover pointer-events-none'
       />
 
       <div className='absolute inset-0 opacity-10 pointer-events-none'>
@@ -73,12 +90,14 @@ const TearableTicket = ({
       </div>
 
       <div className='relative z-10 text-center'>
-        <div className='text-base font-medium text-[#4b4b4b]'>{winner.name}</div>
+        <div className='text-base font-medium text-[#4b4b4b]'>
+          {winner.name}
+        </div>
 
         <div
           className={clsx(
             'text-4xl font-black flex items-end justify-center gap-1 my-3',
-            winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]',
+            amountColorClass // 🔥 Применяем вычисленный цвет
           )}
         >
           {winner.amount}
@@ -95,18 +114,15 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
   const duplicated = [...winners, ...winners];
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  // 🔥 ЗАМЕНЯЕМ useState НА useRef.
-  // Теперь массив лежит "в тени" и не вызывает лишних перерисовок.
   const audioRefs = useRef<HTMLAudioElement[]>([]);
 
   useEffect(() => {
-    // Просто записываем загруженные файлы в свойство .current
     audioRefs.current = [1, 2, 3, 4].map((i) => {
       const audio = new Audio(`/paper-rip/paper-rip-${i}.mp3`);
       audio.preload = 'auto';
       return audio;
     });
-  }, []); // Пустой массив зависимостей теперь полностью легален и не вызывает ворнингов
+  }, []); 
 
   return (
     <div className='overflow-hidden relative'>
@@ -115,7 +131,7 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
           <div
             key={`${winner.id}-${idx}`}
             className={clsx(
-              'transition-all duration-300 flex-shrink-0 h-[149px]',
+              'transition-all duration-300 flex-shrink-0 h-[185px]',
               activeIndex === idx ? 'min-w-[320px]' : 'min-w-[272px]',
             )}
           >
@@ -123,7 +139,7 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
               winner={winner}
               isActive={activeIndex === idx}
               onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
-              audioRefs={audioRefs} // Передаем объект ref целиком
+              audioRefs={audioRefs} 
             />
           </div>
         ))}
