@@ -1,53 +1,34 @@
-import { notFound } from 'next/navigation';
-import { api } from '@/lib/api';
-import { ApiResponse, LotteryDetail, PaginatedResult } from '@/types/api';
-import { LotteryDetailContent } from './LotteryDetailContent';
-import { Winner } from '@/data/mock-content';
+import { LotteryHero } from '@/components/features/lottery-detail/LotteryHero';
+import { LotteryPrizeFund } from '@/components/features/lottery-detail/LotteryPrizeFund';
+import { LotteryHowToPlay } from '@/components/features/lottery-detail/LotteryHowToPlay'; // 🔥 НОВОЕ
+import { LotteryConditions } from '@/components/features/lottery-detail/LotteryConditions'; // 🔥 НОВОЕ
+import { PopularTickets } from '@/widgets/PopularTickets';
+import { WinnersHistory } from '@/widgets/WinnersHistory';
 
-// 🔥 ВАЖНО: В Next.js 15 params - это Promise
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-// Функция получения данных одной лотереи
-async function getLotteryData(id: string): Promise<LotteryDetail | null> {
-  try {
-    const { data } = await api.get<ApiResponse<LotteryDetail>>(
-      `/lotteries/${id}/`,
-    );
-    return data.data;
-  } catch (error) {
-    console.error(`Error fetching lottery ${id}:`, error);
-    return null;
-  }
-}
-
-async function getWinnersData(): Promise<Winner[]> {
-  try {
-    const { data } =
-      await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/');
-    return data.data.results || [];
-  } catch (error) {
-    return [];
-  }
-}
-
-export default async function LotteryDetailPage({ params }: PageProps) {
-  // 🔥 1. Сначала ждем разрешения промиса params
-  const { id } = await params;
-
-  const [lottery, winners] = await Promise.all([
-    getLotteryData(id),
-    getWinnersData(),
-  ]);
-
-  // 3. Если лотерея не найдена или ошибка API — показываем 404
-  if (!lottery) {
-    return notFound();
-  }
-
-  console.log(lottery);
-
-  // 4. Рендерим клиентский контент
-  return <LotteryDetailContent lottery={lottery} winners={winners} />;
+export default function LotteryDetailPage() {
+  return (
+    <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
+      <div className='max-w-[1200px] mx-auto px-4 md:px-8'>
+        <LotteryHero />
+        <LotteryPrizeFund />
+        <LotteryHowToPlay /> {/* 🔥 Вставили */}
+        <LotteryConditions /> {/* 🔥 Вставили */}
+        {/* --- История победителей --- */}
+        {/* <div className='mb-12 md:mb-20 mt-20'>
+          <h2 className='text-base md:text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-8'>
+            История победителей
+          </h2>
+          
+        </div> */}
+        <WinnersHistory />
+        {/* --- Другие лотереи --- */}
+        <div className='mb-12 md:mb-20'>
+          <h2 className='text-base md:text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-8'>
+            Другие лотереи
+          </h2>
+          <PopularTickets />
+        </div>
+      </div>
+    </div>
+  );
 }

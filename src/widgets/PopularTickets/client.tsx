@@ -129,26 +129,26 @@ export const PopularTicketsClient = ({
 }) => {
   const allLotteries = [
     ...lotteries,
-    {
-      id: '0',
-      title: 'Лотерея ДАСТАН',
-      subtitle: 'Приходите позже',
-      backgroundImage: '/animations/3.json',
-      buttonPrice: 300,
-      drawTime: '00:00',
-      prizeText: '1 000 000 ₽',
-      theme: 'white',
-    },
-    {
-      id: '10',
-      title: 'ЛЕГЕнДАРНАЯ ЛОТЕРЕЯ',
-      subtitle: 'Приходите позже',
-      backgroundImage: '/animations/4.json',
-      buttonPrice: 300,
-      drawTime: '00:00',
-      prizeText: '1 000 000 ₽',
-      theme: 'white',
-    },
+    // {
+    //   id: '0',
+    //   title: 'Лотерея ДАСТАН',
+    //   subtitle: 'Приходите позже',
+    //   backgroundImage: '/animations/3.json',
+    //   buttonPrice: 300,
+    //   drawTime: '00:00',
+    //   prizeText: '1 000 000 ₽',
+    //   theme: 'white',
+    // },
+    // {
+    //   id: '10',
+    //   title: 'ЛЕГЕнДАРНАЯ ЛОТЕРЕЯ',
+    //   subtitle: 'Приходите позже',
+    //   backgroundImage: '/animations/4.json',
+    //   buttonPrice: 300,
+    //   drawTime: '00:00',
+    //   prizeText: '1 000 000 ₽',
+    //   theme: 'white',
+    // },
   ];
 
   return (

@@ -55,7 +55,6 @@ export const LotteryDetailContent = ({ lottery, winners }: ContentProps) => {
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-10'>
-      <Header theme='dark' />
       <div className='sticky pl-2 top-4 z-10 h-0'>
         <PageHeader title='' />
       </div>

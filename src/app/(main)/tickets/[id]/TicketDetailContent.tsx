@@ -1,4 +1,3 @@
-// src/app/tickets/[id]/TicketDetailContent.tsx
 'use client';
 
 import Link from 'next/link';
@@ -9,19 +8,21 @@ import {
   TicketDetailData,
 } from '@/components/features/tickets/TicketDetailCard';
 import { TicketRulesCard } from '@/components/features/tickets/TicketRulesCard';
-import { PopularTickets } from '@/widgets/PopularTickets';
 
 import { useTicketsStore } from '@/store/tickets';
 import { LOTTERIES_DB } from '@/data/mock-lotteries';
 import { BACKGROUND_VARIANTS } from '@/config/lottery-styles';
-import { LotteryItem } from '@/types/api'; // Импорт типа
 
+// 🔥 Добавили popularTicketsNode в пропсы
 interface TicketDetailContentProps {
   id: string;
-  popularLotteries: LotteryItem[]; // 🔥 Принимаем данные с сервера
+  popularTicketsNode: React.ReactNode;
 }
 
-export const TicketDetailContent = ({ id }: TicketDetailContentProps) => {
+export const TicketDetailContent = ({
+  id,
+  popularTicketsNode,
+}: TicketDetailContentProps) => {
   const userTicket = useTicketsStore((state) =>
     state.tickets.find((t) => t.id === id),
   );
@@ -90,8 +91,8 @@ export const TicketDetailContent = ({ id }: TicketDetailContentProps) => {
           <h3 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-6'>
             Смотрите также
           </h3>
-          {/* 🔥 Передаем данные в PopularTickets */}
-          <PopularTickets />
+          {/* 🔥 Вставляем готовый узел, который придет с сервера */}
+          {popularTicketsNode}
         </div>
 
         <div className='mt-8 text-center lg:hidden'>
