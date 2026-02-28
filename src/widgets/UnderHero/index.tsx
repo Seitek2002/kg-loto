@@ -69,8 +69,8 @@ const RECENT_WINNERS: WinnerType[] = [
 
 const UnderHero = () => {
   return (
-    <section className='max-w-300 mx-auto px-4 relative mt-12 overflow-hidden'>
-      <h2 className='text-2xl md:text-3xl font-black font-benzin uppercase text-[#1C2035] mb-8'>
+    <section className='mx-auto relative py-12 overflow-hidden bg-[#eeeeee]'>
+      <h2 className='max-w-300 mx-auto text-2xl md:text-3xl font-black font-benzin uppercase text-[#1C2035] mb-8'>
         Недавние победители
       </h2>
 
