@@ -53,7 +53,6 @@ export default function RootLayout({
             даже если контента на странице мало.
           */}
           <div className='relative min-h-screen flex flex-col'>
-            
             {/* Статичная шапка, не подвержена анимациям переходов */}
             <Header theme='dark' />
 
@@ -62,12 +61,11 @@ export default function RootLayout({
               {children}
             </main>
 
-            {/* Статичный футер */}
-            <Footer />
-
             {/* Навигация, которая теперь железобетонно прилипнет к экрану телефона */}
             <BottomNav />
-            
+
+            {/* Статичный футер */}
+            <Footer />
           </div>
         </QueryProvider>
       </body>
