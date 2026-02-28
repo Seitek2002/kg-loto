@@ -106,9 +106,9 @@ export const NewHeroClient = ({ slides }: NewHeroClientProps) => {
   if (!activeSlides || activeSlides.length === 0) return null;
 
   return (
-    <div className='relative w-full bg-gradient-to-b from-[#8b58d6] to-[#bca6db] pt-32 pb-24 font-rubik overflow-hidden min-h-[600px] md:min-h-[850px] flex items-center'>
+    <div className='relative w-full bg-gradient-to-b from-[#8b58d6] to-[#bca6db] pt-32 pb-24 font-rubik overflow-hidden h-[600px] md:h-[650px] flex items-center'>
       {/* 🔥 ФОНОВАЯ ПЛАНЕТА С ОРБИТОЙ */}
-      <div className='absolute bottom-[-5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] md:w-[900px] md:h-[900px] z-0 pointer-events-none'>
+      <div className='absolute bottom-[-5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] md:w-[700px] md:h-[700px] z-0 pointer-events-none'>
         <motion.div
           animate={{ rotate: activeIndex * -ORBIT_STEP_DEG }}
           transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
@@ -135,7 +135,7 @@ export const NewHeroClient = ({ slides }: NewHeroClientProps) => {
               }}
             >
               {/* 3. Отдаляем от центра (это радиус орбиты). -250px для мобилок, -440px для ПК */}
-              <div className='flex flex-col items-center -translate-y-[250px] md:-translate-y-[440px]'>
+              <div className='flex flex-col items-center -translate-y-[250px] md:-translate-y-[380px]'>
                 {/* Круглая фотка/иконка страны (заменишь потом на png) */}
                 <div className='w-14 h-14 md:w-24 md:h-24 relative rounded-full overflow-hidden border-4 border-white shadow-[0_10px_30px_rgba(0,0,0,0.3)] bg-white'>
                   <Image

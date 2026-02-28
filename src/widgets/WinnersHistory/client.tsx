@@ -20,7 +20,7 @@ export const WinnersHistoryClient = ({
   if (!displayWinners || displayWinners.length === 0) return null;
 
   return (
-    <section className='my-12 relative overflow-hidden'>
+    <section className='my-12 relative overflow-hidden hidden'>
       <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
         <div className='max-w-2xl'>
           <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>

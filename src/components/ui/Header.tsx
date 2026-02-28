@@ -127,12 +127,12 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
             <Link href='/#instant' className={navLinkClass}>
               Моментальные
             </Link>
-            <Link href='/draws' className={navLinkClass}>
+            {/* <Link href='/draws' className={navLinkClass}>
               Тиражные
             </Link>
             <Link href='/winners' className={navLinkClass}>
               Победители
-            </Link>
+            </Link> */}
             <Link href='/about' className={navLinkClass}>
               О компании
             </Link>
