@@ -60,7 +60,7 @@ export function BottomNav() {
   };
 
   return (
-    <div className='fixed bottom-6 left-4 right-4 z-50 flex lg:hidden items-center justify-between gap-3 max-w-md mx-auto pointer-events-none'>
+    <div className='fixed bottom-6 left-4 right-4 z-1000 flex lg:hidden items-center justify-between gap-3 max-w-md mx-auto pointer-events-none'>
       {/* ЛЕВАЯ ЧАСТЬ: Основное меню (Капсула) */}
       <nav
         className={clsx(
