@@ -55,16 +55,14 @@ const TearableTicket = ({
     onClick();
   };
 
-  // 🔥 Вычисляем числовое значение суммы
   const numericAmount = parseAmount(winner.amount);
-  
-  // 🔥 Определяем цвет на основе ТЗ дизайнера
-  // Если меньше 10000 -> серый (#4b4b4b)
-  // Иначе -> желтый или оранжевый в зависимости от isYellow
-  const amountColorClass = 
-    numericAmount < 10000 
-      ? 'text-[#4b4b4b]' 
-      : (winner.isYellow ? 'text-[#FFD600]' : 'text-[#E97625]');
+
+  const amountColorClass =
+    numericAmount < 10000
+      ? 'text-[#4b4b4b]'
+      : winner.isYellow
+        ? 'text-[#FFD600]'
+        : 'text-[#E97625]';
 
   return (
     <div
@@ -85,7 +83,7 @@ const TearableTicket = ({
         <img
           src={winner.logo}
           alt='logo'
-          className='w-full h-full object-contain'
+          className='w-[80%] h-[80%] m-auto object-contain'
         />
       </div>
 
@@ -97,7 +95,7 @@ const TearableTicket = ({
         <div
           className={clsx(
             'text-4xl font-black flex items-end justify-center gap-1 my-3',
-            amountColorClass // 🔥 Применяем вычисленный цвет
+            amountColorClass,
           )}
         >
           {winner.amount}
@@ -122,7 +120,7 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
       audio.preload = 'auto';
       return audio;
     });
-  }, []); 
+  }, []);
 
   return (
     <div className='overflow-hidden relative'>
@@ -139,7 +137,7 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
               winner={winner}
               isActive={activeIndex === idx}
               onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
-              audioRefs={audioRefs} 
+              audioRefs={audioRefs}
             />
           </div>
         ))}
