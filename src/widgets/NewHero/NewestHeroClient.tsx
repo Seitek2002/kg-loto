@@ -104,9 +104,8 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
   // 🔥 ОПТИМИЗАЦИЯ 1: Безопасный стартовый индекс.
   // Если слайд всего 1, начнем с 0. Если больше, начнем с 1 (центрального).
   const activeSlides = slides && slides.length > 0 ? slides : MOCK_SLIDES;
-  const initialIndex = activeSlides.length > 1 ? 1 : 0;
 
-  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   if (!activeSlides || activeSlides.length === 0) return null;
 
@@ -137,7 +136,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                 'object-cover transition-opacity duration-700 ease-in-out',
                 activeIndex === index ? 'opacity-100' : 'opacity-0',
               )}
-              priority={index === initialIndex} // Грузим сразу только тот, с которого стартуем
+              priority={index === 0} // Грузим сразу только тот, с которого стартуем
             />
           );
         })}
@@ -193,7 +192,6 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           modules={[Navigation]}
           centeredSlides={true}
           slidesPerView={'auto'}
-          initialSlide={initialIndex} // 🔥 ОПТИМИЗАЦИЯ 1: Безопасный старт
           spaceBetween={20}
           speed={800}
           navigation={{
