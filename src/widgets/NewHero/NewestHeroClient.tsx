@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
@@ -12,7 +12,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
 
-// 🔥 ТОЧНЫЙ ИНТЕРФЕЙС КАК С БЭКЕНДА
 export interface SliderItem {
   id: number;
   title: string;
@@ -36,6 +35,7 @@ interface NewHeroClientProps {
 }
 
 const MOCK_SLIDES: SliderItem[] = [
+  // ... твои моки оставляем без изменений ...
   {
     id: 1,
     title: 'Оной',
@@ -94,7 +94,6 @@ const MOCK_SLIDES: SliderItem[] = [
 ];
 
 const ORBIT_STEP_DEG = 45;
-
 const FALLBACK_GRADIENTS = [
   'linear-gradient(135deg, #4a3b2c, #8b6b4a)',
   'linear-gradient(135deg, #8b58d6, #bca6db)',
@@ -102,29 +101,30 @@ const FALLBACK_GRADIENTS = [
 ];
 
 export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
-  const [activeIndex, setActiveIndex] = useState(1);
+  // 🔥 ОПТИМИЗАЦИЯ 1: Безопасный стартовый индекс.
+  // Если слайд всего 1, начнем с 0. Если больше, начнем с 1 (центрального).
   const activeSlides = slides && slides.length > 0 ? slides : MOCK_SLIDES;
+  const initialIndex = activeSlides.length > 1 ? 1 : 0;
+
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
 
   if (!activeSlides || activeSlides.length === 0) return null;
 
   return (
     <div className='relative w-full pt-32 pb-24 font-rubik overflow-hidden min-h-[500px] md:min-h-[650px] flex items-center bg-[#0a235c]'>
-      {/* ========================================================= */}
-      {/* 🔥 ГЛОБАЛЬНЫЙ ФОН С FADE ЭФФЕКТОМ */}
-      {/* ========================================================= */}
+      {/* ГЛОБАЛЬНЫЙ ФОН */}
       <div className='absolute inset-0 z-0 pointer-events-none'>
-        {/* 1. Дефолтный фон (заглушка) всегда лежит в самом низу */}
         <Image
-          src='/images/hero/main-bg.png' // Твоя локальная фотка
+          src='/images/hero/main-bg.png'
           alt='Default Background'
           fill
+          sizes='100vw' // 🔥 ОПТИМИЗАЦИЯ 2: Подсказали, что фон на всю ширину экрана
           className='object-cover opacity-80'
           priority
         />
 
-        {/* 2. Рендерим фоны всех слайдов и меняем им opacity (плавный переход) */}
         {activeSlides.map((slide, index) => {
-          if (!slide.backgroundImage) return null; // Если с бэка пришел null, фон просто не отрендерится, и будет видна заглушка
+          if (!slide.backgroundImage) return null;
 
           return (
             <Image
@@ -132,22 +132,19 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
               src={slide.backgroundImage}
               alt={`Background ${slide.id}`}
               fill
+              sizes='100vw' // 🔥 ОПТИМИЗАЦИЯ 2
               className={clsx(
-                'object-cover transition-opacity duration-700 ease-in-out', // duration-700 совпадает со скоростью свайпа
+                'object-cover transition-opacity duration-700 ease-in-out',
                 activeIndex === index ? 'opacity-100' : 'opacity-0',
               )}
-              priority={index === 1} // Грузим в первую очередь центральный слайд
+              priority={index === initialIndex} // Грузим сразу только тот, с которого стартуем
             />
           );
         })}
-
-        {/* 3. Затемнение поверх всех фонов, чтобы текст хорошо читался */}
         <div className='absolute inset-0 bg-black/40 z-10' />
       </div>
 
-      {/* ========================================================= */}
-      {/* 🌍 ОРБИТА С ГЛОБУСОМ */}
-      {/* ========================================================= */}
+      {/* ОРБИТА С ГЛОБУСОМ */}
       <div className='absolute bottom-[-5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] md:w-[700px] md:h-[700px] z-0 pointer-events-none'>
         <motion.div
           animate={{ rotate: activeIndex * -ORBIT_STEP_DEG }}
@@ -158,6 +155,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
             src='/globe.svg'
             alt='Planet'
             fill
+            sizes='(max-width: 768px) 500px, 700px' // 🔥 ОПТИМИЗАЦИЯ 2
             className='object-contain opacity-40 md:opacity-100 drop-shadow-2xl'
             priority
           /> */}
@@ -175,6 +173,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                   <Image
                     src={slide.logo || slide.image}
                     fill
+                    sizes='(max-width: 768px) 56px, 96px' // 🔥 ОПТИМИЗАЦИЯ 2: Браузер скачает мини-копию!
                     className='object-cover'
                     alt={slide.title}
                   />
@@ -188,15 +187,13 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
         </motion.div>
       </div>
 
-      {/* ========================================================= */}
-      {/* 🃏 НОВЫЕ КАРТОЧКИ (Свайпер) */}
-      {/* ========================================================= */}
+      {/* НОВЫЕ КАРТОЧКИ (Свайпер) */}
       <section className='max-w-[1440px] mx-auto relative z-10 mt-12 md:mt-24'>
         <Swiper
           modules={[Navigation]}
           centeredSlides={true}
           slidesPerView={'auto'}
-          initialSlide={1}
+          initialSlide={initialIndex} // 🔥 ОПТИМИЗАЦИЯ 1: Безопасный старт
           spaceBetween={20}
           speed={800}
           navigation={{
@@ -224,12 +221,12 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                       : 'scale-[0.85] opacity-60 blur-[2px] z-10',
                   )}
                 >
-                  {/* 🔥 ФОН КАРТОЧКИ */}
                   {slide.backgroundImage ? (
                     <Image
                       src={slide.backgroundImage}
                       alt={`Фон карточки ${slide.id}`}
                       fill
+                      sizes='(max-width: 768px) 85vw, 50vw' // 🔥 ОПТИМИЗАЦИЯ 2: Подсказали размер карточки
                       className='object-cover z-0'
                       priority={isActive}
                     />
@@ -243,7 +240,6 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                     />
                   )}
 
-                  {/* 🔥 КОНТЕНТ КАРТОЧКИ */}
                   <div className='relative z-10 flex flex-col items-center w-full'>
                     <span className='text-[10px] md:text-sm font-medium uppercase font-rubik tracking-widest mb-2 md:mb-4'>
                       Главный приз
@@ -271,7 +267,6 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           ))}
         </Swiper>
 
-        {/* Кнопки навигации */}
         <button className='hero-prev absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white hover:scale-110 transition-all cursor-pointer bg-white/10 p-2 md:p-4 rounded-full backdrop-blur-md border border-white/20'>
           <ChevronLeft size={36} strokeWidth={2} />
         </button>
