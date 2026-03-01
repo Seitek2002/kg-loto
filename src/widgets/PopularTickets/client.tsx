@@ -105,7 +105,7 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
           transformStyle: 'preserve-3d',
         }}
         // 🔥 Увеличили scale до 1.05 и добавили z-50 при ховере
-        className='relative w-full h-full group transition-transform duration-300 hover:scale-[1.05] hover:z-50'
+        className='relative w-full h-full group transition-transform duration-100 hover:scale-[1.05] hover:z-50'
       >
         {/* СЛОЙ С БЛИКОМ */}
         <motion.div
