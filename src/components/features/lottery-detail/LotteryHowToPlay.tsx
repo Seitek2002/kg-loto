@@ -1,4 +1,6 @@
+import { Description } from '@/components/ui/Description';
 import { SafeImage } from '@/components/ui/SafeImage';
+import { Title } from '@/components/ui/Title';
 
 const mockSteps = [
   {
@@ -21,16 +23,15 @@ const mockSteps = [
 export const LotteryHowToPlay = () => {
   return (
     <section className='mb-12 md:mb-20'>
-      <h2 className='text-base md:text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-6 md:mb-8'>
-        Как играть
-      </h2>
+      <Title>Как играть</Title>
+      <Description>{''}</Description>
 
       {/* Сетка: 1 колонка на мобилках, 3 колонки на ПК */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 bg-white shadow-sm border border-gray-100 p-4 rounded-[24px] md:rounded-[32px]'>
         {mockSteps.map((step) => (
           <div key={step.id} className='flex flex-col gap-4'>
             {/* Карточка с картинкой (квадратные пропорции) */}
-            <div className='w-full aspect-[4/3] relative rounded-[24px] md:rounded-[32px] overflow-hidden bg-white shadow-sm border border-gray-100 p-4'>
+            <div className='w-full aspect-[4/3] relative overflow-hidden'>
               <SafeImage
                 src={step.image}
                 alt={`Шаг ${step.id}`}
@@ -40,7 +41,7 @@ export const LotteryHowToPlay = () => {
               />
             </div>
             {/* Текст шага */}
-            <p className='text-xs md:text-sm font-medium text-[#2D2D2D] font-rubik leading-relaxed px-2'>
+            <p className='text-xs md:text-xl font-medium text-[#4b4b4b] font-rubik leading-relaxed px-2'>
               {step.text}
             </p>
           </div>

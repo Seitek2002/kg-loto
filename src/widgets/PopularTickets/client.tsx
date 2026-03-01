@@ -124,8 +124,12 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
 
 export const PopularTicketsClient = ({
   lotteries,
+  title,
+  description,
 }: {
   lotteries: LotteryItem[];
+  title?: string;
+  description?: string;
 }) => {
   const allLotteries = [
     ...lotteries,
@@ -159,10 +163,10 @@ export const PopularTicketsClient = ({
         viewport={{ once: true, margin: '-50px' }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        <Title>Популярные лотереи</Title>
+        <Title>{title || 'Популярные лотереи'}</Title>
         <Description>
-          Популярные лотереи привлекают внимание благодаря крупным джекпотам,
-          частым тиражам и удобным условиям участия.
+          {description ||
+            'Популярные лотереи привлекают внимание благодаря крупным джекпотам, частым тиражам и удобным условиям участия.'}
         </Description>
       </motion.div>
 

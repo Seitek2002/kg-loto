@@ -4,13 +4,10 @@ import Image from 'next/image';
 import { Star, User } from 'lucide-react';
 import { Winner } from '@/types/api';
 import clsx from 'clsx';
-// import { clsx } from 'clsx';
 
 export const WinnerCard = ({ winner }: { winner: Winner }) => {
   // Проверяем, есть ли валидная ссылка на изображение
   const hasImage = winner.image && winner.image.length > 0;
-
-  console.log(winner);
 
   return (
     <div className='relative w-full aspect-4/5 rounded-4xl overflow-hidden bg-white shadow-sm border border-gray-100'>

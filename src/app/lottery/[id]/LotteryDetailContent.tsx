@@ -6,8 +6,7 @@ import { CheckLottery } from '@/widgets/CheckLottery';
 import { LotteryConditions } from '@/components/features/lottery/LotteryConditions';
 import { PrizeTierCard } from '@/components/features/lottery/PrizeTierCard';
 import { useTicketsStore, UserTicket } from '@/store/tickets';
-import { LotteryDetail, Winner } from '@/types/api'; // 🔥 Импорт Winner
-import { Header } from '@/components/ui/Header';
+import { LotteryDetail, Winner } from '@/types/api';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Hero, HeroSlideData } from '@/widgets/Hero';
 import { WinnersHistoryClient } from '@/widgets/WinnersHistory/client';

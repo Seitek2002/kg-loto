@@ -12,10 +12,22 @@ async function getLotteriesData(): Promise<LotteryItem[]> {
   }
 }
 
-export const PopularTickets = async () => {
+export const PopularTickets = async ({
+  title,
+  description,
+}: {
+  title?: string;
+  description?: string;
+}) => {
   const lotteries = await getLotteriesData();
 
   if (!lotteries || lotteries.length === 0) return null;
 
-  return <PopularTicketsClient lotteries={lotteries} />;
+  return (
+    <PopularTicketsClient
+      lotteries={lotteries}
+      title={title}
+      description={description}
+    />
+  );
 };

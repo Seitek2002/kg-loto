@@ -1,5 +1,7 @@
 'use client';
 
+import { Description } from '@/components/ui/Description';
+import { Title } from '@/components/ui/Title';
 import clsx from 'clsx';
 
 const mockConditions = [
@@ -17,14 +19,14 @@ export const LotteryConditions = () => {
   return (
     <section className='mb-12 md:mb-20'>
       <div className='mb-6 md:mb-8'>
-        <h2 className='text-base md:text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-3 md:mb-4'>
+        <Title>
           Условия участия
-        </h2>
-        <p className='text-[11px] md:text-xs text-gray-500 max-w-2xl leading-relaxed font-rubik'>
+        </Title>
+        <Description>
           Приобретая лотерейный билет, вы автоматически соглашаетесь с правилами
           проведения лотереи. Пожалуйста, внимательно ознакомьтесь с основными
           условиями.
-        </p>
+        </Description>
       </div>
 
       {/* Белая плашка-контейнер */}
@@ -67,7 +69,7 @@ export const LotteryConditions = () => {
                   {index + 1}.
                 </span>
                 {/* Текст пункта */}
-                <p className='text-xs md:text-sm text-[#2D2D2D] font-rubik leading-relaxed font-medium'>
+                <p className='text-xs md:text-xl text-[#4B4B4B] font-rubik leading-relaxed font-medium'>
                   {text}
                 </p>
               </div>

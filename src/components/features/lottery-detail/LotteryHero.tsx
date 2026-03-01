@@ -1,4 +1,5 @@
 import { SafeImage } from '@/components/ui/SafeImage';
+import { Title } from '@/components/ui/Title';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 
@@ -17,21 +18,21 @@ export const LotteryHero = () => {
   return (
     <section className='mb-12 md:mb-20'>
       {/* Хлебные крошки */}
-      <nav className='flex items-center gap-2 text-[10px] md:text-xs text-gray-500 font-rubik mb-6 md:mb-10 uppercase'>
-        <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
+      <nav className='flex items-center gap-6 text-[10px] md:text-base text-[#4b4b4b] font-rubik mb-6 md:mb-10 uppercase'>
+        <Link href='/' className='transition-colors'>
           Главная
         </Link>
         <span>/</span>
-        <span className='text-gray-400'>Моментальные лотереи</span>
+        <span className=''>Моментальные лотереи</span>
         <span className='hidden md:inline'>/</span>
-        <span className='hidden md:inline text-gray-400'>Мен миллионер</span>
+        <span className='hidden md:inline font-medium'>Мен миллионер</span>
       </nav>
 
-      <h1 className='text-lg md:text-2xl lg:text-3xl font-black font-benzin uppercase text-[#2D2D2D] mb-6 md:mb-8'>
-        {mockHeroData.title}
-      </h1>
+      <div className='mb-10'>
+        <Title>{mockHeroData.title}</Title>
+      </div>
 
-      <div className='bg-white rounded-[24px] md:rounded-[40px] p-4 md:p-10 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 lg:gap-16'>
+      <div className='bg-white rounded-[24px] items-stretch md:rounded-[40px] p-4 md:p-10 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 lg:gap-16'>
         {/* Картинка билета */}
         <div className='w-full md:w-1/2 lg:w-[45%] aspect-square relative shrink-0'>
           <SafeImage
@@ -45,27 +46,33 @@ export const LotteryHero = () => {
 
         {/* Инфо о призах */}
         <div className='w-full md:w-1/2 flex flex-col justify-center'>
-          <p className='text-sm md:text-base font-bold text-gray-400 font-rubik mb-4'>
+          <p className='text-sm md:text-lg lg:text-4xl font-bold text-[#4B4B4B] font-rubik mb-4'>
             Главные призы:
           </p>
-          <div className='flex flex-col gap-2 md:gap-4 mb-8 md:mb-12 font-black uppercase'>
+          <div className='flex flex-col gap-2 md:gap-4 mb-8 md:mb-12 font-semibold uppercase'>
             {mockHeroData.prizes.map((prize, idx) => (
               <div
                 key={idx}
-                className={`${prize.highlight ? 'text-3xl md:text-4xl lg:text-5xl text-[#F5A623]' : 'text-xl md:text-2xl lg:text-3xl text-[#2D2D2D]'}`}
+                className={`${prize.highlight ? 'text-3xl md:text-4xl lg:text-7xl text-[#F5A623]' : 'text-xl md:text-2xl lg:text-5xl text-[#4b4b4b]'}`}
               >
                 {prize.text}
               </div>
             ))}
           </div>
 
-          <Link
-            href='/map'
-            className='flex items-center justify-center gap-2 w-full sm:w-fit bg-[#FF7A00] hover:bg-[#E66E00] text-white px-8 py-4 md:py-5 rounded-full font-bold text-xs md:text-sm uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-orange-500/30'
-          >
-            Посмотреть карту продаж
-            <MapPin size={18} />
-          </Link>
+          <div className='mt-auto'>
+            <span className='text-[#4B4B4B] text-xs font-medium md:text-base'>
+              Продажа билетов только офлайн
+            </span>
+
+            <Link
+              href='/map'
+              className='flex mt-7 items-center justify-center gap-2 w-full sm:w-fit bg-[#FF7A00] hover:bg-[#E66E00] text-white px-8 py-4 md:py-5 rounded-full font-bold text-xs md:text-sm uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-orange-500/30'
+            >
+              Посмотреть карту продаж
+              <MapPin size={18} />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

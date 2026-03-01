@@ -8,26 +8,13 @@ import { WinnersHistory } from '@/widgets/WinnersHistory';
 export default function LotteryDetailPage() {
   return (
     <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
-      <div className='max-w-[1200px] mx-auto px-4 md:px-8'>
+      <div className='max-w-[1520px] mx-auto px-4 md:px-8'>
         <LotteryHero />
         <LotteryPrizeFund />
-        <LotteryHowToPlay /> {/* 🔥 Вставили */}
-        <LotteryConditions /> {/* 🔥 Вставили */}
-        {/* --- История победителей --- */}
-        {/* <div className='mb-12 md:mb-20 mt-20'>
-          <h2 className='text-base md:text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-8'>
-            История победителей
-          </h2>
-          
-        </div> */}
+        <LotteryHowToPlay />
+        <LotteryConditions />
         <WinnersHistory />
-        {/* --- Другие лотереи --- */}
-        <div className='mb-12 md:mb-20'>
-          <h2 className='text-base md:text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-8'>
-            Другие лотереи
-          </h2>
-          <PopularTickets />
-        </div>
+        <PopularTickets title='Другие лотереи' />
       </div>
     </div>
   );
