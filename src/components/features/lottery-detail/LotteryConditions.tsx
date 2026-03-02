@@ -1,5 +1,3 @@
-'use client';
-
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
 import clsx from 'clsx';
@@ -16,6 +14,21 @@ const mockConditions = [
 ];
 
 export const LotteryConditions = () => {
+  // Вычисляем количество строк (например, для 8 элементов в 2 колонки это будет 4 строки)
+  const ROWS = Math.ceil(mockConditions.length / 2);
+
+  // Хак для Tailwind: он не умеет собирать классы из переменных "на лету",
+  // поэтому заранее пишем маппер для самых частых вариантов.
+  const gridRowsClasses: Record<number, string> = {
+    1: 'lg:grid-rows-1',
+    2: 'lg:grid-rows-2',
+    3: 'lg:grid-rows-3',
+    4: 'lg:grid-rows-4',
+    5: 'lg:grid-rows-5',
+    6: 'lg:grid-rows-6',
+  };
+  const gridRowsClass = gridRowsClasses[ROWS] || 'lg:grid-rows-4';
+
   return (
     <section className='mb-12 md:mb-20'>
       <div className='mb-6 md:mb-8'>
@@ -29,35 +42,40 @@ export const LotteryConditions = () => {
 
       {/* Белая плашка-контейнер */}
       <div className='bg-white rounded-[24px] md:rounded-[40px] shadow-sm border border-gray-100 p-6 md:p-10'>
-        {/* 🔥 Сетка: 1 колонка на моб, 3 колонки на ПК (lg) */}
-        <div className='grid grid-cols-1 lg:grid-cols-2'>
+        {/* 🔥 Добавили lg:grid-flow-col и наш динамический класс строк */}
+        <div
+          className={clsx(
+            'grid grid-cols-1 lg:grid-cols-2 lg:grid-flow-col',
+            gridRowsClass,
+          )}
+        >
           {mockConditions.map((text, index) => {
-            const COLUMNS = 2;
             const isLastItemMobile = index === mockConditions.length - 1;
 
-            // Вычисляем, находится ли элемент в последнем ряду на ПК
-            const isLastRowDesktop =
-              Math.ceil((index + 1) / COLUMNS) ===
-              Math.ceil(mockConditions.length / COLUMNS);
+            // Логика бордеров теперь адаптирована под вертикальное (сверху-вниз) заполнение:
+            // Первая колонка — это элементы с индексами от 0 до (ROWS - 1). Вторая — остальные.
+            const isLastColumnDesktop = Math.floor(index / ROWS) === 1;
 
-            // Вычисляем, является ли элемент последним в своей колонке (справа)
-            const isLastColumnDesktop = (index + 1) % COLUMNS === 0;
+            // Элемент находится в самом низу своей колонки, если его индекс = (ROWS - 1) или это вообще последний элемент массива
+            const isLastRowInColumnDesktop =
+              index === ROWS - 1 || index === mockConditions.length - 1;
 
             return (
               <div
                 key={index}
                 className={clsx(
                   'flex gap-4 p-4 md:p-6 lg:p-8',
+
                   // Пунктирные бордеры:
-                  // На мобилках: бордер снизу у всех, кроме последнего
+                  // На мобилках: бордер снизу у всех, кроме самого последнего элемента
                   !isLastItemMobile &&
                     'border-b border-dashed border-gray-200 lg:border-b-0',
 
-                  // На ПК (lg): бордер снизу у всех, кроме элементов последнего ряда
-                  !isLastRowDesktop &&
+                  // На ПК (lg): бордер снизу у всех, кроме элементов в самом низу колонки
+                  !isLastRowInColumnDesktop &&
                     'lg:border-b lg:border-dashed lg:border-gray-200',
 
-                  // На ПК (lg): бордер справа у всех, кроме последней (3-ей) колонки
+                  // На ПК (lg): бордер справа у всех элементов 1-й колонки
                   !isLastColumnDesktop &&
                     'lg:border-r lg:border-dashed lg:border-gray-200',
                 )}
