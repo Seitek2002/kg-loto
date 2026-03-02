@@ -82,7 +82,7 @@ export function LotteryCard({
       imageSrc={backgroundImage}
       lottieSrc={lottieSrc}
       theme={theme}
-      className=' flex flex-col justify-between p-6 transition-all duration-300 hover:shadow-xl '
+      className='flex flex-col justify-between p-3 transition-all duration-300 hover:shadow-xl'
     >
       {/* ... Весь остальной код верстки без изменений ... */}
 

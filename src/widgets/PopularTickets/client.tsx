@@ -42,7 +42,6 @@ const itemVariants: Variants = {
   },
 };
 
-// 🔥 НОВЫЙ КОМПОНЕНТ: 3D Обертка с бликом
 const TiltCard = ({ children }: { children: React.ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
 
