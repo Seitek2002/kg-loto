@@ -11,6 +11,7 @@ import { clsx } from 'clsx';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
+import { AnimatedPrizeText } from '@/components/ui/AnimatedPrizeText';
 
 export interface SliderItem {
   id: number;
@@ -101,8 +102,6 @@ const FALLBACK_GRADIENTS = [
 ];
 
 export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
-  // 🔥 ОПТИМИЗАЦИЯ 1: Безопасный стартовый индекс.
-  // Если слайд всего 1, начнем с 0. Если больше, начнем с 1 (центрального).
   const activeSlides = slides && slides.length > 0 ? slides : MOCK_SLIDES;
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -175,7 +174,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
       </div>
 
       {/* НОВЫЕ КАРТОЧКИ (Свайпер) */}
-      <section className='max-w-[1440px] mx-auto relative z-10 mt-12 md:mt-24'>
+      <section className='max-w-[1440px] mx-auto z-10 mt-12 md:mt-24'>
         <Swiper
           modules={[Navigation]}
           centeredSlides={true}
@@ -192,7 +191,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           {activeSlides.map((slide, index) => (
             <SwiperSlide
               key={slide.id}
-              className='!w-[85%] sm:!w-[70%] md:!w-[65%]'
+              className='!w-[85%] sm:!w-[70%] md:!w-[60%]'
             >
               {({ isActive }) => (
                 <div
@@ -227,13 +226,16 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                       Главный приз
                     </span>
 
-                    <h2 className='text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-none mb-4 md:mb-6 drop-shadow-lg uppercase'>
-                      {slide.prizeText}
+                    <h2 className='text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-none mb-4 md:mb-6 drop-shadow-lg tabular-nums'>
+                      <AnimatedPrizeText
+                        text={slide.prizeText}
+                        isActive={isActive}
+                      />
                     </h2>
 
                     {slide.subtitle && (
                       <div className='flex flex-col mb-6 md:mb-8'>
-                        <span className='text-sm md:text-lg font-bold tracking-wide uppercase'>
+                        <span className='text-sm md:text-lg font-bold tracking-wide'>
                           {slide.subtitle}
                         </span>
                       </div>
