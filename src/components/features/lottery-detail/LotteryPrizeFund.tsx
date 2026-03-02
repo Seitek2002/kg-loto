@@ -32,7 +32,7 @@ export const LotteryPrizeFund = () => {
 
             <div className='w-px h-[80px] bg-[#6E6E6E] mx-[22px]'></div>
 
-            <div className='flex w-full'>
+            <div className='flex gap-[73px]'>
               {mockFund.map((item, idx) => (
                 <div
                   key={idx}
@@ -40,13 +40,13 @@ export const LotteryPrizeFund = () => {
                     'flex flex-col items-center flex-1 gap-4 text-xs md:text-sm lg:text-[34px]',
                   )}
                 >
-                  <div className='font-black text-[#F5A623]'>
+                  <span className='font-black text-[#F5A623] text-nowrap'>
                     {item.amount}
-                  </div>
+                  </span>
 
-                  <div className='font-rubik font-bold text-[#2D2D2D]'>
+                  <span className='font-bold text-[#2D2D2D] text-nowrap'>
                     {item.count}
-                  </div>
+                  </span>
                 </div>
               ))}
             </div>
