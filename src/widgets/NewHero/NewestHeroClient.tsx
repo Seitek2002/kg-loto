@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
@@ -117,7 +117,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           src='/images/hero/main-bg.png'
           alt='Default Background'
           fill
-          sizes='100vw' // 🔥 ОПТИМИЗАЦИЯ 2: Подсказали, что фон на всю ширину экрана
+          sizes='100vw'
           className='object-cover opacity-80'
           priority
         />
@@ -131,12 +131,12 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
               src={slide.backgroundImage}
               alt={`Background ${slide.id}`}
               fill
-              sizes='100vw' // 🔥 ОПТИМИЗАЦИЯ 2
+              sizes='80vw'
               className={clsx(
                 'object-cover transition-opacity duration-700 ease-in-out',
                 activeIndex === index ? 'opacity-100' : 'opacity-0',
               )}
-              priority={index === 0} // Грузим сразу только тот, с которого стартуем
+              priority={index === 0}
             />
           );
         })}
@@ -144,21 +144,12 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
       </div>
 
       {/* ОРБИТА С ГЛОБУСОМ */}
-      <div className='absolute bottom-[-5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] md:w-[700px] md:h-[700px] z-0 pointer-events-none'>
+      <div className='absolute bottom-[-5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] md:w-[700px] md:h-[700px] mx-auto z-0 pointer-events-none'>
         <motion.div
           animate={{ rotate: activeIndex * -ORBIT_STEP_DEG }}
           transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
           className='w-full h-full relative'
         >
-          {/* <Image
-            src='/globe.svg'
-            alt='Planet'
-            fill
-            sizes='(max-width: 768px) 500px, 700px' // 🔥 ОПТИМИЗАЦИЯ 2
-            className='object-contain opacity-40 md:opacity-100 drop-shadow-2xl'
-            priority
-          /> */}
-
           {activeSlides.map((slide, i) => (
             <div
               key={`orbit-${slide.id}`}
@@ -168,18 +159,15 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
               }}
             >
               <div className='flex flex-col items-center -translate-y-[250px] md:-translate-y-[380px]'>
-                <div className='w-14 h-14 md:w-24 md:h-24 relative rounded-full overflow-hidden border-4 border-white shadow-[0_10px_30px_rgba(0,0,0,0.3)] bg-white'>
+                <div className='w-14 md:w-24 min-h-20 relative'>
                   <Image
                     src={slide.logo || slide.image}
                     fill
-                    sizes='(max-width: 768px) 56px, 96px' // 🔥 ОПТИМИЗАЦИЯ 2: Браузер скачает мини-копию!
-                    className='object-cover'
+                    sizes='(max-width: 768px) 56px, 96px'
+                    className='object-contain'
                     alt={slide.title}
                   />
                 </div>
-                <span className='mt-3 font-benzin font-black text-white text-sm md:text-2xl uppercase tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] whitespace-nowrap'>
-                  {slide.title === 'Главный приз' ? 'Миллионер' : slide.title}
-                </span>
               </div>
             </div>
           ))}
@@ -192,7 +180,6 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           modules={[Navigation]}
           centeredSlides={true}
           slidesPerView={'auto'}
-          spaceBetween={20}
           speed={800}
           navigation={{
             prevEl: '.hero-prev',
@@ -201,19 +188,16 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           allowTouchMove={true}
           onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
           className='!overflow-visible'
-          breakpoints={{
-            768: { spaceBetween: 40 },
-          }}
         >
           {activeSlides.map((slide, index) => (
             <SwiperSlide
               key={slide.id}
-              className='!w-[85%] sm:!w-[70%] md:!w-[55%] lg:!w-[50%]'
+              className='!w-[85%] sm:!w-[70%] md:!w-[65%]'
             >
               {({ isActive }) => (
                 <div
                   className={clsx(
-                    'relative w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] rounded-[32px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center p-6 text-center text-white',
+                    'relative w-full aspect-[4/3] md:aspect-[16/9] rounded-[32px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center p-6 text-center text-white',
                     isActive
                       ? 'scale-100 opacity-100 z-20'
                       : 'scale-[0.85] opacity-60 blur-[2px] z-10',
@@ -224,7 +208,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                       src={slide.backgroundImage}
                       alt={`Фон карточки ${slide.id}`}
                       fill
-                      sizes='(max-width: 768px) 85vw, 50vw' // 🔥 ОПТИМИЗАЦИЯ 2: Подсказали размер карточки
+                      sizes='(max-width: 768px) 85vw, 50vw'
                       className='object-cover z-0'
                       priority={isActive}
                     />
@@ -239,23 +223,23 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                   )}
 
                   <div className='relative z-10 flex flex-col items-center w-full'>
-                    <span className='text-[10px] md:text-sm font-medium uppercase font-rubik tracking-widest mb-2 md:mb-4'>
+                    <span className='text-[10px] md:text-sm font-medium uppercase font-benzin tracking-widest mb-2 md:mb-4'>
                       Главный приз
                     </span>
 
-                    <h2 className='text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-benzin leading-none mb-4 md:mb-6 drop-shadow-lg uppercase'>
+                    <h2 className='text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-none mb-4 md:mb-6 drop-shadow-lg uppercase'>
                       {slide.prizeText}
                     </h2>
 
                     {slide.subtitle && (
                       <div className='flex flex-col mb-6 md:mb-8'>
-                        <span className='text-sm md:text-lg font-bold font-benzin tracking-wide uppercase'>
+                        <span className='text-sm md:text-lg font-bold tracking-wide uppercase'>
                           {slide.subtitle}
                         </span>
                       </div>
                     )}
 
-                    <button className='bg-white text-[#2D2D2D] px-8 py-3.5 md:py-4 rounded-full font-bold font-benzin text-xs md:text-sm shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center gap-2'>
+                    <button className='bg-white text-[#2D2D2D] px-8 py-3.5 md:py-4 rounded-full font-bold text-xs md:text-sm shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center gap-2'>
                       {slide.buttonLabel}
                     </button>
                   </div>

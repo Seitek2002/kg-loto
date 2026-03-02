@@ -18,7 +18,7 @@ export const LotteryHero = () => {
   return (
     <section className='mb-12 md:mb-20'>
       {/* Хлебные крошки */}
-      <nav className='flex items-center gap-6 text-[10px] md:text-base text-[#4b4b4b] font-rubik mb-6 md:mb-10 uppercase'>
+      <nav className='flex items-center gap-6 text-[10px] md:text-base text-[#4b4b4b] font-rubik mb-6 md:mb-10'>
         <Link href='/' className='transition-colors'>
           Главная
         </Link>
