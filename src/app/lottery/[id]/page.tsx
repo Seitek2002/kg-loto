@@ -1,7 +1,7 @@
 import { LotteryHero } from '@/components/features/lottery-detail/LotteryHero';
 import { LotteryPrizeFund } from '@/components/features/lottery-detail/LotteryPrizeFund';
-import { LotteryHowToPlay } from '@/components/features/lottery-detail/LotteryHowToPlay'; // 🔥 НОВОЕ
-import { LotteryConditions } from '@/components/features/lottery-detail/LotteryConditions'; // 🔥 НОВОЕ
+import { LotteryHowToPlay } from '@/components/features/lottery-detail/LotteryHowToPlay';
+import { LotteryConditions } from '@/components/features/lottery-detail/LotteryConditions';
 import { PopularTickets } from '@/widgets/PopularTickets';
 import { WinnersHistory } from '@/widgets/WinnersHistory';
 

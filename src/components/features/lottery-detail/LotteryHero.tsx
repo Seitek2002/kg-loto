@@ -39,7 +39,7 @@ export const LotteryHero = () => {
             src={mockHeroData.image}
             alt='Билет'
             fill
-            className='object-contain'
+            className='object-contain rounded-[10px]'
             fallbackText='Изображение билета'
           />
         </div>

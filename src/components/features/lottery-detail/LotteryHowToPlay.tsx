@@ -29,19 +29,21 @@ export const LotteryHowToPlay = () => {
       {/* Сетка: 1 колонка на мобилках, 3 колонки на ПК */}
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 bg-white shadow-sm border border-gray-100 p-4 rounded-[24px] md:rounded-[32px]'>
         {mockSteps.map((step) => (
-          <div key={step.id} className='flex flex-col gap-4'>
+          <div key={step.id} className='flex flex-col gap-4 max-w-[430px]'>
             {/* Карточка с картинкой (квадратные пропорции) */}
-            <div className='w-full aspect-[4/3] relative overflow-hidden'>
+            <div className='w-full relative overflow-hidden'>
               <SafeImage
                 src={step.image}
                 alt={`Шаг ${step.id}`}
-                fill
-                className='object-contain p-4'
+                width={430}
+                height={430}
+                sizes='(max-width: 768px) 100vw, 50vw'
+                className='object-contain p-4 rounded-[10px] max-w-full'
                 fallbackText={`Изображение шага ${step.id}`}
               />
             </div>
             {/* Текст шага */}
-            <p className='text-xs md:text-xl font-medium text-[#4b4b4b] font-rubik leading-relaxed px-2'>
+            <p className='text-xs md:text-xl font-medium text-[#4b4b4b] leading-relaxed px-4 mx-auto'>
               {step.text}
             </p>
           </div>
