@@ -67,7 +67,7 @@ export const LotteryHero = () => {
 
             <Link
               href='/map'
-              className='flex mt-7 items-center justify-center gap-2 w-full sm:w-fit bg-[#FF7A00] hover:bg-[#E66E00] text-white px-8 py-4 md:py-5 rounded-full font-bold text-xs md:text-2xl uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-orange-500/30'
+              className='flex mt-10 items-center justify-center gap-2 w-full sm:w-fit bg-[#FF7A00] hover:bg-[#E66E00] text-white px-8 py-4 md:py-5 rounded-full font-bold text-xs md:text-2xl uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-orange-500/30'
             >
               Посмотреть карту продаж
               <MapPin size={24} />

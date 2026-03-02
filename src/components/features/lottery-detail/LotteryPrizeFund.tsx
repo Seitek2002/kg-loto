@@ -20,32 +20,31 @@ export const LotteryPrizeFund = () => {
       {/* Обертка для мобильного скролла */}
       <div className='w-full overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible'>
         <div className='bg-white rounded-[24px] md:rounded-[32px] p-6 md:p-10 shadow-sm border border-gray-100 min-w-[600px] md:min-w-0'>
-          <div className='flex justify-between w-full'>
-            <div className='flex flex-col gap-8 md:gap-12 justify-center shrink-0 pr-2 py-2'>
-              <div className='text-[10px] md:text-base font-medium text-[#4B4B4B] uppercase font-rubik'>
+          <div className='flex justify-between w-full items-center'>
+            <div className='flex flex-col gap-4 justify-center shrink-0'>
+              <div className='text-[10px] md:text-base font-medium text-[#4B4B4B] font-rubik'>
                 Сумма выигрыша
               </div>
-              <div className='text-[10px] md:text-base font-medium text-[#4B4B4B] uppercase font-rubik'>
+              <div className='text-[10px] md:text-base font-medium text-[#4B4B4B] font-rubik'>
                 Количество
               </div>
             </div>
 
-            <div className='w-px bg-[#6E6E6E]'></div>
+            <div className='w-px h-[80px] bg-[#6E6E6E] mx-[22px]'></div>
 
             <div className='flex w-full'>
               {mockFund.map((item, idx) => (
                 <div
                   key={idx}
                   className={clsx(
-                    'flex flex-col items-center flex-1 gap-8 md:gap-12 py-2',
+                    'flex flex-col items-center flex-1 gap-4 text-xs md:text-sm lg:text-[34px]',
                   )}
                 >
-                  {/* Сумма */}
-                  <div className='font-black text-xs md:text-sm lg:text-4xl text-[#F5A623]'>
+                  <div className='font-black text-[#F5A623]'>
                     {item.amount}
                   </div>
-                  {/* Количество */}
-                  <div className='font-rubik font-bold text-sm md:text-base lg:text-4xl text-[#2D2D2D]'>
+
+                  <div className='font-rubik font-bold text-[#2D2D2D]'>
                     {item.count}
                   </div>
                 </div>

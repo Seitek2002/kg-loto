@@ -19,9 +19,7 @@ export const LotteryConditions = () => {
   return (
     <section className='mb-12 md:mb-20'>
       <div className='mb-6 md:mb-8'>
-        <Title>
-          Условия участия
-        </Title>
+        <Title>Условия участия</Title>
         <Description>
           Приобретая лотерейный билет, вы автоматически соглашаетесь с правилами
           проведения лотереи. Пожалуйста, внимательно ознакомьтесь с основными
@@ -32,9 +30,9 @@ export const LotteryConditions = () => {
       {/* Белая плашка-контейнер */}
       <div className='bg-white rounded-[24px] md:rounded-[40px] shadow-sm border border-gray-100 p-6 md:p-10'>
         {/* 🔥 Сетка: 1 колонка на моб, 3 колонки на ПК (lg) */}
-        <div className='grid grid-cols-1 lg:grid-cols-3'>
+        <div className='grid grid-cols-1 lg:grid-cols-2'>
           {mockConditions.map((text, index) => {
-            const COLUMNS = 3;
+            const COLUMNS = 2;
             const isLastItemMobile = index === mockConditions.length - 1;
 
             // Вычисляем, находится ли элемент в последнем ряду на ПК
