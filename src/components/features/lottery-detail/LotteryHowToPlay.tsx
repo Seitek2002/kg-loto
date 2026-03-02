@@ -1,4 +1,3 @@
-import { Description } from '@/components/ui/Description';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { Title } from '@/components/ui/Title';
 
@@ -23,8 +22,9 @@ const mockSteps = [
 export const LotteryHowToPlay = () => {
   return (
     <section className='mb-12 md:mb-20'>
-      <Title>Как играть</Title>
-      <Description>{''}</Description>
+      <div className="mb-10">
+        <Title>Как играть</Title>
+      </div>
 
       {/* Сетка: 1 колонка на мобилках, 3 колонки на ПК */}
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 bg-white shadow-sm border border-gray-100 p-4 rounded-[24px] md:rounded-[32px]'>
@@ -43,7 +43,7 @@ export const LotteryHowToPlay = () => {
               />
             </div>
             {/* Текст шага */}
-            <p className='text-xs md:text-xl font-medium text-[#4b4b4b] leading-relaxed px-4 mx-auto'>
+            <p className='text-xs md:text-xl font-medium text-[#4b4b4b] leading-relaxed px-4 mr-20'>
               {step.text}
             </p>
           </div>

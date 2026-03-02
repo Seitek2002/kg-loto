@@ -1,4 +1,3 @@
-import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
 import { clsx } from 'clsx';
 
@@ -14,12 +13,10 @@ const mockFund = [
 export const LotteryPrizeFund = () => {
   return (
     <section className='mb-12 md:mb-20'>
-      <Title>Призовой фонд</Title>
-      <Description>{''}</Description>
+      <div className="mb-10">
+        <Title>Призовой фонд</Title>
+      </div>
 
-      {/* ========================================================= */}
-      {/* 📱 МОБИЛЬНАЯ ВЕРСИЯ (Показывается до 768px)               */}
-      {/* ========================================================= */}
       <div className='md:hidden bg-white rounded-[24px] shadow-sm border border-gray-100 p-5 sm:p-6 mt-4'>
         {/* Заголовки колонок */}
         <div className='grid grid-cols-2 gap-4 mb-5 border-b border-gray-100 pb-4'>
@@ -35,7 +32,6 @@ export const LotteryPrizeFund = () => {
           </div>
         </div>
 
-        {/* Данные (Ряды таблицы) */}
         <div className='flex flex-col gap-4 sm:gap-5'>
           {mockFund.map((item, idx) => (
             <div key={idx} className='grid grid-cols-2 gap-4 items-center'>
@@ -50,9 +46,6 @@ export const LotteryPrizeFund = () => {
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* 💻 ПК ВЕРСИЯ (Показывается от 768px и выше)               */}
-      {/* ========================================================= */}
       <div
         className={clsx(
           'hidden md:block w-full overflow-x-auto pb-4 mt-4 bg-white shadow-sm rounded-[32px] border border-gray-100',
@@ -66,12 +59,12 @@ export const LotteryPrizeFund = () => {
         <div className='p-10 w-full min-w-0'>
           <div className='flex justify-between w-full items-center'>
             {/* Заголовки слева */}
-            <div className='flex flex-col gap-4 justify-center shrink-0'>
+            <div className='flex flex-col gap-6 justify-center shrink-0'>
               <div className='text-base font-medium text-[#4B4B4B] font-rubik'>
                 Сумма выигрыша
               </div>
               <div className='text-base font-medium text-[#4B4B4B] font-rubik'>
-                Количество
+                Количество <br /> победителей
               </div>
             </div>
 
