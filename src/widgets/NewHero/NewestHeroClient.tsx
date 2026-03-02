@@ -36,7 +36,6 @@ interface NewHeroClientProps {
 }
 
 const MOCK_SLIDES: SliderItem[] = [
-  // ... твои моки оставляем без изменений ...
   {
     id: 1,
     title: 'Оной',
@@ -103,13 +102,13 @@ const FALLBACK_GRADIENTS = [
 
 export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
   const activeSlides = slides && slides.length > 0 ? slides : MOCK_SLIDES;
-
-  const [activeIndex, setActiveIndex] = useState(0);
+  const initialIndex = activeSlides.length > 1 ? 1 : 0;
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
 
   if (!activeSlides || activeSlides.length === 0) return null;
 
   return (
-    <div className='relative w-full pt-32 pb-24 font-rubik overflow-hidden min-h-[500px] md:min-h-[650px] flex items-center bg-[#0a235c]'>
+    <div className='relative w-full pt-28 md:pt-32 pb-20 md:pb-24 font-rubik overflow-hidden min-h-[500px] md:min-h-[650px] flex items-center bg-[#0a235c]'>
       {/* ГЛОБАЛЬНЫЙ ФОН */}
       <div className='absolute inset-0 z-0 pointer-events-none'>
         <Image
@@ -130,20 +129,21 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
               src={slide.backgroundImage}
               alt={`Background ${slide.id}`}
               fill
-              sizes='80vw'
+              sizes='100vw'
               className={clsx(
                 'object-cover transition-opacity duration-700 ease-in-out',
                 activeIndex === index ? 'opacity-100' : 'opacity-0',
               )}
-              priority={index === 0}
+              priority={index === initialIndex}
             />
           );
         })}
-        <div className='absolute inset-0 bg-black/40 z-10' />
+        <div className='absolute inset-0 bg-black/30 z-10' />
       </div>
 
       {/* ОРБИТА С ГЛОБУСОМ */}
-      <div className='absolute bottom-[-5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] md:w-[700px] md:h-[700px] mx-auto z-0 pointer-events-none'>
+      {/* 🔥 Уменьшили размеры глобуса для мобилок: w-[340px] h-[340px] */}
+      <div className='absolute bottom-[5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[340px] h-[340px] md:w-[900px] md:h-[900px] mx-auto z-0 pointer-events-none'>
         <motion.div
           animate={{ rotate: activeIndex * -ORBIT_STEP_DEG }}
           transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
@@ -157,13 +157,15 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                 transform: `translate(-50%, -50%) rotate(${i * ORBIT_STEP_DEG}deg)`,
               }}
             >
-              <div className='flex flex-col items-center -translate-y-[250px] md:-translate-y-[380px]'>
-                <div className='w-14 md:w-24 min-h-20 relative'>
+              {/* 🔥 Уменьшили радиус орбиты для мобилок: -translate-y-[180px] */}
+              <div className='flex flex-col items-center -translate-y-[180px] md:-translate-y-[420px]'>
+                {/* 🔥 Убрали скругления, бордеры и тени. Оставили только размеры и relative для Next.js Image */}
+                <div className='w-20 h-16 md:w-40 md:h-28 relative'>
                   <Image
                     src={slide.logo || slide.image}
                     fill
-                    sizes='(max-width: 768px) 56px, 96px'
-                    className='object-contain'
+                    sizes='(max-width: 768px) 80px, 160px'
+                    className='object-contain drop-shadow-md' // 🔥 Заменили object-cover на object-contain
                     alt={slide.title}
                   />
                 </div>
@@ -174,11 +176,13 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
       </div>
 
       {/* НОВЫЕ КАРТОЧКИ (Свайпер) */}
-      <section className='max-w-[1440px] mx-auto z-10 mt-12 md:mt-24'>
+      <section className='w-full max-w-[1440px] mx-auto z-10 mt-16 md:mt-24'>
         <Swiper
           modules={[Navigation]}
           centeredSlides={true}
           slidesPerView={'auto'}
+          initialSlide={initialIndex}
+          spaceBetween={16} // Чуть меньше отступ на мобилках
           speed={800}
           navigation={{
             prevEl: '.hero-prev',
@@ -186,20 +190,24 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           }}
           allowTouchMove={true}
           onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-          className='!overflow-visible'
+          className='!overflow-visible px-4' // Добавили px-4 чтобы карточки не липли к краям экрана
+          breakpoints={{
+            768: { spaceBetween: 40 },
+          }}
         >
           {activeSlides.map((slide, index) => (
             <SwiperSlide
               key={slide.id}
-              className='!w-[85%] sm:!w-[70%] md:!w-[60%]'
+              // 🔥 Исправили ширину: 85% на мобилках, 60% на ПК
+              className='!w-[85%] sm:!w-[70%] md:!w-[60%] lg:!w-[55%] mx-auto'
             >
               {({ isActive }) => (
                 <div
                   className={clsx(
-                    'relative w-full aspect-[4/3] md:aspect-[16/9] rounded-[32px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center p-6 text-center text-white',
+                    'relative w-full aspect-[5/4] sm:aspect-[16/9] lg:aspect-[2/1] rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center p-4 md:p-8 text-center text-white',
                     isActive
                       ? 'scale-100 opacity-100 z-20'
-                      : 'scale-[0.85] opacity-60 blur-[2px] z-10',
+                      : 'scale-[0.9] md:scale-[0.85] opacity-60 blur-[2px] z-10',
                   )}
                 >
                   {slide.backgroundImage ? (
@@ -207,7 +215,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                       src={slide.backgroundImage}
                       alt={`Фон карточки ${slide.id}`}
                       fill
-                      sizes='(max-width: 768px) 85vw, 50vw'
+                      sizes='(max-width: 768px) 85vw, 60vw'
                       className='object-cover z-0'
                       priority={isActive}
                     />
@@ -221,12 +229,14 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                     />
                   )}
 
+                  {/* КОНТЕНТ */}
                   <div className='relative z-10 flex flex-col items-center w-full'>
-                    <span className='text-[10px] md:text-sm font-medium uppercase font-benzin tracking-widest mb-2 md:mb-4'>
+                    <span className='text-[9px] md:text-sm font-medium uppercase font-benzin tracking-widest mb-1.5 md:mb-4'>
                       Главный приз
                     </span>
 
-                    <h2 className='text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-none mb-4 md:mb-6 drop-shadow-lg tabular-nums'>
+                    {/* 🔥 Уменьшили шрифт для мобилок, чтобы он не переносился на новую строку */}
+                    <h2 className='text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black leading-none mb-3 md:mb-6 drop-shadow-lg tabular-nums uppercase'>
                       <AnimatedPrizeText
                         text={slide.prizeText}
                         isActive={isActive}
@@ -234,14 +244,14 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
                     </h2>
 
                     {slide.subtitle && (
-                      <div className='flex flex-col mb-6 md:mb-8'>
-                        <span className='text-sm md:text-lg font-bold tracking-wide'>
+                      <div className='flex flex-col mb-5 md:mb-8'>
+                        <span className='text-xs md:text-lg font-bold tracking-wide uppercase'>
                           {slide.subtitle}
                         </span>
                       </div>
                     )}
 
-                    <button className='bg-white text-[#2D2D2D] px-8 py-3.5 md:py-4 rounded-full font-bold text-xs md:text-sm shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center gap-2'>
+                    <button className='bg-white text-[#2D2D2D] px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-[10px] md:text-sm shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center gap-2 uppercase'>
                       {slide.buttonLabel}
                     </button>
                   </div>
@@ -251,10 +261,11 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           ))}
         </Swiper>
 
-        <button className='hero-prev absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white hover:scale-110 transition-all cursor-pointer bg-white/10 p-2 md:p-4 rounded-full backdrop-blur-md border border-white/20'>
+        {/* 🔥 Скрыли стрелки на мобилках (hidden md:flex) */}
+        <button className='hero-prev hidden md:flex items-center justify-center absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white hover:scale-110 transition-all cursor-pointer bg-white/10 p-3 md:p-4 rounded-full backdrop-blur-md border border-white/20'>
           <ChevronLeft size={36} strokeWidth={2} />
         </button>
-        <button className='hero-next absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white hover:scale-110 transition-all cursor-pointer bg-white/10 p-2 md:p-4 rounded-full backdrop-blur-md border border-white/20'>
+        <button className='hero-next hidden md:flex items-center justify-center absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white hover:scale-110 transition-all cursor-pointer bg-white/10 p-3 md:p-4 rounded-full backdrop-blur-md border border-white/20'>
           <ChevronRight size={36} strokeWidth={2} />
         </button>
       </section>

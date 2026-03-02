@@ -29,8 +29,6 @@ export const NewsListContent = ({ initialNews }: NewsListContentProps) => {
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] pt-0 pb-20'>
-      <Header theme='dark' />
-
       <div className='px-4'>
         <PageHeader title='Новости' />
       </div>

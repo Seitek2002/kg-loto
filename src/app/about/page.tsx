@@ -44,8 +44,6 @@ export default async function AboutPage() {
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] font-rubik'>
-      <Header theme='dark' />
-
       <div className="px-4">
         <PageHeader title='О компании' />
       </div>

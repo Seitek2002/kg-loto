@@ -58,8 +58,6 @@ export default function WinnersPage() {
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] pb-20'>
-      <Header theme='dark' />
-
       <div className='px-4'>
         <PageHeader title='Победители' />
       </div>

@@ -65,8 +65,6 @@ export default async function NewsDetailsPage({
 
   return (
     <div className='min-h-screen bg-[#F5F5F5] font-rubik'>
-      <Header theme='dark' />
-
       <div className='px-4 pt-4'>
         <PageHeader title='' />
       </div>
