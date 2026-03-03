@@ -15,11 +15,15 @@ async function getLotteriesData(): Promise<LotteryItem[]> {
 export const PopularTickets = async ({
   title,
   description,
+  initialLotteries,
 }: {
   title?: string;
   description?: string;
+  initialLotteries?: LotteryItem[];
 }) => {
-  const lotteries = await getLotteriesData();
+  const lotteries = initialLotteries?.length
+    ? initialLotteries
+    : await getLotteriesData();
 
   if (!lotteries || lotteries.length === 0) return null;
 

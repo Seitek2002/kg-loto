@@ -1,39 +1,30 @@
 import { Title } from '@/components/ui/Title';
 import { clsx } from 'clsx';
+import { getTranslations } from 'next-intl/server';
 
-const mockFund = [
-  { amount: '500 000', count: '1' },
-  { amount: '100 000', count: '2' },
-  { amount: '50 000', count: '5' },
-  { amount: '10 000', count: '10' },
-  { amount: '500', count: '100' },
-  { amount: '50', count: '20 000' },
-];
+export const LotteryPrizeFund = async ({ prizeTiers }: { prizeTiers: any[] }) => {
+  if (!prizeTiers || prizeTiers.length === 0) return null;
 
-export const LotteryPrizeFund = () => {
+  const t = await getTranslations('lottery');
+
   return (
     <section className='mb-12 md:mb-20'>
       <div className="mb-10">
-        <Title>Призовой фонд</Title>
+        <Title>{t('prize_fund')}</Title>
       </div>
 
       <div className='md:hidden bg-white rounded-[24px] shadow-sm border border-gray-100 p-5 sm:p-6 mt-4'>
-        {/* Заголовки колонок */}
         <div className='grid grid-cols-2 gap-4 mb-5 border-b border-gray-100 pb-4'>
           <div className='text-center text-[11px] sm:text-xs font-medium text-[#4B4B4B] font-rubik leading-snug'>
-            Сумма
-            <br />
-            выигрыша
+            {t('win_amount')}
           </div>
           <div className='text-center text-[11px] sm:text-xs font-medium text-[#4B4B4B] font-rubik leading-snug'>
-            Количество
-            <br />
-            победителей
+            {t('winners_count')}
           </div>
         </div>
 
         <div className='flex flex-col gap-4 sm:gap-5'>
-          {mockFund.map((item, idx) => (
+          {prizeTiers.map((item, idx) => (
             <div key={idx} className='grid grid-cols-2 gap-4 items-center'>
               <span className='text-center font-black text-[#F5A623] text-xl sm:text-[22px] whitespace-nowrap leading-none'>
                 {item.amount}
@@ -49,7 +40,6 @@ export const LotteryPrizeFund = () => {
       <div
         className={clsx(
           'hidden md:block w-full overflow-x-auto pb-4 mt-4 bg-white shadow-sm rounded-[32px] border border-gray-100',
-          // Стили кастомного скроллбара
           '[&::-webkit-scrollbar]:h-1.5',
           '[&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-50',
           '[&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-200',
@@ -58,26 +48,20 @@ export const LotteryPrizeFund = () => {
       >
         <div className='p-10 w-full min-w-0'>
           <div className='flex justify-between w-full items-center'>
-            {/* Заголовки слева */}
             <div className='flex flex-col gap-6 justify-center shrink-0'>
               <div className='text-base font-medium text-[#4B4B4B] font-rubik'>
-                Сумма выигрыша
+                {t('win_amount')}
               </div>
               <div className='text-base font-medium text-[#4B4B4B] font-rubik'>
-                Количество <br /> победителей
+                {t('winners_count')}
               </div>
             </div>
 
-            {/* Вертикальный разделитель */}
             <div className='w-px h-[80px] bg-[#6E6E6E] mx-[22px]'></div>
 
-            {/* Колонки с цифрами справа */}
             <div className='flex gap-[73px] flex-1'>
-              {mockFund.map((item, idx) => (
-                <div
-                  key={idx}
-                  className='flex flex-col items-center flex-1 gap-4 text-sm lg:text-[34px]'
-                >
+              {prizeTiers.map((item, idx) => (
+                <div key={idx} className='flex flex-col items-center flex-1 gap-4 text-sm lg:text-[34px]'>
                   <span className='font-black text-[#F5A623] whitespace-nowrap'>
                     {item.amount}
                   </span>
