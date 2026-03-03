@@ -2,7 +2,6 @@
 
 import { clsx } from 'clsx';
 import { BaseCard } from '@/components/ui/BaseCard';
-import { FONT_VARIANTS } from '@/config/lottery-styles';
 
 type CardStatus = 'winning' | 'losing' | 'pending' | 'archive';
 type CardVariant = 'lottery' | 'prize';

@@ -1,8 +1,13 @@
 import Image from 'next/image';
 import { clsx } from 'clsx';
-import { Player } from '@lottiefiles/react-lottie-player'; // Импорт плеера
+import dynamic from 'next/dynamic';
 import { AnimatedPrizeText } from '@/components/ui/AnimatedPrizeText';
 import { SliderItem } from '@/types/api';
+
+const LottiePlayer = dynamic(
+  () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
+  { ssr: false }
+);
 
 interface HeroCardProps {
   slide: SliderItem;
@@ -22,7 +27,7 @@ export const HeroCard = ({
       if (slide.image.type === 'lottie') {
         return (
           <div className='absolute inset-0 w-full h-full z-0 overflow-hidden scale-105'>
-            <Player
+            <LottiePlayer
               autoplay
               loop
               src={slide.image.url}
