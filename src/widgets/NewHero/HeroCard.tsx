@@ -6,7 +6,7 @@ import { SliderItem } from '@/types/api';
 
 const LottiePlayer = dynamic(
   () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
-  { ssr: false }
+  { ssr: false },
 );
 
 interface HeroCardProps {
@@ -26,7 +26,7 @@ export const HeroCard = ({
       // 1. Если это Lottie-анимация
       if (slide.image.type === 'lottie') {
         return (
-          <div className='absolute inset-0 w-full h-full z-0 overflow-hidden scale-105'>
+          <div className='absolute bottom-0 w-full z-0 scale-105'>
             <LottiePlayer
               autoplay
               loop
@@ -63,7 +63,7 @@ export const HeroCard = ({
   return (
     <div
       className={clsx(
-        'relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center p-4 md:p-8 text-center text-white',
+        'relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center  text-center text-white',
         isActive
           ? 'scale-100 opacity-100 z-20'
           : 'scale-[0.9] md:scale-[0.85] opacity-60 blur-[2px] z-10',
@@ -73,7 +73,7 @@ export const HeroCard = ({
       {renderCardBackground()}
 
       {/* Контент карточки поверх фона */}
-      <div className='relative z-10 flex flex-col items-center w-full bg-black/20 p-6 rounded-3xl backdrop-blur-[2px]'>
+      <div className='relative z-10 flex flex-col items-center p-6 w-full bg-black/20 rounded-3xl backdrop-blur-[2px]'>
         <span className='text-[9px] md:text-sm font-medium uppercase font-benzin tracking-widest mb-1.5 md:mb-4 drop-shadow-md'>
           Главный приз
         </span>

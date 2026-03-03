@@ -2,7 +2,6 @@
 
 import { Modal } from '@/components/ui/Modal';
 import { Smartphone, X } from 'lucide-react';
-// 🔥 Подключаем хук переводов
 import { useTranslations } from 'next-intl';
 
 interface AppRedirectModalProps {
