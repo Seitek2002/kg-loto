@@ -116,15 +116,13 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
 
   if (!activeSlides || activeSlides.length === 0) return null;
 
-  console.log(slides);
-
   return (
     <div className='relative w-full pt-28 md:pt-32 pb-20 md:pb-24 font-rubik overflow-hidden min-h-[500px] md:min-h-[650px] flex items-center bg-[#0a235c]'>
       {/* 1. Глобальный фон с кроссфейдом */}
       <HeroBackground slides={activeSlides} activeIndex={activeIndex} />
 
       {/* 2. Орбита (строго без глобуса) */}
-      <div className='absolute bottom-[5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[100%] h-[100%] md:w-[100%] md:h-[100%] mx-auto z-0 pointer-events-none'>
+      <div className='absolute bottom-[5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[70%] h-[70%] md:w-[100%] md:h-[100%] mx-auto z-0 pointer-events-none'>
         <motion.div
           animate={{ rotate: activeIndex * -ORBIT_STEP_DEG }}
           transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
