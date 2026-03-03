@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
-import { Header } from '@/components/ui/Header';
 import { ArticleCard } from '@/components/ui/ArticleCard';
 import { LotteriesSlider } from '@/components/features/lottery/LotteriesSlider';
 import { api } from '@/lib/api';
@@ -13,7 +12,9 @@ import {
 } from '@/types/api';
 import { PageHeader } from '@/components/ui/PageHeader';
 
-// Запрос за лотереями (по твоей функции)
+// 🔥 Импортируем серверную функцию переводов
+import { getTranslations } from 'next-intl/server';
+
 async function getLotteriesData(): Promise<LotteryItem[]> {
   try {
     const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
@@ -36,34 +37,36 @@ async function getNewsData(): Promise<NewsItem[]> {
 }
 
 export default async function AboutPage() {
-  //   const lotteries = await getLotteriesData();
   const [lotteries, news] = await Promise.all([
     getLotteriesData(),
     getNewsData(),
   ]);
 
+  // 🔥 Загружаем переводы для страницы
+  const t = await getTranslations('about');
+
   return (
     <div className='min-h-screen bg-[#F9F9F9] font-rubik'>
-      <div className="px-4">
-        <PageHeader title='О компании' />
+      <div className='px-4'>
+        {/* 🔥 Передаем переведенный заголовок */}
+        <PageHeader title={t('breadcrumb_about')} />
       </div>
 
       <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-8 lg:pt-32 pb-20 overflow-hidden'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
         <nav className='hidden lg:flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
           <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
-            Главная
+            {t('breadcrumb_home')}
           </Link>
           <ChevronRight size={14} className='shrink-0' />
-          <span className='text-[#2D2D2D]'>О компании</span>
+          <span className='text-[#2D2D2D]'>{t('breadcrumb_about')}</span>
         </nav>
 
         {/* ГЛАВНОЕ ФОТО (Баннер) */}
         <div className='w-full aspect-[21/9] min-h-[200px] relative rounded-[32px] overflow-hidden mb-12 bg-blue-100'>
-          {/* Замени 'about-banner.jpg' на реальную картинку из макета, когда она у тебя появится */}
           <Image
             src='/banners/1.jpg'
-            alt='О компании'
+            alt={t('breadcrumb_about')}
             fill
             className='object-cover'
             priority
@@ -76,67 +79,34 @@ export default async function AboutPage() {
           <div className='w-full lg:w-[65%] flex flex-col gap-10 text-sm sm:text-base text-[#4B4B4B] leading-relaxed'>
             <section>
               <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
-                О КОМПАНИИ
+                {t('company_title')}
               </h2>
-              <p className='mb-4'>
-                Россиянин выиграл 5 миллионов рублей в лотерее «Второе Шанс:
-                Рождество» с одной из «Национальной Лотереи». Обладатель
-                главного приза, купивший билет «Миллионер», счастливчиком не
-                обзавелся миллионами.
-              </p>
-              <p className='mb-4'>
-                Помимо главного денежного приза, в розыгрыше были разыграны 100
-                призов по 50 тысяч рублей, а также главным подписчиком 40
-                ближайших тиражей лотереи «Миллионер».
-              </p>
-              <p>
-                Итоги акции были подведены в прямом эфире 9 января на
-                официальном сайте «Национальной Лотереи» и в ее сообществе в
-                социальной сети ВКонтакте. Акция приняла всероссийский масштаб:
-                для всего-то и обошла зарегистрировал совпадения 2 хит лотереи
-                «Мечталлион», дополнительный шанс на удачу.
-              </p>
+              <p className='mb-4'>{t('company_p1')}</p>
+              <p className='mb-4'>{t('company_p2')}</p>
+              <p>{t('company_p3')}</p>
             </section>
 
             <section>
               <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
-                НАША МИССИЯ
+                {t('mission_title')}
               </h2>
-              <p className='mb-4'>
-                Россиянин стал обладателем суперприза лотереи «Мечталлион».
-                Лотерейный билет за 100 «Национальной Лотереи». Обладатель
-                главного приза, купивший билет «Миллионер», счастливчиком не
-                обзавелся миллионами.
-              </p>
-              <p>
-                Помимо главного денежного приза, в розыгрыше были разыграны 100
-                призов по 50 тысяч рублей, а также главным подписчиком 40
-                ближайших тиражей лотереи «Миллионер».
-              </p>
+              <p className='mb-4'>{t('mission_p1')}</p>
+              <p>{t('mission_p2')}</p>
             </section>
 
             <section>
               <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
-                НАШИ ЦЕННОСТИ
+                {t('values_title')}
               </h2>
-              <p className='mb-4'>
-                Россиянин выиграл 5 миллионов рублей в лотерее «Второе Шанс:
-                Рождество» с одной из «Национальной Лотереи». Обладатель
-                главного приза, купивший билет «Миллионер», счастливчиком не
-                обзавелся миллионами.
-              </p>
-              <p>
-                Помимо главного денежного приза, в розыгрыше были разыграны 100
-                призов по 50 тысяч рублей, а также главным подписчиком 40
-                ближайших тиражей лотереи «Миллионер».
-              </p>
+              <p className='mb-4'>{t('values_p1')}</p>
+              <p>{t('values_p2')}</p>
             </section>
           </div>
 
           {/* ПРАВАЯ КОЛОНКА: НОВОСТИ (Сайдбар 35%) */}
           <div className='w-full lg:w-[35%] flex flex-col sticky top-28'>
             <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-6'>
-              НОВОСТИ
+              {t('news_title')}
             </h2>
 
             <div className='flex flex-col gap-4'>
@@ -147,7 +117,7 @@ export default async function AboutPage() {
                     title={item.title}
                     description={item.content}
                     imageSrc={item.image}
-                    buttonText='ПОДРОБНЕЕ'
+                    buttonText={t('read_more')} // 🔥 Передаем переведенный текст кнопки
                     theme={item.theme}
                     href={`/news/${item.slug}`}
                   />

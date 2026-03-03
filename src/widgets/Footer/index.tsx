@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { ApiResponse, LotteryItem } from '@/types/api';
+// 🔥 Импортируем серверную функцию для переводов
+import { getTranslations } from 'next-intl/server';
 
 // Запрашиваем лотереи прямо в Footer (выполняется на сервере)
 async function getFooterLotteries(): Promise<LotteryItem[]> {
@@ -14,8 +16,14 @@ async function getFooterLotteries(): Promise<LotteryItem[]> {
   }
 }
 
-// Вынесли кнопки сторов в отдельный мини-компонент
-const StoreButton = ({ type }: { type: 'appstore' | 'googleplay' }) => {
+// 🔥 Добавили проп downloadText для перевода "Скачайте в"
+const StoreButton = ({
+  type,
+  downloadText,
+}: {
+  type: 'appstore' | 'googleplay';
+  downloadText: string;
+}) => {
   const isApple = type === 'appstore';
 
   return (
@@ -35,7 +43,7 @@ const StoreButton = ({ type }: { type: 'appstore' | 'googleplay' }) => {
 
       <div className='flex flex-col'>
         <span className='text-[8px] uppercase font-medium text-gray-300 leading-none'>
-          Скачайте в
+          {downloadText}
         </span>
         <span className='text-[11px] font-bold font-benzin uppercase leading-tight mt-1'>
           {isApple ? 'App Store' : 'Google Play'}
@@ -47,39 +55,39 @@ const StoreButton = ({ type }: { type: 'appstore' | 'googleplay' }) => {
 
 export const Footer = async () => {
   const lotteries = await getFooterLotteries();
+  // 🔥 Вызываем функцию перевода с ключом пространства имен 'footer'
+  const t = await getTranslations('footer');
 
   const footerSections = [
     {
-      title: 'Лотереи',
+      title: t('lotteries'),
       links:
         lotteries.length > 0
           ? lotteries.map((loto) => ({
               name: loto.title,
               href: `/lottery/${loto.id}`,
             }))
-          : [{ name: 'Нет доступных лотерей', href: '#' }],
+          : [{ name: t('no_lotteries'), href: '#' }],
     },
     {
-      title: 'Покупки',
+      title: t('purchases'),
+      links: [{ name: t('sales_map'), href: '/map' }],
+    },
+    {
+      title: t('company'),
       links: [
-        { name: 'Карта продаж', href: '/map' },
+        { name: t('about'), href: '/about' },
+        { name: t('contacts'), href: '#' },
+        { name: t('news'), href: '/news' },
       ],
     },
     {
-      title: 'Компания',
+      title: t('info'),
       links: [
-        { name: 'О компании', href: '/about' },
-        { name: 'Контакты', href: '#' },
-        { name: 'Новости', href: '/news' },
-      ],
-    },
-    {
-      title: 'Информация',
-      links: [
-        { name: 'Проверить билет', href: '/#check' },
-        { name: 'Победители', href: '/winners' },
-        { name: 'Как получить выигрыш', href: '/rules' },
-        { name: 'Вопросы и ответы', href: '/faq' },
+        { name: t('check_ticket'), href: '/#check' },
+        { name: t('winners'), href: '/winners' },
+        { name: t('how_to_get_prize'), href: '/rules' },
+        { name: t('faq'), href: '/faq' },
       ],
     },
   ];
@@ -104,7 +112,7 @@ export const Footer = async () => {
               </Link>
             </div>
             <p className='text-xs font-medium text-[#6E6E6E]'>
-              2021-2026 ООО «KGLOTO»
+              {t('copyright')}
             </p>
           </div>
 
@@ -120,7 +128,7 @@ export const Footer = async () => {
                     <li key={lIdx}>
                       <Link
                         href={link.href}
-                        className='text-[13px] md:text-xs font-bold md:uppercase text-[#2D2D2D] hover:text-[#FFD600] transition-colors leading-tight'
+                        className='text-[13px] md:text-xs font-bold md:uppercase text-[#2D2D2D] hover:text-[#FFD600] transition-colors leading-tight block max-w-full break-words'
                       >
                         {link.name}
                       </Link>
@@ -139,7 +147,7 @@ export const Footer = async () => {
             <div className='flex flex-col lg:flex-row gap-4 lg:gap-12'>
               <div>
                 <span className='block text-xs text-gray-500 mb-1 lg:mb-2'>
-                  Горячая линия
+                  {t('hotline')}
                 </span>
                 <a
                   href='tel:+996312440107'
@@ -158,17 +166,15 @@ export const Footer = async () => {
               </div>
             </div>
 
-            {/* Моб. версия: Безопасность + 18+ (в одну строку) */}
+            {/* Моб. версия: Безопасность + 18+ */}
             <div className='flex lg:hidden items-center justify-between gap-4 mt-2'>
               <p className='text-[11px] text-gray-500 max-w-[220px] leading-relaxed'>
-                Мы гарантируем безопасность всех способов оплаты и не сохраняем
-                ваши данные
+                {t('security_guarantee')}
               </p>
               <span className='font-black text-2xl text-[#2D2D2D]'>18+</span>
             </div>
           </div>
 
-          {/* Разделитель только для мобилок */}
           <div className='h-px bg-gray-300 w-full lg:hidden my-2' />
 
           {/* QR и Кнопки */}
@@ -176,7 +182,7 @@ export const Footer = async () => {
             {/* Текст для ПК */}
             <div className='text-right hidden lg:block'>
               <p className='text-xs text-gray-500 max-w-25'>
-                Скачайте наше приложение
+                {t('download_app')}
               </p>
             </div>
 
@@ -192,14 +198,15 @@ export const Footer = async () => {
 
             {/* Моб. версия: Текст + 2 кнопки сторов */}
             <div className='flex flex-col gap-3 lg:hidden'>
-              <p className='text-[13px] text-[#2D2D2D] leading-snug'>
-                Скачайте наше
-                <br />
-                приложение
+              <p className='text-[13px] text-[#2D2D2D] leading-snug max-w-[120px]'>
+                {t('download_app')}
               </p>
               <div className='flex flex-col gap-2'>
-                <StoreButton type='appstore' />
-                <StoreButton type='googleplay' />
+                <StoreButton type='appstore' downloadText={t('download_in')} />
+                <StoreButton
+                  type='googleplay'
+                  downloadText={t('download_in')}
+                />
               </div>
             </div>
           </div>
@@ -207,28 +214,35 @@ export const Footer = async () => {
 
         <div className='hidden lg:flex border-b border-gray-200 pb-12 mb-8'>
           <p className='text-xs text-gray-400 max-w-sm leading-relaxed'>
-            Мы гарантируем безопасность всех способов оплаты и не сохраняем ваши
-            данные
+            {t('security_guarantee')}
           </p>
         </div>
 
         <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-[11px] text-gray-500 font-medium'>
           <div className='grid grid-cols-2 lg:flex lg:flex-row gap-x-4 gap-y-5 lg:gap-6 w-full lg:w-auto'>
-            <Link href='#' className='hover:text-[#2D2D2D] leading-relaxed'>
-              Политика обработки
-              <br className='lg:hidden' /> персональных данных
+            <Link
+              href='#'
+              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
+            >
+              {t('privacy_policy')}
             </Link>
-            <Link href='#' className='hover:text-[#2D2D2D] leading-relaxed'>
-              Обработка персональных
-              <br className='lg:hidden' /> данных третьими лицами
+            <Link
+              href='#'
+              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
+            >
+              {t('third_party_data')}
             </Link>
-            <Link href='#' className='hover:text-[#2D2D2D] leading-relaxed'>
-              Правила программы
-              <br className='lg:hidden' /> лояльности
+            <Link
+              href='#'
+              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
+            >
+              {t('loyalty_rules')}
             </Link>
-            <Link href='#' className='hover:text-[#2D2D2D] leading-relaxed'>
-              Договор-оферта для
-              <br className='lg:hidden' /> участников лотерей
+            <Link
+              href='#'
+              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
+            >
+              {t('offer_contract')}
             </Link>
           </div>
           <div className='hidden lg:block font-black text-xl text-[#2D2D2D]'>
