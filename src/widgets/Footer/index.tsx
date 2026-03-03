@@ -2,10 +2,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { ApiResponse, LotteryItem } from '@/types/api';
-// 🔥 Импортируем серверную функцию для переводов
 import { getTranslations } from 'next-intl/server';
+// 🔥 Импортируем генератор QR-кода
+import { QRCodeSVG } from 'qrcode.react';
 
-// Запрашиваем лотереи прямо в Footer (выполняется на сервере)
 async function getFooterLotteries(): Promise<LotteryItem[]> {
   try {
     const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
@@ -16,19 +16,23 @@ async function getFooterLotteries(): Promise<LotteryItem[]> {
   }
 }
 
-// 🔥 Добавили проп downloadText для перевода "Скачайте в"
+// 🔥 Добавили проп href и поменяли Link на <a>
 const StoreButton = ({
   type,
   downloadText,
+  href,
 }: {
   type: 'appstore' | 'googleplay';
   downloadText: string;
+  href: string;
 }) => {
   const isApple = type === 'appstore';
 
   return (
-    <Link
-      href='#'
+    <a
+      href={href}
+      target='_blank'
+      rel='noopener noreferrer'
       className='flex items-center gap-3 bg-[#262626] text-white px-5 py-2.5 rounded-[14px] hover:bg-black active:scale-95 transition-all min-w-[150px]'
     >
       {isApple ? (
@@ -49,14 +53,19 @@ const StoreButton = ({
           {isApple ? 'App Store' : 'Google Play'}
         </span>
       </div>
-    </Link>
+    </a>
   );
 };
 
 export const Footer = async () => {
   const lotteries = await getFooterLotteries();
-  // 🔥 Вызываем функцию перевода с ключом пространства имен 'footer'
   const t = await getTranslations('footer');
+
+  // 🔥 Ссылки от босса
+  const APP_STORE_LINK =
+    'https://apps.apple.com/kg/app/kgloto-checker/id6757925326';
+  const GOOGLE_PLAY_LINK =
+    'https://play.google.com/store/apps/details?id=kg.loto.app';
 
   const footerSections = [
     {
@@ -186,13 +195,12 @@ export const Footer = async () => {
               </p>
             </div>
 
-            {/* QR Код */}
+            {/* 🔥 Настоящий QR Код */}
             <div className='w-32 h-32 lg:w-20 lg:h-20 bg-white p-2 rounded-xl shadow-sm relative shrink-0'>
-              <Image
-                src='/qr.svg'
-                alt='QR App'
-                fill
-                className='object-contain p-2 lg:p-1'
+              <QRCodeSVG
+                value='https://kgloto.com'
+                className='w-full h-full text-[#2D2D2D]'
+                level='H'
               />
             </div>
 
@@ -202,9 +210,14 @@ export const Footer = async () => {
                 {t('download_app')}
               </p>
               <div className='flex flex-col gap-2'>
-                <StoreButton type='appstore' downloadText={t('download_in')} />
+                <StoreButton
+                  type='appstore'
+                  href={APP_STORE_LINK}
+                  downloadText={t('download_in')}
+                />
                 <StoreButton
                   type='googleplay'
+                  href={GOOGLE_PLAY_LINK}
                   downloadText={t('download_in')}
                 />
               </div>

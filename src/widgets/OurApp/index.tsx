@@ -2,72 +2,91 @@
 
 import { Title } from '@/components/ui/Title';
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
+import { useTranslations } from 'next-intl';
 
 export const OurApp = () => {
-  // 1. Создаем ссылку на контейнер секции, чтобы отслеживать скролл относительно него
   const sectionRef = useRef<HTMLElement>(null);
+  const t = useTranslations('ourapp'); // 🔥 Подключаем словарь
 
-  // 2. Получаем прогресс скролла конкретно для этой секции
-  // offset: ['start end', 'end start'] означает:
-  // Начало анимации: когда верх секции появляется внизу экрана (start end)
-  // Конец анимации: когда низ секции уходит за верх экрана (end start)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
-  // 3. Преобразуем прогресс скролла (от 0 до 1) в значения смещения по Y
-  // Телефон будет двигаться от +50px вниз до -50px вверх во время прокрутки
   const yParallax = useTransform(scrollYProgress, [0, 1], [80, -80]);
-
-  // Добавим легкий параллакс и для текста, чтобы он двигался в противоположную сторону
   const yTextParallax = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+
+  // Ссылки от босса
+  const APP_STORE_LINK =
+    'https://apps.apple.com/kg/app/kgloto-checker/id6757925326';
+  const GOOGLE_PLAY_LINK =
+    'https://play.google.com/store/apps/details?id=kg.loto.app';
 
   return (
     <section
       ref={sectionRef}
-      className='hidden md:flex relative w-full bg-white rounded-[40px] overflow-hidden min-h-125 items-center my-12' // Добавил my-12 для отступов
+      className='hidden md:flex relative w-full bg-white rounded-[40px] overflow-hidden min-h-125 items-center my-12 shadow-sm'
     >
       <motion.div
-        style={{ y: yTextParallax }} // Применяем легкий параллакс к текстовому блоку
-        className='relative z-10 w-[55%] pl-16 py-16 flex flex-col h-full justify-center'
+        style={{ y: yTextParallax }}
+        className='relative z-10 w-[55%] pl-16 py-12 flex flex-col h-full justify-center'
       >
-        <Title>скачайте наше приложение</Title>
+        <Title>{t('title')}</Title>
 
-        <div className='max-w-md mb-12 text-xs lg:text-xl text-[#6E6E6E] my-3'>
-          Скачайте приложение и получите удобный доступ ко всем возможностям
-          сервиса прямо со своего смартфона — в любое время и в любом месте.
+        <div className='max-w-md mb-8 text-xs lg:text-base text-[#6E6E6E] my-3 leading-relaxed'>
+          {t('desc')}
         </div>
 
-        <div className='flex flex-col gap-3 mb-12'>
-          <div className='relative w-32 h-32'>
-            <Image
-              src='/qr.svg'
-              alt='QR Code'
-              width={160}
-              height={160}
-              className='w-full h-full object-contain'
+        {/* QR Код и Кнопки в один ряд для экономии места */}
+        <div className='flex items-center gap-8 mb-8'>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className='p-3 bg-white border border-gray-100 rounded-2xl shadow-sm'>
+              {/* 🔥 Генерируем QR-код (ведет на сайт, откуда юзер выберет стор) */}
+              <QRCodeSVG
+                value='https://kgloto.com'
+                size={100}
+                level='H'
+                fgColor='#2D2D2D'
+              />
+            </div>
+            <span className='text-[10px] font-bold font-rubik text-gray-400 uppercase tracking-wider'>
+              {t('qr_label')}
+            </span>
+          </div>
+
+          <div className='flex flex-col gap-3'>
+            <StoreButton
+              type='appstore'
+              href={APP_STORE_LINK}
+              downloadText={t('download_from')}
+            />
+            <StoreButton
+              type='googleplay'
+              href={GOOGLE_PLAY_LINK}
+              downloadText={t('download_from')}
             />
           </div>
-          <span className='text-xs font-bold font-rubik text-[#2D2D2D] max-w-25 leading-tight'>
-            Скачайте наше приложение
-          </span>
         </div>
 
-        <div className='flex items-center gap-4'>
-          <StoreButton type='appstore' />
-          <StoreButton type='googleplay' />
+        {/* 🔥 Компактная инструкция по регистрации */}
+        <div className='max-w-md border-t border-gray-100 pt-6'>
+          <h4 className='text-xs font-black font-benzin text-[#2D2D2D] uppercase mb-4'>
+            {t('inst_title')}
+          </h4>
+          <ul className='text-xs text-[#6E6E6E] flex flex-col gap-3 font-rubik leading-relaxed'>
+            <li dangerouslySetInnerHTML={{ __html: t('inst_1') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('inst_2') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('inst_3') }} />
+          </ul>
         </div>
       </motion.div>
 
       <div className='absolute top-0 right-0 bottom-0 w-[50%] h-full pointer-events-none flex items-center justify-center'>
-        {/* 🔥 Обернули картинку в motion.div и применили значение yParallax */}
         <motion.div
           style={{ y: yParallax }}
-          // Увеличиваем высоту картинки (h-[120%]), чтобы при смещении вверх/вниз не было видно обрезанных краев
           className='relative w-full h-[120%]'
         >
           <Image
@@ -84,13 +103,23 @@ export const OurApp = () => {
   );
 };
 
-const StoreButton = ({ type }: { type: 'appstore' | 'googleplay' }) => {
+const StoreButton = ({
+  type,
+  href,
+  downloadText,
+}: {
+  type: 'appstore' | 'googleplay';
+  href: string;
+  downloadText: string;
+}) => {
   const isApple = type === 'appstore';
 
   return (
-    <Link
-      href='#'
-      className='flex items-center gap-3 bg-[#1E1E1E] text-white px-6 py-3 rounded-full hover:bg-black active:scale-95 transition-all min-w-[180px] shadow-md' // Добавил active:scale-95 и shadow-md
+    <a
+      href={href}
+      target='_blank'
+      rel='noopener noreferrer'
+      className='flex items-center gap-3 bg-[#1E1E1E] text-white px-6 py-3 rounded-full hover:bg-black active:scale-95 transition-all min-w-[200px] shadow-md'
     >
       {isApple ? (
         <svg className='w-6 h-6 fill-current' viewBox='0 0 24 24'>
@@ -104,12 +133,12 @@ const StoreButton = ({ type }: { type: 'appstore' | 'googleplay' }) => {
 
       <div className='flex flex-col'>
         <span className='text-[9px] uppercase font-rubik text-gray-400 leading-none'>
-          Скачайте с
+          {downloadText}
         </span>
         <span className='text-[13px] font-bold font-benzin uppercase leading-tight mt-1'>
           {isApple ? 'App Store' : 'Google Play'}
         </span>
       </div>
-    </Link>
+    </a>
   );
 };
