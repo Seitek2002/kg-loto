@@ -1,10 +1,5 @@
-'use client';
-
 import Link from 'next/link';
-import { clsx } from 'clsx';
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -17,13 +12,6 @@ export const MobileMenu = ({
   onClose,
   onRestrictedClick,
 }: MobileMenuProps) => {
-  // Стейт аккордеона теперь живет только здесь!
-  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
-
-  const toggleAccordion = (name: string) => {
-    setOpenAccordion(openAccordion === name ? null : name);
-  };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -35,131 +23,46 @@ export const MobileMenu = ({
           className='fixed inset-x-0 top-[64px] bottom-0 z-[100] bg-black/40 backdrop-blur-sm flex flex-col pb-24 overflow-y-auto'
         >
           <div className='m-4 bg-white rounded-[24px] p-5 shadow-2xl flex flex-col gap-4 font-rubik'>
-            {/* Навигация */}
+            {/* Навигация (строго как на ПК) */}
             <div className='flex flex-col'>
-              {/* Аккордеон: Моментальные */}
-              <div className='flex flex-col border-b border-gray-100'>
-                <button
-                  onClick={() => toggleAccordion('instant')}
-                  className='flex items-center justify-between py-4 text-[13px] font-bold text-[#2D2D2D] uppercase'
-                >
-                  Моментальные билеты
-                  <ChevronDown
-                    size={18}
-                    className={clsx(
-                      'transition-transform text-gray-400',
-                      openAccordion === 'instant' && 'rotate-180',
-                    )}
-                  />
-                </button>
-                <AnimatePresence>
-                  {openAccordion === 'instant' && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className='flex flex-col gap-3 pb-3 pl-4 overflow-hidden'
-                    >
-                      <Link
-                        href='/#instant'
-                        onClick={onClose}
-                        className='text-sm text-gray-600 font-medium'
-                      >
-                        Мен миллионер
-                      </Link>
-                      <Link
-                        href='/#instant'
-                        onClick={onClose}
-                        className='text-sm text-gray-600 font-medium'
-                      >
-                        Оной
-                      </Link>
-                      <Link
-                        href='/#instant'
-                        onClick={onClose}
-                        className='text-sm text-gray-600 font-medium'
-                      >
-                        Уйго белек
-                      </Link>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <Link
+                href='/'
+                onClick={onClose}
+                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+              >
+                Главная
+              </Link>
 
-              <button
-                onClick={onRestrictedClick} // Заглушка
-                className='py-4 text-left text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
-              >
-                Проверить билет
-              </button>
               <Link
-                href='/winners'
+                href='/#instant'
                 onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
-                Победители
+                Моментальные
               </Link>
-              <Link
-                href='/draws'
-                onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
-              >
-                Тиражные билеты
-              </Link>
+
               <Link
                 href='/about'
                 onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100'
+                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 О компании
               </Link>
 
-              {/* Аккордеон: Контакты */}
-              <div className='flex flex-col border-b border-gray-100'>
-                <button
-                  onClick={() => toggleAccordion('contacts')}
-                  className='flex items-center justify-between py-4 text-[13px] font-bold text-[#2D2D2D] uppercase'
-                >
-                  Контакты
-                  <ChevronDown
-                    size={18}
-                    className={clsx(
-                      'transition-transform text-gray-400',
-                      openAccordion === 'contacts' && 'rotate-180',
-                    )}
-                  />
-                </button>
-                <AnimatePresence>
-                  {openAccordion === 'contacts' && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className='flex flex-col gap-3 pb-3 pl-4 overflow-hidden'
-                    >
-                      <a
-                        href='tel:996312440107'
-                        className='text-sm text-gray-600 font-medium'
-                      >
-                        996 312 44 01 07
-                      </a>
-                      <a
-                        href='mailto:support@kgloto.kg'
-                        className='text-sm text-gray-600 font-medium'
-                      >
-                        support@kgloto.kg
-                      </a>
-                      <Link
-                        href='/map'
-                        onClick={onClose}
-                        className='text-sm text-gray-600 font-medium'
-                      >
-                        Карта продаж
-                      </Link>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <button
+                onClick={onRestrictedClick} // Заглушка
+                className='py-4 text-left text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+              >
+                Проверить билет
+              </button>
+
+              <a
+                href='tel:996312440107'
+                onClick={onClose}
+                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+              >
+                Горячая линия: 996 312 44 01 07
+              </a>
             </div>
 
             {/* Кнопки аутентификации */}
