@@ -1,9 +1,7 @@
 import { api } from '@/lib/api';
-import { ApiResponse } from '@/types/api';
-import { NewestHeroClient, SliderItem } from './NewestHeroClient';
-// import { NewHeroClient, SliderItem } from './client';
+import { ApiResponse, SliderItem } from '@/types/api';
+import { NewestHeroClient } from './NewestHeroClient';
 
-// Функция для получения данных слайдера
 async function getHeroSlides(): Promise<SliderItem[]> {
   try {
     const { data } = await api.get<ApiResponse<SliderItem[]>>('/slider/');
@@ -14,18 +12,13 @@ async function getHeroSlides(): Promise<SliderItem[]> {
   }
 }
 
-// 🔥 Серверный компонент (может быть async)
 const NewHero = async () => {
-  // Запрашиваем данные на сервере
   const slides = await getHeroSlides();
 
-  // Если вдруг данных нет, можно вернуть fallback или null
   if (!slides || slides.length === 0) {
     return null; 
   }
 
-  // Передаем готовые данные в клиентский UI
-  // return <NewHeroClient slides={slides} />;
   return <NewestHeroClient slides={slides} />;
 };
 
