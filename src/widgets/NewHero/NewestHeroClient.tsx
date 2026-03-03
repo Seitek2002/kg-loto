@@ -143,7 +143,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
 
       {/* ОРБИТА С ГЛОБУСОМ */}
       {/* 🔥 Уменьшили размеры глобуса для мобилок: w-[340px] h-[340px] */}
-      <div className='absolute bottom-[5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[340px] h-[340px] md:w-[900px] md:h-[900px] mx-auto z-0 pointer-events-none'>
+      <div className='absolute bottom-[5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[80%] h-[80%] md:w-[100%] md:h-[100%] mx-auto z-0 pointer-events-none'>
         <motion.div
           animate={{ rotate: activeIndex * -ORBIT_STEP_DEG }}
           transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
