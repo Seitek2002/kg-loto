@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl'; // 🔥 Импортируем хук
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,6 +15,8 @@ export const MobileMenu = ({
   onClose,
   onRestrictedClick,
 }: MobileMenuProps) => {
+  const t = useTranslations('header'); // 🔥 Подключаем словарь 'header'
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -23,14 +28,14 @@ export const MobileMenu = ({
           className='fixed inset-x-0 top-[64px] bottom-0 z-[100] bg-black/40 backdrop-blur-sm flex flex-col pb-24 overflow-y-auto'
         >
           <div className='m-4 bg-white rounded-[24px] p-5 shadow-2xl flex flex-col gap-4 font-rubik'>
-            {/* Навигация (строго как на ПК) */}
+            {/* Навигация */}
             <div className='flex flex-col'>
               <Link
                 href='/'
                 onClick={onClose}
                 className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
-                Главная
+                {t('home')}
               </Link>
 
               <Link
@@ -38,7 +43,7 @@ export const MobileMenu = ({
                 onClick={onClose}
                 className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
-                Моментальные
+                {t('instant')}
               </Link>
 
               <Link
@@ -46,14 +51,14 @@ export const MobileMenu = ({
                 onClick={onClose}
                 className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
-                О компании
+                {t('about')}
               </Link>
 
               <button
                 onClick={onRestrictedClick} // Заглушка
                 className='py-4 text-left text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
-                Проверить билет
+                {t('check_ticket')}
               </button>
 
               <a
@@ -61,7 +66,7 @@ export const MobileMenu = ({
                 onClick={onClose}
                 className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
-                Горячая линия: 996 312 44 01 07
+                {t('hotline')}: 996 312 44 01 07
               </a>
             </div>
 
@@ -71,13 +76,13 @@ export const MobileMenu = ({
                 onClick={onRestrictedClick}
                 className='flex-1 bg-[#4A4A4A] text-white py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform'
               >
-                Регистрация
+                {t('register')}
               </button>
               <button
                 onClick={onRestrictedClick}
                 className='flex-1 bg-[#FFD600] text-[#2D2D2D] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
               >
-                Личный кабинет
+                {t('profile')}
               </button>
             </div>
           </div>

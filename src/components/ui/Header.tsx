@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { AppRedirectModal } from '@/components/features/modal/AppRedirectModal';
 import { MobileMenu } from './MobileMenu';
 import { ChevronDown, Menu, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface HeaderProps {
   theme?: 'light' | 'dark';
@@ -16,6 +17,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
   const [isRedirectModalOpen, setIsRedirectModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const t = useTranslations('header');
   const isDark = theme === 'dark';
 
   const handleRestrictedClick = () => {
@@ -52,16 +54,16 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
         {/* DESKTOP HEADER TOP */}
         <div className='hidden lg:flex bg-[#0B1F3B] justify-between text-white py-3 px-8 text-xs font-rubik'>
           <Link href='/about' className='hover:underline'>
-            О компании
+            {t('about')}
           </Link>
           <a href='tel:996312440107' className='flex hover:underline'>
-            Горячая линия 996 312 44 01 07
+            {t('hotline')} 996 312 44 01 07
           </a>
           <button
             onClick={handleRestrictedClick}
             className='cursor-pointer hover:underline'
           >
-            Проверить билет
+            {t('check_ticket')}
           </button>
         </div>
 
@@ -78,28 +80,29 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
 
           <nav className='flex items-center gap-10'>
             <Link href='/' className={navLinkClass}>
-              Главная
+              {t('home')}
             </Link>
             <Link href='/#instant' className={navLinkClass}>
-              Моментальные
+              {t('instant')}
             </Link>
             <Link href='/about' className={navLinkClass}>
-              О компании
+              {t('about')}
             </Link>
           </nav>
 
           <div className='flex items-center gap-4'>
+            {/* Пока оставляем "RU", позже сюда можно прикрутить переключатель языков */}
             <button className='text-xs font-black uppercase flex items-center gap-1 text-[#2D2D2D]'>
               RU <ChevronDown size={14} />
             </button>
             <button className={regBtnClass} onClick={handleRestrictedClick}>
-              Регистрация
+              {t('register')}
             </button>
             <button
               onClick={handleRestrictedClick}
               className='bg-[#FFD600] cursor-pointer text-[#2D2D2D] px-6 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-[#FFC000] transition-colors'
             >
-              Личный кабинет
+              {t('profile')}
             </button>
           </div>
         </div>
@@ -129,6 +132,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
           </Link>
 
           <div className='flex items-center gap-4'>
+            {/* Тоже оставляем "РУ" как плейсхолдер переключателя */}
             <button
               className={clsx(
                 'text-xs font-black uppercase flex items-center gap-1',
@@ -153,7 +157,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
           </div>
         </div>
 
-        {/* 🔥 Наше вынесенное мобильное меню */}
+        {/* Наше вынесенное мобильное меню */}
         <MobileMenu
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}

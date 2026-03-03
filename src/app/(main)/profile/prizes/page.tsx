@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PrizeTabs } from '@/components/features/prizes/PrizeTabs';
@@ -9,8 +9,19 @@ import { useUserStore, UserTicket } from '@/store/user';
 
 export default function MyPrizesPage() {
   const router = useRouter();
+
+  const [isMounted, setIsMounted] = useState(false);
+
   const myTickets = useUserStore((state) => state.myTickets);
   const [activeTab, setActiveTab] = useState<'received' | 'waiting'>('waiting');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const winningTickets = myTickets.filter((t) => t.status === 'winning');
 
@@ -30,6 +41,17 @@ export default function MyPrizesPage() {
       return;
     }
   };
+
+  // 🔥 3. Если мы еще на сервере (во время билда), возвращаем null или пустой div.
+  // Это предотвратит краш и ошибку гидратации.
+  if (!isMounted) {
+    return (
+      <div className='min-h-screen bg-[#F9F9F9] px-4 pt-2 pb-10'>
+        <PageHeader title='МОИ ПРИЗЫ' />
+        {/* Можно добавить красивый скелетон лоадер сюда */}
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] px-4 pt-2 pb-10'>
