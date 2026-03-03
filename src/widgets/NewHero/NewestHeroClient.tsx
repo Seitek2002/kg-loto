@@ -204,7 +204,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
               {({ isActive }) => (
                 <div
                   className={clsx(
-                    'relative w-full aspect-[5/4] sm:aspect-[16/9] lg:aspect-[2/1] rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center p-4 md:p-8 text-center text-white',
+                    'relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center p-4 md:p-8 text-center text-white',
                     isActive
                       ? 'scale-100 opacity-100 z-20'
                       : 'scale-[0.9] md:scale-[0.85] opacity-60 blur-[2px] z-10',
