@@ -2,6 +2,8 @@
 
 import { Modal } from '@/components/ui/Modal';
 import { Smartphone, X } from 'lucide-react';
+// 🔥 Подключаем хук переводов
+import { useTranslations } from 'next-intl';
 
 interface AppRedirectModalProps {
   isOpen: boolean;
@@ -12,6 +14,9 @@ export const AppRedirectModal = ({
   isOpen,
   onClose,
 }: AppRedirectModalProps) => {
+  // 🔥 Вызываем словарь 'modal'
+  const t = useTranslations('modal');
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className='max-w-md'>
       <div className='bg-white rounded-[32px] p-8 flex flex-col items-center text-center relative overflow-hidden'>
@@ -28,14 +33,12 @@ export const AppRedirectModal = ({
           <Smartphone size={40} strokeWidth={1.5} />
         </div>
 
-        {/* Текстовка */}
+        {/* Текстовка с переводами */}
         <h3 className='text-xl font-black font-benzin uppercase text-[#1C2035] mb-4'>
-          Функция недоступна
+          {t('title')}
         </h3>
-        <p className='text-sm text-gray-500 font-rubik mb-8 leading-relaxed'>
-          В данный момент этот раздел доступен только в нашем официальном
-          мобильном приложении. Пожалуйста, скачайте его для полного доступа ко
-          всем функциям.
+        <p className='text-sm text-gray-500 font-rubik mb-8 leading-relaxed px-2'>
+          {t('description')}
         </p>
 
         {/* Заглушки для сторов с едиными иконками */}
