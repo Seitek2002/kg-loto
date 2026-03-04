@@ -39,7 +39,7 @@ export const MobileMenu = ({
               </Link>
 
               <Link
-                href='/#instant'
+                href='/lottery'
                 onClick={onClose}
                 className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >

@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 import { useState, useEffect } from 'react';
 import { AppRedirectModal } from '@/components/features/modal/AppRedirectModal';
 import { MobileMenu } from './MobileMenu';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
@@ -83,7 +83,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
             <Link href='/' className={navLinkClass}>
               {t('home')}
             </Link>
-            <Link href='/#instant' className={navLinkClass}>
+            <Link href='/lottery' className={navLinkClass}>
               {t('instant')}
             </Link>
             <Link href='/about' className={navLinkClass}>
