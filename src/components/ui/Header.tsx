@@ -8,6 +8,7 @@ import { AppRedirectModal } from '@/components/features/modal/AppRedirectModal';
 import { MobileMenu } from './MobileMenu';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface HeaderProps {
   theme?: 'light' | 'dark';
@@ -92,9 +93,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
 
           <div className='flex items-center gap-4'>
             {/* Пока оставляем "RU", позже сюда можно прикрутить переключатель языков */}
-            <button className='text-xs font-black uppercase flex items-center gap-1 text-[#2D2D2D]'>
-              RU <ChevronDown size={14} />
-            </button>
+            <LanguageSwitcher isDark={false} />
             <button className={regBtnClass} onClick={handleRestrictedClick}>
               {t('register')}
             </button>
@@ -133,14 +132,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
 
           <div className='flex items-center gap-4'>
             {/* Тоже оставляем "РУ" как плейсхолдер переключателя */}
-            <button
-              className={clsx(
-                'text-xs font-black uppercase flex items-center gap-1',
-                isMobileMenuOpen || !isDark ? 'text-[#2D2D2D]' : 'text-white',
-              )}
-            >
-              РУ <ChevronDown size={14} />
-            </button>
+            <LanguageSwitcher isDark={false} />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={clsx(

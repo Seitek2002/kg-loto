@@ -7,8 +7,10 @@ import { LotteryConditions } from '@/components/features/lottery-detail/LotteryC
 import { PopularTickets } from '@/widgets/PopularTickets';
 import { WinnersHistory } from '@/widgets/WinnersHistory';
 import { getTranslations } from 'next-intl/server';
+// 🔥 Импортируем наш новый тип
+import { LotteryDetail } from '@/types/api';
 
-async function getLotteryDetail(id: string) {
+async function getLotteryDetail(id: string): Promise<LotteryDetail | null> {
   try {
     const { data } = await api.get(`/lotteries/${id}/`);
     return data.data;
@@ -21,13 +23,9 @@ async function getLotteryDetail(id: string) {
 export default async function LotteryDetailPage({
   params,
 }: {
-  // 🔥 1. Указываем TypeScript, что params — это Promise
   params: Promise<{ id: string }>;
 }) {
-  // 🔥 2. Распаковываем промис через await
   const resolvedParams = await params;
-
-  // 🔥 3. Передаем уже распакованный ID
   const lottery = await getLotteryDetail(resolvedParams.id);
   const t = await getTranslations('lottery');
 
@@ -37,9 +35,15 @@ export default async function LotteryDetailPage({
     <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
       <div className='max-w-[1520px] mx-auto px-4 md:px-8'>
         <LotteryHero data={lottery} />
+
+        {/* Призовой фонд */}
         <LotteryPrizeFund prizeTiers={lottery.prizeTiers} />
-        <LotteryHowToPlay terms={lottery.terms} />
-        <LotteryConditions rules={lottery.rules} />
+
+        {/* 🔥 ВНИМАНИЕ: Сюда передаем rules, так как в них картинки! */}
+        <LotteryHowToPlay rules={lottery.rules} />
+
+        {/* 🔥 А сюда передаем terms, так как это просто текст */}
+        <LotteryConditions terms={lottery.terms} />
 
         <WinnersHistory />
 

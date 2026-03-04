@@ -1,15 +1,19 @@
 import { Title } from '@/components/ui/Title';
 import { clsx } from 'clsx';
 import { getTranslations } from 'next-intl/server';
+import { LotteryPrizeTier } from '@/types/api';
 
-export const LotteryPrizeFund = async ({ prizeTiers }: { prizeTiers: any[] }) => {
+export const LotteryPrizeFund = async ({
+  prizeTiers,
+}: {
+  prizeTiers: LotteryPrizeTier[];
+}) => {
   if (!prizeTiers || prizeTiers.length === 0) return null;
-
   const t = await getTranslations('lottery');
 
   return (
     <section className='mb-12 md:mb-20'>
-      <div className="mb-10">
+      <div className='mb-10'>
         <Title>{t('prize_fund')}</Title>
       </div>
 
@@ -22,15 +26,15 @@ export const LotteryPrizeFund = async ({ prizeTiers }: { prizeTiers: any[] }) =>
             {t('winners_count')}
           </div>
         </div>
-
         <div className='flex flex-col gap-4 sm:gap-5'>
-          {prizeTiers.map((item, idx) => (
-            <div key={idx} className='grid grid-cols-2 gap-4 items-center'>
+          {prizeTiers.map((item) => (
+            <div key={item.id} className='grid grid-cols-2 gap-4 items-center'>
               <span className='text-center font-black text-[#F5A623] text-xl sm:text-[22px] whitespace-nowrap leading-none'>
                 {item.amount}
               </span>
+              {/* 🔥 Используем item.winners */}
               <span className='text-center font-bold text-[#2D2D2D] text-xl sm:text-[22px] whitespace-nowrap leading-none'>
-                {item.count}
+                {item.winners}
               </span>
             </div>
           ))}
@@ -56,17 +60,19 @@ export const LotteryPrizeFund = async ({ prizeTiers }: { prizeTiers: any[] }) =>
                 {t('winners_count')}
               </div>
             </div>
-
             <div className='w-px h-[80px] bg-[#6E6E6E] mx-[22px]'></div>
-
             <div className='flex gap-[73px] flex-1'>
-              {prizeTiers.map((item, idx) => (
-                <div key={idx} className='flex flex-col items-center flex-1 gap-4 text-sm lg:text-[34px]'>
+              {prizeTiers.map((item) => (
+                <div
+                  key={item.id}
+                  className='flex flex-col items-center flex-1 gap-4 text-sm lg:text-[34px]'
+                >
                   <span className='font-black text-[#F5A623] whitespace-nowrap'>
                     {item.amount}
                   </span>
+                  {/* 🔥 Используем item.winners */}
                   <span className='font-bold text-[#2D2D2D] whitespace-nowrap'>
-                    {item.count}
+                    {item.winners}
                   </span>
                 </div>
               ))}

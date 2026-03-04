@@ -1,16 +1,20 @@
 import { getRequestConfig } from 'next-intl/server';
+// 🔥 1. Обязательно импортируем cookies
+import { cookies } from 'next/headers'; 
 
-export default getRequestConfig(async ({ locale }) => {
-  // 🔥 Задаем значение по умолчанию, чтобы TS точно знал, что это строка
-  const currentLocale = locale || 'ru';
+// Убираем аргумент { locale }, он нам больше не нужен, берем всё из кук
+export default getRequestConfig(async () => {
+  // 🔥 2. Читаем куку, которую сохранил наш LanguageSwitcher
+  const cookieStore = await cookies();
+  const currentLocale = cookieStore.get('NEXT_LOCALE')?.value || 'ru';
 
-  // 1. Делаем запрос к твоему API (добавь кэширование по необходимости)
+  // 3. Делаем запрос к твоему API 
   const res = await fetch('https://crm.kgloto.com/api/v1/page-texts/', {
-    next: { revalidate: 60 }, // Кэшируем на 60 секунд, чтобы не спамить бэкенд
+    next: { revalidate: 60 }, 
   });
   const json = await res.json();
 
-  // 2. Превращаем массив от бэкенда во вложенный объект
+  // 4. Превращаем массив от бэкенда во вложенный объект
   const messages: Record<string, any> = {};
 
   if (json?.data?.results) {
@@ -21,7 +25,7 @@ export default getRequestConfig(async ({ locale }) => {
       // Строим вложенность
       keys.forEach((k: string, i: number) => {
         if (i === keys.length - 1) {
-          // 🔥 Используем currentLocale для проверки
+          // 🔥 Используем currentLocale из куки для выбора нужного текста
           current[k] = currentLocale === 'ky' ? item.textKy : item.textRu;
         } else {
           current[k] = current[k] || {};
@@ -31,9 +35,9 @@ export default getRequestConfig(async ({ locale }) => {
     });
   }
 
-  // 3. Отдаем готовый словарь библиотеке
+  // 5. Отдаем готовый словарь библиотеке
   return {
-    locale: currentLocale, // 🔥 Теперь TS спокоен (это 100% строка)
-    messages,
+    locale: currentLocale, 
+    messages, // Передаем тот самый объект messages, который мы только что собрали
   };
 });

@@ -85,14 +85,50 @@ export interface OtpVerifyResponse {
 export interface LotteryItem {
   id: number;
   title: string;
-  subtitle?: string;
+  titleText: string;
+  subtitle: string;
+  logo: string | null;
+  imageLive: string | null;
+  mainPrize1: string;
+  mainPrize2: string;
+  mainPrize3: string;
   prizeText: string;
+  buttonText: string;
   buttonPrice: number | null;
+  buttonLabel: string;
+  buttonUrl?: string;
   drawTime: string;
   theme: 'white' | 'dark';
   backgroundImage: string;
-  fontFile?: string | null;
-  lottieSrc?: string;
+  font: string;
+}
+
+export interface LotteryPrizeTier {
+  id: number;
+  amount: string;
+  winners: number;
+  order: number;
+}
+
+export interface LotteryTerm {
+  id: number;
+  text: string;
+  order: number;
+}
+
+export interface LotteryRule {
+  id: number;
+  image: string;
+  text: string;
+  order: number;
+}
+
+export interface LotteryDetail extends LotteryItem {
+  heroTitle: string | null;
+  terms: LotteryTerm[];
+  prizeTiers: LotteryPrizeTier[];
+  rules: LotteryRule[];
+  otherLotteries: LotteryItem[];
 }
 
 export interface PrizeTier {
