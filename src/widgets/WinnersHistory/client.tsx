@@ -29,8 +29,7 @@ export const WinnersHistoryClient = ({
   if (!displayWinners || displayWinners.length === 0) return null;
 
   return (
-    // Внимание: тут стоит класс hidden, уберешь его, когда понадобится показать блок
-    <section className='my-12 relative overflow-hidden hidden'>
+    <section className='my-12 relative overflow-hidden'>
       <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
         <div className='max-w-2xl'>
           {/* 🔥 Используем переводы */}
