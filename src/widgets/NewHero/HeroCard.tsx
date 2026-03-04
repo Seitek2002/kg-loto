@@ -20,10 +20,8 @@ export const HeroCard = ({
   isActive,
   fallbackGradient,
 }: HeroCardProps) => {
-  // Функция для рендера заднего фона карточки (Lottie, Картинка или Градиент)
   const renderCardBackground = () => {
     if (slide.image) {
-      // 1. Если это Lottie-анимация
       if (slide.image.type === 'lottie') {
         return (
           <div className='absolute bottom-0 w-full z-0 scale-105'>
@@ -36,7 +34,6 @@ export const HeroCard = ({
           </div>
         );
       }
-      // 2. Если это обычная картинка
       if (slide.image.type === 'image') {
         return (
           <Image
@@ -51,7 +48,6 @@ export const HeroCard = ({
       }
     }
 
-    // 3. Заглушка-градиент, если медиа вообще нет
     return (
       <div
         className='absolute inset-0 w-full h-full z-0'
@@ -63,28 +59,30 @@ export const HeroCard = ({
   return (
     <div
       className={clsx(
-        'relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center  text-center text-white',
+        // 🔥 Добавили тень для карточки: shadow-[0px_0px_20px_rgba(0,0,0,0.5)]
+        'relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-[0px_0px_20px_rgba(0,0,0,0.5)] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center  text-center text-white',
         isActive
           ? 'scale-100 opacity-100 z-20'
           : 'scale-[0.9] md:scale-[0.85] opacity-60 blur-[2px] z-10',
       )}
     >
-      {/* 🔥 Задний фон карточки */}
       {renderCardBackground()}
 
-      {/* Контент карточки поверх фона */}
       <div className='relative z-10 flex flex-col items-center p-6 w-full rounded-3xl'>
-        <span className='text-[9px] md:text-sm font-medium uppercase font-benzin tracking-widest mb-1.5 md:mb-4 drop-shadow-md'>
+        {/* 🔥 Добавили тень тексту: drop-shadow-[0px_0px_10px_rgba(0,0,0,0.5)] */}
+        <span className='text-[9px] md:text-sm font-medium uppercase font-benzin tracking-widest mb-1.5 md:mb-4 drop-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]'>
           Главный приз
         </span>
 
-        <h2 className='text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black leading-none mb-3 md:mb-6 drop-shadow-xl tabular-nums uppercase'>
+        {/* 🔥 Добавили тень тексту: drop-shadow-[0px_0px_10px_rgba(0,0,0,0.5)] */}
+        <h2 className='text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black leading-none mb-3 md:mb-6 uppercase tabular-nums drop-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]'>
           <AnimatedPrizeText text={slide.prizeText} isActive={isActive} />
         </h2>
 
         {slide.subtitle && (
           <div className='flex flex-col mb-5 md:mb-8'>
-            <span className='text-xs md:text-lg font-bold tracking-wide uppercase drop-shadow-md'>
+            {/* 🔥 Добавили тень тексту: drop-shadow-[0px_0px_10px_rgba(0,0,0,0.5)] */}
+            <span className='text-xs md:text-lg font-bold tracking-wide uppercase drop-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]'>
               {slide.subtitle}
             </span>
           </div>

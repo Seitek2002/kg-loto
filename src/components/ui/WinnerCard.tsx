@@ -4,15 +4,15 @@ import Image from 'next/image';
 import { Star, User } from 'lucide-react';
 import { Winner } from '@/types/api';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 export const WinnerCard = ({ winner }: { winner: Winner }) => {
   // Проверяем, есть ли валидная ссылка на изображение
-  const hasImage = winner.image && winner.image.length > 0;
 
   return (
     <div className='relative w-full aspect-4/5 rounded-4xl overflow-hidden bg-white shadow-sm border border-gray-100'>
       {/* ЛОГИКА ОТОБРАЖЕНИЯ ФОТО ИЛИ ЗАГЛУШКИ */}
-      {hasImage ? (
+      {winner.image ? (
         <Image
           src={winner.image!}
           alt={winner.name}
@@ -28,13 +28,13 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
         </div>
       )}
 
-      {winner.lotteryPhoto ? (
+      {winner.lotteryLogo ? (
         <div>
           <Image
             className='absolute top-2 left-2'
             width={105}
             height={59}
-            src={winner.lotteryPhoto}
+            src={winner.lotteryLogo}
             alt={''}
           />
         </div>
@@ -63,14 +63,15 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
           </span>
         </div>
         <div className='flex justify-center'>
-          <button
+          <Link
+            href={winner.buttonUrl || '#'}
             className={clsx(
               'w-auto bg-white mt-4 px-6 py-3 md:px-8 md:py-4 rounded-full shadow-lg transition-transform active:scale-95',
               'font-bold text-xs uppercase tracking-wider',
             )}
           >
             ИГРАТЬ • 100 с
-          </button>
+          </Link>
         </div>
       </div>
     </div>

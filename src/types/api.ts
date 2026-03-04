@@ -218,7 +218,8 @@ export interface Winner {
   prize: string;
   image: string | null;
   lotteryBadge: string;
-  lotteryPhoto?: string;
+  lotteryLogo?: string;
+  buttonUrl?: string;
 }
 
 export interface RecentWinner {
