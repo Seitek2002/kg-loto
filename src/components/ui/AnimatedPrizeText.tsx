@@ -84,7 +84,7 @@ export const AnimatedPrizeText = ({
       </span>
 
       {/* Суффикс (например " СОМ") */}
-      {parsed.suffix && <span>{parsed.suffix}</span>}
+      {parsed.suffix && <span className='ml-2'>{parsed.suffix}</span>}
     </span>
   );
 };
