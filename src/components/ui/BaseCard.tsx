@@ -41,8 +41,8 @@ export const BaseCard = ({
   return (
     <div
       className={clsx(
-        'relative w-full rounded-4xl flex flex-col shadow-xl overflow-hidden',
-        !bgPath && !lottieSrc && 'bg-gray-200',
+        'relative w-full rounded-3xl flex flex-col shadow-xl overflow-hidden',
+        !bgPath && !lottieSrc && 'bg-transparent',
         textColor,
         className,
       )}
@@ -81,7 +81,7 @@ export const BaseCard = ({
         <div className='absolute inset-0 bg-black/10 z-0' />
       )}
 
-      <div className='relative z-10 flex flex-col flex-1 h-full p-6'>
+      <div className='relative z-10 flex flex-col flex-1 h-full p-3'>
         {children}
       </div>
     </div>

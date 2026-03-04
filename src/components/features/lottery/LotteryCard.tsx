@@ -83,7 +83,6 @@ export function LotteryCard({
       theme={theme}
       className='flex flex-col justify-between p-3 transition-all duration-300 hover:shadow-xl'
     >
-      {/* ... Весь остальной код верстки без изменений ... */}
 
       {/* ВЕРХНЯЯ ЧАСТЬ */}
       <div className='flex justify-between items-start'>
@@ -113,20 +112,6 @@ export function LotteryCard({
           {title}
         </h3>
       </div>
-
-      {/* ПРИЗ */}
-      {/* <div className='mb-2 lg:mb-8'>
-        <span
-          className={clsx(
-            'block leading-none uppercase tracking-tight wrap-break-word text-sm',
-            prizeFontId === 'default' ? 'md:text-2xl lg:text-4xl' : '',
-            colors.prize,
-            FONT_VARIANTS[prizeFontId] || FONT_VARIANTS['default'],
-          )}
-        >
-          {prize}
-        </span>
-      </div> */}
 
       {/* КНОПКА */}
       <div className='mt-auto lg:mt-auto'>
