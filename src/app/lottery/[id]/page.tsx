@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { LotteryHero } from '@/components/features/lottery-detail/LotteryHero';
 import { LotteryPrizeFund } from '@/components/features/lottery-detail/LotteryPrizeFund';
 import { LotteryHowToPlay } from '@/components/features/lottery-detail/LotteryHowToPlay';
@@ -12,7 +13,9 @@ import { LotteryDetail } from '@/types/api';
 
 async function getLotteryDetail(id: string): Promise<LotteryDetail | null> {
   try {
-    const { data } = await api.get(`/lotteries/${id}/`);
+    const { data } = await api.get(`/lotteries/${id}/`, {
+      headers: await getLocaleHeader(),
+    });
     return data.data;
   } catch (error) {
     console.error('Lottery Detail Error:', error);

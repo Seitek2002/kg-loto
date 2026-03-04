@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ChevronRight, ImageIcon } from 'lucide-react';
 
 import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { Header } from '@/components/ui/Header';
 import { OtherMaterialsSlider } from '@/components/features/news/OtherMaterialsSlider';
@@ -15,7 +16,9 @@ interface NewsDetailsPageProps {
 
 async function getNewsDetail(id: string): Promise<NewsItem | null> {
   try {
-    const { data } = await api.get<ApiResponse<NewsItem>>(`/news/${id}/`);
+    const { data } = await api.get<ApiResponse<NewsItem>>(`/news/${id}/`, {
+      headers: await getLocaleHeader(),
+    });
     return data.data;
   } catch (error) {
     console.error(`Error fetching news ${id}:`, error);
@@ -26,7 +29,9 @@ async function getNewsDetail(id: string): Promise<NewsItem | null> {
 async function getNewsData(): Promise<NewsItem[]> {
   try {
     const { data } =
-      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/');
+      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/', {
+        headers: await getLocaleHeader(),
+      });
     return data.data.results || [];
   } catch (error) {
     console.error('News Error:', error);

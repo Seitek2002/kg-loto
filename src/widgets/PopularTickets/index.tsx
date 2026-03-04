@@ -1,10 +1,13 @@
 import { ApiResponse, LotteryItem } from '@/types/api';
 import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { PopularTicketsClient } from './client'; // Импортируем UI
 
 async function getLotteriesData(): Promise<LotteryItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
+    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/', {
+      headers: await getLocaleHeader(),
+    });
     return data.data || [];
   } catch (error) {
     console.error('Lotteries Error:', error);

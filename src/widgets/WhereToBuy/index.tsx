@@ -1,10 +1,13 @@
 import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, BranchItem } from '@/types/api';
 import { WhereToBuyClient } from './client'; // 🔥 Импортируем наш клиентский UI
 
 async function getBranchesData(): Promise<BranchItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<BranchItem[]>>('/branches/');
+    const { data } = await api.get<ApiResponse<BranchItem[]>>('/branches/', {
+      headers: await getLocaleHeader(),
+    });
     return data.data || [];
   } catch (error) {
     console.error('Branches Error:', error);

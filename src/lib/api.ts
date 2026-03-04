@@ -61,6 +61,13 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
+  // Add Accept-Language for client-side requests (browser environment)
+  if (typeof document !== 'undefined') {
+    const match = document.cookie.match(/(?:^|;\s*)NEXT_LOCALE=([^;]*)/);
+    const locale = match ? match[1] : 'ru';
+    config.headers['Accept-Language'] = locale;
+  }
+
   if (config.data) {
     config.data = keysToSnake(config.data);
   }

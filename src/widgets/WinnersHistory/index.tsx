@@ -1,12 +1,15 @@
 import { ApiResponse, PaginatedResult, Winner } from '@/types/api';
 import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { WinnersHistoryClient } from './client';
 
 // Запрос остается здесь (на сервере)
 async function getWinnersData(): Promise<Winner[]> {
   try {
     const { data } =
-      await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/');
+      await api.get<ApiResponse<PaginatedResult<Winner>>>('/winners/', {
+        headers: await getLocaleHeader(),
+      });
     return data.data.results || [];
   } catch (error) {
     console.error('Winners Error:', error);

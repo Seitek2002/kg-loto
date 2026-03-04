@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, LotteryItem } from '@/types/api';
 import { getTranslations } from 'next-intl/server';
 // 🔥 Импортируем генератор QR-кода
@@ -8,7 +9,9 @@ import { QRCodeSVG } from 'qrcode.react';
 
 async function getFooterLotteries(): Promise<LotteryItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
+    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/', {
+      headers: await getLocaleHeader(),
+    });
     return data.data || [];
   } catch (error) {
     console.error('Footer Lotteries Error:', error);

@@ -2,11 +2,14 @@ import { Description } from '@/components/ui/Description';
 import { FAQItem } from '@/components/ui/FAQItem';
 import { Title } from '@/components/ui/Title';
 import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, QAItem } from '@/types/api'; // Импорт типа
 
 async function getFAQData(): Promise<QAItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<QAItem[]>>('/qa/');
+    const { data } = await api.get<ApiResponse<QAItem[]>>('/qa/', {
+      headers: await getLocaleHeader(),
+    });
     return data.data || [];
   } catch (error) {
     console.error('FAQ Error:', error);

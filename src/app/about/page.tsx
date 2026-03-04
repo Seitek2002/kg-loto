@@ -10,6 +10,7 @@ import {
   NewsItem,
   PaginatedResult,
 } from '@/types/api';
+import { getLocaleHeader } from '@/lib/locale';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 // 🔥 Импортируем серверную функцию переводов
@@ -17,7 +18,9 @@ import { getTranslations } from 'next-intl/server';
 
 async function getLotteriesData(): Promise<LotteryItem[]> {
   try {
-    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/');
+    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/', {
+      headers: await getLocaleHeader(),
+    });
     return data.data || [];
   } catch (error) {
     console.error('Lotteries Error:', error);
@@ -28,7 +31,9 @@ async function getLotteriesData(): Promise<LotteryItem[]> {
 async function getNewsData(): Promise<NewsItem[]> {
   try {
     const { data } =
-      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/');
+      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/', {
+        headers: await getLocaleHeader(),
+      });
     return data.data.results || [];
   } catch (error) {
     console.error('News Error:', error);
