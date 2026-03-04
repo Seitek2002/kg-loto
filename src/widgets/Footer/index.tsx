@@ -198,7 +198,7 @@ export const Footer = async () => {
               </p>
             </div>
 
-            {/* 🔥 Настоящий QR Код */}
+            {/* Настоящий QR Код */}
             <div className='w-32 h-32 lg:w-20 lg:h-20 bg-white p-2 rounded-xl shadow-sm relative shrink-0'>
               <QRCodeSVG
                 value='https://kgloto.com'
@@ -236,30 +236,39 @@ export const Footer = async () => {
 
         <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-[11px] text-gray-500 font-medium'>
           <div className='grid grid-cols-2 lg:flex lg:flex-row gap-x-4 gap-y-5 lg:gap-6 w-full lg:w-auto'>
-            <Link
-              href='#'
+            {/* 🔥 Обновленные динамические ссылки на PDF */}
+            <a
+              href={t('docs.policy_file')}
+              target='_blank'
+              rel='noopener noreferrer'
               className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
             >
-              {t('privacy_policy')}
-            </Link>
-            <Link
-              href='#'
+              {t('docs.policy')}
+            </a>
+            <a
+              href={t('docs.third_party_file')}
+              target='_blank'
+              rel='noopener noreferrer'
               className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
             >
-              {t('third_party_data')}
-            </Link>
-            <Link
-              href='#'
+              {t('docs.third_party')}
+            </a>
+            <a
+              href={t('docs.loyalty_file')}
+              target='_blank'
+              rel='noopener noreferrer'
               className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
             >
-              {t('loyalty_rules')}
-            </Link>
-            <Link
-              href='#'
+              {t('docs.loyalty')}
+            </a>
+            <a
+              href={t('docs.offer_file')}
+              target='_blank'
+              rel='noopener noreferrer'
               className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
             >
-              {t('offer_contract')}
-            </Link>
+              {t('docs.offer')}
+            </a>
           </div>
           <div className='hidden lg:block font-black text-xl text-[#2D2D2D]'>
             18+
