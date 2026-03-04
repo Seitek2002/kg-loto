@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
 import { ArticleCard } from '@/components/ui/ArticleCard';
-import { Header } from '@/components/ui/Header';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { NewsItem } from '@/types/api';
 

@@ -6,7 +6,6 @@ import { Description } from '@/components/ui/Description';
 import { WinnerCard } from '@/components/ui/WinnerCard';
 import { clsx } from 'clsx';
 import { useWinners } from '@/hooks/useWinners';
-import { Header } from '@/components/ui/Header';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 const FILTER_OPTIONS = [
