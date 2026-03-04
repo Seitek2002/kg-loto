@@ -123,37 +123,13 @@ export interface LotteryRule {
   order: number;
 }
 
+// 🔥 Оставляем только этот правильный LotteryDetail
 export interface LotteryDetail extends LotteryItem {
   heroTitle: string | null;
   terms: LotteryTerm[];
   prizeTiers: LotteryPrizeTier[];
   rules: LotteryRule[];
   otherLotteries: LotteryItem[];
-}
-
-export interface PrizeTier {
-  id: number;
-  category: string;
-  amount: string;
-  winners: number;
-  description: string | null;
-  backgroundImage?: string;
-}
-
-export interface LotteryDetail {
-  id: number;
-  title: string;
-  subtitle: string;
-  prizeText: string;
-  buttonText: string;
-  buttonPrice: number | null;
-  buttonLabel: string;
-  drawTime: string;
-  theme: 'white' | 'dark';
-  backgroundImage: string;
-  font: string;
-  heroTitle: string | null;
-  prizeTiers: PrizeTier[];
 }
 
 export interface CombinationCheckResult {
