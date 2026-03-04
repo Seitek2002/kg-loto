@@ -129,7 +129,7 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
           <div
             key={`${winner.id}-${idx}`}
             className={clsx(
-              'transition-all duration-300 flex-shrink-0 h-[185px]',
+              'transition-all duration-300 flex-shrink-0 h-[149px]',
               activeIndex === idx ? 'min-w-[320px]' : 'min-w-[272px]',
             )}
           >
