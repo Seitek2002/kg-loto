@@ -73,7 +73,7 @@ export const HeroCard = ({
       {renderCardBackground()}
 
       {/* Контент карточки поверх фона */}
-      <div className='relative z-10 flex flex-col items-center p-6 w-full bg-black/20 rounded-3xl backdrop-blur-[2px]'>
+      <div className='relative z-10 flex flex-col items-center p-6 w-full rounded-3xl'>
         <span className='text-[9px] md:text-sm font-medium uppercase font-benzin tracking-widest mb-1.5 md:mb-4 drop-shadow-md'>
           Главный приз
         </span>
