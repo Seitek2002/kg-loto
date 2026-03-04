@@ -61,23 +61,18 @@ export const AnimatedPrizeText = ({
 
   return (
     <span className='inline-flex items-baseline'>
-      {/* Префикс */}
       {parsed.prefix && <span>{parsed.prefix}</span>}
 
       <span className='relative inline-flex items-center justify-center'>
-        {/* Невидимый скелет с финальным числом для жесткой ширины */}
         <span className='opacity-0 pointer-events-none select-none tabular-nums'>
           {parsed.number.toLocaleString('ru-RU')}
         </span>
 
         <motion.span className='absolute inset-0 flex items-center justify-center tabular-nums'>
-          {/* 🔥 МАГИЯ ЗДЕСЬ: Если слайд не активен, показываем полное число. 
-              А если активен — запускаем анимацию rounded */}
           {isActive ? rounded : parsed.number.toLocaleString('ru-RU')}
         </motion.span>
       </span>
 
-      {/* Суффикс */}
       {parsed.suffix && <span className='ml-2'>{parsed.suffix}</span>}
     </span>
   );
