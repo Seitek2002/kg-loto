@@ -66,7 +66,7 @@ const TearableTicket = ({
 
   return (
     <div
-      onClick={handleClick}
+      onMouseEnter={handleClick}
       className={clsx(
         'relative flex items-center justify-center w-full h-full cursor-pointer transition-transform duration-300 transform-gpu',
         isActive ? 'scale-105' : 'scale-100',
