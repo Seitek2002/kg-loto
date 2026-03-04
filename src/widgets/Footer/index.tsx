@@ -245,30 +245,6 @@ export const Footer = async () => {
             >
               {t('docs.policy')}
             </a>
-            <a
-              href={t('docs.third_party_file')}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
-            >
-              {t('docs.third_party')}
-            </a>
-            <a
-              href={t('docs.loyalty_file')}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
-            >
-              {t('docs.loyalty')}
-            </a>
-            <a
-              href={t('docs.offer_file')}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
-            >
-              {t('docs.offer')}
-            </a>
           </div>
           <div className='hidden lg:block font-black text-xl text-[#2D2D2D]'>
             18+
