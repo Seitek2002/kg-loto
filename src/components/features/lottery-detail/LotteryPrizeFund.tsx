@@ -43,14 +43,18 @@ export const LotteryPrizeFund = async ({
 
       <div
         className={clsx(
-          'hidden md:block w-full overflow-x-auto pb-4 mt-4 bg-white shadow-sm rounded-[32px] border border-gray-100',
-          '[&::-webkit-scrollbar]:h-1.5',
-          '[&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-50',
-          '[&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-200',
-          'hover:[&::-webkit-scrollbar-thumb]:bg-gray-300',
+          'hidden md:block w-full pb-4 mt-4 bg-white shadow-sm rounded-[32px] border border-gray-100',
         )}
       >
-        <div className='p-10 w-full min-w-0'>
+        <div
+          className={clsx(
+            'p-10 w-full min-w-0 overflow-x-auto',
+            '[&::-webkit-scrollbar]:h-1.5',
+            '[&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-50',
+            '[&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-200',
+            'hover:[&::-webkit-scrollbar-thumb]:bg-gray-300',
+          )}
+        >
           <div className='flex justify-between w-full items-center'>
             <div className='flex flex-col gap-6 justify-center shrink-0'>
               <div className='text-base font-medium text-[#4B4B4B] font-rubik'>
@@ -61,7 +65,7 @@ export const LotteryPrizeFund = async ({
               </div>
             </div>
             <div className='w-px h-[80px] bg-[#6E6E6E] mx-[22px]'></div>
-            <div className='flex gap-[73px] flex-1'>
+            <div className='flex gap-[73px] flex-1 pr-10'>
               {prizeTiers.map((item) => (
                 <div
                   key={item.id}

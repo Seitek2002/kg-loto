@@ -28,10 +28,10 @@ export const LotteryHero = async ({ data }: { data: any }) => {
         <Title>{data.heroTitle || data.title}</Title>
       </div>
 
-      <div className='bg-white rounded-[24px] items-stretch md:rounded-[40px] p-4 md:p-10 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 lg:gap-16'>
+      <div className='bg-white rounded-3xl items-stretch md:rounded-[40px] p-4 md:p-10 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 lg:gap-16'>
         <div className='w-full md:w-1/2 lg:w-[45%] aspect-square relative shrink-0'>
           <SafeImage
-            src={data.logo || '/images/lottery/ticket-placeholder.png'}
+            src={data.imageLive || '/images/lottery/ticket-placeholder.png'}
             alt={data.title}
             fill
             className='object-contain rounded-[10px]'
