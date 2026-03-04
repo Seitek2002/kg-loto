@@ -1,4 +1,3 @@
-// import { Preloader } from '@/components/ui/Preloader';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { BestMaterials } from '@/widgets/BestMaterials';
 import { CheckLottery } from '@/widgets/CheckLottery';
@@ -20,12 +19,10 @@ const BlockSkeleton = () => (
 export default function Home() {
   return (
     <>
-
       <NewHero />
       <UnderHero />
 
       <div className='mt-10 max-w-300 mx-auto px-4'>
-        {/* Оборачиваем каждый блок, которому нужны данные, в Suspense */}
         <Suspense fallback={<BlockSkeleton />}>
           <PopularTickets />
         </Suspense>

@@ -6,12 +6,16 @@ import { Title } from '@/components/ui/Title';
 import { NewsItem } from '@/types/api';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import { useTranslations } from 'next-intl';
 
 interface BestMaterialsClientProps {
   articles: NewsItem[];
 }
 
 export const BestMaterialsClient = ({ articles }: BestMaterialsClientProps) => {
+  const t = useTranslations('best_materials');
+
   const articlesToDisplay = articles?.slice(0, 6) || [];
 
   if (!articlesToDisplay || articlesToDisplay?.length === 0) return null;
@@ -20,18 +24,16 @@ export const BestMaterialsClient = ({ articles }: BestMaterialsClientProps) => {
     <section className='my-12 relative overflow-hidden hidden'>
       <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
         <div className='max-w-2xl'>
-          <Title>ЛУЧШИЕ МАТЕРИАЛЫ</Title>
-          <Description>
-            Следите за последними событиями, улучшениями и нововведениями — мы
-            регулярно рассказываем о том, что важно знать.
-          </Description>
+          {/* 🔥 Используем переводы */}
+          <Title>{t('title')}</Title>
+          <Description>{t('desc')}</Description>
         </div>
 
         <Link
           href='/news'
           className='hidden lg:inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] hover:bg-gray-50 transition-colors shadow-sm shrink-0 ml-4'
         >
-          Все новости
+          {t('all_news')}
         </Link>
       </div>
 
@@ -52,7 +54,7 @@ export const BestMaterialsClient = ({ articles }: BestMaterialsClientProps) => {
               description={article.shortText}
               imageSrc={article.image}
               theme={article.theme}
-              buttonText='ЧИТАТЬ'
+              buttonText={t('read_button')} // 🔥 Переводим кнопку карточки
               buttonAlign='left'
               href={'/news/' + article.slug}
             />
@@ -65,7 +67,7 @@ export const BestMaterialsClient = ({ articles }: BestMaterialsClientProps) => {
           href='/news'
           className='flex w-full items-center justify-center py-4 bg-white rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] shadow-md active:scale-95 transition-transform'
         >
-          Все новости
+          {t('all_news')}
         </Link>
       </div>
     </section>

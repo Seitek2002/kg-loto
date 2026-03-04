@@ -7,34 +7,42 @@ import { Description } from '@/components/ui/Description';
 import { WinnerCard } from '@/components/ui/WinnerCard';
 import 'swiper/css';
 import { Winner } from '@/types/api';
+// 🔥 Импортируем хук переводов
+import { useTranslations } from 'next-intl';
 
 interface WinnersHistoryClientProps {
   winners: Winner[];
+  title?: string;
+  description?: string;
 }
 
 export const WinnersHistoryClient = ({
   winners,
+  title,
+  description,
 }: WinnersHistoryClientProps) => {
+  // 🔥 Подключаем словарь
+  const t = useTranslations('winners_history');
+
   const displayWinners = winners?.slice(0, 6) || [];
 
   if (!displayWinners || displayWinners.length === 0) return null;
 
   return (
+    // Внимание: тут стоит класс hidden, уберешь его, когда понадобится показать блок
     <section className='my-12 relative overflow-hidden hidden'>
       <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8'>
         <div className='max-w-2xl'>
-          <Title>ИСТОРИЯ ПОБЕДИТЕЛЕЙ</Title>
-          <Description>
-            Популярные лотереи привлекают внимание благодаря крупным джекпотам,
-            частым тиражам и удобным условиям участия.
-          </Description>
+          {/* 🔥 Используем переводы */}
+          <Title>{title || t('title')}</Title>
+          <Description>{description || t('desc')}</Description>
         </div>
 
         <Link
           href='/winners'
           className='hidden lg:inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] hover:bg-gray-50 transition-colors shadow-sm'
         >
-          Все победители
+          {t('all_winners')}
         </Link>
       </div>
 
@@ -59,7 +67,7 @@ export const WinnersHistoryClient = ({
           href='/winners'
           className='flex w-full items-center justify-center py-4 bg-white rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] shadow-md active:scale-95 transition-transform'
         >
-          Все победители
+          {t('all_winners')}
         </Link>
       </div>
     </section>

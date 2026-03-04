@@ -19,7 +19,6 @@ interface NewHeroClientProps {
   slides?: SliderItem[];
 }
 
-// Временные моковые данные в новом формате для безопасного рендера
 const MOCK_SLIDES: SliderItem[] = [
   {
     id: 6,
@@ -111,8 +110,7 @@ const FALLBACK_GRADIENTS = [
 
 export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
   const activeSlides = slides && slides.length > 0 ? slides : MOCK_SLIDES;
-  const initialIndex = activeSlides.length > 1 ? 1 : 0;
-  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   if (!activeSlides || activeSlides.length === 0) return null;
 
@@ -148,7 +146,7 @@ export const NewestHeroClient = ({ slides }: NewHeroClientProps) => {
           modules={[Navigation]}
           centeredSlides={true}
           slidesPerView={'auto'}
-          initialSlide={initialIndex}
+          initialSlide={0}
           spaceBetween={16}
           speed={800}
           navigation={{ prevEl: '.hero-prev', nextEl: '.hero-next' }}

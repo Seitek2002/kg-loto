@@ -3,7 +3,8 @@ import { FAQItem } from '@/components/ui/FAQItem';
 import { Title } from '@/components/ui/Title';
 import { api } from '@/lib/api';
 import { getLocaleHeader } from '@/lib/locale';
-import { ApiResponse, QAItem } from '@/types/api'; // Импорт типа
+import { ApiResponse, QAItem } from '@/types/api';
+import { getTranslations } from 'next-intl/server';
 
 async function getFAQData(): Promise<QAItem[]> {
   try {
@@ -19,6 +20,8 @@ async function getFAQData(): Promise<QAItem[]> {
 
 export const FAQ = async () => {
   const questions = await getFAQData();
+  // 🔥 Подключаем словарь
+  const t = await getTranslations('faq');
 
   if (!questions || questions.length === 0) return null;
 
@@ -27,12 +30,12 @@ export const FAQ = async () => {
       {/* Заголовки */}
       <div className='mb-8'>
         <Title>
-          ОТВЕТЫ НА ЧАСТЫЕ <br /> ВОПРОСЫ
+          {/* 🔥 t.rich позволяет безопасно рендерить <br> из текста */}
+          {t.rich('title', {
+            br: () => <br />,
+          })}
         </Title>
-        <Description>
-          Если не нашли ответа на свой вопрос, просто спросите у нас в привычном
-          мессенджере.
-        </Description>
+        <Description>{t('desc')}</Description>
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 items-start'>

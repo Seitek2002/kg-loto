@@ -132,7 +132,7 @@ export const Header = ({ theme = 'light' }: HeaderProps) => {
 
           <div className='flex items-center gap-4'>
             {/* Тоже оставляем "РУ" как плейсхолдер переключателя */}
-            <LanguageSwitcher isDark={false} />
+            <LanguageSwitcher isDark={!isMobileMenuOpen} />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={clsx(

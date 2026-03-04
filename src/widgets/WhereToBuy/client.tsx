@@ -6,6 +6,7 @@ import { Title } from '@/components/ui/Title';
 import { Description } from '@/components/ui/Description';
 import { Copy, Loader2 } from 'lucide-react';
 import { BranchItem } from '@/types/api';
+import { useTranslations } from 'next-intl';
 
 const LeafletMap = dynamic(
   () => import('@/components/features/map/LeafletMap'),
@@ -21,10 +22,17 @@ const LeafletMap = dynamic(
 
 interface WhereToBuyClientProps {
   branches: BranchItem[];
+  title?: string;
+  description?: string;
 }
 
-// Компонент НЕ асинхронный, он просто получает готовые данные через пропсы
-export const WhereToBuyClient = ({ branches }: WhereToBuyClientProps) => {
+export const WhereToBuyClient = ({
+  branches,
+  title,
+  description,
+}: WhereToBuyClientProps) => {
+  const t = useTranslations('where_to_buy');
+
   const mapBranches = useMemo(() => {
     return branches
       .map((b) => ({
@@ -56,11 +64,9 @@ export const WhereToBuyClient = ({ branches }: WhereToBuyClientProps) => {
   return (
     <section className='my-20 relative' id='map'>
       <div className='mb-8 max-w-2xl'>
-        <Title>ГДЕ ПРИОБРЕСТИ БИЛЕТЫ</Title>
-        <Description>
-          Если не нашли ответа на свой вопрос, просто спросите у нас в привычном
-          мессенджере.
-        </Description>
+        {/* 🔥 Подключаем переводы */}
+        <Title>{title || t('title')}</Title>
+        <Description>{description || t('desc')}</Description>
       </div>
 
       <div className='relative w-full h-100 lg:h-125 rounded-[40px] overflow-hidden shadow-sm border border-gray-100'>
@@ -74,7 +80,8 @@ export const WhereToBuyClient = ({ branches }: WhereToBuyClientProps) => {
           <div className='absolute bottom-6 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-400'>
             <div className='bg-white/90 backdrop-blur-md px-6 py-4 rounded-3xl shadow-xl border border-white/50 flex flex-col items-center text-center lg:flex-row lg:text-left gap-2 lg:gap-4 max-w-xl mx-auto'>
               <span className='text-gray-400 text-[10px] lg:text-xs font-bold font-benzin uppercase tracking-wide whitespace-nowrap'>
-                Лотереи {activeBranch.name} по адресу:
+                {/* 🔥 Динамически подставляем имя через next-intl */}
+                {t('address_prefix', { name: activeBranch.name })}
               </span>
 
               <div
