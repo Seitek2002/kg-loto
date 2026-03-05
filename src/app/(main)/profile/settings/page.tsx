@@ -26,7 +26,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('account');
   const [openMobileTab, setOpenMobileTab] = useState<string | null>('account');
 
-  // 🔥 Находим индекс активного таба, чтобы знать, куда двигать ползунок
+  // Находим индекс активного таба, чтобы знать, куда двигать ползунок
   const activeIndex = TABS.findIndex((t) => t.id === activeTab);
   const ActiveComponent = TABS[activeIndex !== -1 ? activeIndex : 0].Component;
 
@@ -35,7 +35,7 @@ export default function SettingsPage() {
       <div className='max-w-[1045px] mx-auto px-4 sm:px-6 lg:px-8'>
         <ProfileHeader />
 
-        <div className='mt-4 sm:mt-10 overflow-hidden'>
+        <div className='mt-4 sm:mt-10 overflow-y-hidden'>
           {/* ======================================= */}
           {/* 🔥 ДЕСКТОПНАЯ ВЕРСИЯ (С плавающим ползунком) */}
           {/* ======================================= */}
@@ -44,26 +44,28 @@ export default function SettingsPage() {
             <div className='w-[320px] shrink-0 relative z-10'>
               <div className='relative flex flex-col'>
                 {/* 🔥 ТОТ САМЫЙ ПЛАВАЮЩИЙ ПОЛЗУНОК */}
-                {/* Он позиционируется абсолютно и ездит вверх-вниз благодаря translateY */}
                 <div
                   className='absolute left-0 w-full h-[64px] bg-white rounded-l-[32px] transition-transform duration-300 ease-in-out pointer-events-none z-0'
                   style={{ transform: `translateY(${activeIndex * 100}%)` }}
                 >
-                  {/* Верхний уголок */}
-                  <div className='absolute top-[-24px] right-0 w-[24px] h-[24px] bg-transparent rounded-br-[24px] shadow-[12px_12px_0_0_#ffffff]' />
-                  {/* Нижний уголок */}
-                  <div className='absolute bottom-[-24px] right-0 w-[24px] h-[24px] bg-transparent rounded-tr-[24px] shadow-[12px_-12px_0_0_#ffffff]' />
+                  {/* 🔥 Идеально плавный верхний уголок */}
+                  <div className='absolute top-[-32px] right-0 w-[32px] h-[32px] bg-white'>
+                    <div className='w-full h-full bg-[#F5F5F5] rounded-br-[32px]' />
+                  </div>
+
+                  {/* 🔥 Идеально плавный нижний уголок */}
+                  <div className='absolute bottom-[-32px] right-0 w-[32px] h-[32px] bg-white'>
+                    <div className='w-full h-full bg-[#F5F5F5] rounded-tr-[32px]' />
+                  </div>
                 </div>
 
                 {/* САМИ КНОПКИ ТАБОВ */}
-                {/* Они прозрачные и лежат поверх ползунка (z-10) */}
                 {TABS.map((tab) => {
                   const isActive = activeTab === tab.id;
                   return (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      // 🔥 Фиксируем высоту кнопки (h-[64px]), чтобы ползунок ездил идеально ровно
                       className={clsx(
                         'relative z-10 w-full h-[64px] text-left px-8 text-[14px] font-benzin uppercase transition-colors tracking-wide',
                         isActive
@@ -79,7 +81,13 @@ export default function SettingsPage() {
             </div>
 
             {/* Контентная часть */}
-            <div className='flex-1 bg-white rounded-[40px] rounded-tl-none min-h-[600px] p-10 relative z-0 shadow-sm'>
+            <div
+              className={clsx(
+                'flex-1 bg-white rounded-[40px] min-h-[600px] p-10 relative z-0 shadow-sm transition-all duration-200',
+                // 🔥 Убираем скругление левого верхнего угла ТОЛЬКО если активен НЕ первый таб
+                activeIndex == 0 && 'rounded-tl-none',
+              )}
+            >
               <ActiveComponent />
             </div>
           </div>
