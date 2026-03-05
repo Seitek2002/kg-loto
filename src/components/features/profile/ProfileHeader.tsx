@@ -38,7 +38,7 @@ export const ProfileHeader = () => {
   const initials = getInitials(user.name);
 
   return (
-    <div className='flex flex-col items-center w-full mb-4'>
+    <div className='flex flex-col items-center max-w-[1045px] mb-4 mx-auto'>
       {/* Хлебные крошки */}
       <div className='w-full flex justify-start mb-6 text-base text-[#4B4B4B]'>
         <Link href='/' className='hover:opacity-80'>
@@ -75,7 +75,7 @@ export const ProfileHeader = () => {
 
       {/* Главные вкладки навигации */}
       <div className='w-full overflow-x-auto scrollbar-hide'>
-        <div className='flex justify-start sm:justify-center items-center gap-1 md:gap-12.5 min-w-max'>
+        <div className='flex justify-start sm:justify-between items-center'>
           {TABS.map((tab) => {
             const isActive = pathname === tab.href;
             const Icon = tab.icon;
@@ -85,17 +85,17 @@ export const ProfileHeader = () => {
                 key={tab.name}
                 href={tab.href}
                 className={clsx(
-                  'flex items-center gap-2 px-5 py-3 rounded-full font-benzin uppercase transition-all whitespace-nowrap active:scale-95',
+                  'flex items-center gap-2 px-6 py-3 rounded-full font-benzin uppercase transition-all whitespace-nowrap active:scale-95',
                   isActive
                     ? 'bg-[#4B4B4B] text-white shadow-md'
                     : 'bg-transparent text-[#4B4B4B] hover:bg-gray-200 hover:text-[#2D2D2D]',
                 )}
               >
                 <Icon
-                  size={16}
+                  size={24}
                   className={clsx(isActive ? 'text-white' : 'text-[#4B4B4B]')}
                 />
-                <span className='font-extralight text-[10px] sm:text-[11px]'>
+                <span className='font-extralight text-[10px] sm:text-base'>
                   {tab.name}
                 </span>
               </Link>
