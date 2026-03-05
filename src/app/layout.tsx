@@ -8,7 +8,6 @@ import { Footer } from '@/widgets/Footer';
 import dynamic from 'next/dynamic';
 import './globals.css';
 
-// 🔥 Импортируем провайдер и серверные функции для next-intl
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale, getTranslations } from 'next-intl/server';
 
@@ -19,11 +18,37 @@ const rubik = Rubik({
   weight: ['400', '500', '700'],
 });
 
-const benzinHero = localFont({
-  src: '../font/Benzin-ExtraBold.woff2',
+// 🔥 Подключаем все начертания Benzin массивом
+const benzin = localFont({
+  src: [
+    {
+      path: '../font/Benzin-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../font/Benzin-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../font/Benzin-Semibold.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: '../font/Benzin-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../font/Benzin-ExtraBold.woff2',
+      weight: '800',
+      style: 'normal',
+    },
+  ],
   variable: '--font-benzin',
   display: 'swap',
-  weight: '800',
   preload: true,
 });
 
@@ -87,7 +112,8 @@ export default async function RootLayout({
     // 🔥 Теперь lang меняется динамически ('ru' или 'ky')
     <html lang={locale}>
       <body
-        className={`${rubik.variable} ${benzinHero.variable} antialiased font-rubik bg-[#F5F5F5]`}
+        // 🔥 Обновил переменную тут
+        className={`${rubik.variable} ${benzin.variable} antialiased font-rubik bg-[#F5F5F5]`}
       >
         {/* 🔥 Оборачиваем приложение в провайдер переводов */}
         <NextIntlClientProvider messages={messages}>
