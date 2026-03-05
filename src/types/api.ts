@@ -220,6 +220,7 @@ export interface Winner {
   lotteryBadge: string;
   lotteryLogo?: string;
   buttonUrl?: string;
+  lotteryId?: number;
 }
 
 export interface RecentWinner {

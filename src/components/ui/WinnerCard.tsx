@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import { Star, User } from 'lucide-react';
 import { Winner } from '@/types/api';
@@ -7,7 +5,8 @@ import clsx from 'clsx';
 import Link from 'next/link';
 
 export const WinnerCard = ({ winner }: { winner: Winner }) => {
-  // Проверяем, есть ли валидная ссылка на изображение
+
+  console.log(winner);
 
   return (
     <div className='relative w-full aspect-4/5 rounded-4xl overflow-hidden bg-white shadow-sm border border-gray-100'>
@@ -64,7 +63,7 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
         </div>
         <div className='flex justify-center'>
           <Link
-            href={winner.buttonUrl || '#'}
+            href={winner.buttonUrl || `/lottery/${winner.lotteryId}`}
             className={clsx(
               'w-auto bg-white mt-4 px-6 py-3 md:px-8 md:py-4 rounded-full shadow-lg transition-transform active:scale-95',
               'font-bold text-xs uppercase tracking-wider',
