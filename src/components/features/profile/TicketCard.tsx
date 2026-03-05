@@ -51,7 +51,7 @@ export const TicketCard = ({
                 </span>
                 <span
                   className={clsx(
-                    'text-base sm:text-[32px] font-black whitespace-nowrap',
+                    'text-base sm:text-[32px] font-medium whitespace-nowrap',
                     isHighlighted ? 'text-[#FF7600]' : 'text-[#4B4B4B]',
                   )}
                 >
