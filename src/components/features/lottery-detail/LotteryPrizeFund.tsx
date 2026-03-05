@@ -68,7 +68,7 @@ export const LotteryPrizeFund = async ({
           </div>
 
           {/* СПИСОК ПРИЗОВ */}
-          <div className='flex gap-[73px] flex-nowrap pr-10'>
+          <div className='flex gap-[73px] flex-nowrap pl-10 pr-10'>
             {prizeTiers.map((item) => (
               <div
                 key={item.id}
