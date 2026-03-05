@@ -6,7 +6,6 @@ export default getRequestConfig(async () => {
   const currentLocale = cookieStore.get('NEXT_LOCALE')?.value || 'ru';
 
   try {
-    // Делаем запрос к API, обязательно передавая заголовок языка
     const res = await fetch('https://crm.kgloto.com/api/v1/page-texts/', {
       headers: {
         'Accept-Language': currentLocale,
@@ -15,33 +14,52 @@ export default getRequestConfig(async () => {
     });
 
     const json = await res.json();
-    const messages: Record<string, any> = {};
+
+    // 🔥 1. Броня для новых разделов: заранее объявляем их пустыми,
+    // чтобы не было ошибки "Could not resolve namespace"
+    const messages: Record<string, any> = {
+      seo: {},
+      footer: {},
+    };
 
     if (json?.data?.results) {
       json.data.results.forEach((item: any) => {
         const keys = item.key.split('.');
         let current = messages;
 
-        // Строим вложенность
         keys.forEach((k: string, i: number) => {
           if (i === keys.length - 1) {
-            // 🔥 БЕРЕМ ПРОСТО item.text (бэкенд уже перевел его для нас)
-            current[k] = item.text || '';
+            let text = item.text || '';
+            text = text.replace(/<\/br>/gi, '');
+            text = text.replace(/<br\s*\/?>/gi, '<br></br>');
 
-            // Файлы для футера оставляем как есть
+            current[k] = text;
             current[`${k}_file`] = item.file || '#';
           } else {
-            current[k] = current[k] || {};
-            current = current[k];
+            current[k.toLowerCase()] = current[k.toLowerCase()] || {};
+            current = current[k.toLowerCase()];
           }
         });
       });
     }
 
-    // Отдаем готовый словарь библиотеке
     return {
       locale: currentLocale,
       messages,
+
+      // 🔥 2. ГЛУШИТЕЛЬ ОШИБОК: Запрещаем библиотеке ругаться в консоль на недостающие ключи
+      onError(error) {
+        if (error.code === 'MISSING_MESSAGE') {
+          return; // Просто игнорируем
+        }
+        console.error(error); // Остальные реальные ошибки оставляем
+      },
+
+      // 🔥 3. Говорим библиотеке: "Если не нашла перевод, просто верни название ключа"
+      // Благодаря этому наши проверки t('phone_1') === 'phone_1' будут работать железобетонно
+      getMessageFallback({ key }) {
+        return key;
+      },
     };
   } catch (error) {
     console.error('Ошибка при загрузке словаря в i18n.ts:', error);
