@@ -27,22 +27,29 @@ export const SupportTable = ({ tickets }: SupportTableProps) => {
             <th className='py-4 px-4 w-[30%]'>Ответ</th>
           </tr>
         </thead>
-        <tbody className='text-[13px]'>
+        <tbody className='text-base text-[#4B4B4B]'>
           {tickets.map((ticket) => (
             <tr
               key={ticket.id}
-              className='odd:bg-transparent even:bg-[#FFF6F6] text-[#4B4B4B]'
+              // 🔥 Задаем фиксированную высоту для всех строк
+              className='even:bg-transparent odd:bg-[#FFF6F6] h-[96px]'
             >
-              <td className='py-5 px-4 font-semibold'>{ticket.id}</td>
-              <td className='py-5 px-4 pr-10 leading-relaxed text-[#6E6E6E]'>
-                {ticket.message}
+              <td className='px-5'>{ticket.id}</td>
+              <td className='px-5 pr-10'>
+                {/* 🔥 Ограничиваем текст до 2 строк, лишнее уходит в "..." */}
+                <div className='line-clamp-2 leading-relaxed'>
+                  {ticket.message}
+                </div>
               </td>
-              <td className='py-5 px-4 text-[#6E6E6E]'>{ticket.date}</td>
-              <td className='py-5 px-4'>
+              <td className='px-5'>{ticket.date}</td>
+              <td className='px-5'>
                 <StatusBadge status={ticket.status} />
               </td>
-              <td className='py-5 px-4 pr-10 leading-relaxed text-[#6E6E6E]'>
-                {ticket.reply}
+              <td className='px-5 pr-10'>
+                {/* 🔥 То же самое для ответа */}
+                <div className='line-clamp-2 leading-relaxed'>
+                  {ticket.reply}
+                </div>
               </td>
             </tr>
           ))}
