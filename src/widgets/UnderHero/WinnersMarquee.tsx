@@ -123,8 +123,8 @@ export const WinnersMarquee = ({ winners }: { winners: WinnerType[] }) => {
   }, []);
 
   return (
-    <div className='overflow-hidden relative'>
-      <div className='marquee flex'>
+    <div className='relative'>
+      <div className='marquee flex py-4'>
         {duplicated.map((winner, idx) => (
           <div
             key={`${winner.id}-${idx}`}
