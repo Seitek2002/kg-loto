@@ -73,7 +73,7 @@ const UnderHero = async () => {
 
   return (
     <section className='mx-auto relative py-12 overflow-hidden'>
-      <div className='pl-4 uppercase mb-8'>
+      <div className='pl-4 uppercase mb-8 max-w-300 mx-auto'>
         <Title>
           {t('recent_winners_title')}
         </Title>

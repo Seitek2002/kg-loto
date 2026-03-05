@@ -17,7 +17,7 @@ export const SupportTable = ({ tickets }: SupportTableProps) => {
     <div className='hidden lg:block w-full overflow-x-auto'>
       <table className='w-full text-left border-collapse'>
         <thead>
-          <tr className='text-[#4B4B4B] text-[14px] font-bold border-b border-[#909090]'>
+          <tr className='text-[#4B4B4B] text-[20px] font-medium'>
             <th className='py-4 px-4 whitespace-nowrap w-[10%]'>№ Тикета</th>
             <th className='py-4 px-4 w-[30%]'>Сообщение</th>
             <th className='py-4 px-4 whitespace-nowrap w-[15%]'>
