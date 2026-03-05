@@ -10,7 +10,7 @@ import './globals.css';
 
 // 🔥 Импортируем провайдер и серверные функции для next-intl
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getLocale } from 'next-intl/server';
+import { getMessages, getLocale, getTranslations } from 'next-intl/server';
 
 const rubik = Rubik({
   variable: '--font-rubik',
@@ -33,11 +33,45 @@ const BottomNav = dynamic(() =>
   ),
 );
 
-export const metadata: Metadata = {
-  title: 'KGLOTO.COM',
-  description: 'Первый маркетплейс лотерейных билетов',
-  icons: { icon: '/favicon.png' },
-};
+// 🔥 Динамическая генерация SEO-метаданных
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('seo');
+  const locale = await getLocale();
+
+  // Безопасные фоллбэки, если ключей еще нет в базе
+  const title = t('title') === 'title' ? 'KGLOTO.COM' : t('title');
+  const description =
+    t('description') === 'description'
+      ? 'Первый маркетплейс лотерейных билетов'
+      : t('description');
+  const keywords =
+    t('keywords') === 'keywords'
+      ? 'лотерея, билеты, кыргызстан, выигрыш, джекпот, kgloto'
+      : t('keywords');
+  const siteName = t('site_name') === 'site_name' ? 'KGLOTO' : t('site_name');
+
+  return {
+    title,
+    description,
+    keywords,
+    applicationName: siteName,
+    // OpenGraph для красивых ссылок в WhatsApp/Telegram
+    openGraph: {
+      title,
+      description,
+      siteName,
+      locale: locale,
+      type: 'website',
+    },
+    // Карточки для X (Twitter) и других соцсетей
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    icons: { icon: '/favicon.png' },
+  };
+}
 
 // 🔥 Делаем layout асинхронным, чтобы получать данные словаря
 export default async function RootLayout({
