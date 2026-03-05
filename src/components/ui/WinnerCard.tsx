@@ -6,8 +6,6 @@ import Link from 'next/link';
 
 export const WinnerCard = ({ winner }: { winner: Winner }) => {
 
-  console.log(winner);
-
   return (
     <div className='relative w-full aspect-4/5 rounded-4xl overflow-hidden bg-white shadow-sm border border-gray-100'>
       {/* ЛОГИКА ОТОБРАЖЕНИЯ ФОТО ИЛИ ЗАГЛУШКИ */}
