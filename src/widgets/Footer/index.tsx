@@ -19,7 +19,6 @@ async function getFooterLotteries(): Promise<LotteryItem[]> {
   }
 }
 
-// 🔥 Добавили проп href и поменяли Link на <a>
 const StoreButton = ({
   type,
   downloadText,
@@ -64,7 +63,14 @@ export const Footer = async () => {
   const lotteries = await getFooterLotteries();
   const t = await getTranslations('footer');
 
-  // 🔥 Ссылки от босса
+  // 🔥 Защита: Если ключа в базе еще нет, берем номер из ТЗ
+  const phone1 = t('phone_1') === 'phone_1' ? '+996 998 777 377' : t('phone_1');
+  const phone2 = t('phone_2') === 'phone_2' ? '+996 226 777 877' : t('phone_2');
+  const phone3 = t('phone_3') === 'phone_3' ? '+996 507 778 733' : t('phone_3');
+
+  // 🔥 Динамическая почта
+  const email = t('email') === 'email' ? 'support@kgloto.kg' : t('email');
+
   const APP_STORE_LINK =
     'https://apps.apple.com/kg/app/kgloto-checker/id6757925326';
   const GOOGLE_PLAY_LINK =
@@ -156,24 +162,40 @@ export const Footer = async () => {
         <div className='flex flex-col lg:flex-row justify-between gap-8 mb-8'>
           {/* Контакты и Безопасность */}
           <div className='flex flex-col gap-6 lg:gap-8'>
-            <div className='flex flex-col lg:flex-row gap-4 lg:gap-12'>
+            <div className='flex flex-col lg:flex-row gap-8 lg:gap-12'>
+              {/* ТРИ НОМЕРА ТЕЛЕФОНА */}
               <div>
-                <span className='block text-xs text-gray-500 mb-1 lg:mb-2'>
+                <span className='block text-xs text-gray-500 mb-2 lg:mb-3'>
                   {t('hotline')}
                 </span>
-                <a
-                  href='tel:+996312440107'
-                  className='text-[17px] md:text-xl font-bold text-[#2D2D2D] hover:text-[#FFD600]'
-                >
-                  996 312 44 01 07
-                </a>
+                <div className='flex flex-col gap-1.5'>
+                  <a
+                    href={`tel:${phone1.replace(/\s/g, '')}`}
+                    className='text-[16px] md:text-[18px] font-bold text-[#2D2D2D] hover:text-[#FFD600] transition-colors whitespace-nowrap'
+                  >
+                    {phone1}
+                  </a>
+                  <a
+                    href={`tel:${phone2.replace(/\s/g, '')}`}
+                    className='text-[16px] md:text-[18px] font-bold text-[#2D2D2D] hover:text-[#FFD600] transition-colors whitespace-nowrap'
+                  >
+                    {phone2}
+                  </a>
+                  <a
+                    href={`tel:${phone3.replace(/\s/g, '')}`}
+                    className='text-[16px] md:text-[18px] font-bold text-[#2D2D2D] hover:text-[#FFD600] transition-colors whitespace-nowrap'
+                  >
+                    {phone3}
+                  </a>
+                </div>
               </div>
               <div className='mt-1 lg:mt-0'>
+                {/* 🔥 Динамическая почта */}
                 <a
-                  href='mailto:support@kgloto.kg'
+                  href={`mailto:${email}`}
                   className='text-[15px] md:text-sm text-[#2D2D2D] hover:text-[#FFD600]'
                 >
-                  support@kgloto.kg
+                  {email}
                 </a>
               </div>
             </div>
@@ -191,14 +213,12 @@ export const Footer = async () => {
 
           {/* QR и Кнопки */}
           <div className='flex items-center gap-6'>
-            {/* Текст для ПК */}
             <div className='text-right hidden lg:block'>
               <p className='text-xs text-gray-500 max-w-25'>
                 {t('download_app')}
               </p>
             </div>
 
-            {/* Настоящий QR Код */}
             <div className='w-32 h-32 lg:w-20 lg:h-20 bg-white p-2 rounded-xl shadow-sm relative shrink-0'>
               <QRCodeSVG
                 value='https://kgloto.com'
@@ -207,7 +227,6 @@ export const Footer = async () => {
               />
             </div>
 
-            {/* Моб. версия: Текст + 2 кнопки сторов */}
             <div className='flex flex-col gap-3 lg:hidden'>
               <p className='text-[13px] text-[#2D2D2D] leading-snug max-w-[120px]'>
                 {t('download_app')}
@@ -236,7 +255,6 @@ export const Footer = async () => {
 
         <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-[11px] text-gray-500 font-medium'>
           <div className='grid grid-cols-2 lg:flex lg:flex-row gap-x-4 gap-y-5 lg:gap-6 w-full lg:w-auto'>
-            {/* 🔥 Обновленные динамические ссылки на PDF */}
             <a
               href={t('docs.policy_file')}
               target='_blank'
