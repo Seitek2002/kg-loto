@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { WinnersMarquee, WinnerType } from './WinnersMarquee';
+import { Title } from '@/components/ui/Title';
 
 const UnderHero = async () => {
   const t = await getTranslations('home');
@@ -72,8 +73,10 @@ const UnderHero = async () => {
 
   return (
     <section className='mx-auto relative py-12 overflow-hidden'>
-      <h2 className='max-w-300 pl-4 mx-auto text-2xl md:text-3xl font-black font-benzin uppercase text-[#1C2035] mb-8'>
-        {t('recent_winners_title')}
+      <h2 className='pl-4 uppercase mb-8'>
+        <Title>
+          {t('recent_winners_title')}
+        </Title>
       </h2>
 
       <WinnersMarquee winners={RECENT_WINNERS} />
