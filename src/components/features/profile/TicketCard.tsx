@@ -97,7 +97,7 @@ export const TicketCard = ({
           <h3 className='text-[18px] sm:text-[24px] font-semibold text-[#4B4B4B] mb-3.5'>
             {ticketName}
           </h3>
-          <div className='text-xs md:text-base text-[#6E6E6E] flex flex-col gap-1.5'>
+          <div className='text-xs md:text-base text-[#6E6E6E] flex flex-col gap-1'>
             <span>Стоимость: {price}</span>
             <span>Дата покупки: {date}</span>
           </div>
