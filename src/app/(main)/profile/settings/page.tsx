@@ -16,62 +16,66 @@ const TABS = [
     id: 'terms',
     title: 'Условия использования',
     Component: () => (
-      <div className='text-sm text-gray-500'>Текст условий...</div>
+      <div className='text-sm text-[#6E6E6E]'>Текст условий...</div>
     ),
   },
   { id: 'faq', title: 'FAQ', Component: FaqSettings },
 ];
 
 export default function SettingsPage() {
-  // Состояние для десктопа (активная вкладка)
   const [activeTab, setActiveTab] = useState('account');
-  // Состояние для мобилки (открытый аккордеон)
   const [openMobileTab, setOpenMobileTab] = useState<string | null>('account');
 
-  // Находим текущий компонент для десктопа
-  const ActiveComponent =
-    TABS.find((t) => t.id === activeTab)?.Component || AccountForm;
+  // 🔥 Находим индекс активного таба, чтобы знать, куда двигать ползунок
+  const activeIndex = TABS.findIndex((t) => t.id === activeTab);
+  const ActiveComponent = TABS[activeIndex !== -1 ? activeIndex : 0].Component;
 
   return (
     <div className='min-h-screen bg-[#F5F5F5] pt-4 md:pt-6 pb-24 font-rubik'>
-      <div className='max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-[1045px] mx-auto px-4 sm:px-6 lg:px-8'>
         <ProfileHeader />
 
-        <div className='mt-4 sm:mt-10 max-w-[1045px] mx-auto'>
+        <div className='mt-4 sm:mt-10 overflow-hidden'>
           {/* ======================================= */}
-          {/* 🔥 ДЕСКТОПНАЯ ВЕРСИЯ (Бесшовные вкладки) */}
+          {/* 🔥 ДЕСКТОПНАЯ ВЕРСИЯ (С плавающим ползунком) */}
           {/* ======================================= */}
           <div className='hidden lg:flex w-full items-start'>
             {/* Сайдбар */}
-            <div className='w-[320px] shrink-0 py-8 relative z-10'>
-              {TABS.map((tab) => {
-                const isActive = activeTab === tab.id;
-                return (
-                  <div key={tab.id} className='relative'>
+            <div className='w-[320px] shrink-0 relative z-10'>
+              <div className='relative flex flex-col'>
+                {/* 🔥 ТОТ САМЫЙ ПЛАВАЮЩИЙ ПОЛЗУНОК */}
+                {/* Он позиционируется абсолютно и ездит вверх-вниз благодаря translateY */}
+                <div
+                  className='absolute left-0 w-full h-[64px] bg-white rounded-l-[32px] transition-transform duration-300 ease-in-out pointer-events-none z-0'
+                  style={{ transform: `translateY(${activeIndex * 100}%)` }}
+                >
+                  {/* Верхний уголок */}
+                  <div className='absolute top-[-24px] right-0 w-[24px] h-[24px] bg-transparent rounded-br-[24px] shadow-[12px_12px_0_0_#ffffff]' />
+                  {/* Нижний уголок */}
+                  <div className='absolute bottom-[-24px] right-0 w-[24px] h-[24px] bg-transparent rounded-tr-[24px] shadow-[12px_-12px_0_0_#ffffff]' />
+                </div>
+
+                {/* САМИ КНОПКИ ТАБОВ */}
+                {/* Они прозрачные и лежат поверх ползунка (z-10) */}
+                {TABS.map((tab) => {
+                  const isActive = activeTab === tab.id;
+                  return (
                     <button
+                      key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
+                      // 🔥 Фиксируем высоту кнопки (h-[64px]), чтобы ползунок ездил идеально ровно
                       className={clsx(
-                        'w-full text-left px-8 py-5 text-[14px] font-benzin uppercase transition-all tracking-wide',
+                        'relative z-10 w-full h-[64px] text-left px-8 text-[14px] font-benzin uppercase transition-colors tracking-wide',
                         isActive
-                          ? 'bg-white text-[#2D2D2D] rounded-l-[32px] font-bold'
+                          ? 'text-[#2D2D2D] font-bold'
                           : 'text-[#6E6E6E] hover:text-[#2D2D2D]',
                       )}
                     >
                       {tab.title}
                     </button>
-
-                    {/* 🔥 МАГИЯ CSS: Рисуем внутренние скругления для активного таба */}
-                    {isActive && (
-                      <>
-                        {/* Верхний уголок */}
-                        <div className='absolute top-[-24px] right-0 w-[24px] h-[24px] bg-transparent rounded-br-[24px] shadow-[12px_12px_0_0_#ffffff] pointer-events-none' />
-                        {/* Нижний уголок */}
-                        <div className='absolute bottom-[-24px] right-0 w-[24px] h-[24px] bg-transparent rounded-tr-[24px] shadow-[12px_-12px_0_0_#ffffff] pointer-events-none' />
-                      </>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
             {/* Контентная часть */}
@@ -101,13 +105,12 @@ export default function SettingsPage() {
                     <ChevronDown
                       size={20}
                       className={clsx(
-                        'transition-transform duration-300',
+                        'transition-transform duration-300 text-[#4B4B4B]',
                         isOpen && 'rotate-180',
                       )}
                     />
                   </button>
 
-                  {/* Анимация раскрытия контента */}
                   <div
                     className={clsx(
                       'grid transition-all duration-300 ease-in-out',
