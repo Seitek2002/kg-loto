@@ -41,7 +41,7 @@ export default function SettingsPage() {
           {/* ======================================= */}
           <div className='hidden lg:flex w-full items-start'>
             {/* Сайдбар */}
-            <div className='w-[320px] shrink-0 relative z-10'>
+            <div className='w-[386px] shrink-0 relative z-10'>
               <div className='relative flex flex-col'>
                 {/* 🔥 ТОТ САМЫЙ ПЛАВАЮЩИЙ ПОЛЗУНОК */}
                 <div
@@ -67,10 +67,8 @@ export default function SettingsPage() {
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       className={clsx(
-                        'relative z-10 w-full h-[64px] text-left px-8 text-[14px] font-benzin uppercase transition-colors tracking-wide',
-                        isActive
-                          ? 'text-[#2D2D2D] font-bold'
-                          : 'text-[#6E6E6E] hover:text-[#2D2D2D]',
+                        'relative z-10 cursor-pointer w-full text-[#4B4B4B] h-[64px] text-left px-8 text-[18px] font-benzin uppercase transition-colors tracking-wide',
+                        isActive ? 'font-extrabold' : 'font-medium',
                       )}
                     >
                       {tab.title}
@@ -84,7 +82,6 @@ export default function SettingsPage() {
             <div
               className={clsx(
                 'flex-1 bg-white rounded-[40px] min-h-[600px] p-10 relative z-0 shadow-sm transition-all duration-200',
-                // 🔥 Убираем скругление левого верхнего угла ТОЛЬКО если активен НЕ первый таб
                 activeIndex == 0 && 'rounded-tl-none',
               )}
             >
