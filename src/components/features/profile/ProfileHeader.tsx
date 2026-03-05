@@ -88,12 +88,12 @@ export const ProfileHeader = () => {
                   'flex items-center gap-2 px-5 py-3 rounded-full font-benzin uppercase transition-all whitespace-nowrap active:scale-95',
                   isActive
                     ? 'bg-[#4B4B4B] text-white shadow-md'
-                    : 'bg-transparent text-gray-500 hover:bg-gray-200 hover:text-[#2D2D2D]',
+                    : 'bg-transparent text-[#4B4B4B] hover:bg-gray-200 hover:text-[#2D2D2D]',
                 )}
               >
                 <Icon
                   size={16}
-                  className={clsx(isActive ? 'text-white' : 'text-gray-400')}
+                  className={clsx(isActive ? 'text-white' : 'text-[#4B4B4B]')}
                 />
                 <span className='font-extralight text-[10px] sm:text-[11px]'>
                   {tab.name}
