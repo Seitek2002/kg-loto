@@ -46,7 +46,7 @@ export const TicketCard = ({
               </span>
             ) : (
               <>
-                <span className='text-xs sm:text-base text-[#4B4B4B] font-semibold mb-2 block'>
+                <span className='text-xs sm:text-base text-[#4B4B4B] font-semibold mb-1.5 block'>
                   Ваш приз
                 </span>
                 <span
