@@ -32,7 +32,7 @@ export const SupportTable = ({ tickets }: SupportTableProps) => {
             <tr
               key={ticket.id}
               // 🔥 Задаем фиксированную высоту для всех строк
-              className='even:bg-transparent odd:bg-[#FFF6F6] h-[96px]'
+              className='even:bg-transparent odd:bg-[#FFF6F6] h-24'
             >
               <td className='px-5'>{ticket.id}</td>
               <td className='px-5 pr-10'>
