@@ -1,5 +1,5 @@
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { BestMaterials } from '@/widgets/BestMaterials';
+// import { BestMaterials } from '@/widgets/BestMaterials';
 import { CheckLottery } from '@/widgets/CheckLottery';
 import { FAQ } from '@/widgets/FAQ';
 import NewHero from '@/widgets/NewHero';
@@ -37,11 +37,11 @@ export default function Home() {
           </ScrollReveal>
         </Suspense>
 
-        <Suspense fallback={<BlockSkeleton />}>
+        {/* <Suspense fallback={<BlockSkeleton />}>
           <ScrollReveal direction='right'>
             <BestMaterials />
           </ScrollReveal>
-        </Suspense>
+        </Suspense> */}
 
         <Suspense fallback={<BlockSkeleton />}>
           <ScrollReveal direction='up'>
@@ -49,15 +49,15 @@ export default function Home() {
           </ScrollReveal>
         </Suspense>
 
+        <ScrollReveal direction='up'>
+          <OurApp />
+        </ScrollReveal>
+
         <Suspense fallback={<BlockSkeleton />}>
           <ScrollReveal direction='up'>
             <FAQ />
           </ScrollReveal>
         </Suspense>
-
-        <ScrollReveal direction='up'>
-          <OurApp />
-        </ScrollReveal>
       </div>
 
       <div className='h-8' />

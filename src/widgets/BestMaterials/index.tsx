@@ -19,6 +19,8 @@ async function getNewsData(): Promise<NewsItem[]> {
 export const BestMaterials = async () => {
   const articles = await getNewsData();
 
+  console.log(articles);
+
   return (
     <BestMaterialsClient articles={articles} />
   );

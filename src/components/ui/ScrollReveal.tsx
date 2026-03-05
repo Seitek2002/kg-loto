@@ -24,7 +24,7 @@ export const ScrollReveal = ({
   };
 
   return (
-    <div style={{ width, position: 'sticky', overflow: 'hidden', top: 0, background: '#f5f5f5' }}>
+    <div style={{ width, position: 'sticky', overflow: 'hidden', top: 0, background: '#f5f5f5', minHeight: '100vh' }}>
       <motion.div
         initial={hiddenVariants[direction]}
         whileInView={{ opacity: 1, y: 0, x: 0 }}
