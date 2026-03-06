@@ -26,7 +26,7 @@ export const FaqSettings = () => {
   const [openId, setOpenId] = useState<number | null>(null);
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-5 overflow-y-auto max-h-screen'>
       {FAQ_ITEMS.map((item) => {
         const isOpen = openId === item.id;
         return (
@@ -38,7 +38,7 @@ export const FaqSettings = () => {
               onClick={() => setOpenId(isOpen ? null : item.id)}
               className='w-full flex items-center justify-between p-5 text-left'
             >
-              <span className='text-[14px] font-semibold text-[#4B4B4B] pr-4'>
+              <span className='text-[20px] text-[#4B4B4B] pr-4'>
                 {item.id}. {item.question}
               </span>
               {isOpen ? (

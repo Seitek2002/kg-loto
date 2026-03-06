@@ -30,7 +30,7 @@ export const LanguageForm = () => {
             )}
           >
             <div className='flex items-center gap-4'>
-              <div className='relative w-6 h-6 rounded-full overflow-hidden shadow-sm'>
+              <div className='relative w-7.25 h-5.5 overflow-hidden shadow-sm'>
                 <Image
                   src={lang.icon}
                   alt={lang.name}

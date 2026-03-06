@@ -81,24 +81,24 @@ export const AccountForm = () => {
 
       {/* Паспортные данные (Заглушки для фото) */}
       <div className='flex flex-col gap-2'>
-        <label className='text-[13px] font-semibold text-[#4B4B4B] pl-1'>
+        <label className='text-[20px] font-medium text-[#4B4B4B] pl-1'>
           Паспортные данные
         </label>
-        <div className='border border-dashed border-[#E5E5E5] rounded-[24px] p-4 flex flex-col gap-4'>
-          <div className='relative w-full h-[180px] bg-gray-50 rounded-[16px] overflow-hidden'>
+        <div className='flex rounded-[10px] p-5 gap-4 border border-[#A3A3A3]'>
+          <div className='relative w-full h-[155px] rounded-[3px] overflow-hidden'>
             <Image
               src='/passport-front.png'
               alt='Passport Front'
               fill
-              className='object-contain p-2'
+              className='object-contain'
             />
           </div>
-          <div className='relative w-full h-[180px] bg-gray-50 rounded-[16px] overflow-hidden'>
+          <div className='relative w-full h-[155px] rounded-[3px] overflow-hidden'>
             <Image
               src='/passport-back.png'
               alt='Passport Back'
               fill
-              className='object-contain p-2'
+              className='object-contain'
             />
           </div>
         </div>
