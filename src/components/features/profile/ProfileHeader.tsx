@@ -5,34 +5,35 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { clsx } from 'clsx';
 import { Ticket, Trophy, Headphones, Settings } from 'lucide-react';
-
-const TABS = [
-  { name: 'Мои билеты', href: '/profile', icon: Ticket },
-  { name: 'Мои призы', href: '/profile/prizes', icon: Trophy },
-  { name: 'Обращения', href: '/profile/support', icon: Headphones },
-  { name: 'Настройки', href: '/profile/settings', icon: Settings },
-];
+import { useTranslations } from 'next-intl'; // 🔥 Импортируем хук
 
 // 🔥 Функция для извлечения инициалов
 const getInitials = (fullName: string) => {
   if (!fullName) return '';
-  // Разбиваем строку по пробелам
   const names = fullName.trim().split(/\s+/);
   if (names.length >= 2) {
-    // Берем первую букву первого и второго слова (Фамилия и Имя)
     return (names[0][0] + names[1][0]).toUpperCase();
   }
-  // Если ввели только одно слово
   return names[0][0].toUpperCase();
 };
 
 export const ProfileHeader = () => {
   const pathname = usePathname();
+  // 🔥 Инициализируем переводы для нужного раздела
+  const t = useTranslations('profile_header');
+
+  // 🔥 Переносим TABS внутрь компонента, чтобы использовать хук 't'
+  const TABS = [
+    { name: t('tabs.my_tickets'), href: '/profile', icon: Ticket },
+    { name: t('tabs.my_prizes'), href: '/profile/prizes', icon: Trophy },
+    { name: t('tabs.support'), href: '/profile/support', icon: Headphones },
+    { name: t('tabs.settings'), href: '/profile/settings', icon: Settings },
+  ];
 
   const user = {
     name: 'Бегалиев Сейтек',
     email: 'seitek.seitekov@gmail.com',
-    avatarUrl: null, // Если тут будет ссылка, покажется фото. Если null — инициалы
+    avatarUrl: null,
   };
 
   const initials = getInitials(user.name);
@@ -42,15 +43,16 @@ export const ProfileHeader = () => {
       {/* Хлебные крошки */}
       <div className='w-full flex justify-start mb-6 text-base text-[#4B4B4B]'>
         <Link href='/' className='hover:opacity-80'>
-          Главная
+          {t('breadcrumbs.home')} {/* 🔥 Заменили текст */}
         </Link>
         <span className='mx-2 md:mx-6'>/</span>
-        <span className='text-[#4B4B4B] font-semibold'>Личный кабинет</span>
+        <span className='text-[#4B4B4B] font-semibold'>
+          {t('breadcrumbs.profile')} {/* 🔥 Заменили текст */}
+        </span>
       </div>
 
       {/* Аватар и инфо */}
       <div className='flex flex-col items-center mb-10'>
-        {/* 🔥 Контейнер аватара. Задали желтый фон и темный цвет текста для инициалов */}
         <div className='relative flex items-center justify-center w-15 h-15 sm:w-30 sm:h-30 rounded-full overflow-hidden mb-6 border border-gray-200 bg-[#FFD600] text-[#2D2D2D] text-2xl sm:text-3xl font-benzin tracking-wider shadow-sm'>
           {user.avatarUrl ? (
             <Image

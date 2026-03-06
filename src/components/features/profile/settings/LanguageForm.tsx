@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { clsx } from 'clsx';
 import { Check } from 'lucide-react';
 
@@ -11,8 +13,30 @@ const LANGUAGES = [
   { id: 'en', name: 'English', icon: '/flags/en.svg' },
 ];
 
+// 🔥 Выносим мутацию глобального объекта ВНЕ компонента,
+// чтобы строгий React Compiler не ругался на изменение внешних переменных
+const setLocaleCookie = (locale: string) => {
+  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000;`;
+};
+
 export const LanguageForm = () => {
-  const [activeLang, setActiveLang] = useState('ru');
+  const router = useRouter();
+  const currentLocale = useLocale();
+  const [isPending, startTransition] = useTransition();
+
+  const [activeLang, setActiveLang] = useState(currentLocale);
+
+  const handleLanguageChange = (newLocale: string) => {
+    setActiveLang(newLocale);
+
+    // 🔥 Вызываем нашу безопасную внешнюю функцию
+    setLocaleCookie(newLocale);
+
+    // Плавно обновляем страницу, чтобы применились новые переводы
+    startTransition(() => {
+      router.refresh();
+    });
+  };
 
   return (
     <div className='flex flex-col gap-4'>
@@ -21,12 +45,14 @@ export const LanguageForm = () => {
         return (
           <button
             key={lang.id}
-            onClick={() => setActiveLang(lang.id)}
+            onClick={() => handleLanguageChange(lang.id)}
+            disabled={isPending}
             className={clsx(
               'flex items-center justify-between w-full border rounded-[20px] p-5 transition-all active:scale-[0.98]',
               isActive
                 ? 'border-[#FF7600] bg-[#FFF8F3]'
-                : 'border-[#E5E5E5] bg-white hover:border-gray-300',
+                : 'border-[#E5E5E5] bg-white hover:border-gray-300 opacity-100',
+              isPending && 'opacity-70 pointer-events-none',
             )}
           >
             <div className='flex items-center gap-4'>
