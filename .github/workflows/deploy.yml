@@ -17,13 +17,14 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           debug: true
           script: |
-            echo "Начинаю деплой..."
-            
+            echo "Начинаю деплой фронтенда..."
+ 
             cd /home/kuma/ibox-next || exit 1
             git pull origin master
-            
+   
+            docker restart frontend
+   
             cd /home/kuma/kgloto_back || exit 1
-            docker compose -f docker-compose.prod.yml up -d --build frontend
             docker compose -f docker-compose.prod.yml restart nginx
             
-            echo "Деплой завершён!"
+            echo "Деплой фронтенда завершён!"

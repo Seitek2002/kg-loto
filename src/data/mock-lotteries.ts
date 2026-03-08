@@ -33,7 +33,7 @@ export const LOTTERIES_DB: LotteryData[] = [
     id: 1,
     title: 'Космический Старт',
     description: 'Классическая лотерея. Главный приз ждет тебя!',
-    prize: '1 000 000 С',
+    prize: '1 000 000 TEST С',
     price: 100,
     time: '20:00',
     theme: 'white',
@@ -46,7 +46,7 @@ export const LOTTERIES_DB: LotteryData[] = [
     prizeTiers: [
       {
         category: 'Джекпот',
-        amount: '1 000 000 С',
+        amount: '1 000 000 TEST С',
         winners: 1,
         gradientFrom: 'from-blue-500',
         gradientTo: 'to-indigo-600',
