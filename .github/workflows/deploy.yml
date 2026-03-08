@@ -15,7 +15,6 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          debug: true
           script: |
             echo "Начинаю деплой фронтенда..."
  
