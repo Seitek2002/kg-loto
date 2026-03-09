@@ -16,6 +16,21 @@ import { PageHeader } from '@/components/ui/PageHeader';
 // 🔥 Импортируем серверную функцию переводов
 import { getTranslations } from 'next-intl/server';
 
+export async function generateMetadata() {
+  // Вытаскиваем переводы для раздела 'seo' или 'about', где у тебя лежат заголовки
+  const t = await getTranslations('about');
+  const tSeo = await getTranslations('seo');
+
+  // Достаем название сайта из seo, чтобы вкладка была "О компании | KGLOTO"
+  const siteName =
+    tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
+
+  return {
+    // Шаблон: "О компании | KGLOTO"
+    title: `${t('breadcrumb_about')} | ${siteName}`,
+  };
+}
+
 async function getLotteriesData(): Promise<LotteryItem[]> {
   try {
     const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/', {
@@ -30,10 +45,12 @@ async function getLotteriesData(): Promise<LotteryItem[]> {
 
 async function getNewsData(): Promise<NewsItem[]> {
   try {
-    const { data } =
-      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/', {
+    const { data } = await api.get<ApiResponse<PaginatedResult<NewsItem>>>(
+      '/news/',
+      {
         headers: await getLocaleHeader(),
-      });
+      },
+    );
     return data.data.results || [];
   } catch (error) {
     console.error('News Error:', error);

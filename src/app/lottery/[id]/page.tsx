@@ -23,6 +23,33 @@ async function getLotteryDetail(id: string): Promise<LotteryDetail | null> {
   }
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const lottery = await getLotteryDetail(resolvedParams.id);
+  const tSeo = await getTranslations('seo');
+
+  const siteName =
+    tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
+
+  // Если лотерея не найдена, отдаем дефолтный заголовок
+  if (!lottery) {
+    return { title: `Лотерея не найдена | ${siteName}` };
+  }
+
+  // Шаблон: "Название Лотереи | KGLOTO"
+  return {
+    title: `${lottery.title} | ${siteName}`,
+    // Можно заодно подтянуть описание лотереи для SEO сниппета в Google:
+    description:
+      lottery.subtitle ||
+      `Участвуйте в лотерее ${lottery.title} и выигрывайте призы!`,
+  };
+}
+
 export default async function LotteryDetailPage({
   params,
 }: {
