@@ -6,9 +6,9 @@ import { ChevronRight, ImageIcon } from 'lucide-react';
 import { api } from '@/lib/api';
 import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
-import { Header } from '@/components/ui/Header';
 import { OtherMaterialsSlider } from '@/components/features/news/OtherMaterialsSlider';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { getTranslations } from 'next-intl/server'; // 🔥 ИМПОРТ
 
 interface NewsDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -28,15 +28,39 @@ async function getNewsDetail(id: string): Promise<NewsItem | null> {
 
 async function getNewsData(): Promise<NewsItem[]> {
   try {
-    const { data } =
-      await api.get<ApiResponse<PaginatedResult<NewsItem>>>('/news/', {
+    const { data } = await api.get<ApiResponse<PaginatedResult<NewsItem>>>(
+      '/news/',
+      {
         headers: await getLocaleHeader(),
-      });
+      },
+    );
     return data.data.results || [];
   } catch (error) {
     console.error('News Error:', error);
     return [];
   }
+}
+
+// 🔥 ГЕНЕРАЦИЯ ДИНАМИЧЕСКИХ МЕТАДАННЫХ
+export async function generateMetadata({ params }: NewsDetailsPageProps) {
+  const { id } = await params;
+
+  // Делаем запрос (Next.js его закэширует, так что двойной нагрузки не будет)
+  const article = await getNewsDetail(id);
+  const tSeo = await getTranslations('seo');
+  const siteName =
+    tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
+
+  if (!article) {
+    return { title: `Новость не найдена | ${siteName}` };
+  }
+
+  // Шаблон: "Название новости | KGLOTO"
+  return {
+    title: `${article.title} | ${siteName}`,
+    // Добавляем shortText в description для SEO, если он есть
+    description: article.shortText || article.title,
+  };
 }
 
 export default async function NewsDetailsPage({
@@ -74,7 +98,6 @@ export default async function NewsDetailsPage({
         <PageHeader title='' />
       </div>
 
-      {/* overflow-hidden предотвращает появление горизонтального скролла от слайдера */}
       <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-10 lg:pt-56 pb-20 overflow-hidden'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
         <nav className='hidden lg:flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
@@ -119,7 +142,7 @@ export default async function NewsDetailsPage({
           )}
         </div>
 
-        {/* 🔥 КОНТЕНТ НОВОСТИ (ограничили ширину для читабельности) */}
+        {/* КОНТЕНТ НОВОСТИ */}
         <div className='w-full max-w-4xl'>
           <div
             className='html-content text-sm sm:text-base text-[#4B4B4B] leading-relaxed'
@@ -127,7 +150,7 @@ export default async function NewsDetailsPage({
           />
         </div>
 
-        {/* 🔥 2. НАШ НОВЫЙ БЛОК СО СЛАЙДЕРОМ */}
+        {/* СЛАЙДЕР "ДРУГИЕ МАТЕРИАЛЫ" */}
         <OtherMaterialsSlider articles={otherArticles} />
       </main>
 

@@ -4,6 +4,17 @@ import { ApiResponse, LotteryItem } from '@/types/api';
 import { getTranslations } from 'next-intl/server';
 import { LotteryListContent } from './LotteryListContent';
 
+export async function generateMetadata() {
+  const t = await getTranslations('populartickets');
+  const tSeo = await getTranslations('seo');
+  const siteName =
+    tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
+
+  return {
+    title: `${t('title')} | ${siteName}`, // Получится "Популярные лотереи | KGLOTO"
+  };
+}
+
 async function getAllLotteries(): Promise<LotteryItem[]> {
   try {
     const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/', {
