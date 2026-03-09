@@ -6,7 +6,7 @@ export default getRequestConfig(async () => {
   const currentLocale = cookieStore.get('NEXT_LOCALE')?.value || 'ru';
 
   try {
-    const res = await fetch('https://crm.kgloto.com/api/v1/page-texts/', {
+    const res = await fetch('https://kgloto.com/api/v1/page-texts/', {
       headers: {
         'Accept-Language': currentLocale,
       },

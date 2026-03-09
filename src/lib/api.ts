@@ -47,7 +47,7 @@ const keysToSnake = (obj: any): any => {
 };
 
 export const api = axios.create({
-  baseURL: 'https://crm.kgloto.com/api/v1',
+  baseURL: 'https://kgloto.com/api/v1',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

@@ -26,7 +26,7 @@ const MOCK_SLIDES: SliderItem[] = [
     subtitle: 'Тут мог быть "Подтекст"',
     prizeText: 'MacBook Air 15',
     image: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/1.json',
+      url: 'https://kgloto.com/media/slider/2026/03/02/1.json',
       type: 'lottie',
     },
     imageMobile: null,
@@ -46,19 +46,19 @@ const MOCK_SLIDES: SliderItem[] = [
     subtitle: 'Тут мог быть "Подтекст"',
     prizeText: 'IPhone 17 pro max',
     image: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/3.json',
+      url: 'https://kgloto.com/media/slider/2026/03/02/3.json',
       type: 'lottie',
     },
     imageMobile: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/2.json',
+      url: 'https://kgloto.com/media/slider/2026/03/02/2.json',
       type: 'lottie',
     },
     imageLayer: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/2.lottie',
+      url: 'https://kgloto.com/media/slider/2026/03/02/2.lottie',
       type: 'lottie',
     },
     imageMobileLayer: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/Head_%D0%9C%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%B5%D1%80.jpg',
+      url: 'https://kgloto.com/media/slider/2026/03/02/Head_%D0%9C%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%B5%D1%80.jpg',
       type: 'image',
     },
     backgroundImage: null,
@@ -75,29 +75,29 @@ const MOCK_SLIDES: SliderItem[] = [
     subtitle: 'ooo',
     prizeText: '10000',
     image: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/009631dd-e069-445d-9f9b-883997034fa6.png',
+      url: 'https://kgloto.com/media/slider/2026/03/02/009631dd-e069-445d-9f9b-883997034fa6.png',
       type: 'image',
     },
     imageMobile: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17.png',
+      url: 'https://kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17.png',
       type: 'image',
     },
     imageLayer: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17_A6bvoeG.png',
+      url: 'https://kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17_A6bvoeG.png',
       type: 'image',
     },
     imageMobileLayer: {
-      url: 'https://crm.kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17_lTKfbye.png',
+      url: 'https://kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17_lTKfbye.png',
       type: 'image',
     },
     backgroundImage:
-      'https://crm.kgloto.com/media/slider/backgrounds/2026/03/02/anime-meme-background-w13zt6adj4t13chk.jpg',
-    logo: 'https://crm.kgloto.com/media/slider/logos/2026/03/02/d2c16d99034f9407fd708dfc3356c688.jpg',
+      'https://kgloto.com/media/slider/backgrounds/2026/03/02/anime-meme-background-w13zt6adj4t13chk.jpg',
+    logo: 'https://kgloto.com/media/slider/logos/2026/03/02/d2c16d99034f9407fd708dfc3356c688.jpg',
     hasAnimation: true,
     buttonText: 'Играть',
     buttonPrice: 100,
     buttonLabel: 'ИГРАТЬ • 100 СОМ',
-    buttonUrl: 'https://crm.kgloto.com/admin/content/slider/add/',
+    buttonUrl: 'https://kgloto.com/admin/content/slider/add/',
   },
 ];
 
