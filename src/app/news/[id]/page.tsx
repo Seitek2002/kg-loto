@@ -8,7 +8,9 @@ import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { OtherMaterialsSlider } from '@/components/features/news/OtherMaterialsSlider';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { getTranslations } from 'next-intl/server'; // 🔥 ИМПОРТ
+import { getTranslations } from 'next-intl/server';
+
+import './style.css';
 
 interface NewsDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -98,7 +100,7 @@ export default async function NewsDetailsPage({
         <PageHeader title='' />
       </div>
 
-      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-10 lg:pt-56 pb-20 overflow-hidden'>
+      <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-10 lg:pt-12 pb-20 overflow-hidden'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
         <nav className='hidden lg:flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
           <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
@@ -123,7 +125,7 @@ export default async function NewsDetailsPage({
         </div>
 
         {/* ГЛАВНОЕ ФОТО */}
-        <div className='w-full aspect-video relative rounded-3xl overflow-hidden mb-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-100'>
+        {/* <div className='w-full aspect-video relative rounded-3xl overflow-hidden mb-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-100'>
           {article.image ? (
             <Image
               src={article.image}
@@ -140,7 +142,7 @@ export default async function NewsDetailsPage({
               </span>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* КОНТЕНТ НОВОСТИ */}
         <div className='w-full max-w-4xl'>
@@ -153,23 +155,6 @@ export default async function NewsDetailsPage({
         {/* СЛАЙДЕР "ДРУГИЕ МАТЕРИАЛЫ" */}
         <OtherMaterialsSlider articles={otherArticles} />
       </main>
-
-      {/* СТИЛИ ДЛЯ ВЛОЖЕННОГО HTML */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        .html-content p { margin-bottom: 24px; }
-        .html-content strong, .html-content b { color: #2D2D2D; font-weight: 700; }
-        .html-content ul { margin-bottom: 24px; padding-left: 20px; }
-        .html-content li { margin-bottom: 12px; position: relative; }
-        .html-content li::before {
-          content: '•'; color: #FFD600; font-weight: bold;
-          display: inline-block; width: 1em; margin-left: -1em;
-        }
-        .html-content a { color: #FFD600; text-decoration: underline; }
-      `,
-        }}
-      />
     </div>
   );
 }
