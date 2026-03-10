@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 import localFont from 'next/font/local';
+import { cookies } from 'next/headers'; // 🔥 Добавили импорт кук
 import { LiquidFilterDef } from '@/components/ui/LiquidFilterDef';
 import QueryProvider from '@/providers/QueryProvider';
 import { Header } from '@/components/ui/Header';
 import { Footer } from '@/widgets/Footer';
+import { AgeVerificationModal } from '@/components/ui/AgeVerificationModal'; // 🔥 Добавили импорт модалки
 import dynamic from 'next/dynamic';
 import './globals.css';
 
@@ -18,34 +20,13 @@ const rubik = Rubik({
   weight: ['400', '500', '700'],
 });
 
-// 🔥 Подключаем все начертания Benzin массивом
 const benzin = localFont({
   src: [
-    {
-      path: '../font/Benzin-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../font/Benzin-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../font/Benzin-Semibold.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-    {
-      path: '../font/Benzin-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: '../font/Benzin-ExtraBold.woff2',
-      weight: '800',
-      style: 'normal',
-    },
+    { path: '../font/Benzin-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../font/Benzin-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../font/Benzin-Semibold.woff2', weight: '600', style: 'normal' },
+    { path: '../font/Benzin-Bold.woff2', weight: '700', style: 'normal' },
+    { path: '../font/Benzin-ExtraBold.woff2', weight: '800', style: 'normal' },
   ],
   variable: '--font-benzin',
   display: 'swap',
@@ -58,12 +39,10 @@ const BottomNav = dynamic(() =>
   ),
 );
 
-// 🔥 Динамическая генерация SEO-метаданных
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('seo');
   const locale = await getLocale();
 
-  // Безопасные фоллбэки, если ключей еще нет в базе
   const title = t('title') === 'title' ? 'KGLOTO.COM' : t('title');
   const description =
     t('description') === 'description'
@@ -80,7 +59,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     keywords,
     applicationName: siteName,
-    // OpenGraph для красивых ссылок в WhatsApp/Telegram
     openGraph: {
       title,
       description,
@@ -88,7 +66,6 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: locale,
       type: 'website',
     },
-    // Карточки для X (Twitter) и других соцсетей
     twitter: {
       card: 'summary_large_image',
       title,
@@ -98,27 +75,29 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// 🔥 Делаем layout асинхронным, чтобы получать данные словаря
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // 🔥 Вытаскиваем текущую локаль и все переводы с сервера (из i18n.ts)
   const locale = await getLocale();
   const messages = await getMessages();
 
+  // 🔥 Получаем куки на сервере и проверяем наличие флага
+  const cookieStore = await cookies();
+  const isAgeVerified = cookieStore.get('age_verified')?.value === 'true';
+
   return (
-    // 🔥 Теперь lang меняется динамически ('ru' или 'ky')
     <html lang={locale}>
       <body
-        // 🔥 Обновил переменную тут
         className={`${rubik.variable} ${benzin.variable} antialiased font-rubik bg-[#F5F5F5]`}
       >
-        {/* 🔥 Оборачиваем приложение в провайдер переводов */}
         <NextIntlClientProvider messages={messages}>
           <LiquidFilterDef />
           <QueryProvider>
+            {/* 🔥 Если куки нет, рендерим модалку поверх всего сайта */}
+            {!isAgeVerified && <AgeVerificationModal />}
+
             <div className='relative min-h-screen flex flex-col'>
               <Header theme='dark' />
 

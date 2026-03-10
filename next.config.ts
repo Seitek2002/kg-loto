@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         hostname: 'crm.kgloto.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'kgloto.com',
+        pathname: '/**',
+      },
     ],
     minimumCacheTTL: 60,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
