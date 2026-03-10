@@ -67,7 +67,7 @@ export const ProfileHeader = () => {
           )}
         </div>
 
-        <h1 className='text-xl sm:text-[28px] font-semibold text-[#4B4B4B] mb-3'>
+        <h1 className='text-xl sm:text-[28px] font-semibold text-[#4B4B4B] mb-3 leading-5'>
           {user.name}
         </h1>
         <p className='text-xs sm:text-base text-[#A3A3A3] font-medium'>
