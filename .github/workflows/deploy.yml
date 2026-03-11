@@ -19,7 +19,7 @@ jobs:
             echo "Начинаю деплой фронтенда..."
 
             cd /home/kuma/ibox-next || exit 1
-
+            
             # --- Сохраняем защищённые файлы ---
             mkdir -p /tmp/ibox_protected
             cp Dockerfile /tmp/ibox_protected/Dockerfile 2>/dev/null || true
