@@ -1,23 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { api } from '@/lib/api';
-import { getLocaleHeader } from '@/lib/locale';
-import { ApiResponse, LotteryItem } from '@/types/api';
 import { getTranslations } from 'next-intl/server';
-// 🔥 Импортируем генератор QR-кода
 import { QRCodeSVG } from 'qrcode.react';
-
-async function getFooterLotteries(): Promise<LotteryItem[]> {
-  try {
-    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/', {
-      headers: await getLocaleHeader(),
-    });
-    return data.data || [];
-  } catch (error) {
-    console.error('Footer Lotteries Error:', error);
-    return [];
-  }
-}
+import { MenuData, MenuItem } from '@/types/api';
 
 const StoreButton = ({
   type,
@@ -59,16 +44,26 @@ const StoreButton = ({
   );
 };
 
-export const Footer = async () => {
-  const lotteries = await getFooterLotteries();
+// 🔥 Хелпер для безопасного парсинга ссылок
+const getRelativeUrl = (url: string) => {
+  try {
+    return new URL(url).pathname;
+  } catch {
+    return url.startsWith('/') ? url : `/${url}`;
+  }
+};
+
+interface FooterProps {
+  menuData?: MenuData | null;
+}
+
+export const Footer = async ({ menuData }: FooterProps) => {
   const t = await getTranslations('footer');
 
-  // 🔥 Защита: Если ключа в базе еще нет, берем номер из ТЗ
   const phone1 = t('phone_1') === 'phone_1' ? '+996 998 777 377' : t('phone_1');
   const phone2 = t('phone_2') === 'phone_2' ? '+996 226 777 877' : t('phone_2');
   const phone3 = t('phone_3') === 'phone_3' ? '+996 507 778 733' : t('phone_3');
 
-  // 🔥 Динамическая почта
   const email = t('email') === 'email' ? 'support@kgloto.kg' : t('email');
 
   const APP_STORE_LINK =
@@ -76,37 +71,37 @@ export const Footer = async () => {
   const GOOGLE_PLAY_LINK =
     'https://play.google.com/store/apps/details?id=kg.loto.app';
 
+  // 🔥 Сортируем и подготавливаем данные из объекта menuData
+  const formatLinks = (items?: MenuItem[]) => {
+    if (!items || items.length === 0) return [];
+    return items
+      .filter((item) => item.isActive)
+      .sort((a, b) => a.order - b.order)
+      .map((item) => ({
+        name: item.title,
+        href: getRelativeUrl(item.link),
+      }));
+  };
+
   const footerSections = [
     {
       title: t('lotteries'),
       links:
-        lotteries.length > 0
-          ? lotteries.map((loto) => ({
-              name: loto.title,
-              href: `/lottery/${loto.id}`,
-            }))
+        formatLinks(menuData?.['footer.lotteries']).length > 0
+          ? formatLinks(menuData?.['footer.lotteries'])
           : [{ name: t('no_lotteries'), href: '#' }],
     },
     {
       title: t('purchases'),
-      links: [{ name: t('sales_map'), href: '/map' }],
+      links: formatLinks(menuData?.['footer.purchases']),
     },
     {
       title: t('company'),
-      links: [
-        { name: t('about'), href: '/about' },
-        { name: t('contacts'), href: '#' },
-        { name: t('news'), href: '/news' },
-      ],
+      links: formatLinks(menuData?.['footer.company']),
     },
     {
       title: t('info'),
-      links: [
-        { name: t('check_ticket'), href: '/#check' },
-        { name: t('winners'), href: '/winners' },
-        { name: t('how_to_get_prize'), href: '/rules' },
-        { name: t('faq'), href: '/faq' },
-      ],
+      links: formatLinks(menuData?.['footer.info']),
     },
   ];
 
@@ -134,7 +129,7 @@ export const Footer = async () => {
             </p>
           </div>
 
-          {/* Сетка ссылок */}
+          {/* Сетка динамических ссылок */}
           <div className='lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 order-2 lg:order-none'>
             {footerSections.map((section, idx) => (
               <div key={idx} className='flex flex-col gap-4'>
@@ -160,10 +155,8 @@ export const Footer = async () => {
 
         <div className='h-px bg-gray-300 w-full mb-8 lg:hidden' />
         <div className='flex flex-col lg:flex-row justify-between gap-8 mb-8'>
-          {/* Контакты и Безопасность */}
           <div className='flex flex-col gap-6 lg:gap-8'>
             <div className='flex flex-col lg:flex-row gap-8 lg:gap-12'>
-              {/* ТРИ НОМЕРА ТЕЛЕФОНА */}
               <div>
                 <span className='block text-xs text-gray-500 mb-2 lg:mb-3'>
                   {t('hotline')}
@@ -190,7 +183,6 @@ export const Footer = async () => {
                 </div>
               </div>
               <div className='mt-1 lg:mt-0'>
-                {/* 🔥 Динамическая почта */}
                 <a
                   href={`mailto:${email}`}
                   className='text-[15px] md:text-sm text-[#2D2D2D] hover:text-[#FFD600]'
@@ -200,7 +192,6 @@ export const Footer = async () => {
               </div>
             </div>
 
-            {/* Моб. версия: Безопасность + 18+ */}
             <div className='flex lg:hidden items-center justify-between gap-4 mt-2'>
               <p className='text-[11px] text-gray-500 max-w-[220px] leading-relaxed'>
                 {t('security_guarantee')}
@@ -211,7 +202,6 @@ export const Footer = async () => {
 
           <div className='h-px bg-gray-300 w-full lg:hidden my-2' />
 
-          {/* QR и Кнопки */}
           <div className='flex items-center gap-6'>
             <div className='text-right hidden lg:block'>
               <p className='text-xs text-gray-500 max-w-25'>

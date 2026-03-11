@@ -1,17 +1,20 @@
 import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 import localFont from 'next/font/local';
-import { cookies } from 'next/headers'; // 🔥 Добавили импорт кук
+import { cookies } from 'next/headers';
 import { LiquidFilterDef } from '@/components/ui/LiquidFilterDef';
 import QueryProvider from '@/providers/QueryProvider';
 import { Header } from '@/components/ui/Header';
 import { Footer } from '@/widgets/Footer';
-import { AgeVerificationModal } from '@/components/ui/AgeVerificationModal'; // 🔥 Добавили импорт модалки
+import { AgeVerificationModal } from '@/components/ui/AgeVerificationModal';
 import dynamic from 'next/dynamic';
 import './globals.css';
 
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale, getTranslations } from 'next-intl/server';
+import { api } from '@/lib/api';
+import { getLocaleHeader } from '@/lib/locale';
+import { MenuApiResponse, MenuData } from '@/types/api';
 
 const rubik = Rubik({
   variable: '--font-rubik',
@@ -75,6 +78,19 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// 🔥 Новая функция для получения меню
+async function getMenuData(): Promise<MenuData | null> {
+  try {
+    const { data } = await api.get<MenuApiResponse>('/menu/', {
+      headers: await getLocaleHeader(),
+    });
+    return data.data;
+  } catch (error) {
+    console.error('Menu Data Error:', error);
+    return null;
+  }
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -83,9 +99,11 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
 
-  // 🔥 Получаем куки на сервере и проверяем наличие флага
   const cookieStore = await cookies();
   const isAgeVerified = cookieStore.get('age_verified')?.value === 'true';
+
+  // 🔥 Получаем данные меню с бэка
+  const menuData = await getMenuData();
 
   return (
     <html lang={locale}>
@@ -95,18 +113,19 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <LiquidFilterDef />
           <QueryProvider>
-            {/* 🔥 Если куки нет, рендерим модалку поверх всего сайта */}
             {!isAgeVerified && <AgeVerificationModal />}
 
             <div className='relative min-h-screen flex flex-col'>
-              <Header theme='dark' />
+              {/* 🔥 Прокидываем данные хедера (если есть) */}
+              <Header theme='dark' headerMenu={menuData?.['header.menu']} />
 
               <main className='flex-1 pb-20 w-full mx-auto shadow-sm'>
                 {children}
               </main>
 
               <BottomNav />
-              <Footer />
+              {/* 🔥 Прокидываем все меню в футер */}
+              <Footer menuData={menuData} />
             </div>
           </QueryProvider>
         </NextIntlClientProvider>
