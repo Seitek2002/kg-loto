@@ -17,13 +17,33 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "Начинаю деплой фронтенда..."
- 
+
             cd /home/kuma/ibox-next || exit 1
-            git pull origin master
-   
-            docker restart frontend
-   
+
+            # --- Сохраняем защищённые файлы ---
+            mkdir -p /tmp/ibox_protected
+            cp Dockerfile /tmp/ibox_protected/Dockerfile 2>/dev/null || true
+            cp next-env.d.ts /tmp/ibox_protected/next-env.d.ts 2>/dev/null || true
+            cp -r "src/app/(main)/faq" /tmp/ibox_protected/faq 2>/dev/null || true
+            cp -r "src/app/(main)/rules" /tmp/ibox_protected/rules 2>/dev/null || true
+
+            # --- Тянем новый код (перезаписывает все tracked файлы) ---
+            git fetch origin master
+            git reset --hard origin/master
+
+            # --- Восстанавливаем защищённые файлы ---
+            cp /tmp/ibox_protected/Dockerfile Dockerfile 2>/dev/null || true
+            cp /tmp/ibox_protected/next-env.d.ts next-env.d.ts 2>/dev/null || true
+            rm -rf "src/app/(main)/faq" && cp -r /tmp/ibox_protected/faq "src/app/(main)/faq" 2>/dev/null || true
+            rm -rf "src/app/(main)/rules" && cp -r /tmp/ibox_protected/rules "src/app/(main)/rules" 2>/dev/null || true
+
+            # --- Пересобираем и перезапускаем фронтенд ---
+            docker network create kgloto_network 2>/dev/null || true
+            docker compose up -d --build frontend
+
+
+            # --- Перезапускаем nginx ---
             cd /home/kuma/kgloto_back || exit 1
             docker compose -f docker-compose.prod.yml restart nginx
-            
+
             echo "Деплой фронтенда завершён!"
