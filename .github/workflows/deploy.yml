@@ -41,7 +41,6 @@ jobs:
             docker network create kgloto_network 2>/dev/null || true
             docker compose up -d --build frontend
 
-
             # --- Перезапускаем nginx ---
             cd /home/kuma/kgloto_back || exit 1
             docker compose -f docker-compose.prod.yml restart nginx
