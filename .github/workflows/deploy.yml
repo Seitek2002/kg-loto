@@ -27,7 +27,6 @@ jobs:
             cp -r "src/app/(main)/faq" /tmp/ibox_protected/faq 2>/dev/null || true
             cp -r "src/app/(main)/rules" /tmp/ibox_protected/rules 2>/dev/null || true
 
-            # --- Тянем новый код (перезаписывает все tracked файлы) ---
             git fetch origin master
             git reset --hard origin/master
 
@@ -41,7 +40,6 @@ jobs:
             docker network create kgloto_network 2>/dev/null || true
             docker compose up -d --build frontend
 
-            # --- Перезапускаем nginx ---
             cd /home/kuma/kgloto_back || exit 1
             docker compose -f docker-compose.prod.yml restart nginx
 
