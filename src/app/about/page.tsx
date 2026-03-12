@@ -13,21 +13,51 @@ import {
 import { getLocaleHeader } from '@/lib/locale';
 import { PageHeader } from '@/components/ui/PageHeader';
 
-// 🔥 Импортируем серверную функцию переводов
 import { getTranslations } from 'next-intl/server';
 
-export async function generateMetadata() {
-  // Вытаскиваем переводы для раздела 'seo' или 'about', где у тебя лежат заголовки
-  const t = await getTranslations('about');
-  const tSeo = await getTranslations('seo');
+import './style.css'
 
-  // Достаем название сайта из seo, чтобы вкладка была "О компании | KGLOTO"
+// 🔥 1. ДОБАВЛЯЕМ ТИП ДЛЯ НОВЫХ ДАННЫХ
+export interface AboutCompanyData {
+  id: number;
+  title: string;
+  shortText: string;
+  content: string;
+  image: string | null;
+  createdAt: string;
+}
+
+// 🔥 2. ДОБАВЛЯЕМ ФУНКЦИЮ ЗАПРОСА
+async function getAboutCompanyData(): Promise<AboutCompanyData | null> {
+  try {
+    const { data } = await api.get<ApiResponse<AboutCompanyData>>(
+      '/about-company/',
+      {
+        headers: await getLocaleHeader(),
+      },
+    );
+    return data.data;
+  } catch (error) {
+    console.error('About Company Error:', error);
+    return null;
+  }
+}
+
+// 🔥 3. ОБНОВЛЯЕМ SEO (title и shortText)
+export async function generateMetadata() {
+  const tSeo = await getTranslations('seo');
   const siteName =
     tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
 
+  const aboutData = await getAboutCompanyData();
+
+  // Если с бэка пришел title, используем его. Иначе дефолтный.
+  const pageTitle = aboutData?.title || 'О компании';
+
   return {
-    // Шаблон: "О компании | KGLOTO"
-    title: `${t('breadcrumb_about')} | ${siteName}`,
+    title: `${pageTitle} | ${siteName}`,
+    description:
+      aboutData?.shortText || 'Первый маркетплейс лотерейных билетов',
   };
 }
 
@@ -59,19 +89,25 @@ async function getNewsData(): Promise<NewsItem[]> {
 }
 
 export default async function AboutPage() {
-  const [lotteries, news] = await Promise.all([
+  // 🔥 4. ЗАПРАШИВАЕМ ДАННЫЕ О КОМПАНИИ ВМЕСТЕ С ОСТАЛЬНЫМИ
+  const [lotteries, news, aboutData] = await Promise.all([
     getLotteriesData(),
     getNewsData(),
+    getAboutCompanyData(),
   ]);
 
-  // 🔥 Загружаем переводы для страницы
   const t = await getTranslations('about');
+
+  // Если картинки с бэка нет, оставляем фоллбэк
+  const bannerImage = aboutData?.image || '/banners/1.jpg';
+  // Если title с бэка нет, берем из словаря
+  const displayTitle = aboutData?.title || t('breadcrumb_about');
+  const htmlContent = aboutData?.content || '';
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] font-rubik'>
       <div className='px-4'>
-        {/* 🔥 Передаем переведенный заголовок */}
-        <PageHeader title={t('breadcrumb_about')} />
+        <PageHeader title={displayTitle} />
       </div>
 
       <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-8 lg:pt-32 pb-20 overflow-hidden'>
@@ -81,14 +117,14 @@ export default async function AboutPage() {
             {t('breadcrumb_home')}
           </Link>
           <ChevronRight size={14} className='shrink-0' />
-          <span className='text-[#2D2D2D]'>{t('breadcrumb_about')}</span>
+          <span className='text-[#2D2D2D]'>{displayTitle}</span>
         </nav>
 
         {/* ГЛАВНОЕ ФОТО (Баннер) */}
         <div className='w-full aspect-[21/9] min-h-[200px] relative rounded-[32px] overflow-hidden mb-12 bg-blue-100'>
           <Image
-            src='/banners/1.jpg'
-            alt={t('breadcrumb_about')}
+            src={bannerImage}
+            alt={displayTitle}
             fill
             className='object-cover'
             priority
@@ -97,35 +133,15 @@ export default async function AboutPage() {
 
         {/* ОСНОВНОЙ КОНТЕНТ (2 КОЛОНКИ) */}
         <div className='flex flex-col lg:flex-row gap-12 items-start'>
-          {/* ЛЕВАЯ КОЛОНКА: СТАТИЧНЫЙ ТЕКСТ (65%) */}
+          {/* 🔥 5. ЛЕВАЯ КОЛОНКА: ДИНАМИЧЕСКИЙ HTML */}
           <div className='w-full lg:w-[65%] flex flex-col gap-10 text-sm sm:text-base text-[#4B4B4B] leading-relaxed'>
-            <section>
-              <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
-                {t('company_title')}
-              </h2>
-              <p className='mb-4'>{t('company_p1')}</p>
-              <p className='mb-4'>{t('company_p2')}</p>
-              <p>{t('company_p3')}</p>
-            </section>
-
-            <section>
-              <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
-                {t('mission_title')}
-              </h2>
-              <p className='mb-4'>{t('mission_p1')}</p>
-              <p>{t('mission_p2')}</p>
-            </section>
-
-            <section>
-              <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
-                {t('values_title')}
-              </h2>
-              <p className='mb-4'>{t('values_p1')}</p>
-              <p>{t('values_p2')}</p>
-            </section>
+            <div
+              className='html-content'
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
           </div>
 
-          {/* ПРАВАЯ КОЛОНКА: НОВОСТИ (Сайдбар 35%) */}
+          {/* ПРАВАЯ КОЛОНКА: НОВОСТИ (Сайдбар 35%) - НЕ ТРОГАЕМ */}
           <div className='w-full lg:w-[35%] flex flex-col sticky top-28'>
             <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-6'>
               {t('news_title')}
@@ -139,7 +155,7 @@ export default async function AboutPage() {
                     title={item.title}
                     description={item.content}
                     imageSrc={item.image}
-                    buttonText={t('read_more')} // 🔥 Передаем переведенный текст кнопки
+                    buttonText={t('read_more')}
                     theme={item.theme}
                     href={`/news/${item.slug}`}
                   />
