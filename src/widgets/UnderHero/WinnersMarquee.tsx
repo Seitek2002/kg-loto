@@ -12,13 +12,10 @@ export interface WinnerType {
   currency: string;
   logo: string;
   isYellow: boolean;
+  isTextPrize?: boolean; // 🔥 Добавили новый флаг
 }
 
-// 🔥 Вспомогательная функция для парсинга суммы из строки "10 000" в число 10000
-const parseAmount = (amountStr: string) => {
-  // Убираем все пробелы и преобразуем в число
-  return Number(amountStr.replace(/\s+/g, ''));
-};
+// Парсер теперь не нужен для цвета, так как мы определяем цвет по флагу isYellow
 
 const TearableTicket = ({
   winner,
@@ -43,7 +40,7 @@ const TearableTicket = ({
     soundClone.volume = 0.3;
 
     soundClone.play().catch((error) => {
-      console.warn('Audio playback failed (usually iOS restriction):', error);
+      console.warn('Audio playback failed:', error);
     });
   };
 
@@ -55,19 +52,16 @@ const TearableTicket = ({
     onClick();
   };
 
-  const numericAmount = parseAmount(winner.amount);
-
-  const amountColorClass =
-    numericAmount < 10000
-      ? 'text-[#4b4b4b]'
-      : winner.isYellow
-        ? 'text-[#FFD600]'
-        : 'text-[#E97625]';
+  // Цвет суммы зависит от флага isYellow
+  const amountColorClass = winner.isYellow
+    ? 'text-[#FFD600]'
+    : 'text-[#E97625]';
 
   return (
     <div
       onMouseEnter={handleClick}
       className={clsx(
+        // Убрал overflow-hidden отсюда, так как он ломал тень билета
         'relative flex items-center justify-center w-full h-full cursor-pointer transition-transform duration-300 transform-gpu',
         isActive ? 'scale-105' : 'scale-100',
       )}
@@ -79,27 +73,32 @@ const TearableTicket = ({
         className='object-cover pointer-events-none'
       />
 
-      <div className='absolute inset-0 opacity-10 pointer-events-none'>
+      {/* 🔥 Жестко ограничиваем контейнер логотипа, чтобы он не вылазил за края билета */}
+      <div className='absolute left-4 right-4 top-4 bottom-4 opacity-10 pointer-events-none flex items-center justify-center overflow-hidden'>
         <img
           src={winner.logo}
           alt='logo'
-          className='w-[80%] h-[80%] m-auto object-contain'
+          className='w-full h-full object-contain'
         />
       </div>
 
-      <div className='relative z-10 text-center'>
-        <div className='text-base font-medium text-[#4b4b4b]'>
+      <div className='relative z-10 text-center px-4 w-full'>
+        <div className='text-base font-medium text-[#4b4b4b] truncate'>
           {winner.name}
         </div>
 
         <div
           className={clsx(
-            'text-4xl font-black flex items-end justify-center gap-1 my-3',
+            'flex items-end justify-center gap-1 my-3 font-black uppercase line-clamp-2',
             amountColorClass,
+            // Если текст длинный (вещевой приз), делаем шрифт меньше, чтобы влезло
+            winner.isTextPrize ? 'text-2xl leading-tight' : 'text-4xl',
           )}
         >
           {winner.amount}
-          <span className='text-2xl underline'>{winner.currency}</span>
+          {winner.currency && (
+            <span className='text-2xl underline'>{winner.currency}</span>
+          )}
         </div>
 
         <div className='text-sm text-[#4b4b4b]'>{winner.date}</div>

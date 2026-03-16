@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 
 export const OurApp = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const t = useTranslations('ourapp'); // 🔥 Подключаем словарь
+  const t = useTranslations('ourapp'); // 🔥 Вернули твой словарь
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -40,13 +40,13 @@ export const OurApp = () => {
           {t('desc')}
         </div>
 
-        {/* QR Код и Кнопки в один ряд для экономии места */}
+        {/* QR Код и Кнопки */}
         <div className='flex items-center gap-8 mb-8'>
           <div className='flex flex-col gap-2 items-center'>
             <div className='p-3 bg-white border border-gray-100 rounded-2xl shadow-sm'>
-              {/* 🔥 Генерируем QR-код (ведет на сайт, откуда юзер выберет стор) */}
+              {/* 🔥 Умная ссылка для редиректа на нужный магазин */}
               <QRCodeSVG
-                value='https://kgloto.com'
+                value='https://kgloto.com/download'
                 size={100}
                 level='H'
                 fgColor='#2D2D2D'
@@ -71,15 +71,18 @@ export const OurApp = () => {
           </div>
         </div>
 
-        {/* 🔥 Компактная инструкция по регистрации */}
+        {/* 🔥 Вернули переводы инструкции */}
         <div className='max-w-md border-t border-gray-100 pt-6'>
           <h4 className='text-xs font-black font-benzin text-[#2D2D2D] uppercase mb-4'>
             {t('inst_title')}
           </h4>
           <ul className='text-xs text-[#6E6E6E] flex flex-col gap-3 font-rubik leading-relaxed'>
+            {/* Сюда в JSON вставишь обновленные шаги от босса */}
             <li dangerouslySetInnerHTML={{ __html: t('inst_1') }} />
             <li dangerouslySetInnerHTML={{ __html: t('inst_2') }} />
             <li dangerouslySetInnerHTML={{ __html: t('inst_3') }} />
+            {/* Добавь новые ключи в JSON, если шагов стало больше, и раскомментируй: */}
+            {/* <li dangerouslySetInnerHTML={{ __html: t('inst_4') }} /> */}
           </ul>
         </div>
       </motion.div>
