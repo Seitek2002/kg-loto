@@ -105,6 +105,8 @@ export default async function RootLayout({
   // 🔥 Получаем данные меню с бэка
   const menuData = await getMenuData();
 
+  console.log(menuData);
+
   return (
     <html lang={locale}>
       <body
@@ -117,7 +119,7 @@ export default async function RootLayout({
 
             <div className='relative min-h-screen flex flex-col'>
               {/* 🔥 Прокидываем данные хедера (если есть) */}
-              <Header theme='dark' headerMenu={menuData?.['header.menu']} />
+              <Header theme='dark' headerMenu={menuData?.['header.menu']} headerUpperMenu={menuData?.['header.uppermenu']} />
 
               <main className='flex-1 pb-20 w-full mx-auto shadow-sm'>
                 {children}

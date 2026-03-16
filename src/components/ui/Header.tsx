@@ -104,10 +104,15 @@ export const MobileMenu = ({
 // ==========================================
 interface HeaderProps {
   theme?: 'light' | 'dark';
-  headerMenu?: MenuItem[]; // 🔥 Добавили пропс
+  headerMenu?: MenuItem[];
+  headerUpperMenu?: MenuItem[];
 }
 
-export const Header = ({ theme = 'light', headerMenu = [] }: HeaderProps) => {
+export const Header = ({
+  theme = 'light',
+  headerMenu = [],
+  headerUpperMenu = [],
+}: HeaderProps) => {
   const [isRedirectModalOpen, setIsRedirectModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -133,6 +138,8 @@ export const Header = ({ theme = 'light', headerMenu = [] }: HeaderProps) => {
       : 'bg-white text-[#2D2D2D] hover:bg-gray-200',
   );
 
+  //996 312 44 01 07
+
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -141,32 +148,22 @@ export const Header = ({ theme = 'light', headerMenu = [] }: HeaderProps) => {
     }
   }, [isMobileMenuOpen]);
 
-  // Сортируем пункты по order
-  const sortedMenu = [...headerMenu]
-    .filter((item) => item.isActive)
-    .sort((a, b) => a.order - b.order);
-
   return (
     <>
       <header className='relative z-50'>
         <div className='hidden lg:flex bg-[#0B1F3B] justify-between text-white py-3 px-8 text-xs font-rubik'>
           {/* Для верхнего левого угла берем последний элемент из меню или жесткую ссылку (тут берем последнюю) */}
-          {sortedMenu.length > 0 && (
-            <Link
-              href={getRelativeUrl(sortedMenu[sortedMenu.length - 1].link)}
-              className='hover:underline'
-            >
-              {sortedMenu[sortedMenu.length - 1].title}
-            </Link>
-          )}
-          <a href='tel:996312440107' className='flex hover:underline'>
-            {t('hotline')} 996 312 44 01 07
+          <Link href={headerUpperMenu[2].link} className='hover:underline'>
+            {headerUpperMenu[2].title}
+          </Link>
+          <a href={headerUpperMenu[0].link} className='flex hover:underline'>
+            {headerUpperMenu[0].title}
           </a>
           <button
             onClick={handleRestrictedClick}
             className='cursor-pointer hover:underline'
           >
-            {t('check_ticket')}
+            {headerUpperMenu[1].title}
           </button>
         </div>
 
@@ -182,7 +179,7 @@ export const Header = ({ theme = 'light', headerMenu = [] }: HeaderProps) => {
 
           <nav className='flex items-center gap-10'>
             {/* 🔥 Динамическое десктопное меню */}
-            {sortedMenu.map((item) => (
+            {headerMenu.map((item) => (
               <Link
                 key={item.id}
                 href={getRelativeUrl(item.link)}
@@ -252,7 +249,7 @@ export const Header = ({ theme = 'light', headerMenu = [] }: HeaderProps) => {
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
           onRestrictedClick={handleRestrictedClick}
-          menuItems={sortedMenu} // 🔥 Передаем динамическое меню
+          menuItems={headerMenu}
         />
       </header>
 

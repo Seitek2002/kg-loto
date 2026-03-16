@@ -260,6 +260,7 @@ export interface MenuData {
   'footer.info': MenuItem[];
   'footer.lotteries': MenuItem[];
   'header.menu': MenuItem[];
+  'header.uppermenu': MenuItem[];
   'footer.company': MenuItem[];
   'footer.purchases': MenuItem[];
 }
