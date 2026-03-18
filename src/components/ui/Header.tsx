@@ -156,9 +156,12 @@ export const Header = ({
           <Link href={headerUpperMenu[2].link} className='hover:underline'>
             {headerUpperMenu[2].title}
           </Link>
-          <a href={headerUpperMenu[0].link} className='flex hover:underline'>
+          <button
+            onClick={handleRestrictedClick}
+            className='cursor-pointer hover:underline'
+          >
             {headerUpperMenu[0].title}
-          </a>
+          </button>
           <button
             onClick={handleRestrictedClick}
             className='cursor-pointer hover:underline'
