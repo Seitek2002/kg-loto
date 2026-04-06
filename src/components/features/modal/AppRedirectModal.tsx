@@ -18,7 +18,7 @@ export const AppRedirectModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className='max-w-md'>
-      <div className='bg-white rounded-[32px] p-8 flex flex-col items-center text-center relative overflow-hidden'>
+      <div className='bg-white rounded-4xl p-8 flex flex-col items-center text-center relative overflow-hidden'>
         {/* Кнопка закрытия */}
         <button
           onClick={onClose}
