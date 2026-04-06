@@ -13,7 +13,6 @@ export const AppRedirectModal = ({
   isOpen,
   onClose,
 }: AppRedirectModalProps) => {
-  // 🔥 Вызываем словарь 'modal'
   const t = useTranslations('modal');
 
   return (
