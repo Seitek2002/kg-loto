@@ -30,7 +30,7 @@ export default function LoginPage() {
   return (
     <div className='min-h-screen bg-[#F5F5F5] flex flex-col items-center justify-center p-4 font-rubik relative'>
       {/* Белая карточка по центру экрана */}
-      <div className='bg-white rounded-[32px] shadow-sm p-8 pt-12 w-full max-w-[480px]'>
+      <div className='bg-white rounded-4xl shadow-sm p-8 pt-12 w-full max-w-120'>
         {/* ШАГ 1: Ввод телефона (используется и для логина, и для регистрации) */}
         {step === 'phone' && (
           <PhoneForm
