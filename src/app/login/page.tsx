@@ -2,81 +2,73 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/auth';
 
-import { LoginForm } from '@/components/features/auth/LoginForm';
-import { RegisterForm } from '@/components/features/auth/RegisterForm';
+// 🔥 Импортируем наши новые компоненты для SMS-авторизации
 import { OTPForm } from '@/components/features/auth/OTPForm';
-import { RegisterData } from '@/services/auth'; // 🔥 Изменили импорт
+import { PhoneForm } from '@/components/features/modal/PhoneForm';
+import { RegisterDetailsForm } from '@/components/features/modal/RegisterDetailsForm';
 
-type AuthStep = 'login' | 'register' | 'otp' | 'forgot-password';
+type AuthFlow = 'login' | 'register';
+type AuthStep = 'phone' | 'otp' | 'details';
 
 export default function LoginPage() {
   const router = useRouter();
+  const fetchUser = useAuthStore((state) => state.fetchUser);
 
-  const [step, setStep] = useState<AuthStep>('login');
+  // Стейты, управляющие экранами (как в AuthModal)
+  const [flow, setFlow] = useState<AuthFlow>('login');
+  const [step, setStep] = useState<AuthStep>('phone');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
-  const [phoneForOtp, setPhoneForOtp] = useState('');
-
-  const handleSuccess = () => {
-    router.push('/profile');
-  };
-
-  // 🔥 Поменяли тип принимаемых данных на RegisterData
-  const handleRegisterSubmit = (data: RegisterData) => {
-    setPhoneForOtp(data.phoneNumber);
-    setStep('otp');
-  };
-
-  const [isResending, setIsResending] = useState(false);
-  const handleResendOtp = async () => {
-    setIsResending(true);
-    setTimeout(() => setIsResending(false), 1500);
+  // Общий хендлер для успешного входа/регистрации
+  const handleAuthSuccess = async () => {
+    await fetchUser();
+    router.push('/profile'); // Перекидываем в профиль
   };
 
   return (
     <div className='min-h-screen bg-[#F5F5F5] flex flex-col items-center justify-center p-4 font-rubik relative'>
-      {step === 'login' && (
-        <LoginForm
-          onRegisterClick={() => setStep('register')}
-          onForgotPasswordClick={() => setStep('forgot-password')}
-          onSuccess={handleSuccess}
-        />
-      )}
+      {/* Белая карточка по центру экрана */}
+      <div className='bg-white rounded-[32px] shadow-sm p-8 pt-12 w-full max-w-[480px]'>
+        {/* ШАГ 1: Ввод телефона (используется и для логина, и для регистрации) */}
+        {step === 'phone' && (
+          <PhoneForm
+            flow={flow}
+            onSwitchFlow={() =>
+              setFlow(flow === 'login' ? 'register' : 'login')
+            }
+            onSuccess={(phone) => {
+              setPhoneNumber(phone);
+              setStep('otp');
+            }}
+          />
+        )}
 
-      {step === 'register' && (
-        <RegisterForm
-          onLoginClick={() => setStep('login')}
-          onSubmit={handleRegisterSubmit}
-        />
-      )}
+        {/* ШАГ 2: Ввод кода (OTP) */}
+        {step === 'otp' && (
+          <OTPForm
+            flow={flow}
+            phoneNumber={phoneNumber}
+            onBack={() => setStep('phone')}
+            onSuccess={() => {
+              if (flow === 'login') {
+                handleAuthSuccess(); // Логин завершен
+              } else {
+                setStep('details'); // Регистрация идет дальше
+              }
+            }}
+          />
+        )}
 
-      {step === 'otp' && (
-        <OTPForm
-          phoneNumber={phoneForOtp}
-          onBack={() => setStep('register')}
-          onSuccess={handleSuccess}
-          onResend={handleResendOtp}
-          isResending={isResending}
-        />
-      )}
-
-      {step === 'forgot-password' && (
-        <div className='text-left'>
-          <h2 className='text-2xl font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
-            Восстановление
-          </h2>
-          <p className='text-xs font-rubik font-medium text-gray-500 mb-6'>
-            Функция восстановления пароля находится в разработке. Пожалуйста,
-            обратитесь в поддержку.
-          </p>
-          <button
-            onClick={() => setStep('login')}
-            className='w-full bg-[#FFD600] text-[#2D2D2D] font-black font-benzin uppercase py-4 rounded-full shadow-lg hover:bg-[#ffe033] transition-all text-[10px]'
-          >
-            Вернуться ко входу
-          </button>
-        </div>
-      )}
+        {/* ШАГ 3: ФИО и ИНН (только для регистрации) */}
+        {step === 'details' && flow === 'register' && (
+          <RegisterDetailsForm
+            phoneNumber={phoneNumber}
+            onSuccess={handleAuthSuccess}
+          />
+        )}
+      </div>
     </div>
   );
 }
