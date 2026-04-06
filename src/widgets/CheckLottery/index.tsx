@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { Description } from '@/components/ui/Description';
 import { Title } from '@/components/ui/Title';
 import { MagneticButton } from '@/components/ui/MagneticButton';
-import { AppRedirectModal } from '@/components/features/modal/AppRedirectModal';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
+import { AuthModal } from '@/components/features/modal/AuthModal';
 
 export const CheckLottery = ({
   title,
@@ -16,7 +16,7 @@ export const CheckLottery = ({
   description?: string;
 }) => {
   const [ticketNumber, setTicketNumber] = useState('');
-  const [isRedirectModalOpen, setIsRedirectModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const t = useTranslations('check_lottery');
 
@@ -25,7 +25,7 @@ export const CheckLottery = ({
 
     if (!ticketNumber.trim()) return;
 
-    setIsRedirectModalOpen(true);
+    setIsAuthModalOpen(true);
   };
 
   return (
@@ -70,9 +70,11 @@ export const CheckLottery = ({
         </MagneticButton>
       </form>
 
-      <AppRedirectModal
-        isOpen={isRedirectModalOpen}
-        onClose={() => setIsRedirectModalOpen(false)}
+      {/* 🔥 Подключаем новую модалку с флоу входа */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialFlow='login'
       />
     </section>
   );
