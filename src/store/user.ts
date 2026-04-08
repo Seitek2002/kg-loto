@@ -98,7 +98,7 @@ export const useUserStore = create<UserState>((set) => ({
   fetchUser: async () => {
     set({ isLoading: true });
     try {
-      const { data } = await api.get('/users/me/');
+      const { data } = await api.get('/profile/me/');
       set({ user: data.data, isLoading: false });
     } catch (error) {
       console.error('Ошибка при загрузке профиля:', error);

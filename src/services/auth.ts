@@ -23,5 +23,5 @@ export const AuthService = {
 
   // 🔥 ВОТ ЭТО МЫ СЛУЧАЙНО УДАЛИЛИ. ВОЗВРАЩАЕМ:
   // Убедись, что URL '/auth/me/' совпадает с тем, что дает бэкендер (иногда это '/users/me/')
-  getMe: () => api.get('/users/me/'),
+  getMe: () => api.get('/profile/me/'),
 };
