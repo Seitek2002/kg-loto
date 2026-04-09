@@ -61,6 +61,8 @@ export default async function LotteryDetailPage({
 
   if (!lottery) return notFound();
 
+  console.log(lottery.otherLotteries);
+
   return (
     <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
       <div className='max-w-[1520px] mx-auto px-4 md:px-8'>
