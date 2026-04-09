@@ -16,6 +16,7 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
           fill
           className='object-cover'
           sizes='(max-width: 768px) 50vw, 25vw'
+          unoptimized
         />
       ) : (
         <div className='w-full h-full flex flex-col items-center justify-center bg-linear-to-br from-gray-100 to-gray-200'>
