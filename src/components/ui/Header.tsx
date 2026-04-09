@@ -13,6 +13,8 @@ import { MenuItem } from '@/types/api';
 import { useAuthStore } from '@/store/auth';
 import { AuthModal } from '../features/modal/AuthModal';
 
+import { useCartStore } from '@/store/cart';
+
 const getRelativeUrl = (url: string) => {
   try {
     return new URL(url).pathname;
@@ -180,6 +182,7 @@ export const Header = ({
   const isDark = theme === 'dark';
 
   const user = useAuthStore((state) => state.user);
+  const cartCount = useCartStore((state) => state.items.length);
 
   const handleAuthClick = (flow: 'login' | 'register' = 'login') => {
     setIsMobileMenuOpen(false);
@@ -284,7 +287,15 @@ export const Header = ({
                   className='flex items-center gap-2 text-[#4B4B4B] hover:text-[#FFD600] transition-colors cursor-pointer'
                 >
                   <span className='text-[15px] font-medium'>Мои билеты</span>
-                  <ShoppingCart size={24} strokeWidth={2} />
+                  <div className='relative'>
+                    <ShoppingCart size={24} strokeWidth={2} />
+                    {/* 🔥 Бейджик счетчика */}
+                    {cartCount > 0 && (
+                      <span className='absolute -top-2 -right-2 bg-[#F58220] text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full shadow-sm'>
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
                 </Link>
 
                 {/* Баланс */}
@@ -371,11 +382,17 @@ export const Header = ({
               <Link
                 href='/cart'
                 className={clsx(
-                  'transition-colors',
+                  'relative transition-colors',
                   isMobileMenuOpen || !isDark ? 'text-[#4B4B4B]' : 'text-white',
                 )}
               >
                 <ShoppingCart size={24} strokeWidth={2} />
+                {/* 🔥 Бейджик счетчика */}
+                {cartCount > 0 && (
+                  <span className='absolute -top-1.5 -right-1.5 bg-[#F58220] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm border border-white'>
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             )}
 

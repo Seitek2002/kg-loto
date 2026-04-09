@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { clsx } from 'clsx';
 import { useAuthStore } from '@/store/auth';
+import { useCartStore } from '@/store/cart'; // 🔥 Подключаем наш новый стор корзины
 
 const getTicketPlural = (count: number) => {
   const lastDigit = count % 10;
@@ -89,18 +90,21 @@ const TicketCard = ({
 };
 
 export const DrawTicketsBlock = () => {
-  const [basket, setBasket] = useState<number[]>([]);
+  // 🔥 Берем данные из глобального Zustand стора вместо локального useState
+  const cartItems = useCartStore((state) => state.items);
+  const toggleItem = useCartStore((state) => state.toggleItem);
+
   const [mounted, setMounted] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false); // Стейт для разворачивания корзины на мобилках
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
+    // 🔥 Фикс ошибки синхронного стейта
     const timer = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(timer);
   }, []);
 
-  // Добавили type, чтобы разбивать корзину на "Суперджекпот" и "Другой"
   const mockTickets = [
     {
       id: 1,
@@ -146,26 +150,17 @@ export const DrawTicketsBlock = () => {
     },
   ];
 
-  const toggleTicketInBasket = (ticketId: number) => {
-    setBasket((prev) =>
-      prev.includes(ticketId)
-        ? prev.filter((id) => id !== ticketId)
-        : [...prev, ticketId],
-    );
-  };
+  // Массив ID билетов, которые сейчас в корзине
+  const basketIds = cartItems.map((item) => item.id);
 
-  // Вычисления для корзины
-  const superTickets = basket
-    .map((id) => mockTickets.find((t) => t.id === id))
-    .filter((t) => t?.type === 'super');
-  const otherTickets = basket
-    .map((id) => mockTickets.find((t) => t.id === id))
-    .filter((t) => t?.type === 'other');
+  // Вычисления для корзины (считаем напрямую из данных Zustand)
+  const superTickets = cartItems.filter((t) => t.type === 'super');
+  const otherTickets = cartItems.filter((t) => t.type === 'other');
 
   const superCount = superTickets.length;
-  const superSum = superTickets.reduce((acc, t) => acc + (t?.price || 0), 0);
+  const superSum = superTickets.reduce((acc, t) => acc + t.price, 0);
   const otherCount = otherTickets.length;
-  const otherSum = otherTickets.reduce((acc, t) => acc + (t?.price || 0), 0);
+  const otherSum = otherTickets.reduce((acc, t) => acc + t.price, 0);
   const totalPrice = superSum + otherSum;
 
   return (
@@ -178,8 +173,14 @@ export const DrawTicketsBlock = () => {
             price={ticket.price}
             selectedNumbers={ticket.selected}
             isOrangeButton={ticket.isOrange}
-            isInBasket={basket.includes(ticket.id)}
-            onToggle={() => toggleTicketInBasket(ticket.id)}
+            isInBasket={basketIds.includes(ticket.id)} // Проверяем, есть ли билет в сторе
+            onToggle={() =>
+              toggleItem({
+                id: ticket.id,
+                price: ticket.price,
+                type: ticket.type as 'super' | 'other',
+              })
+            }
           />
         ))}
       </div>
@@ -190,17 +191,13 @@ export const DrawTicketsBlock = () => {
         </button>
       </div>
 
-      {/* 🔥 КОРЗИНА В PORTAL */}
       {mounted &&
-        basket.length > 0 &&
+        cartItems.length > 0 &&
         createPortal(
           <>
-            {/* === ДЕСКТОПНАЯ ВЕРСИЯ КОРЗИНЫ === */}
             <div className='hidden lg:flex fixed bottom-0 left-0 right-0 bg-[#FFF7F0] border-t border-[#FEEEDF] z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.15)] py-4 transition-all'>
               <div className='max-w-350 w-full mx-auto px-8 flex items-center justify-between'>
-                {/* Левая часть: Логотипы и табличка */}
                 <div className='flex items-center gap-6'>
-                  {/* Имитация 3D текста */}
                   <div className='flex gap-2 opacity-90'>
                     <span
                       className='font-benzin font-black text-[#F6C635] text-[11px] leading-tight italic drop-shadow-sm'
@@ -220,7 +217,6 @@ export const DrawTicketsBlock = () => {
                     </span>
                   </div>
 
-                  {/* Блок с разбивкой */}
                   <div className='flex items-center gap-6 border border-gray-300 rounded-2xl px-5 py-2.5 bg-white/60'>
                     <div className='flex flex-col'>
                       <span className='text-gray-500 text-[11px] font-medium mb-0.5'>
@@ -231,7 +227,6 @@ export const DrawTicketsBlock = () => {
                         <span className='underline'>с</span>
                       </span>
                     </div>
-                    {/* Разделитель */}
                     <div className='w-px h-8 bg-gray-300'></div>
                     <div className='flex flex-col'>
                       <span className='text-gray-500 text-[11px] font-medium mb-0.5'>
@@ -245,15 +240,14 @@ export const DrawTicketsBlock = () => {
                   </div>
                 </div>
 
-                {/* Правая часть: Итого и кнопка */}
                 <div className='flex items-center gap-6'>
                   <div className='flex flex-col text-right'>
                     <span className='text-gray-500 text-[12px] font-medium mb-0.5'>
                       Итого:
                     </span>
                     <span className='text-[#2D2D2D] font-black text-[16px] leading-none'>
-                      {basket.length} {getTicketPlural(basket.length)} &bull;{' '}
-                      {totalPrice} <span className='underline'>с</span>
+                      {cartItems.length} {getTicketPlural(cartItems.length)}{' '}
+                      &bull; {totalPrice} <span className='underline'>с</span>
                     </span>
                   </div>
                   <button className='bg-[#F58220] hover:bg-[#E5761A] text-white font-bold text-[14px] py-3.5 px-8 rounded-xl transition-colors shadow-md active:scale-95'>
@@ -263,14 +257,12 @@ export const DrawTicketsBlock = () => {
               </div>
             </div>
 
-            {/* === МОБИЛЬНАЯ ВЕРСИЯ КОРЗИНЫ (Bottom Sheet) === */}
             <div
               className={clsx(
                 'flex lg:hidden fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex-col overflow-hidden',
-                isExpanded ? 'bottom-0' : 'bottom-0', // Контейнер всегда внизу, меняется высота внутренностей
+                isExpanded ? 'bottom-0' : 'bottom-0',
               )}
             >
-              {/* Свайп-хэндл */}
               <div
                 className='w-full pt-3 pb-2 flex justify-center cursor-pointer active:bg-gray-100 transition-colors'
                 onClick={() => setIsExpanded(!isExpanded)}
@@ -278,7 +270,6 @@ export const DrawTicketsBlock = () => {
                 <div className='w-12 h-1.5 bg-gray-500 rounded-full'></div>
               </div>
 
-              {/* Основной хедер (Итого + Кнопка) */}
               <div className='px-5 pb-5 flex items-center justify-between'>
                 <div
                   className='flex flex-col'
@@ -288,8 +279,9 @@ export const DrawTicketsBlock = () => {
                     Итого:
                   </span>
                   <span className='text-[#2D2D2D] font-black text-[16px] leading-none flex items-center gap-1.5'>
-                    {basket.length} {getTicketPlural(basket.length)} &bull;{' '}
-                    {totalPrice} <span className='underline text-sm'>с</span>
+                    {cartItems.length} {getTicketPlural(cartItems.length)}{' '}
+                    &bull; {totalPrice}{' '}
+                    <span className='underline text-sm'>с</span>
                   </span>
                 </div>
                 <button className='bg-[#F58220] hover:bg-[#E5761A] text-white font-bold text-[13px] py-3.5 px-5 rounded-xl transition-colors shadow-md active:scale-95 shrink-0'>
@@ -297,7 +289,6 @@ export const DrawTicketsBlock = () => {
                 </button>
               </div>
 
-              {/* Выезжающая детальная статистика */}
               <div
                 className={clsx(
                   'transition-all duration-300 ease-in-out border-gray-200',
