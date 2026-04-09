@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { clsx } from 'clsx';
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+// 🔥 Добавили иконки корзины и кошелька
+import { Menu, X, ShoppingCart, Wallet } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -38,7 +39,6 @@ export const MobileMenu = ({
 }: MobileMenuProps) => {
   const t = useTranslations('header');
 
-  // Достаем юзера и функцию выхода
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
 
@@ -53,6 +53,21 @@ export const MobileMenu = ({
           className='fixed inset-x-0 top-16 bottom-0 z-100 bg-black/40 backdrop-blur-sm flex flex-col pb-24 overflow-y-auto'
         >
           <div className='m-4 bg-white rounded-3xl p-5 shadow-2xl flex flex-col gap-4 font-rubik'>
+            {/* 🔥 Если авторизован - показываем баланс в мобильном меню */}
+            {user && (
+              <div className='flex items-center justify-between bg-[#F9F9F9] border border-gray-100 p-4 rounded-2xl mb-2'>
+                <div className='flex items-center gap-2 text-[#4B4B4B]'>
+                  <Wallet size={20} strokeWidth={2} />
+                  <span className='font-bold text-[13px] uppercase'>
+                    Баланс
+                  </span>
+                </div>
+                <div className='text-[18px] font-black text-[#F58220]'>
+                  150 <span className='underline'>с</span>
+                </div>
+              </div>
+            )}
+
             <div className='flex flex-col'>
               {menuItems.map((item) => (
                 <Link
@@ -68,7 +83,6 @@ export const MobileMenu = ({
               <button
                 onClick={() => {
                   onClose();
-                  // Если хотим чтобы в мобилке "Проверить билет" скроллил вниз
                   document
                     .getElementById('check')
                     ?.scrollIntoView({ behavior: 'smooth' });
@@ -77,6 +91,18 @@ export const MobileMenu = ({
               >
                 {t('check_ticket')}
               </button>
+
+              {/* 🔥 Добавили "Мои билеты" в мобильное меню для удобства */}
+              {user && (
+                <Link
+                  href='/cart'
+                  onClick={onClose}
+                  className='py-4 flex items-center justify-between text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                >
+                  Мои билеты
+                  <ShoppingCart size={18} strokeWidth={2} />
+                </Link>
+              )}
 
               <a
                 href='tel:996312440107'
@@ -88,7 +114,6 @@ export const MobileMenu = ({
             </div>
 
             <div className='flex gap-3 mt-4 pt-2'>
-              {/* Если авторизован - показываем ВЫЙТИ и ссылку в ПРОФИЛЬ */}
               {user ? (
                 <>
                   <button
@@ -109,7 +134,6 @@ export const MobileMenu = ({
                   </Link>
                 </>
               ) : (
-                /* Если НЕ авторизован - показываем модалки */
                 <>
                   <button
                     onClick={() => onAuthClick('register')}
@@ -155,7 +179,6 @@ export const Header = ({
   const t = useTranslations('header');
   const isDark = theme === 'dark';
 
-  // Достаем юзера из стора
   const user = useAuthStore((state) => state.user);
 
   const handleAuthClick = (flow: 'login' | 'register' = 'login') => {
@@ -186,7 +209,6 @@ export const Header = ({
     }
   }, [isMobileMenuOpen]);
 
-  // 🔥 Извлекаем первую букву имени для аватарки, если фото нет
   const userInitial = user?.fullName
     ? user.fullName.charAt(0).toUpperCase()
     : 'U';
@@ -250,44 +272,56 @@ export const Header = ({
             ))}
           </nav>
 
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center gap-5'>
             <LanguageSwitcher isDark={false} />
 
-            {/* 🔥 Меняем кнопки десктопа в зависимости от авторизации (По дизайну из Figma) */}
+            {/* 🔥 Обновленный дизайн десктопа для авторизованного юзера */}
             {user ? (
-              <>
-                <button
-                  onClick={() =>
-                    document
-                      .getElementById('check')
-                      ?.scrollIntoView({ behavior: 'smooth' })
-                  }
-                  className='bg-[#4B4B4B] text-white px-7 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-black transition-colors flex items-center justify-center cursor-pointer'
+              <div className='flex items-center gap-6'>
+                {/* Мои билеты */}
+                <Link
+                  href='/cart'
+                  className='flex items-center gap-2 text-[#4B4B4B] hover:text-[#FFD600] transition-colors cursor-pointer'
                 >
-                  ПРОВЕРИТЬ
-                </button>
+                  <span className='text-[15px] font-medium'>Мои билеты</span>
+                  <ShoppingCart size={24} strokeWidth={2} />
+                </Link>
+
+                {/* Баланс */}
+                <div className='flex items-center gap-2 cursor-pointer group'>
+                  <Wallet
+                    size={24}
+                    strokeWidth={2}
+                    className='text-[#4B4B4B] group-hover:text-[#F58220] transition-colors'
+                  />
+                  <div className='text-[22px] font-black text-[#F58220] flex items-end gap-1'>
+                    150 <span className='text-[16px] underline mb-0.5'>с</span>
+                  </div>
+                </div>
+
+                {/* Аватар */}
                 <Link
                   href='/profile'
-                  className='w-10 h-10 rounded-full overflow-hidden bg-gray-200 border border-gray-300 flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition-opacity relative'
+                  className='w-11 h-11 rounded-full overflow-hidden bg-[#CBA3D3] flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition-opacity relative shadow-sm'
                 >
                   {userAvatar && !avatarError ? (
                     <Image
                       src={userAvatar}
                       alt='Аватар'
                       fill
-                      sizes='40px'
+                      sizes='44px'
                       className='object-cover'
-                      onError={() => setAvatarError(true)} // 🔥 Если картинка битая, переключаемся на букву
+                      onError={() => setAvatarError(true)}
                     />
                   ) : (
-                    <span className='text-[#4B4B4B] font-bold text-sm'>
+                    <span className='text-[#331C39] font-medium text-lg'>
                       {userInitial}
                     </span>
                   )}
                 </Link>
-              </>
+              </div>
             ) : (
-              <>
+              <div className='flex items-center gap-4 pl-2'>
                 <button
                   className={regBtnClass}
                   onClick={() => handleAuthClick('register')}
@@ -300,7 +334,7 @@ export const Header = ({
                 >
                   {t('profile')}
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -331,6 +365,20 @@ export const Header = ({
 
           <div className='flex items-center gap-4'>
             <LanguageSwitcher isDark={!isMobileMenuOpen} />
+
+            {/* 🔥 В мобилке добавляем иконку корзины прямо в шапку для быстрого доступа */}
+            {user && (
+              <Link
+                href='/cart'
+                className={clsx(
+                  'transition-colors',
+                  isMobileMenuOpen || !isDark ? 'text-[#4B4B4B]' : 'text-white',
+                )}
+              >
+                <ShoppingCart size={24} strokeWidth={2} />
+              </Link>
+            )}
+
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={clsx(
