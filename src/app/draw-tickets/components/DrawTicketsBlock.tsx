@@ -2,17 +2,25 @@
 
 import { clsx } from 'clsx';
 
-// Моковый компонент одного билета
+// 🔥 Создаем интерфейс для пропсов карточки
+interface TicketCardProps {
+  ticketNumber: number | string;
+  price: number;
+  selectedNumbers: number[];
+  isOrangeButton: boolean;
+}
+
+// Заменяем any на TicketCardProps
 const TicketCard = ({
   ticketNumber,
   price,
   selectedNumbers,
   isOrangeButton,
-}: any) => {
+}: TicketCardProps) => {
   const numbers = Array.from({ length: 36 }, (_, i) => i + 1);
 
   return (
-    <div className='bg-white rounded-[24px] p-5 shadow-sm border border-gray-100 flex flex-col relative'>
+    <div className='bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col relative'>
       <div className='absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-[#F9F9F9] rounded-full border-r border-gray-100' />
       <div className='absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-[#F9F9F9] rounded-full border-l border-gray-100' />
 
@@ -59,6 +67,7 @@ const TicketCard = ({
 };
 
 export const DrawTicketsBlock = () => {
+  // TypeScript теперь сам поймет типы этих объектов
   const mockTickets = [
     { id: 1, selected: [1, 16, 26, 30], isOrange: false },
     { id: 2, selected: [1, 16, 26, 30], isOrange: true },
@@ -68,7 +77,6 @@ export const DrawTicketsBlock = () => {
     { id: 6, selected: [1, 16, 26, 30], isOrange: true },
   ];
 
-  // 🔥 Убрали отсюда WinnersHistory и mt-16
   return (
     <div>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10'>

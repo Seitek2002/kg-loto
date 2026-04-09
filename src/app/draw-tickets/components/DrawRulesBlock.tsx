@@ -23,7 +23,7 @@ export const DrawRulesBlock = () => {
 
       <div className='flex flex-col gap-4 lg:gap-6'>
         {/* КАРТОЧКА 1: Определение выигрыша */}
-        <div className='bg-white rounded-[24px] lg:rounded-[32px] p-6 lg:p-8 shadow-sm border border-gray-100'>
+        <div className='bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100'>
           <h3 className='font-bold text-[14px] lg:text-[16px] mb-3'>
             Определение выигрыша:
           </h3>
@@ -38,7 +38,7 @@ export const DrawRulesBlock = () => {
         </div>
 
         {/* 🔥 КАРТОЧКА 2: Таблица призов (Обновленная под моб. версию) */}
-        <div className='bg-white rounded-[24px] lg:rounded-[32px] py-6 px-4 sm:p-8 lg:p-10 shadow-sm border border-gray-100'>
+        <div className='bg-white rounded-3xl lg:rounded-4xl py-6 px-4 sm:p-8 lg:p-10 shadow-sm border border-gray-100'>
           <div className='grid grid-cols-3 gap-y-5 lg:gap-y-8 items-center text-center'>
             {/* Заголовки (Шапка таблицы) */}
             <div className='text-[12px] lg:text-[15px] font-bold text-[#4B4B4B] mb-2'>
@@ -79,7 +79,7 @@ export const DrawRulesBlock = () => {
         </div>
 
         {/* КАРТОЧКА 3: Дополнительные правила */}
-        <div className='bg-white rounded-[24px] lg:rounded-[32px] p-6 lg:p-8 shadow-sm border border-gray-100 flex flex-col gap-6'>
+        <div className='bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100 flex flex-col gap-6'>
           <p className='text-[13px] lg:text-[15px] leading-relaxed text-[#4B4B4B]'>
             Если в 1-й категории отсутствуют победители, сумма джекпота
             переносится на следующий тираж.
