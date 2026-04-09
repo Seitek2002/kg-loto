@@ -11,7 +11,7 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
       {/* ЛОГИКА ОТОБРАЖЕНИЯ ФОТО ИЛИ ЗАГЛУШКИ */}
       {winner.image ? (
         <Image
-          src={winner.image!}
+          src={winner.image}
           alt={winner.name}
           fill
           className='object-cover'
