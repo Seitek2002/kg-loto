@@ -36,7 +36,7 @@ const TicketCard = ({
   return (
     <div
       className={clsx(
-        'bg-white rounded-[24px] p-5 shadow-sm border flex flex-col relative transition-colors duration-300',
+        'bg-white rounded-3xl p-5 shadow-sm border flex flex-col relative transition-colors duration-300',
         isInBasket ? 'border-[#4B4B4B]' : 'border-gray-100',
       )}
     >
@@ -96,7 +96,8 @@ export const DrawTicketsBlock = () => {
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Добавили type, чтобы разбивать корзину на "Суперджекпот" и "Другой"
@@ -183,7 +184,7 @@ export const DrawTicketsBlock = () => {
         ))}
       </div>
 
-      <div className='flex justify-center mb-[140px] lg:mb-[100px]'>
+      <div className='flex justify-center mb-35 lg:mb-25'>
         <button className='bg-transparent border border-[#A3A3A3] text-[#4B4B4B] font-medium py-3 px-12 rounded-full hover:bg-gray-50 active:scale-95 transition-all text-sm'>
           Посмотреть еще
         </button>
@@ -195,8 +196,8 @@ export const DrawTicketsBlock = () => {
         createPortal(
           <>
             {/* === ДЕСКТОПНАЯ ВЕРСИЯ КОРЗИНЫ === */}
-            <div className='hidden lg:flex fixed bottom-0 left-0 right-0 bg-[#FFF7F0] border-t border-[#FEEEDF] z-[100] shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.15)] py-4 transition-all'>
-              <div className='max-w-[1400px] w-full mx-auto px-8 flex items-center justify-between'>
+            <div className='hidden lg:flex fixed bottom-0 left-0 right-0 bg-[#FFF7F0] border-t border-[#FEEEDF] z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.15)] py-4 transition-all'>
+              <div className='max-w-350 w-full mx-auto px-8 flex items-center justify-between'>
                 {/* Левая часть: Логотипы и табличка */}
                 <div className='flex items-center gap-6'>
                   {/* Имитация 3D текста */}
@@ -220,7 +221,7 @@ export const DrawTicketsBlock = () => {
                   </div>
 
                   {/* Блок с разбивкой */}
-                  <div className='flex items-center gap-6 border border-gray-300 rounded-[16px] px-5 py-2.5 bg-white/60'>
+                  <div className='flex items-center gap-6 border border-gray-300 rounded-2xl px-5 py-2.5 bg-white/60'>
                     <div className='flex flex-col'>
                       <span className='text-gray-500 text-[11px] font-medium mb-0.5'>
                         Суперджекпот:
@@ -265,7 +266,7 @@ export const DrawTicketsBlock = () => {
             {/* === МОБИЛЬНАЯ ВЕРСИЯ КОРЗИНЫ (Bottom Sheet) === */}
             <div
               className={clsx(
-                'flex lg:hidden fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-[100] shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex-col overflow-hidden',
+                'flex lg:hidden fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex-col overflow-hidden',
                 isExpanded ? 'bottom-0' : 'bottom-0', // Контейнер всегда внизу, меняется высота внутренностей
               )}
             >
@@ -301,12 +302,12 @@ export const DrawTicketsBlock = () => {
                 className={clsx(
                   'transition-all duration-300 ease-in-out border-gray-200',
                   isExpanded
-                    ? 'max-h-[300px] opacity-100 border-t'
+                    ? 'max-h-75 opacity-100 border-t'
                     : 'max-h-0 opacity-0 border-transparent',
                 )}
               >
                 <div className='p-5 pt-4 bg-[#F9F9F9]'>
-                  <div className='border border-gray-300 rounded-[16px] p-4 bg-white flex flex-col gap-3.5 shadow-sm'>
+                  <div className='border border-gray-300 rounded-2xl p-4 bg-white flex flex-col gap-3.5 shadow-sm'>
                     <div className='flex justify-between items-center'>
                       <span className='text-gray-600 text-[13px] font-medium'>
                         Суперджекпот:
