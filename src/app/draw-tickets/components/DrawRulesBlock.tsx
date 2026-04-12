@@ -38,36 +38,75 @@ export const DrawRulesBlock = () => {
         </div>
 
         {/* 🔥 КАРТОЧКА 2: Таблица призов (Обновленная под моб. версию) */}
-        <div className='bg-white rounded-3xl lg:rounded-4xl py-6 px-4 sm:p-8 lg:p-10 shadow-sm border border-gray-100'>
-          <div className='grid grid-cols-3 gap-y-5 lg:gap-y-8 items-center text-center'>
-            {/* Заголовки (Шапка таблицы) */}
-            <div className='text-[12px] lg:text-[15px] font-bold text-[#4B4B4B] mb-2'>
+        <div className='grid lg:hidden grid-cols-3 gap-y-5 items-center text-center bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100'>
+          {/* Заголовки */}
+          <div className='text-[12px] sm:text-[14px] font-bold text-[#4B4B4B] mb-2'>
+            Категория
+          </div>
+          <div className='text-[12px] sm:text-[14px] font-bold text-[#4B4B4B] mb-2'>
+            Совпадение
+          </div>
+          <div className='text-[12px] sm:text-[14px] font-bold text-[#4B4B4B] mb-2'>
+            Приз
+          </div>
+
+          {/* Строки */}
+          {PRIZE_TIERS.map((item) => (
+            <div key={item.id} className='contents'>
+              <div
+                className={clsx(
+                  'text-[16px] sm:text-[20px] font-black',
+                  item.isSuper ? 'text-[#F58220]' : 'text-[#F6C635]',
+                )}
+              >
+                {item.category}
+              </div>
+              <div className='text-[18px] sm:text-[22px] font-black text-[#4B4B4B] tracking-wide'>
+                {item.match}
+              </div>
+              <div
+                className={clsx(
+                  'text-[16px] sm:text-[20px] font-black',
+                  item.isSuper ? 'text-[#F58220]' : 'text-[#F6C635]',
+                )}
+              >
+                {item.prize}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className='hidden lg:flex flex-row items-center bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100'>
+          <div className='flex flex-col space-y-8 pr-8 border-r border-gray-100 min-w-[160px] text-left'>
+            <div className='text-[15px] font-bold text-[#4B4B4B]'>
               Категория
             </div>
-            <div className='text-[12px] lg:text-[15px] font-bold text-[#4B4B4B] mb-2'>
+            <div className='text-[15px] font-bold text-[#4B4B4B]'>
               Совпадение
             </div>
-            <div className='text-[12px] lg:text-[15px] font-bold text-[#4B4B4B] mb-2'>
-              Приз
-            </div>
+            <div className='text-[15px] font-bold text-[#4B4B4B]'>Приз</div>
+          </div>
 
-            {/* Строки с данными */}
+          <div className='flex flex-row flex-1 justify-around pl-8'>
             {PRIZE_TIERS.map((item) => (
-              <div key={item.id} className='contents'>
+              <div
+                key={item.id}
+                className='flex flex-col space-y-8 text-center'
+              >
                 <div
                   className={clsx(
-                    'text-[16px] sm:text-[20px] lg:text-[26px] font-black',
+                    'text-[26px] font-black',
                     item.isSuper ? 'text-[#F58220]' : 'text-[#F6C635]',
                   )}
                 >
                   {item.category}
                 </div>
-                <div className='text-[18px] sm:text-[22px] lg:text-[28px] font-black text-[#4B4B4B] tracking-wide'>
+                <div className='text-[28px] font-black text-[#4B4B4B] tracking-wide'>
                   {item.match}
                 </div>
                 <div
                   className={clsx(
-                    'text-[16px] sm:text-[20px] lg:text-[26px] font-black',
+                    'text-[26px] font-black',
                     item.isSuper ? 'text-[#F58220]' : 'text-[#F6C635]',
                   )}
                 >
