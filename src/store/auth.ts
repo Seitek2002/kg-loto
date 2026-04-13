@@ -1,9 +1,9 @@
-// src/store/auth.ts
 import { AuthService } from '@/services/auth';
 import { User } from '@/types/api';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+// 🔥 ДОБАВИЛИ updateTokens В ИНТЕРФЕЙС
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
@@ -13,6 +13,7 @@ interface AuthState {
   fetchUser: () => Promise<void>;
 
   setTokens: (access: string, refresh: string) => void;
+  updateTokens: (newAccessToken: string, newRefreshToken?: string) => void;
   setUser: (user: User) => void;
   logout: () => void;
 }
@@ -24,6 +25,14 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       isAuth: false,
       user: null,
+
+      updateTokens: (newAccessToken: string, newRefreshToken?: string) =>
+        set((state) => ({
+          ...state,
+          accessToken: newAccessToken,
+          // Обновляем refreshToken только если сервер его прислал
+          ...(newRefreshToken && { refreshToken: newRefreshToken }),
+        })),
 
       fetchUser: async () => {
         try {
