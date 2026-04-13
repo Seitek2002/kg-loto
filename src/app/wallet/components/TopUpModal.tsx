@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { clsx } from 'clsx';
 import Image from 'next/image';
+import { useTopUp } from '@/hooks/useFinance'; // 🔥 Подключаем хук
+import { Loader2 } from 'lucide-react';
 
 interface TopUpModalProps {
   isOpen: boolean;
@@ -16,54 +18,82 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
   const [selectedMethod, setSelectedMethod] = useState<
     'mobile' | 'visa' | null
   >(null);
+  const [amount, setAmount] = useState(''); // 🔥 Стейт для суммы
+
+  const { mutate: createPaylink, isPending } = useTopUp();
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
-      // Сбрасываем выбор при закрытии модалки (с небольшой задержкой для анимации)
-      setTimeout(() => setSelectedMethod(null), 300);
+      setTimeout(() => {
+        setSelectedMethod(null);
+        setAmount(''); // Очищаем сумму при закрытии
+      }, 300);
     }
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
 
-  // Закрытие модалки при клике на фон
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  const handleTopUp = () => {
+    if (!amount || isNaN(Number(amount))) return;
+
+    createPaylink(amount, {
+      onSuccess: (data) => {
+        // 🔥 Перенаправляем пользователя на платежный шлюз
+        if (data.paylinkUrl) {
+          window.location.href = data.paylinkUrl;
+        }
+      },
+      onError: (err) => {
+        console.error('Ошибка создания ссылки на оплату:', err);
+      },
+    });
   };
 
   if (!isOpen || !mounted) return null;
 
+  // Форма валидна, если выбран метод и введена сумма больше 0
+  const isFormValid = selectedMethod !== null && Number(amount) > 0;
+
   const modalContent = (
     <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4'>
-      {/* Темный фон (Overlay) */}
       <div
         className='absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity'
         onClick={handleBackdropClick}
       />
 
-      {/* Контейнер модального окна */}
       <div className='relative w-full max-w-[420px] bg-[#F5F5F7] rounded-[24px] lg:rounded-[32px] p-6 lg:p-10 shadow-2xl z-10'>
-        {/* Заголовок */}
         <h2 className='text-[20px] lg:text-[24px] font-black text-[#2D2D2D] uppercase text-center leading-tight mb-2'>
-          Выберите кошелек
-          <br />
-          пополнения
+          Пополнение баланса
         </h2>
 
-        {/* Подзаголовок */}
         <p className='text-[#8C8C8C] text-[11px] lg:text-[12px] text-center mb-6 lg:mb-8 font-medium'>
-          Деньги будут отправлены в течение 3 рабочих дней
+          Деньги поступят на счет моментально после оплаты
         </p>
 
-        {/* Варианты оплаты */}
+        {/* 🔥 НОВОЕ ПОЛЕ: Ввод суммы */}
+        <div className='flex flex-col gap-2 mb-6'>
+          <label className='text-[13px] lg:text-[14px] font-bold text-[#2D2D2D]'>
+            Сумма пополнения (сом)
+          </label>
+          <input
+            type='number'
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder='Например: 100'
+            min='1'
+            className='w-full bg-white rounded-xl px-4 py-3.5 text-[16px] font-bold text-[#2D2D2D] outline-none border border-transparent focus:border-[#FFD600] transition-colors shadow-sm'
+          />
+        </div>
+
         <div className='flex flex-col gap-3 mb-6 lg:mb-8'>
-          {/* Вариант 1: Мобильные кошельки */}
           <div
             onClick={() => setSelectedMethod('mobile')}
             className={clsx(
@@ -76,8 +106,6 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
             <div className='text-[13px] lg:text-[14px] font-bold text-[#2D2D2D] mb-3'>
               Оплата через мобильные кошельки
             </div>
-
-            {/* Реальные логотипы банков */}
             <div className='flex items-center gap-3'>
               <Image
                 src='/banks-logo/bakai.png'
@@ -124,7 +152,6 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
             </div>
           </div>
 
-          {/* Вариант 2: VISA */}
           <div
             onClick={() => setSelectedMethod('visa')}
             className={clsx(
@@ -137,24 +164,27 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
             <div className='text-[13px] lg:text-[14px] font-bold text-[#2D2D2D] mb-3'>
               Оплата через карту VISA
             </div>
-            {/* Если у тебя появится логотип VISA, сможешь заменить этот текст на <Image /> аналогичным образом */}
             <div className='text-[#1A1F71] font-black italic text-xl tracking-tighter'>
               VISA
             </div>
           </div>
         </div>
 
-        {/* Кнопка Продолжить */}
         <button
-          disabled={!selectedMethod}
+          onClick={handleTopUp}
+          disabled={!isFormValid || isPending}
           className={clsx(
-            'w-full py-4 rounded-full font-black text-[13px] uppercase tracking-wider transition-all duration-300',
-            selectedMethod
+            'w-full py-4 flex items-center justify-center gap-2 rounded-full font-black text-[13px] uppercase tracking-wider transition-all duration-300',
+            isFormValid && !isPending
               ? 'bg-[#FFD600] text-[#2D2D2D] hover:bg-[#F5C200] active:scale-95 shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed',
           )}
         >
-          Продолжить
+          {isPending ? (
+            <Loader2 className='w-5 h-5 animate-spin text-gray-500' />
+          ) : (
+            'Продолжить'
+          )}
         </button>
       </div>
     </div>

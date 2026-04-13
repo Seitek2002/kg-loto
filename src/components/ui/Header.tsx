@@ -14,6 +14,7 @@ import { useAuthStore } from '@/store/auth';
 import { AuthModal } from '../features/modal/AuthModal';
 
 import { useCartStore } from '@/store/cart';
+import { useBalance } from '@/hooks/useFinance';
 
 const getRelativeUrl = (url: string) => {
   try {
@@ -188,6 +189,8 @@ export const Header = ({
   const user = useAuthStore((state) => state.user);
   const cartCount = useCartStore((state) => state.items.length);
 
+  useBalance();
+
   const handleAuthClick = (flow: 'login' | 'register' = 'login') => {
     setIsMobileMenuOpen(false);
     setAuthFlow(flow);
@@ -309,14 +312,18 @@ export const Header = ({
                 </Link>
 
                 {/* Баланс */}
-                <Link href='/wallet' className='flex items-center gap-2 cursor-pointer group'>
+                <Link
+                  href='/wallet'
+                  className='flex items-center gap-2 cursor-pointer group'
+                >
                   <Wallet
                     size={24}
                     strokeWidth={2}
                     className='text-[#4B4B4B] group-hover:text-[#F58220] transition-colors'
                   />
                   <div className='text-[22px] font-black text-[#F58220] flex items-end gap-1'>
-                    {user.balance || '0'} <span className='text-[16px] underline mb-0.5'>с</span>
+                    {user.balance || '0'}{' '}
+                    <span className='text-[16px] underline mb-0.5'>с</span>
                   </div>
                 </Link>
 

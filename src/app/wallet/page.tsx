@@ -5,6 +5,8 @@ import { useAuthStore } from '@/store/auth';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { TopUpModal } from './components/TopUpModal';
+import { useCartStore } from '@/store/cart';
+import { useBalance } from '@/hooks/useFinance';
 
 // Моковые данные для истории операций
 const MOCK_TRANSACTIONS = [
@@ -76,6 +78,8 @@ const getStatusProps = (status: string) => {
 export default function WalletPage() {
   const user = useAuthStore((state) => state.user);
   const [isTopUpModalOpen, setIsTopUpModalOpen] = useState(false);
+
+  useBalance();
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] font-rubik pb-20'>
