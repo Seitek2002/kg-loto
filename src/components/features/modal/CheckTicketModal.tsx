@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom'; // 🔥 Импортируем Портал
 import { X, Trophy, Frown, Loader2 } from 'lucide-react';
 import { useCheckTicket } from '@/hooks/useTickets';
 
 interface CheckTicketModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialCode?: string; // Принимаем код из главной страницы
+  initialCode?: string;
 }
 
 export const CheckTicketModal = ({
@@ -15,6 +16,7 @@ export const CheckTicketModal = ({
   onClose,
   initialCode = '',
 }: CheckTicketModalProps) => {
+  const [mounted, setMounted] = useState(false); // 🔥 Состояние для избежания ошибки гидратации (SSR)
   const [ticketNumber, setTicketNumber] = useState(initialCode || '');
 
   const {
@@ -25,9 +27,13 @@ export const CheckTicketModal = ({
     reset,
   } = useCheckTicket();
 
+  // Отмечаем, что компонент смонтирован на клиенте
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (isOpen && initialCode) {
-      // Асинхронный вызов убирает предупреждение React о каскадном рендере
       const timer = setTimeout(() => setTicketNumber(initialCode), 0);
       return () => clearTimeout(timer);
     }
@@ -38,21 +44,19 @@ export const CheckTicketModal = ({
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
-
       const timer = setTimeout(() => {
         setTicketNumber('');
-        reset(); // Сбрасываем результат из React Query
+        reset();
       }, 300);
-
       return () => clearTimeout(timer);
     }
-
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, reset]);
 
-  if (!isOpen) return null;
+  // 🔥 Если не открыто ИЛИ еще не смонтировано на клиенте - ничего не рендерим
+  if (!isOpen || !mounted) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,11 +64,12 @@ export const CheckTicketModal = ({
     checkTicket(ticketNumber);
   };
 
-  return (
-    <div className='fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
-      <div className='absolute inset-0' onClick={onClose} />
+  // 🔥 Оборачиваем всю верстку в переменную
+  const modalContent = (
+    <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
+      <div className='absolute inset-0 z-0' onClick={onClose} />
 
-      <div className='bg-white w-full max-w-105 rounded-4xl p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 z-10 overflow-hidden'>
+      <div className='bg-white w-full max-w-[420px] rounded-[32px] p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 z-10 overflow-hidden'>
         <button
           onClick={onClose}
           className='absolute top-6 right-6 text-gray-400 hover:text-[#2D2D2D] transition-colors z-20'
@@ -121,13 +126,13 @@ export const CheckTicketModal = ({
 
             <button
               onClick={() => reset()}
-              className='mt-8 text-sm font-bold text-gray-400 hover:text-[#2D2D2D] underline'
+              className='mt-8 text-sm font-bold text-gray-400 hover:text-[#2D2D2D] underline cursor-pointer'
             >
               Проверить другой билет
             </button>
           </div>
         ) : (
-          /* ЕСЛИ ЭТО ПРОСТО ФОРМА ВВОДА (НАЧАЛЬНОЕ СОСТОЯНИЕ) */
+          /* ЕСЛИ ЭТО ПРОСТО ФОРМА ВВОДА */
           <>
             <h2 className='text-3xl leading-tight font-black font-benzin uppercase text-[#2D2D2D] mb-2 pr-6'>
               Проверка билета
@@ -148,8 +153,7 @@ export const CheckTicketModal = ({
                 className='w-full bg-[#F5F5F5] rounded-2xl px-5 py-4 font-bold font-rubik text-sm text-[#2D2D2D] outline-none focus:ring-2 focus:ring-[#FFD600] transition-all placeholder:text-gray-300 mb-2'
               />
 
-              {/* Показ ошибки если билет не найден */}
-              <div className='h-6 mb-2 text-center'>
+              <div className='h-6 mb-2 text-center flex items-center justify-center'>
                 {error && (
                   <span className='text-red-500 text-xs font-bold'>
                     Код не найден или недействителен
@@ -160,7 +164,7 @@ export const CheckTicketModal = ({
               <button
                 type='submit'
                 disabled={!ticketNumber.trim()}
-                className='w-full bg-[#FFD600] text-[#2D2D2D] font-black uppercase py-4 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-xs disabled:opacity-50 disabled:active:scale-100'
+                className='w-full bg-[#FFD600] text-[#2D2D2D] font-black uppercase py-4 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-xs disabled:opacity-50 disabled:active:scale-100 cursor-pointer'
               >
                 Проверить
               </button>
@@ -170,4 +174,7 @@ export const CheckTicketModal = ({
       </div>
     </div>
   );
+
+  // 🔥 Выкидываем модалку в корень документа (body)
+  return createPortal(modalContent, document.body);
 };
