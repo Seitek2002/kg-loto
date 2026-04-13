@@ -32,3 +32,10 @@ export const useTopUp = () => {
     mutationFn: financeApi.createPaylink,
   });
 };
+
+export const useWithdrawals = () => {
+  return useQuery({
+    queryKey: ['withdrawals'],
+    queryFn: financeApi.getWithdrawals,
+  });
+};
