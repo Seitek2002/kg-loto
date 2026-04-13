@@ -1,7 +1,7 @@
 import { Description } from '@/components/ui/Description';
 import { FAQItem } from '@/components/ui/FAQItem';
 import { Title } from '@/components/ui/Title';
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, QAItem } from '@/types/api';
 import { getTranslations } from 'next-intl/server';

@@ -1,27 +1,32 @@
-import { api } from '@/lib/api';
+import api from "./api/apiClient";
 
 export const AuthService = {
   // Логин
-  loginPhone: (data: { phone_number: string }) =>
+  loginPhone: (data: { phoneNumber: string }) =>
     api.post('/auth/login/phone/', data),
-  loginVerify: (data: { phone_number: string; code: string }) =>
+
+  loginVerify: (data: { phoneNumber: string; code: string }) =>
     api.post('/auth/login/verify/', data),
 
   // Регистрация
-  registerPhone: (data: { phone_number: string }) =>
+  registerPhone: (data: { phoneNumber: string }) =>
     api.post('/auth/register/phone/', data),
+
   registerVerify: (data: {
-    phone_number: string;
+    phoneNumber: string;
     code: string;
-    purpose: string;
+    purpose: string; // 'register' | 'reset' | 'login'
   }) => api.post('/auth/verify/', data),
+
+  // Завершение регистрации (Флоу с паспортами)
   registerComplete: (data: {
-    phone_number: string;
-    full_name: string;
+    phoneNumber: string;
+    fullName: string;
     inn: string;
+    passportFront?: string; // Абсолютный URL до фото
+    passportBack?: string; // Абсолютный URL до фото
   }) => api.post('/auth/register/complete/', data),
 
-  // 🔥 ВОТ ЭТО МЫ СЛУЧАЙНО УДАЛИЛИ. ВОЗВРАЩАЕМ:
-  // Убедись, что URL '/auth/me/' совпадает с тем, что дает бэкендер (иногда это '/users/me/')
+  // Получение данных текущего пользователя
   getMe: () => api.get('/profile/me/'),
 };

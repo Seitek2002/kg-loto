@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { WinnersMarquee, WinnerType } from './WinnersMarquee';
 import { Title } from '@/components/ui/Title';
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 
 interface RecentWinnerApi {

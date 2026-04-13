@@ -1,27 +1,21 @@
-import { api } from '@/lib/api';
+import api from './api/apiClient';
 
 export interface CheckTicketResponse {
-  is_winning: boolean;
-  combination_id: number;
+  isWinning: boolean;
+  combinationId: number;
   message: string;
-  prize_type: string;
-  prize_amount: string | null;
-  prize_product: string | null;
+  prizeType: string;
+  prizeAmount: string | null;
+  prizeProduct: string | null;
 }
 
 export const TicketService = {
   // Функция проверки билета
   checkCombination: async (code: string): Promise<CheckTicketResponse> => {
-    // Форматируем данные как x-www-form-urlencoded (согласно твоему Swagger)
-    const formData = new URLSearchParams();
-    formData.append('code', code);
+    // 🔥 ИСПРАВЛЕНИЕ 2: Просто передаем объект { code } и полный URL.
+    // Наш apiClient сам поставит заголовки, токен и нужный формат.
+    const { data } = await api.post('/api/v1/me/combination/check/', { code });
 
-    const { data } = await api.post('/v1/me/combination/check/', formData, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    
-    return data.data; // Возвращаем именно объект data из ответа
+    return data.data;
   },
 };

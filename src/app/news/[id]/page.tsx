@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ChevronRight, ImageIcon } from 'lucide-react';
 
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { OtherMaterialsSlider } from '@/components/features/news/OtherMaterialsSlider';

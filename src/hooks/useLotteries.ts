@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { LotteryData } from '@/data/mock-lotteries';
 import { ApiResponse } from '@/types/api';
 

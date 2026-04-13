@@ -1,4 +1,4 @@
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, BranchItem } from '@/types/api';
 import { WhereToBuyClient } from './client'; // 🔥 Импортируем наш клиентский UI

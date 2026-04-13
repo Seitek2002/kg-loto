@@ -12,9 +12,9 @@ import './globals.css';
 
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale, getTranslations } from 'next-intl/server';
-import { api } from '@/lib/api';
 import { getLocaleHeader } from '@/lib/locale';
 import { MenuApiResponse, MenuData } from '@/types/api';
+import api from '@/services/api/apiClient';
 
 const rubik = Rubik({
   variable: '--font-rubik',

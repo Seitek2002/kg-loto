@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 import { LotteryHero } from '@/components/features/lottery-detail/LotteryHero';
 import { LotteryPrizeFund } from '@/components/features/lottery-detail/LotteryPrizeFund';

@@ -1,4 +1,4 @@
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, SliderItem } from '@/types/api';
 import { NewestHeroClient } from './NewestHeroClient';
@@ -19,7 +19,7 @@ const NewHero = async () => {
   const slides = await getHeroSlides();
 
   if (!slides || slides.length === 0) {
-    return null; 
+    return null;
   }
 
   return <NewestHeroClient slides={slides} />;

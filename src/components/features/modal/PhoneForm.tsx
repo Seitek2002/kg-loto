@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { AuthService } from '@/services/auth';
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 
 interface PhoneFormProps {
   flow: 'login' | 'register';

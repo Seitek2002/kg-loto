@@ -1,4 +1,4 @@
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { create } from 'zustand';
 
 export type WinType = 'money' | 'item' | null;

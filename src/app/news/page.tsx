@@ -1,4 +1,4 @@
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 import { ApiResponse, NewsItem, PaginatedResult } from '@/types/api';
 import { NewsListContent } from './NewsListContent';

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
 import { ArticleCard } from '@/components/ui/ArticleCard';
 import { LotteriesSlider } from '@/components/features/lottery/LotteriesSlider';
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import {
   ApiResponse,
   LotteryItem,
@@ -15,7 +15,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 
 import { getTranslations } from 'next-intl/server';
 
-import './style.css'
+import './style.css';
 
 // 🔥 1. ДОБАВЛЯЕМ ТИП ДЛЯ НОВЫХ ДАННЫХ
 export interface AboutCompanyData {

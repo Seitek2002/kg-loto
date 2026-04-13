@@ -1,5 +1,5 @@
 import { ApiResponse, LotteryItem } from '@/types/api';
-import { api } from '@/lib/api';
+import api from '@/services/api/apiClient';
 import { getLocaleHeader } from '@/lib/locale';
 import { PopularTicketsClient } from './client'; // Импортируем UI
 
