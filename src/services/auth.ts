@@ -1,4 +1,17 @@
-import api from "./api/apiClient";
+import api from './api/apiClient';
+
+// 🔥 Создаем строгий тип для обновления профиля.
+// Все поля делаем опциональными (с вопросительным знаком), так как это PATCH запрос.
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  middleName?: string;
+  birthDate?: string;
+  email?: string;
+  avatar?: string; // URL загруженной картинки (на будущее)
+  passportFront?: string; // URL (на будущее)
+  passportBack?: string; // URL (на будущее)
+}
 
 export const AuthService = {
   // Логин
@@ -23,10 +36,14 @@ export const AuthService = {
     phoneNumber: string;
     fullName: string;
     inn: string;
-    passportFront?: string; // Абсолютный URL до фото
-    passportBack?: string; // Абсолютный URL до фото
+    passportFront?: string;
+    passportBack?: string;
   }) => api.post('/auth/register/complete/', data),
 
   // Получение данных текущего пользователя
   getMe: () => api.get('/profile/me/'),
+
+  // 🔥 Заменяем any на наш новый интерфейс
+  updateProfile: (data: UpdateProfileRequest) =>
+    api.patch('/profile/me/', data),
 };

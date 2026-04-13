@@ -7,7 +7,7 @@ import { useAuthStore } from '@/store/auth';
 // 🔥 Импортируем наши новые компоненты для SMS-авторизации
 import { OTPForm } from '@/components/features/auth/OTPForm';
 import { PhoneForm } from '@/components/features/modal/PhoneForm';
-import { RegisterDetailsForm } from '@/components/features/modal/RegisterDetailsForm';
+import { RegisterDetailsForm } from '@/components/features/modal/RegisterForm';
 
 type AuthFlow = 'login' | 'register';
 type AuthStep = 'phone' | 'otp' | 'details';
