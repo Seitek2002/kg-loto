@@ -1,84 +1,172 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Trophy, Frown, Loader2 } from 'lucide-react';
+import { useCheckTicket } from '@/hooks/useTickets';
 
 interface CheckTicketModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialCode?: string; // Принимаем код из главной страницы
 }
 
 export const CheckTicketModal = ({
   isOpen,
   onClose,
+  initialCode = '',
 }: CheckTicketModalProps) => {
-  const [ticketNumber, setTicketNumber] = useState('');
+  const [ticketNumber, setTicketNumber] = useState(initialCode || '');
 
-  // Блокируем скролл страницы, когда модалка открыта
+  const {
+    mutate: checkTicket,
+    data: result,
+    isPending,
+    error,
+    reset,
+  } = useCheckTicket();
+
+  useEffect(() => {
+    if (isOpen && initialCode) {
+      // Асинхронный вызов убирает предупреждение React о каскадном рендере
+      const timer = setTimeout(() => setTicketNumber(initialCode), 0);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, initialCode]);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
+
+      const timer = setTimeout(() => {
+        setTicketNumber('');
+        reset(); // Сбрасываем результат из React Query
+      }, 300);
+
+      return () => clearTimeout(timer);
     }
+
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen]);
+  }, [isOpen, reset]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!ticketNumber.trim()) return;
-
-    // 🔥 Здесь будет логика отправки запроса на проверку билета
-    console.log('Проверяем билет:', ticketNumber);
-
-    // Если нужно перекинуть на страницу результатов:
-    // router.push(`/scan/result?ticket=${ticketNumber}`);
+    checkTicket(ticketNumber);
   };
 
   return (
-    <div className='fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
-      {/* Клик по фону закрывает модалку */}
+    <div className='fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
       <div className='absolute inset-0' onClick={onClose} />
 
-      <div className='bg-white w-full max-w-[420px] rounded-[32px] p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 z-10'>
+      <div className='bg-white w-full max-w-105 rounded-4xl p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 z-10 overflow-hidden'>
         <button
           onClick={onClose}
-          className='absolute top-6 right-6 text-gray-400 hover:text-[#2D2D2D] transition-colors'
+          className='absolute top-6 right-6 text-gray-400 hover:text-[#2D2D2D] transition-colors z-20'
         >
           <X size={24} />
         </button>
 
-        <h2 className='text-3xl leading-tight font-black font-benzin uppercase text-[#2D2D2D] mb-2 pr-6'>
-          Проверка билета
-        </h2>
-        <p className='text-sm font-medium font-rubik text-gray-400 mb-8'>
-          Узнайте выиграли ли вы приз!
-        </p>
+        {/* ЕСЛИ ИДЕТ ЗАГРУЗКА */}
+        {isPending ? (
+          <div className='flex flex-col items-center justify-center py-10'>
+            <Loader2 className='w-12 h-12 text-[#FFD600] animate-spin mb-4' />
+            <p className='text-[#2D2D2D] font-bold font-rubik'>
+              Проверяем билет...
+            </p>
+          </div>
+        ) : /* ЕСЛИ ЕСТЬ РЕЗУЛЬТАТ */
+        result ? (
+          <div className='flex flex-col items-center text-center pt-4'>
+            {result.isWinning ? (
+              <>
+                <div className='w-20 h-20 bg-[#D1F5D3] rounded-full flex items-center justify-center mb-4 shadow-sm'>
+                  <Trophy className='w-10 h-10 text-[#1FAF38]' />
+                </div>
+                <h2 className='text-2xl font-black text-[#2D2D2D] uppercase font-benzin mb-2'>
+                  Победа!
+                </h2>
+                <p className='text-gray-500 font-medium mb-6'>
+                  {result.message}
+                </p>
+                <div className='bg-[#FFF0D4] px-6 py-3 rounded-2xl border border-[#F58220]/20'>
+                  <span className='block text-[#F58220] text-xs font-bold uppercase mb-1'>
+                    Ваш выигрыш
+                  </span>
+                  <span className='text-2xl font-black text-[#F58220]'>
+                    {result.prizeAmount
+                      ? `${result.prizeAmount} сом`
+                      : result.prizeProduct}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className='w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 shadow-sm'>
+                  <Frown className='w-10 h-10 text-gray-400' />
+                </div>
+                <h2 className='text-2xl font-black text-[#2D2D2D] uppercase font-benzin mb-2'>
+                  Увы...
+                </h2>
+                <p className='text-gray-500 font-medium mb-6'>
+                  {result.message || 'Этот билет не выиграл'}
+                </p>
+              </>
+            )}
 
-        <form onSubmit={handleSubmit} className='flex flex-col'>
-          <label className='block text-xs font-bold text-[#2D2D2D] font-rubik mb-2 ml-1'>
-            Номер билета
-          </label>
-          <input
-            type='text'
-            value={ticketNumber}
-            onChange={(e) => setTicketNumber(e.target.value)}
-            placeholder='YT2357912'
-            className='w-full bg-[#F5F5F5] rounded-2xl px-5 py-4 font-bold font-rubik text-sm text-[#2D2D2D] outline-none focus:ring-2 focus:ring-[#FFD600] transition-all placeholder:text-gray-300 mb-8'
-          />
+            <button
+              onClick={() => reset()}
+              className='mt-8 text-sm font-bold text-gray-400 hover:text-[#2D2D2D] underline'
+            >
+              Проверить другой билет
+            </button>
+          </div>
+        ) : (
+          /* ЕСЛИ ЭТО ПРОСТО ФОРМА ВВОДА (НАЧАЛЬНОЕ СОСТОЯНИЕ) */
+          <>
+            <h2 className='text-3xl leading-tight font-black font-benzin uppercase text-[#2D2D2D] mb-2 pr-6'>
+              Проверка билета
+            </h2>
+            <p className='text-sm font-medium font-rubik text-gray-400 mb-8'>
+              Узнайте выиграли ли вы приз!
+            </p>
 
-          <button
-            type='submit'
-            disabled={!ticketNumber.trim()}
-            className='w-full bg-[#FFD600] text-[#2D2D2D] font-black uppercase py-4 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-xs disabled:opacity-50 disabled:active:scale-100'
-          >
-            Проверить
-          </button>
-        </form>
+            <form onSubmit={handleSubmit} className='flex flex-col'>
+              <label className='block text-xs font-bold text-[#2D2D2D] font-rubik mb-2 ml-1'>
+                Номер билета
+              </label>
+              <input
+                type='text'
+                value={ticketNumber}
+                onChange={(e) => setTicketNumber(e.target.value)}
+                placeholder='Например: YT2357912'
+                className='w-full bg-[#F5F5F5] rounded-2xl px-5 py-4 font-bold font-rubik text-sm text-[#2D2D2D] outline-none focus:ring-2 focus:ring-[#FFD600] transition-all placeholder:text-gray-300 mb-2'
+              />
+
+              {/* Показ ошибки если билет не найден */}
+              <div className='h-6 mb-2 text-center'>
+                {error && (
+                  <span className='text-red-500 text-xs font-bold'>
+                    Код не найден или недействителен
+                  </span>
+                )}
+              </div>
+
+              <button
+                type='submit'
+                disabled={!ticketNumber.trim()}
+                className='w-full bg-[#FFD600] text-[#2D2D2D] font-black uppercase py-4 rounded-full shadow-lg hover:bg-[#ffe033] active:scale-95 transition-all text-xs disabled:opacity-50 disabled:active:scale-100'
+              >
+                Проверить
+              </button>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

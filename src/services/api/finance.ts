@@ -3,13 +3,13 @@ import api from './apiClient'; // Импортируем наш настроен
 export const financeApi = {
   // Получить баланс
   getBalance: async () => {
-    const response = await api.get('/api/v1/profile/balance');
+    const response = await api.get('/profile/balance');
     return response.data.data; // { amount: "150.00", currency: "KGS" }
   },
 
   // Создать ссылку на оплату
   createPaylink: async (amount: string) => {
-    const response = await api.post('/api/v1/balance/paylink', { amount });
+    const response = await api.post('/balance/paylink', { amount });
     return response.data.data; // { paylinkUrl: "https://..." }
   },
 };

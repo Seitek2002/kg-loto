@@ -27,14 +27,14 @@ export const supportApi = {
   // Получить список тикетов
   getTickets: async () => {
     const response = await api.get<TicketsResponse>(
-      '/api/v1/me/report-tickets/',
+      '/me/report-tickets/',
     );
     return response.data.data;
   },
 
   // Создать новый тикет
   createTicket: async (formData: FormData) => {
-    const response = await api.post('/api/v1/me/report-tickets/', formData, {
+    const response = await api.post('/me/report-tickets/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data', // Для файлов
       },

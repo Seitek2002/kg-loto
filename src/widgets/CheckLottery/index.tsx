@@ -7,6 +7,8 @@ import { MagneticButton } from '@/components/ui/MagneticButton';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import { AuthModal } from '@/components/features/modal/AuthModal';
+import { useAuthStore } from '@/store/auth';
+import { CheckTicketModal } from '@/components/features/modal/CheckTicketModal';
 
 export const CheckLottery = ({
   title,
@@ -16,16 +18,27 @@ export const CheckLottery = ({
   description?: string;
 }) => {
   const [ticketNumber, setTicketNumber] = useState('');
+
+  // Состояния для двух модалок
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isCheckModalOpen, setIsCheckModalOpen] = useState(false);
+
+  // Достаем инфу о том, залогинен ли юзер
+  const isAuth = useAuthStore((state) => state.isAuth);
 
   const t = useTranslations('check_lottery');
 
   const handleCheck = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!ticketNumber.trim()) return;
 
-    setIsAuthModalOpen(true);
+    if (!isAuth) {
+      // Если не залогинен - просим войти
+      setIsAuthModalOpen(true);
+    } else {
+      // Если залогинен - открываем модалку с проверкой
+      setIsCheckModalOpen(true);
+    }
   };
 
   return (
@@ -70,11 +83,18 @@ export const CheckLottery = ({
         </MagneticButton>
       </form>
 
-      {/* 🔥 Подключаем новую модалку с флоу входа */}
+      {/* Модалка авторизации */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         initialFlow='login'
+      />
+
+      {/* 🔥 Новая модалка результата проверки билета */}
+      <CheckTicketModal
+        isOpen={isCheckModalOpen}
+        onClose={() => setIsCheckModalOpen(false)}
+        initialCode={ticketNumber}
       />
     </section>
   );

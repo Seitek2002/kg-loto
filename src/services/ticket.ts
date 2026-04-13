@@ -14,7 +14,7 @@ export const TicketService = {
   checkCombination: async (code: string): Promise<CheckTicketResponse> => {
     // 🔥 ИСПРАВЛЕНИЕ 2: Просто передаем объект { code } и полный URL.
     // Наш apiClient сам поставит заголовки, токен и нужный формат.
-    const { data } = await api.post('/api/v1/me/combination/check/', { code });
+    const { data } = await api.post('/me/combination/check/', { code });
 
     return data.data;
   },

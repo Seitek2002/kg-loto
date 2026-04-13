@@ -9,7 +9,7 @@ export interface MyTicket {
 export const ticketsApi = {
   // Получить список билетов
   getMyTickets: async (page = 1, pageSize = 10) => {
-    const response = await api.get('/api/v1/me/tickets/', {
+    const response = await api.get('/me/tickets/', {
       params: { page, pageSize },
     });
     return response.data;
@@ -17,7 +17,7 @@ export const ticketsApi = {
 
   // Получить детали одного билета
   getTicketById: async (ticketId: string) => {
-    const response = await api.get(`/api/v1/me/tickets/${ticketId}/`);
+    const response = await api.get(`/me/tickets/${ticketId}/`);
     return response.data.data;
   },
 };

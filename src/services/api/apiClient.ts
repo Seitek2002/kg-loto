@@ -52,7 +52,7 @@ const keysToSnake = (obj: any): any => {
 // НАСТРОЙКА AXIOS
 // ==========================================
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://kgloto.com',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://kgloto.com/api/v1',
   // Обрати внимание: я убрал жестко заданные заголовки Content-Type,
   // чтобы axios сам решал, когда отправлять JSON, а когда FormData (для файлов)
 });
