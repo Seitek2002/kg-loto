@@ -27,23 +27,23 @@ export const OTPForm = ({
   const setTokens = useAuthStore((state) => state.setTokens);
   const isLogin = flow === 'login';
 
-  // 🔥 Исправленная мутация. Обернули в функцию, чтобы TS всё правильно понял
+  // 🔥 ИСПРАВЛЕНО: Заменили phone_number на phoneNumber
   const verifyMutation = useMutation({
     mutationFn: (variables: {
-      phone_number: string;
+      phoneNumber: string; // <-- здесь
       code: string;
       purpose?: string;
     }) => {
       if (isLogin) {
         return AuthService.loginVerify({
-          phone_number: variables.phone_number,
+          phoneNumber: variables.phoneNumber, // <-- здесь
           code: variables.code,
         });
       }
       return AuthService.registerVerify({
-        phone_number: variables.phone_number,
+        phoneNumber: variables.phoneNumber, // <-- и здесь
         code: variables.code,
-        purpose: variables.purpose!, // Гарантируем TS, что тут будет строка
+        purpose: variables.purpose!,
       });
     },
     onSuccess: (response: any) => {
@@ -59,24 +59,23 @@ export const OTPForm = ({
     },
   });
 
-  // Мутация отправки заново
+  // 🔥 ИСПРАВЛЕНО: Заменили phone_number на phoneNumber
   const resendMutation = useMutation({
     mutationFn: () => {
       if (isLogin) {
-        return AuthService.loginPhone({ phone_number: phoneNumber });
+        return AuthService.loginPhone({ phoneNumber: phoneNumber }); // <-- здесь
       }
-      return AuthService.registerPhone({ phone_number: phoneNumber });
+      return AuthService.registerPhone({ phoneNumber: phoneNumber }); // <-- здесь
     },
     onSuccess: () => setError('Код отправлен заново'),
   });
 
-  // 🔥 Исправленный сабмит
   const handleSubmit = (currentOtp?: string[]) => {
     const code = (currentOtp || otp).join('');
     if (code.length < 4) return;
 
     verifyMutation.mutate({
-      phone_number: phoneNumber,
+      phoneNumber: phoneNumber, // 🔥 ИСПРАВЛЕНО: Заменили phone_number на phoneNumber
       code,
       purpose: isLogin ? undefined : 'register',
     });
