@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom'; // 🔥 Импортируем Портал
 import { X, Trophy, Frown, Loader2 } from 'lucide-react';
 import { useCheckTicket } from '@/hooks/useTickets';
+import { useMounted } from '@/hooks/useMounted';
 
 interface CheckTicketModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ export const CheckTicketModal = ({
   onClose,
   initialCode = '',
 }: CheckTicketModalProps) => {
-  const [mounted, setMounted] = useState(false); // 🔥 Состояние для избежания ошибки гидратации (SSR)
+  const mounted = useMounted();
   const [ticketNumber, setTicketNumber] = useState(initialCode || '');
 
   const {
@@ -26,11 +27,6 @@ export const CheckTicketModal = ({
     error,
     reset,
   } = useCheckTicket();
-
-  // Отмечаем, что компонент смонтирован на клиенте
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (isOpen && initialCode) {
@@ -66,10 +62,10 @@ export const CheckTicketModal = ({
 
   // 🔥 Оборачиваем всю верстку в переменную
   const modalContent = (
-    <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
+    <div className='fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
       <div className='absolute inset-0 z-0' onClick={onClose} />
 
-      <div className='bg-white w-full max-w-[420px] rounded-[32px] p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 z-10 overflow-hidden'>
+      <div className='bg-white w-full max-w-105 rounded-4xl p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 z-10 overflow-hidden'>
         <button
           onClick={onClose}
           className='absolute top-6 right-6 text-gray-400 hover:text-[#2D2D2D] transition-colors z-20'
