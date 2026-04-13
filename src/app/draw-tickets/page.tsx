@@ -9,6 +9,7 @@ import { LotteryConditions } from '@/components/features/lottery-detail/LotteryC
 import { PopularTickets } from '@/widgets/PopularTickets';
 import { WinnersHistory } from '@/widgets/WinnersHistory';
 import { LotteryItem } from '@/types/api';
+import { DrawArchiveBlock } from './components/DrawArchiveBlock';
 
 const MOCK_TERMS = [
   {
@@ -162,11 +163,7 @@ export default async function SuperJackpotPage() {
             </>
           }
           // ТАБ 3: Архив тиражей
-          archiveTab={
-            <div className='mt-20 text-center text-gray-400 font-bold text-xl'>
-              Здесь будет Архив тиражей...
-            </div>
-          }
+          archiveTab={<DrawArchiveBlock />}
         />
       </div>
     </div>
