@@ -212,10 +212,16 @@ export const Header = ({
     }
   }, [isMobileMenuOpen]);
 
-  const userInitial = user?.fullName
-    ? user.fullName.charAt(0).toUpperCase()
-    : 'U';
-  const userAvatar = user?.kglotteryProfile?.avatar;
+  const userInitial = user?.firstName
+    ? user.firstName.charAt(0).toUpperCase()
+    : user?.fullName
+      ? user.fullName.charAt(0).toUpperCase()
+      : 'U';
+
+  // Проверяем аватар и в корне объекта, и во вложенном профиле (на случай разных ответов API)
+  const userAvatar = user?.avatar || user?.kglotteryProfile?.avatar;
+
+  console.log(user);
 
   return (
     <>

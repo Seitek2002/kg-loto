@@ -47,16 +47,36 @@ export interface KGLotteryProfile {
   confirmedAge18?: boolean;
 }
 
+export interface PhoneData {
+  countryCode: string;
+  dialCode: string;
+  flag: string;
+  number: string;
+}
+
 export interface User {
-  id: number;
-  phoneNumber: string;
-  fullName: string;
+  // Новые поля из твоего console.log
+  firstName: string;
+  lastName: string;
+  middleName: string | null;
+  avatar: string | null;
+  birthDate: string | null;
   inn: string;
-  isActive: boolean;
-  isPhoneVerified: boolean;
-  // Бэкенд может отдавать профиль строкой (JSON), либо объектом.
-  // Мы будем парсить его в объект, поэтому ставим тип интерфейса.
-  kglotteryProfile: KGLotteryProfile | null;
+  passportFront: string | null;
+  passportBack: string | null;
+  email: string;
+  phone: PhoneData;
+  isAccountApproved: boolean;
+  isAccountActive: boolean;
+  balance: string; // Заметь, баланс приходит строкой "0.00"
+
+  // Старые поля оставляем опциональными (вдруг где-то еще используются)
+  id?: number;
+  fullName?: string;
+  phoneNumber?: string;
+  isActive?: boolean;
+  isPhoneVerified?: boolean;
+  kglotteryProfile?: KGLotteryProfile | null;
 }
 
 // ==========================================
