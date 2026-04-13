@@ -5,7 +5,6 @@ import { useAuthStore } from '@/store/auth';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { TopUpModal } from './components/TopUpModal';
-import { useCartStore } from '@/store/cart';
 import { useBalance } from '@/hooks/useFinance';
 
 // Моковые данные для истории операций
