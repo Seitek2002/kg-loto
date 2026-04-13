@@ -57,7 +57,11 @@ export const MobileMenu = ({
           <div className='m-4 bg-white rounded-3xl p-5 shadow-2xl flex flex-col gap-4 font-rubik'>
             {/* 🔥 Если авторизован - показываем баланс в мобильном меню */}
             {user && (
-              <div className='flex items-center justify-between bg-[#F9F9F9] border border-gray-100 p-4 rounded-2xl mb-2'>
+              <Link
+                href='/wallet'
+                onClick={onClose}
+                className='flex items-center justify-between bg-[#F9F9F9] border border-gray-100 p-4 rounded-2xl mb-2 hover:bg-gray-100 active:scale-[0.98] transition-all'
+              >
                 <div className='flex items-center gap-2 text-[#4B4B4B]'>
                   <Wallet size={20} strokeWidth={2} />
                   <span className='font-bold text-[13px] uppercase'>
@@ -65,9 +69,9 @@ export const MobileMenu = ({
                   </span>
                 </div>
                 <div className='text-[18px] font-black text-[#F58220]'>
-                  150 <span className='underline'>с</span>
+                  {user.balance || '0'} <span className='underline'>с</span>
                 </div>
-              </div>
+              </Link>
             )}
 
             <div className='flex flex-col'>
@@ -305,16 +309,16 @@ export const Header = ({
                 </Link>
 
                 {/* Баланс */}
-                <div className='flex items-center gap-2 cursor-pointer group'>
+                <Link href='/wallet' className='flex items-center gap-2 cursor-pointer group'>
                   <Wallet
                     size={24}
                     strokeWidth={2}
                     className='text-[#4B4B4B] group-hover:text-[#F58220] transition-colors'
                   />
                   <div className='text-[22px] font-black text-[#F58220] flex items-end gap-1'>
-                    150 <span className='text-[16px] underline mb-0.5'>с</span>
+                    {user.balance || '0'} <span className='text-[16px] underline mb-0.5'>с</span>
                   </div>
-                </div>
+                </Link>
 
                 {/* Аватар */}
                 <Link
