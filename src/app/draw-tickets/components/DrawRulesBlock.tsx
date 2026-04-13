@@ -1,3 +1,5 @@
+import { Description } from '@/components/ui/Description';
+import { Title } from '@/components/ui/Title';
 import { clsx } from 'clsx';
 
 // Моковые данные для таблицы призов
@@ -17,9 +19,7 @@ const PRIZE_TIERS = [
 export const DrawRulesBlock = () => {
   return (
     <section className='mt-12 lg:mt-20 font-rubik text-[#2D2D2D]'>
-      <h2 className='text-xl lg:text-[28px] font-black font-benzin uppercase mb-6 lg:mb-8 text-center lg:text-left'>
-        ПРАВИЛА ТИРАЖНОЙ ЛОТЕРЕИ &quot;СУПЕРДЖЕКПОТ 5 ИЗ 36&quot;
-      </h2>
+      <Title>ПРАВИЛА ТИРАЖНОЙ ЛОТЕРЕИ &quot;СУПЕРДЖЕКПОТ 5 ИЗ 36&quot;</Title>
 
       <div className='flex flex-col gap-4 lg:gap-6'>
         {/* КАРТОЧКА 1: Определение выигрыша */}
@@ -27,14 +27,14 @@ export const DrawRulesBlock = () => {
           <h3 className='font-bold text-[14px] lg:text-[16px] mb-3'>
             Определение выигрыша:
           </h3>
-          <p className='text-[13px] lg:text-[15px] leading-relaxed text-[#4B4B4B]'>
+          <Description className='lg:max-w-none'>
             Победитель определяется в ходе трансляции тиража. Выигрышная
             комбинация из 5 (пяти) чисел в диапазоне от 1 до 36 определяется
             случайным образом с использованием лототрона. Билет считается
             выигрышным, если указанные в нем числа (в соответствии с выбранными
             игровыми комбинациями) совпадают с выпавшими номерами в ходе
             розыгрыша по следующим категориям:
-          </p>
+          </Description>
         </div>
 
         {/* 🔥 КАРТОЧКА 2: Таблица призов (Обновленная под моб. версию) */}
@@ -119,26 +119,26 @@ export const DrawRulesBlock = () => {
 
         {/* КАРТОЧКА 3: Дополнительные правила */}
         <div className='bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100 flex flex-col gap-6'>
-          <p className='text-[13px] lg:text-[15px] leading-relaxed text-[#4B4B4B]'>
+          <Description className='lg:max-w-none'>
             Если в 1-й категории отсутствуют победители, сумма джекпота
             переносится на следующий тираж.
-          </p>
+          </Description>
 
           <div>
             <h3 className='font-bold text-[14px] lg:text-[16px] mb-2'>
               Правила округления выигрышей:
             </h3>
-            <p className='text-[13px] lg:text-[15px] leading-relaxed text-[#4B4B4B]'>
+            <Description className='lg:max-w-none'>
               В меньшую сторону до целых 100 сом. Расчет выигрышей
               осуществляется автоматически системой без вмешательства человека.
-            </p>
+            </Description>
           </div>
 
           <div>
             <h3 className='font-bold text-[14px] lg:text-[16px] mb-2'>
               Порядок получения выигрыша:
             </h3>
-            <p className='text-[13px] lg:text-[15px] leading-relaxed text-[#4B4B4B]'>
+            <Description className='lg:max-w-none'>
               Свяжитесь с нами в течение 3 (трех) месяцев с даты тиража по
               указанным телефонам. Для получения приза Участнику необходимо в
               головном офисе Оператора, предоставить оригинал билета, а также
@@ -146,7 +146,7 @@ export const DrawRulesBlock = () => {
               целостность и отсутствие химических/механических воздействий
               сроком до 30 дней. При признании билета поддельным выигрыш не
               выплачивается, а материалы передаются в правоохранительные органы.
-            </p>
+            </Description>
           </div>
         </div>
       </div>

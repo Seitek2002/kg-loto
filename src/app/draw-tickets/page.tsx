@@ -1,4 +1,3 @@
-// 🔥 БЕЗ 'use client'! Это теперь чистый серверный компонент.
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
