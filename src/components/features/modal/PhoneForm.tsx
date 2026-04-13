@@ -46,7 +46,7 @@ export const PhoneForm = ({
       const defaultCountry =
         countries.find((c) => c.code === 'KG') || countries[0];
 
-      // 🔥 Оборачиваем в setTimeout, чтобы избежать ошибки каскадного рендера
+      // Оборачиваем в setTimeout, чтобы избежать ошибки каскадного рендера
       const timer = setTimeout(() => setSelectedCountry(defaultCountry), 0);
       return () => clearTimeout(timer);
     }
@@ -55,7 +55,8 @@ export const PhoneForm = ({
   const mutation = useMutation({
     mutationFn: isLogin ? AuthService.loginPhone : AuthService.registerPhone,
     onSuccess: (_, variables) => {
-      onSuccess(variables.phone_number);
+      // 🔥 ИСПРАВЛЕНО: phone_number -> phoneNumber
+      onSuccess(variables.phoneNumber);
     },
     onError: (err: any) => {
       setError(
@@ -75,7 +76,8 @@ export const PhoneForm = ({
     const cleanPhone = phone.replace(/[^0-9]/g, '').replace(/^0+/, '');
     const formattedPhone = `${selectedCountry.dialCode}${cleanPhone}`;
 
-    mutation.mutate({ phone_number: formattedPhone });
+    // 🔥 ИСПРАВЛЕНО: phone_number -> phoneNumber
+    mutation.mutate({ phoneNumber: formattedPhone });
   };
 
   return (
