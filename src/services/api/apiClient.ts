@@ -107,7 +107,7 @@ api.interceptors.response.use(
 
         // Важно: тут используем чистый axios, чтобы не сработали интерцепторы и конвертеры
         const refreshResponse = await axios.post(
-          `${api.defaults.baseURL}/api/v1/auth/token/refresh/`,
+          `${api.defaults.baseURL}/auth/token/refresh/`,
           {
             refresh: refreshToken,
           },
