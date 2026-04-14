@@ -73,7 +73,7 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
           <X size={24} />
         </button>
 
-        <h2 className='text-[20px] lg:text-[24px] font-black text-[#2D2D2D] uppercase text-center leading-tight mb-2'>
+        <h2 className='text-[20px] lg:text-[24px] font-black text-[#4B4B4B] uppercase text-center leading-tight mb-2'>
           Пополнение баланса
         </h2>
 
@@ -83,7 +83,7 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
 
         {/* Ввод суммы */}
         <div className='flex flex-col gap-2 mb-6'>
-          <label className='text-[13px] lg:text-[14px] font-bold text-[#2D2D2D] ml-1'>
+          <label className='text-[13px] lg:text-[14px] font-bold text-[#4B4B4B] ml-1'>
             Сумма пополнения (сом)
           </label>
           <input
@@ -92,14 +92,14 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
             onChange={(e) => setAmount(e.target.value)}
             placeholder='Например: 100'
             min='1'
-            className='w-full bg-white rounded-xl px-5 py-4 text-[16px] font-bold text-[#2D2D2D] outline-none border-2 border-transparent focus:border-[#FFD600] transition-all shadow-sm placeholder:text-gray-300'
+            className='w-full bg-white rounded-xl px-5 py-4 text-[16px] font-bold text-[#4B4B4B] outline-none border-2 border-transparent focus:border-[#FFD600] transition-all shadow-sm placeholder:text-gray-300'
           />
         </div>
 
         {/* Информационный блок доступных методов */}
         <div className='flex flex-col gap-3 mb-6 lg:mb-8'>
           <div className='bg-white rounded-[20px] p-4 border border-gray-100 shadow-sm'>
-            <div className='text-[12px] font-bold text-[#2D2D2D] mb-3 opacity-60 uppercase tracking-tight'>
+            <div className='text-[12px] font-bold text-[#4B4B4B] mb-3 opacity-60 uppercase tracking-tight'>
               Доступные способы оплаты:
             </div>
 
@@ -147,7 +147,7 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
               <div className='text-[#1A1F71] font-black italic text-lg tracking-tighter'>
                 VISA
               </div>
-              <div className='text-[#2D2D2D] text-[13px] font-bold'>
+              <div className='text-[#4B4B4B] text-[13px] font-bold'>
                 / Mastercard
               </div>
             </div>
@@ -160,7 +160,7 @@ export const TopUpModal = ({ isOpen, onClose }: TopUpModalProps) => {
           className={clsx(
             'w-full py-4 flex items-center justify-center gap-2 rounded-full font-black text-[13px] uppercase tracking-wider transition-all duration-300 cursor-pointer',
             isFormValid && !isPending
-              ? 'bg-[#FFD600] text-[#2D2D2D] hover:bg-[#F5C200] active:scale-95 shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
+              ? 'bg-[#FFD600] text-[#4B4B4B] hover:bg-[#F5C200] active:scale-95 shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed',
           )}
         >

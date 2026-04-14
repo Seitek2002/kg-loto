@@ -55,7 +55,7 @@ export const TicketsHero = ({ activeTab, onTabChange }: TicketsHeroProps) => {
               className={clsx(
                 'flex-1 py-2.5 sm:py-3.5 rounded-[10px] lg:rounded-[14px] text-[11px] sm:text-[13px] lg:text-[16px] font-bold transition-all',
                 activeTab === tab.id
-                  ? 'bg-white text-[#2D2D2D] shadow-sm'
+                  ? 'bg-white text-[#4B4B4B] shadow-sm'
                   : 'text-white hover:bg-white/10',
               )}
             >
@@ -69,17 +69,17 @@ export const TicketsHero = ({ activeTab, onTabChange }: TicketsHeroProps) => {
       <div className='flex flex-col gap-4 lg:gap-6'>
         {/* КАРТОЧКА ТИРАЖА */}
         <div className='bg-white rounded-[24px] lg:rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-center flex-1'>
-          <h2 className='text-[20px] lg:text-[26px] font-bold text-[#2D2D2D] text-center mb-6 lg:mb-8'>
+          <h2 className='text-[20px] lg:text-[26px] font-bold text-[#4B4B4B] text-center mb-6 lg:mb-8'>
             Тираж №005034
           </h2>
           <div className='flex flex-col gap-4 text-[13px] lg:text-[16px]'>
             <div className='flex justify-between items-center'>
               <span className='text-gray-500 font-medium'>Дата тиража:</span>
-              <span className='text-[#2D2D2D] font-bold'>4 апреля 2026</span>
+              <span className='text-[#4B4B4B] font-bold'>4 апреля 2026</span>
             </div>
             <div className='flex justify-between items-center'>
               <span className='text-gray-500 font-medium'>Суперприз от:</span>
-              <span className='text-[#2D2D2D] font-bold'>
+              <span className='text-[#4B4B4B] font-bold'>
                 20 000 <span className='underline'>С</span>
               </span>
             </div>
@@ -87,7 +87,7 @@ export const TicketsHero = ({ activeTab, onTabChange }: TicketsHeroProps) => {
               <span className='text-gray-500 font-medium'>
                 Место проведения:
               </span>
-              <span className='text-[#2D2D2D] font-bold'>Бишкек</span>
+              <span className='text-[#4B4B4B] font-bold'>Бишкек</span>
             </div>
           </div>
         </div>

@@ -93,11 +93,11 @@ function MapContent() {
       <div className='absolute top-0 left-0 right-0 z-1000 pt-4 px-4 flex items-center justify-center pointer-events-none'>
         <button
           onClick={() => router.back()}
-          className='absolute left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md text-[#2D2D2D] active:scale-95 pointer-events-auto hover:bg-gray-50'
+          className='absolute left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md text-[#4B4B4B] active:scale-95 pointer-events-auto hover:bg-gray-50'
         >
           <ArrowLeft size={24} />
         </button>
-        <h1 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] bg-white/80 backdrop-blur-md px-6 py-2 rounded-2xl shadow-sm'>
+        <h1 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] bg-white/80 backdrop-blur-md px-6 py-2 rounded-2xl shadow-sm'>
           КАРТЫ
         </h1>
       </div>
@@ -146,7 +146,7 @@ function MapContent() {
                 )}
               >
                 <div>
-                  <h3 className='text-xs font-black font-benzin uppercase text-[#2D2D2D] mb-1'>
+                  <h3 className='text-xs font-black font-benzin uppercase text-[#4B4B4B] mb-1'>
                     {branch.name}
                   </h3>
                   <p className='text-xs text-gray-500 font-rubik'>

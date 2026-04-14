@@ -101,19 +101,19 @@ export const NewTicketModal = ({ isOpen, onClose }: NewTicketModalProps) => {
         {/* Кнопка закрытия */}
         <button
           onClick={onClose}
-          className='absolute top-5 right-5 lg:top-6 lg:right-6 text-gray-400 hover:text-[#2D2D2D] transition-colors'
+          className='absolute top-5 right-5 lg:top-6 lg:right-6 text-gray-400 hover:text-[#4B4B4B] transition-colors'
         >
           <X size={24} strokeWidth={2} />
         </button>
 
         {/* Заголовок */}
-        <h2 className='text-[20px] lg:text-[24px] font-black text-[#2D2D2D] uppercase mb-6 lg:mb-8 text-center lg:text-left'>
+        <h2 className='text-[20px] lg:text-[24px] font-black text-[#4B4B4B] uppercase mb-6 lg:mb-8 text-center lg:text-left'>
           Новое обращение
         </h2>
 
         {/* Поле: Тема сообщения */}
         <div className='flex flex-col gap-2 mb-4'>
-          <label className='text-[13px] lg:text-[14px] font-bold text-[#2D2D2D]'>
+          <label className='text-[13px] lg:text-[14px] font-bold text-[#4B4B4B]'>
             Тема сообщения
           </label>
           <div className='relative'>
@@ -124,7 +124,7 @@ export const NewTicketModal = ({ isOpen, onClose }: NewTicketModalProps) => {
                 'w-full appearance-none bg-[#F5F5F7] rounded-xl px-4 py-3.5 text-[14px] outline-none border transition-colors cursor-pointer',
                 subject === ''
                   ? 'text-gray-400 border-transparent'
-                  : 'text-[#2D2D2D] border-transparent focus:border-[#FFD600]',
+                  : 'text-[#4B4B4B] border-transparent focus:border-[#FFD600]',
               )}
             >
               <option value='' disabled>
@@ -144,7 +144,7 @@ export const NewTicketModal = ({ isOpen, onClose }: NewTicketModalProps) => {
 
         {/* Поле: Текст сообщения */}
         <div className='flex flex-col gap-2 mb-5'>
-          <label className='text-[13px] lg:text-[14px] font-bold text-[#2D2D2D]'>
+          <label className='text-[13px] lg:text-[14px] font-bold text-[#4B4B4B]'>
             Текст сообщения
           </label>
           <textarea
@@ -152,7 +152,7 @@ export const NewTicketModal = ({ isOpen, onClose }: NewTicketModalProps) => {
             onChange={(e) => setMessage(e.target.value)}
             rows={5}
             placeholder='Опишите вашу проблему максимально подробно...'
-            className='w-full bg-[#F5F5F7] rounded-xl px-4 py-3.5 text-[14px] text-[#2D2D2D] outline-none border border-transparent focus:border-[#FFD600] transition-colors resize-none placeholder:text-gray-400'
+            className='w-full bg-[#F5F5F7] rounded-xl px-4 py-3.5 text-[14px] text-[#4B4B4B] outline-none border border-transparent focus:border-[#FFD600] transition-colors resize-none placeholder:text-gray-400'
           />
         </div>
 
@@ -179,7 +179,7 @@ export const NewTicketModal = ({ isOpen, onClose }: NewTicketModalProps) => {
           className={clsx(
             'w-full py-4 flex items-center justify-center gap-2 rounded-full font-black text-[13px] uppercase tracking-wider transition-all duration-300',
             isFormValid && !isPending
-              ? 'bg-[#FFD600] text-[#2D2D2D] hover:bg-[#F5C200] active:scale-95 shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
+              ? 'bg-[#FFD600] text-[#4B4B4B] hover:bg-[#F5C200] active:scale-95 shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed',
           )}
         >

@@ -19,7 +19,7 @@ export const PageHeader = ({ title }: PageHeaderProps) => {
         <ArrowLeft size={20} strokeWidth={2.5} />
       </button>
 
-      <h1 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] tracking-wide'>
+      <h1 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] tracking-wide'>
         {title}
       </h1>
     </div>

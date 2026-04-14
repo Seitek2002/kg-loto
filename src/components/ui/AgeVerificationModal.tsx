@@ -22,7 +22,7 @@ export const AgeVerificationModal = () => {
     <div className='fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4'>
       {/* Анимация появления (zoom-in) */}
       <div className='bg-white rounded-[32px] p-6 sm:p-10 max-w-[560px] w-full flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-300'>
-        <h2 className='text-[20px] sm:text-[24px] font-black font-benzin uppercase text-[#2D2D2D] mb-4'>
+        <h2 className='text-[20px] sm:text-[24px] font-black font-benzin uppercase text-[#4B4B4B] mb-4'>
           Подтверждение возраста
         </h2>
 
@@ -43,7 +43,7 @@ export const AgeVerificationModal = () => {
           {/* Темная кнопка (Подтверждение) */}
           <button
             onClick={handleConfirm}
-            className='w-full sm:flex-1 bg-[#4B4B4B] text-white py-4 rounded-full font-bold text-[14px] hover:bg-[#2D2D2D] active:scale-95 transition-all'
+            className='w-full sm:flex-1 bg-[#4B4B4B] text-white py-4 rounded-full font-bold text-[14px] hover:bg-[#4B4B4B] active:scale-95 transition-all'
           >
             Мне есть 18 лет
           </button>

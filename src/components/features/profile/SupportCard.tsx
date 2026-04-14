@@ -22,27 +22,27 @@ export const SupportCard = ({ ticket }: SupportCardProps) => {
       <div className='flex flex-col gap-2.5 border-b border-[#E5E5E5] pb-4 mb-4'>
         <div className='flex justify-between items-center'>
           <span className='text-xs text-[#6E6E6E]'>№ Тикета</span>
-          <span className='text-[13px] font-bold text-[#2D2D2D]'>
+          <span className='text-[13px] font-bold text-[#4B4B4B]'>
             {ticket.id}
           </span>
         </div>
         <div className='flex justify-between items-center'>
           <span className='text-xs text-[#6E6E6E]'>Дата создания</span>
-          <span className='text-[13px] font-bold text-[#2D2D2D]'>
+          <span className='text-[13px] font-bold text-[#4B4B4B]'>
             {ticket.date}
           </span>
         </div>
       </div>
 
       <div className='flex flex-col gap-1.5 mb-4'>
-        <span className='text-[13px] font-bold text-[#2D2D2D]'>Сообщение</span>
+        <span className='text-[13px] font-bold text-[#4B4B4B]'>Сообщение</span>
         <p className='text-xs text-[#4B4B4B] leading-relaxed'>
           {ticket.message}
         </p>
       </div>
 
       <div className='flex flex-col gap-1.5'>
-        <span className='text-[13px] font-bold text-[#2D2D2D]'>Ответ</span>
+        <span className='text-[13px] font-bold text-[#4B4B4B]'>Ответ</span>
         <p className='text-xs text-[#4B4B4B] leading-relaxed'>{ticket.reply}</p>
       </div>
     </div>

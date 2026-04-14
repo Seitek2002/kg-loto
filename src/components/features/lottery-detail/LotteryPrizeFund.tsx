@@ -34,7 +34,7 @@ export const LotteryPrizeFund = async ({
               <span className='text-center font-black text-[#F5A623] text-xl sm:text-[22px] whitespace-nowrap leading-none'>
                 {item.amount}
               </span>
-              <span className='text-center font-bold text-[#2D2D2D] text-xl sm:text-[22px] whitespace-nowrap leading-none'>
+              <span className='text-center font-bold text-[#4B4B4B] text-xl sm:text-[22px] whitespace-nowrap leading-none'>
                 {item.winners}
               </span>
             </div>
@@ -77,7 +77,7 @@ export const LotteryPrizeFund = async ({
                 <span className='font-black text-[#F5A623] whitespace-nowrap'>
                   {item.amount}
                 </span>
-                <span className='font-bold text-[#2D2D2D] whitespace-nowrap'>
+                <span className='font-bold text-[#4B4B4B] whitespace-nowrap'>
                   {item.winners}
                 </span>
               </div>

@@ -32,7 +32,7 @@ export const AndroidUploadModal = ({
           <X size={20} />
         </button>
 
-        <h3 className='text-lg font-black font-benzin uppercase text-[#2D2D2D] mb-6 text-center'>
+        <h3 className='text-lg font-black font-benzin uppercase text-[#4B4B4B] mb-6 text-center'>
           Загрузить из...
         </h3>
 

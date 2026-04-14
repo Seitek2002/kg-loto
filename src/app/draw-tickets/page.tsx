@@ -122,18 +122,18 @@ export default async function SuperJackpotPage() {
       <div className='max-w-350 mx-auto px-4 pt-6'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
         <nav className='flex items-center gap-2 text-[12px] font-medium text-gray-500 mb-6'>
-          <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
+          <Link href='/' className='hover:text-[#4B4B4B] transition-colors'>
             Главная
           </Link>
           <span>/</span>
           <Link
             href='/draw-lotteries'
-            className='hover:text-[#2D2D2D] transition-colors'
+            className='hover:text-[#4B4B4B] transition-colors'
           >
             Тиражные лотереи
           </Link>
           <span>/</span>
-          <span className='text-[#2D2D2D] font-bold'>Суперджекпот</span>
+          <span className='text-[#4B4B4B] font-bold'>Суперджекпот</span>
         </nav>
 
         {/* 🔥 КЛИЕНТСКАЯ ОБОЛОЧКА С ПЕРЕДАЧЕЙ СЕРВЕРНЫХ ПРОПСОВ */}

@@ -33,7 +33,7 @@ export const Preloader = () => {
           // Анимация ИСЧЕЗНОВЕНИЯ лоадера (уезжает вверх)
           exit={{ y: '-100%' }}
           transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }} // Дорогой ease (cubic-bezier)
-          className='fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#2D2D2D] text-white'
+          className='fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#4B4B4B] text-white'
         >
           <div className='relative flex flex-col items-center overflow-hidden'>
             {/* Анимация ПОЯВЛЕНИЯ логотипа (выплывает снизу) */}

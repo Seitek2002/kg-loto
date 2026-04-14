@@ -21,7 +21,7 @@ export default function WithdrawPage() {
     <div className='min-h-screen bg-[#F9F9F9] px-4 pt-2 pb-10'>
       <PageHeader title='' /> {/* Пустой заголовок, только стрелка */}
       <div className='mt-2 mb-8'>
-        <h1 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-2'>
+        <h1 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-2'>
           ВЫБЕРИТЕ КОШЕЛЕК <br /> ПОПОЛНЕНИЯ!
         </h1>
         <p className='text-xs text-gray-400 font-rubik'>

@@ -89,7 +89,7 @@ export const HeroCard = ({
         )}
 
         {slide.buttonLabel && (
-          <button className='bg-[#FFD600] text-[#2D2D2D] px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-[10px] md:text-sm shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center gap-2 uppercase'>
+          <button className='bg-[#FFD600] text-[#4B4B4B] px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-[10px] md:text-sm shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center gap-2 uppercase'>
             {slide.buttonLabel}
           </button>
         )}

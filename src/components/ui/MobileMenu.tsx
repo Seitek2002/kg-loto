@@ -33,7 +33,7 @@ export const MobileMenu = ({
               <Link
                 href='/'
                 onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                className='py-4 text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 {t('home')}
               </Link>
@@ -41,7 +41,7 @@ export const MobileMenu = ({
               <Link
                 href='/lottery'
                 onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                className='py-4 text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 {t('instant')}
               </Link>
@@ -49,14 +49,14 @@ export const MobileMenu = ({
               <Link
                 href='/about'
                 onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                className='py-4 text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 {t('about')}
               </Link>
 
               <button
                 onClick={onRestrictedClick} // Заглушка
-                className='py-4 text-left text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                className='py-4 text-left text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 {t('check_ticket')}
               </button>
@@ -64,7 +64,7 @@ export const MobileMenu = ({
               <a
                 href='tel:996312440107'
                 onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                className='py-4 text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 {t('hotline')}: 996 312 44 01 07
               </a>
@@ -80,7 +80,7 @@ export const MobileMenu = ({
               </button>
               <button
                 onClick={onRestrictedClick}
-                className='flex-1 bg-[#FFD600] text-[#2D2D2D] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
+                className='flex-1 bg-[#FFD600] text-[#4B4B4B] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
               >
                 {t('profile')}
               </button>

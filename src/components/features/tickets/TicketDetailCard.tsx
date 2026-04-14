@@ -35,7 +35,7 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
   // Настройка цветов
   const isDark = data.theme === 'dark';
   const labelColor = isDark ? 'text-gray-600' : 'text-white/60';
-  const valueColor = isDark ? 'text-[#2D2D2D]' : 'text-white';
+  const valueColor = isDark ? 'text-[#4B4B4B]' : 'text-white';
   const borderColor = isDark ? 'border-gray-300/50' : 'border-white/20';
 
   const prizeFontClass =
@@ -194,7 +194,7 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
       {data.status === 'winning' && (
         <button
           onClick={handleClaimPrize} // 🔥 Подключили функцию
-          className='w-full h-14 bg-white text-[#2D2D2D] rounded-full font-bold font-benzin uppercase text-xs shadow-lg active:scale-[0.98] transition-transform hover:bg-gray-50'
+          className='w-full h-14 bg-white text-[#4B4B4B] rounded-full font-bold font-benzin uppercase text-xs shadow-lg active:scale-[0.98] transition-transform hover:bg-gray-50'
         >
           ГДЕ ЗАБРАТЬ СВОЙ ВЫИГРЫШ?
         </button>

@@ -81,7 +81,7 @@ export const MobileMenu = ({
                   key={item.id}
                   href={getRelativeUrl(item.link)}
                   onClick={onClose}
-                  className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                  className='py-4 text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
                 >
                   {item.title}
                 </Link>
@@ -94,7 +94,7 @@ export const MobileMenu = ({
                     .getElementById('check')
                     ?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className='py-4 text-left text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                className='py-4 text-left text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 {t('check_ticket')}
               </button>
@@ -104,7 +104,7 @@ export const MobileMenu = ({
                 <Link
                   href='/cart'
                   onClick={onClose}
-                  className='py-4 flex items-center justify-between text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                  className='py-4 flex items-center justify-between text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
                 >
                   Мои билеты
                   <ShoppingCart size={18} strokeWidth={2} />
@@ -114,7 +114,7 @@ export const MobileMenu = ({
               <a
                 href='tel:996312440107'
                 onClick={onClose}
-                className='py-4 text-[13px] font-bold text-[#2D2D2D] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
+                className='py-4 text-[13px] font-bold text-[#4B4B4B] uppercase border-b border-gray-100 hover:text-[#F5A623] transition-colors'
               >
                 {t('hotline')}: 996 312 44 01 07
               </a>
@@ -135,7 +135,7 @@ export const MobileMenu = ({
                   <Link
                     href='/profile'
                     onClick={onClose}
-                    className='flex-1 bg-[#FFD600] text-[#2D2D2D] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)] flex items-center justify-center'
+                    className='flex-1 bg-[#FFD600] text-[#4B4B4B] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)] flex items-center justify-center'
                   >
                     {t('profile')}
                   </Link>
@@ -150,7 +150,7 @@ export const MobileMenu = ({
                   </button>
                   <button
                     onClick={() => onAuthClick('login')}
-                    className='flex-1 bg-[#FFD600] text-[#2D2D2D] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
+                    className='flex-1 bg-[#FFD600] text-[#4B4B4B] py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,214,0,0.4)]'
                   >
                     {t('profile')}
                   </button>
@@ -200,15 +200,15 @@ export const Header = ({
   const navLinkClass = clsx(
     'text-sm font-medium uppercase transition-colors',
     isDark
-      ? 'text-[#2D2D2D]/70 hover:text-[#2D2D2D]'
+      ? 'text-[#4B4B4B]/70 hover:text-[#4B4B4B]'
       : 'text-white/80 hover:text-white',
   );
 
   const regBtnClass = clsx(
     'px-6 py-2.5 rounded-full text-[10px] font-black uppercase transition-colors cursor-pointer flex items-center justify-center',
     isDark
-      ? 'bg-[#2D2D2D] text-white hover:bg-black'
-      : 'bg-white text-[#2D2D2D] hover:bg-gray-200',
+      ? 'bg-[#4B4B4B] text-white hover:bg-black'
+      : 'bg-white text-[#4B4B4B] hover:bg-gray-200',
   );
 
   useEffect(() => {
@@ -358,7 +358,7 @@ export const Header = ({
                 </button>
                 <button
                   onClick={() => handleAuthClick('login')}
-                  className='bg-[#FFD600] cursor-pointer text-[#2D2D2D] px-6 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-[#FFC000] transition-colors flex items-center justify-center'
+                  className='bg-[#FFD600] cursor-pointer text-[#4B4B4B] px-6 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-[#FFC000] transition-colors flex items-center justify-center'
                 >
                   {t('profile')}
                 </button>
@@ -417,7 +417,7 @@ export const Header = ({
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={clsx(
                 'p-1',
-                isMobileMenuOpen || !isDark ? 'text-[#2D2D2D]' : 'text-white',
+                isMobileMenuOpen || !isDark ? 'text-[#4B4B4B]' : 'text-white',
               )}
             >
               {isMobileMenuOpen ? (

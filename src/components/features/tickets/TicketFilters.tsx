@@ -24,8 +24,8 @@ export const TicketFilters = () => {
             className={clsx(
               'px-6 py-3 rounded-full font-bold text-xs font-benzin uppercase whitespace-nowrap transition-all',
               isActive
-                ? 'bg-[#2D2D2D] text-white shadow-lg'
-                : 'bg-white text-[#2D2D2D] border border-gray-100',
+                ? 'bg-[#4B4B4B] text-white shadow-lg'
+                : 'bg-white text-[#4B4B4B] border border-gray-100',
             )}
           >
             {f.label}

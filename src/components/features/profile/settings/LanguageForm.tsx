@@ -64,7 +64,7 @@ export const LanguageForm = () => {
                   className='object-cover'
                 />
               </div>
-              <span className='text-[15px] font-medium text-[#2D2D2D]'>
+              <span className='text-[15px] font-medium text-[#4B4B4B]'>
                 {lang.name}
               </span>
             </div>

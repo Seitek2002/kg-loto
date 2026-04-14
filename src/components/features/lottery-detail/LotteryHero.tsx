@@ -15,7 +15,7 @@ export const LotteryHero = async ({ data }: { data: any }) => {
   return (
     <section className='mb-12 md:mb-20'>
       <nav className='flex items-center gap-6 text-[10px] md:text-base text-[#4b4b4b] font-rubik mb-6 md:mb-19'>
-        <Link href='/' className='transition-colors hover:text-[#2D2D2D]'>
+        <Link href='/' className='transition-colors hover:text-[#4B4B4B]'>
           {t('breadcrumb_home')}
         </Link>
         <span>/</span>

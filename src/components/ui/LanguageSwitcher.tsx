@@ -59,7 +59,7 @@ export const LanguageSwitcher = ({ isDark }: LanguageSwitcherProps) => {
           'text-xs font-black uppercase flex items-center gap-1 transition-colors outline-none',
           isDark
             ? 'text-white hover:text-gray-300'
-            : 'text-[#2D2D2D] hover:text-[#FFD600]',
+            : 'text-[#4B4B4B] hover:text-[#FFD600]',
         )}
       >
         {locale === 'ky' ? 'КГ' : 'РУ'}
@@ -83,7 +83,7 @@ export const LanguageSwitcher = ({ isDark }: LanguageSwitcherProps) => {
                 'w-full text-center py-2.5 text-xs font-bold uppercase transition-colors',
                 locale === lang.code
                   ? 'text-[#FFD600] bg-yellow-50/50'
-                  : 'text-[#2D2D2D] hover:bg-gray-50',
+                  : 'text-[#4B4B4B] hover:bg-gray-50',
               )}
             >
               {lang.label}

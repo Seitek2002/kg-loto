@@ -64,7 +64,7 @@ export const NewsListContent = ({ initialNews }: NewsListContentProps) => {
           <div className='mt-12 flex justify-center'>
             <button
               onClick={handleLoadMore}
-              className='bg-white text-[#2D2D2D] font-bold font-benzin uppercase text-xs py-4 px-12 rounded-full shadow-md hover:bg-gray-50 active:scale-95 transition-all'
+              className='bg-white text-[#4B4B4B] font-bold font-benzin uppercase text-xs py-4 px-12 rounded-full shadow-md hover:bg-gray-50 active:scale-95 transition-all'
             >
               Загрузить еще
             </button>

@@ -43,7 +43,7 @@ export const ArticleCard = ({
       className={clsx(
         'relative w-full h-115 rounded-4xl p-8 flex flex-col justify-between overflow-hidden border border-gray-100/50 shadow-sm transition-transform hover:scale-[1.01] group cursor-pointer',
         !hasImage && theme === 'dark' && 'bg-white',
-        !hasImage && theme === 'light' && 'bg-[#2D2D2D]',
+        !hasImage && theme === 'light' && 'bg-[#4B4B4B]',
         !hasImage && theme === 'blue' && 'bg-[#6F51FF]',
       )}
     >
@@ -68,9 +68,8 @@ export const ArticleCard = ({
               'w-full h-full flex items-center justify-center',
               theme === 'dark' && 'bg-linear-to-br from-gray-50 to-gray-100',
               theme === 'light' &&
-                'bg-linear-to-br from-[#2D2D2D] to-[#1F1F1F]',
-              theme === 'blue' &&
-                'bg-linear-to-br from-[#6F51FF] to-[#5842CC]',
+                'bg-linear-to-br from-[#4B4B4B] to-[#1F1F1F]',
+              theme === 'blue' && 'bg-linear-to-br from-[#6F51FF] to-[#5842CC]',
             )}
           >
             <FileText

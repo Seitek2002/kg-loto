@@ -71,7 +71,7 @@ export default function WithdrawDetailsPage() {
       {step === 'phone' && (
         <div className='mt-8 flex flex-col gap-6 animate-in fade-in slide-in-from-right-8 duration-300'>
           <div>
-            <h2 className='text-sm font-bold font-benzin uppercase text-[#2D2D2D] mb-1'>
+            <h2 className='text-sm font-bold font-benzin uppercase text-[#4B4B4B] mb-1'>
               Номер телефона
             </h2>
             <div className='flex gap-2 mt-2'>
@@ -89,7 +89,7 @@ export default function WithdrawDetailsPage() {
           </div>
 
           <div>
-            <h2 className='text-sm font-bold font-benzin uppercase text-[#2D2D2D] mb-1'>
+            <h2 className='text-sm font-bold font-benzin uppercase text-[#4B4B4B] mb-1'>
               Сумма пополнения:{' '}
               <span className='text-green-500'>10 000 сом</span>
             </h2>
@@ -109,7 +109,7 @@ export default function WithdrawDetailsPage() {
       {step === 'sms' && (
         <div className='mt-8 flex flex-col gap-6 animate-in fade-in slide-in-from-right-8 duration-300'>
           <div className='text-center mb-4'>
-            <h2 className='text-sm font-bold font-benzin uppercase text-[#2D2D2D] mb-2'>
+            <h2 className='text-sm font-bold font-benzin uppercase text-[#4B4B4B] mb-2'>
               Введите код из СМС
             </h2>
             <p className='text-xs text-gray-400 font-rubik max-w-62.5 mx-auto'>
@@ -129,7 +129,7 @@ export default function WithdrawDetailsPage() {
                 maxLength={1}
                 value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
-                className='w-14 h-16 rounded-2xl bg-white shadow-sm text-center text-2xl font-black font-benzin text-[#2D2D2D] outline-none focus:ring-2 focus:ring-[#FFD600] transition-all'
+                className='w-14 h-16 rounded-2xl bg-white shadow-sm text-center text-2xl font-black font-benzin text-[#4B4B4B] outline-none focus:ring-2 focus:ring-[#FFD600] transition-all'
               />
             ))}
           </div>
@@ -176,7 +176,7 @@ export default function WithdrawDetailsPage() {
               <polyline points='20 6 9 17 4 12'></polyline>
             </svg>
           </div>
-          <h2 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-2 text-center'>
+          <h2 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-2 text-center'>
             Успешно!
           </h2>
           <p className='text-sm text-gray-500 font-rubik text-center max-w-xs mb-10'>
@@ -185,7 +185,7 @@ export default function WithdrawDetailsPage() {
 
           <button
             onClick={() => router.push('/profile')}
-            className='w-full h-14 bg-white border-2 border-gray-100 text-[#2D2D2D] rounded-full font-benzin font-bold text-sm uppercase tracking-wider hover:bg-gray-50 flex items-center justify-center gap-2'
+            className='w-full h-14 bg-white border-2 border-gray-100 text-[#4B4B4B] rounded-full font-benzin font-bold text-sm uppercase tracking-wider hover:bg-gray-50 flex items-center justify-center gap-2'
           >
             В профиль <ArrowRight size={18} />
           </button>

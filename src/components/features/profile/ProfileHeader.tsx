@@ -53,7 +53,7 @@ export const ProfileHeader = () => {
 
       {/* Аватар и инфо */}
       <div className='flex flex-col items-center mb-10'>
-        <div className='relative flex items-center justify-center w-15 h-15 sm:w-30 sm:h-30 rounded-full overflow-hidden mb-6 border border-gray-200 bg-[#FFD600] text-[#2D2D2D] text-2xl sm:text-3xl font-benzin tracking-wider shadow-sm'>
+        <div className='relative flex items-center justify-center w-15 h-15 sm:w-30 sm:h-30 rounded-full overflow-hidden mb-6 border border-gray-200 bg-[#FFD600] text-[#4B4B4B] text-2xl sm:text-3xl font-benzin tracking-wider shadow-sm'>
           {user.avatarUrl ? (
             <Image
               src={user.avatarUrl}
@@ -90,7 +90,7 @@ export const ProfileHeader = () => {
                   'flex items-center gap-2 px-6 py-3 rounded-full font-benzin uppercase transition-all whitespace-nowrap active:scale-95',
                   isActive
                     ? 'bg-[#4B4B4B] text-white shadow-md'
-                    : 'bg-transparent text-[#4B4B4B] hover:bg-gray-200 hover:text-[#2D2D2D]',
+                    : 'bg-transparent text-[#4B4B4B] hover:bg-gray-200 hover:text-[#4B4B4B]',
                 )}
               >
                 <Icon

@@ -190,7 +190,7 @@ export const PhoneForm = ({
       <button
         type='submit'
         disabled={mutation.isPending || phone.length < 6}
-        className='w-full bg-[#F6C635] text-[#2D2D2D] font-black font-rubik uppercase py-4 rounded-full shadow-md hover:bg-[#E5B524] active:scale-95 transition-all text-[11px] disabled:opacity-60 disabled:active:scale-100 flex justify-center items-center'
+        className='w-full bg-[#F6C635] text-[#4B4B4B] font-black font-rubik uppercase py-4 rounded-full shadow-md hover:bg-[#E5B524] active:scale-95 transition-all text-[11px] disabled:opacity-60 disabled:active:scale-100 flex justify-center items-center'
       >
         {mutation.isPending ? (
           <Loader2 className='animate-spin' size={16} />

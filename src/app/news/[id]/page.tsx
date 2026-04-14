@@ -103,21 +103,21 @@ export default async function NewsDetailsPage({
       <main className='max-w-[1200px] mx-auto px-4 lg:px-8 pt-10 lg:pt-12 pb-20 overflow-hidden'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
         <nav className='hidden lg:flex items-center gap-2 text-[10px] sm:text-xs font-bold text-gray-400 mb-6 uppercase overflow-x-auto whitespace-nowrap'>
-          <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
+          <Link href='/' className='hover:text-[#4B4B4B] transition-colors'>
             Главная
           </Link>
           <ChevronRight size={14} className='shrink-0' />
-          <Link href='/news' className='hover:text-[#2D2D2D] transition-colors'>
+          <Link href='/news' className='hover:text-[#4B4B4B] transition-colors'>
             Новости
           </Link>
           <ChevronRight size={14} className='shrink-0' />
-          <span className='text-[#2D2D2D] truncate max-w-50 sm:max-w-none'>
+          <span className='text-[#4B4B4B] truncate max-w-50 sm:max-w-none'>
             {article.title}
           </span>
         </nav>
 
         {/* ЗАГОЛОВОК И ДАТА */}
-        <h1 className='text-2xl sm:text-3xl lg:text-[40px] font-black font-benzin text-[#2D2D2D] uppercase leading-tight mb-4 max-w-4xl'>
+        <h1 className='text-2xl sm:text-3xl lg:text-[40px] font-black font-benzin text-[#4B4B4B] uppercase leading-tight mb-4 max-w-4xl'>
           {article.title}
         </h1>
         <div className='text-xs font-bold font-rubik text-gray-500 uppercase mb-8 lg:mb-12'>

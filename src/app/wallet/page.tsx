@@ -59,23 +59,23 @@ export default function WalletPage() {
       <div className='max-w-[1000px] mx-auto px-4 pt-6'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
         <nav className='flex items-center gap-2 text-[12px] font-medium text-gray-500 mb-6 lg:mb-8'>
-          <Link href='/' className='hover:text-[#2D2D2D] transition-colors'>
+          <Link href='/' className='hover:text-[#4B4B4B] transition-colors'>
             Главная
           </Link>
           <span>/</span>
           <Link
             href='/draw-lotteries'
-            className='hover:text-[#2D2D2D] transition-colors'
+            className='hover:text-[#4B4B4B] transition-colors'
           >
             Тиражные лотереи
           </Link>
           <span>/</span>
-          <span className='text-[#2D2D2D] font-bold'>Кошелек</span>
+          <span className='text-[#4B4B4B] font-bold'>Кошелек</span>
         </nav>
 
         {/* КАРТОЧКА БАЛАНСА */}
         <div className='bg-white rounded-[24px] lg:rounded-[32px] p-6 lg:p-10 shadow-sm border border-gray-100 mb-8 lg:mb-10'>
-          <h2 className='text-[14px] lg:text-[16px] font-bold text-[#2D2D2D] uppercase tracking-wide mb-2 lg:mb-4'>
+          <h2 className='text-[14px] lg:text-[16px] font-bold text-[#4B4B4B] uppercase tracking-wide mb-2 lg:mb-4'>
             Баланс
           </h2>
           <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-6'>
@@ -115,7 +115,7 @@ export default function WalletPage() {
           <>
             {/* ДЕСКТОПНАЯ ТАБЛИЦА */}
             <div className='hidden lg:block bg-white rounded-[32px] p-8 shadow-sm border border-gray-100'>
-              <div className='grid grid-cols-4 pb-4 text-[#2D2D2D] font-bold text-[15px] text-center border-b border-gray-50'>
+              <div className='grid grid-cols-4 pb-4 text-[#4B4B4B] font-bold text-[15px] text-center border-b border-gray-50'>
                 <div>Дата</div>
                 <div>Сумма</div>
                 <div>Способ</div>
@@ -167,7 +167,7 @@ export default function WalletPage() {
                       <span className='text-gray-500 font-medium text-[14px]'>
                         Дата
                       </span>
-                      <span className='text-[#2D2D2D] font-bold text-[14px]'>
+                      <span className='text-[#4B4B4B] font-bold text-[14px]'>
                         {formatDate(tx.createdAt)}
                       </span>
                     </div>
@@ -175,7 +175,7 @@ export default function WalletPage() {
                       <span className='text-gray-500 font-medium text-[14px]'>
                         Сумма
                       </span>
-                      <span className='text-[#2D2D2D] font-bold text-[14px]'>
+                      <span className='text-[#4B4B4B] font-bold text-[14px]'>
                         {tx.amount} <span className='underline'>с</span>
                       </span>
                     </div>
@@ -183,7 +183,7 @@ export default function WalletPage() {
                       <span className='text-gray-500 font-medium text-[14px]'>
                         Способ
                       </span>
-                      <span className='text-[#2D2D2D] font-bold text-[14px]'>
+                      <span className='text-[#4B4B4B] font-bold text-[14px]'>
                         {getMethodName(tx.method)}
                       </span>
                     </div>

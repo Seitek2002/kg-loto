@@ -39,7 +39,7 @@ export const WinnersHistoryClient = ({
 
         <Link
           href='/winners'
-          className='hidden lg:inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] hover:bg-gray-50 transition-colors shadow-sm'
+          className='hidden lg:inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 rounded-full text-xs font-bold font-benzin uppercase text-[#4B4B4B] hover:bg-gray-50 transition-colors shadow-sm'
         >
           {t('all_winners')}
         </Link>
@@ -64,7 +64,7 @@ export const WinnersHistoryClient = ({
       <div className='mt-8 lg:hidden'>
         <Link
           href='/winners'
-          className='flex w-full items-center justify-center py-4 bg-white rounded-full text-xs font-bold font-benzin uppercase text-[#2D2D2D] shadow-md active:scale-95 transition-transform'
+          className='flex w-full items-center justify-center py-4 bg-white rounded-full text-xs font-bold font-benzin uppercase text-[#4B4B4B] shadow-md active:scale-95 transition-transform'
         >
           {t('all_winners')}
         </Link>

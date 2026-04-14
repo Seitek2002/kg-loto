@@ -64,7 +64,7 @@ function CheckTicketContent() {
             onClick={() => setModalState('none')}
           />
           <div className='relative bg-white w-full max-w-sm rounded-[32px] p-8 text-center animate-in fade-in zoom-in-95'>
-            <h3 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-3'>
+            <h3 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-3'>
               Билет не выиграл
             </h3>
             <p className='text-xs text-gray-500 font-rubik mb-8 leading-relaxed px-4'>
@@ -73,7 +73,7 @@ function CheckTicketContent() {
             <div className='flex gap-3'>
               <button
                 onClick={() => setModalState('none')}
-                className='flex-1 h-12 rounded-full border-2 border-gray-100 text-[#2D2D2D] font-benzin font-bold text-[10px] uppercase hover:bg-gray-50'
+                className='flex-1 h-12 rounded-full border-2 border-gray-100 text-[#4B4B4B] font-benzin font-bold text-[10px] uppercase hover:bg-gray-50'
               >
                 ОК
               </button>
@@ -101,7 +101,7 @@ function CheckTicketContent() {
           </div>
 
           <div className='flex-1 px-4 flex flex-col justify-center pb-20'>
-            <h2 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-2 text-left'>
+            <h2 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-2 text-left'>
               ПОЗДРАВЛЯЕМ! <br /> ВЫ ВЫИГРАЛИ!
             </h2>
             <p className='text-xs text-gray-500 font-rubik mb-8 leading-relaxed max-w-xs'>

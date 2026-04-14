@@ -20,7 +20,7 @@ export const FAQItem = ({ question, answer }: FAQItemProps) => {
         // Добавили padding (px-6 или px-8), чтобы текст не прилипал к краям карточки
         className='w-full py-6 px-6 md:px-8 flex items-center justify-between gap-4 text-left group'
       >
-        <span className='font-benzin font-bold text-xs md:text-sm text-[#2D2D2D] uppercase leading-tight'>
+        <span className='font-benzin font-bold text-xs md:text-sm text-[#4B4B4B] uppercase leading-tight'>
           {question}
         </span>
         <span

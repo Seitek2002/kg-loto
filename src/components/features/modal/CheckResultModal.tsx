@@ -69,7 +69,7 @@ const CheckResultModal = ({
             transition={springTransition}
             className='text-center p-4'
           >
-            <h2 className='text-3xl font-black font-benzin uppercase text-[#2D2D2D] mb-4 leading-tight'>
+            <h2 className='text-3xl font-black font-benzin uppercase text-[#4B4B4B] mb-4 leading-tight'>
               ПОПРОБУЙТЕ <br /> ЕЩЕ РАЗ!
             </h2>
             <p className='text-sm text-gray-500 font-rubik mb-8 leading-relaxed px-2'>
@@ -78,7 +78,7 @@ const CheckResultModal = ({
             </p>
             <button
               onClick={onClose}
-              className='w-full py-4 bg-white border-2 border-gray-100 text-[#2D2D2D] rounded-full font-benzin font-bold text-xs uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
+              className='w-full py-4 bg-white border-2 border-gray-100 text-[#4B4B4B] rounded-full font-benzin font-bold text-xs uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
             >
               ОК
             </button>
@@ -117,13 +117,13 @@ const CheckResultModal = ({
             <div className='flex flex-col gap-3 mt-6'>
               <button
                 onClick={() => router.push('/scan/withdraw')}
-                className='w-full py-4 bg-white border border-gray-200 text-[#2D2D2D] rounded-full font-benzin font-bold text-[10px] uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
+                className='w-full py-4 bg-white border border-gray-200 text-[#4B4B4B] rounded-full font-benzin font-bold text-[10px] uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
               >
                 Пополнить кошелек
               </button>
               <button
                 onClick={() => setStep('qr')}
-                className='w-full py-4 bg-white border border-gray-200 text-[#2D2D2D] rounded-full font-benzin font-bold text-[10px] uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
+                className='w-full py-4 bg-white border border-gray-200 text-[#4B4B4B] rounded-full font-benzin font-bold text-[10px] uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
               >
                 Забрать бесплатные билеты
               </button>
@@ -158,13 +158,13 @@ const CheckResultModal = ({
             <div className='flex gap-3'>
               <button
                 onClick={() => setStep('initial')}
-                className='flex-1 py-4 bg-white border border-gray-200 text-[#2D2D2D] rounded-full font-benzin font-bold text-xs uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
+                className='flex-1 py-4 bg-white border border-gray-200 text-[#4B4B4B] rounded-full font-benzin font-bold text-xs uppercase hover:bg-gray-50 active:scale-95 transition-all shadow-sm'
               >
                 НАЗАД
               </button>
               <button
                 onClick={onClose}
-                className='flex-[1.5] py-4 bg-[#FFD600] text-[#2D2D2D] rounded-full font-benzin font-bold text-xs uppercase shadow-lg hover:bg-[#FFC000] active:scale-95 transition-all'
+                className='flex-[1.5] py-4 bg-[#FFD600] text-[#4B4B4B] rounded-full font-benzin font-bold text-xs uppercase shadow-lg hover:bg-[#FFC000] active:scale-95 transition-all'
               >
                 ОК
               </button>

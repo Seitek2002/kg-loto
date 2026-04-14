@@ -30,12 +30,12 @@ export const EmptySupport = () => {
       </div>
 
       {/* Текст */}
-      <h3 className='text-[18px] sm:text-[20px] font-bold text-[#2D2D2D] mb-6 font-rubik'>
+      <h3 className='text-[18px] sm:text-[20px] font-bold text-[#4B4B4B] mb-6 font-rubik'>
         Обращений пока нет
       </h3>
 
       {/* Кнопка НАПИСАТЬ */}
-      <button className='bg-[#4B4B4B] cursor-pointer text-white text-[13px] sm:text-[14px] font-bold uppercase rounded-full px-10 py-3 sm:py-3.5 hover:bg-[#2D2D2D] active:scale-95 transition-all'>
+      <button className='bg-[#4B4B4B] cursor-pointer text-white text-[13px] sm:text-[14px] font-bold uppercase rounded-full px-10 py-3 sm:py-3.5 hover:bg-[#4B4B4B] active:scale-95 transition-all'>
         Написать
       </button>
     </div>

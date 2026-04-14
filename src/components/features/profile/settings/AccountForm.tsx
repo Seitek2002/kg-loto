@@ -54,7 +54,7 @@ const InputField = ({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       disabled={disabled}
-      className={`w-full border border-[#A3A3A3] rounded-[10px] p-5 text-[20px] text-[#2D2D2D] outline-none transition-colors placeholder:text-gray-400
+      className={`w-full border border-[#A3A3A3] rounded-[10px] p-5 text-[20px] text-[#4B4B4B] outline-none transition-colors placeholder:text-gray-400
         ${disabled ? 'bg-gray-100/60 text-gray-500 cursor-not-allowed border-gray-200' : 'focus:border-[#FF7600] bg-white'}`}
     />
   </div>
@@ -168,7 +168,7 @@ export const AccountForm = () => {
     <div className='flex flex-col gap-8'>
       {/* Аватар */}
       <div className='flex items-center gap-6'>
-        <div className='relative flex items-center justify-center w-17.5 h-17.5 rounded-full overflow-hidden border border-gray-200 bg-[#FFD600] text-[#2D2D2D] text-xl font-black font-benzin tracking-wider shadow-sm shrink-0'>
+        <div className='relative flex items-center justify-center w-17.5 h-17.5 rounded-full overflow-hidden border border-gray-200 bg-[#FFD600] text-[#4B4B4B] text-xl font-black font-benzin tracking-wider shadow-sm shrink-0'>
           {(avatarPreview || serverAvatar) && !avatarError ? (
             <Image
               src={avatarPreview || serverAvatar!}
@@ -337,7 +337,7 @@ export const AccountForm = () => {
           <button
             onClick={handleSave}
             disabled={updateMutation.isPending}
-            className='flex-1 flex justify-center items-center bg-[#FFD600] text-[#2D2D2D] font-bold uppercase py-4 rounded-full hover:bg-[#ffe033] shadow-md transition-all active:scale-95 text-[14px] disabled:opacity-70'
+            className='flex-1 flex justify-center items-center bg-[#FFD600] text-[#4B4B4B] font-bold uppercase py-4 rounded-full hover:bg-[#ffe033] shadow-md transition-all active:scale-95 text-[14px] disabled:opacity-70'
           >
             {updateMutation.isPending ? (
               <Loader2 className='animate-spin' size={20} />

@@ -48,7 +48,7 @@ const TicketCard = ({
         <span className='text-gray-400 font-medium text-sm'>
           Билет №{ticketNumber}
         </span>
-        <span className='font-bold text-[#2D2D2D] text-[15px]'>
+        <span className='font-bold text-[#4B4B4B] text-[15px]'>
           {price} <span className='underline'>с</span>
         </span>
       </div>
@@ -63,7 +63,7 @@ const TicketCard = ({
                 'flex items-center justify-center aspect-square rounded-md text-[13px] font-bold transition-colors cursor-pointer',
                 isSelected
                   ? 'bg-[#F58220] text-white shadow-sm'
-                  : 'bg-[#F5F5F5] text-[#2D2D2D] hover:bg-gray-200',
+                  : 'bg-[#F5F5F5] text-[#4B4B4B] hover:bg-gray-200',
               )}
             >
               {num}
@@ -77,10 +77,10 @@ const TicketCard = ({
         className={clsx(
           'w-full py-3.5 rounded-full font-bold text-xs uppercase transition-all active:scale-95 shadow-sm',
           isInBasket
-            ? 'bg-[#4B4B4B] text-white hover:bg-[#2D2D2D]'
+            ? 'bg-[#4B4B4B] text-white hover:bg-[#4B4B4B]'
             : isOrangeButton
               ? 'bg-[#F58220] text-white hover:bg-[#E5761A]'
-              : 'bg-[#FFD600] text-[#2D2D2D] hover:bg-[#F5C700]',
+              : 'bg-[#FFD600] text-[#4B4B4B] hover:bg-[#F5C700]',
         )}
       >
         {isInBasket ? 'Убрать' : `Играть • ${price} с`}
@@ -222,7 +222,7 @@ export const DrawTicketsBlock = () => {
                       <span className='text-gray-500 text-[11px] font-medium mb-0.5'>
                         Суперджекпот:
                       </span>
-                      <span className='text-[#2D2D2D] font-bold text-[14px]'>
+                      <span className='text-[#4B4B4B] font-bold text-[14px]'>
                         {superCount} {getTicketPlural(superCount)} / {superSum}{' '}
                         <span className='underline'>с</span>
                       </span>
@@ -232,7 +232,7 @@ export const DrawTicketsBlock = () => {
                       <span className='text-gray-500 text-[11px] font-medium mb-0.5'>
                         Другой джекпот:
                       </span>
-                      <span className='text-[#2D2D2D] font-bold text-[14px]'>
+                      <span className='text-[#4B4B4B] font-bold text-[14px]'>
                         {otherCount} {getTicketPlural(otherCount)} / {otherSum}{' '}
                         <span className='underline'>с</span>
                       </span>
@@ -245,7 +245,7 @@ export const DrawTicketsBlock = () => {
                     <span className='text-gray-500 text-[12px] font-medium mb-0.5'>
                       Итого:
                     </span>
-                    <span className='text-[#2D2D2D] font-black text-[16px] leading-none'>
+                    <span className='text-[#4B4B4B] font-black text-[16px] leading-none'>
                       {cartItems.length} {getTicketPlural(cartItems.length)}{' '}
                       &bull; {totalPrice} <span className='underline'>с</span>
                     </span>
@@ -278,7 +278,7 @@ export const DrawTicketsBlock = () => {
                   <span className='text-gray-500 text-[12px] font-medium mb-1'>
                     Итого:
                   </span>
-                  <span className='text-[#2D2D2D] font-black text-[16px] leading-none flex items-center gap-1.5'>
+                  <span className='text-[#4B4B4B] font-black text-[16px] leading-none flex items-center gap-1.5'>
                     {cartItems.length} {getTicketPlural(cartItems.length)}{' '}
                     &bull; {totalPrice}{' '}
                     <span className='underline text-sm'>с</span>
@@ -303,7 +303,7 @@ export const DrawTicketsBlock = () => {
                       <span className='text-gray-600 text-[13px] font-medium'>
                         Суперджекпот:
                       </span>
-                      <span className='text-[#2D2D2D] font-bold text-[14px]'>
+                      <span className='text-[#4B4B4B] font-bold text-[14px]'>
                         {superCount} {getTicketPlural(superCount)} / {superSum}{' '}
                         <span className='underline'>с</span>
                       </span>
@@ -312,7 +312,7 @@ export const DrawTicketsBlock = () => {
                       <span className='text-gray-600 text-[13px] font-medium'>
                         Другой джекпот:
                       </span>
-                      <span className='text-[#2D2D2D] font-bold text-[14px]'>
+                      <span className='text-[#4B4B4B] font-bold text-[14px]'>
                         {otherCount} {getTicketPlural(otherCount)} / {otherSum}{' '}
                         <span className='underline'>с</span>
                       </span>

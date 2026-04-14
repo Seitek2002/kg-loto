@@ -88,7 +88,7 @@ export const WhereToBuyClient = ({
                 onClick={handleCopyAddress}
                 className='flex items-center gap-2 cursor-pointer group'
               >
-                <span className='text-[#2D2D2D] text-xs lg:text-sm font-black font-benzin uppercase leading-tight group-hover:text-[#FFD600] transition-colors'>
+                <span className='text-[#4B4B4B] text-xs lg:text-sm font-black font-benzin uppercase leading-tight group-hover:text-[#FFD600] transition-colors'>
                   {activeBranch.address}
                 </span>
                 <Copy

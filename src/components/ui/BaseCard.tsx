@@ -30,7 +30,7 @@ export const BaseCard = ({
   aspectRatio = '4/3',
   theme = 'dark',
 }: BaseCardProps) => {
-  const textColor = theme === 'dark' ? 'text-[#2D2D2D]' : 'text-white';
+  const textColor = theme === 'dark' ? 'text-[#4B4B4B]' : 'text-white';
 
   const bgPath = imageSrc
     ? imageSrc

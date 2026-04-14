@@ -49,7 +49,7 @@ export const OurApp = () => {
                 value='https://kgloto.com/download'
                 size={100}
                 level='H'
-                fgColor='#2D2D2D'
+                fgColor='#4B4B4B'
               />
             </div>
             <span className='text-[10px] font-bold font-rubik text-gray-400 uppercase tracking-wider'>
@@ -73,7 +73,7 @@ export const OurApp = () => {
 
         {/* 🔥 Вернули переводы инструкции */}
         <div className='max-w-md border-t border-gray-100 pt-6'>
-          <h4 className='text-xs font-black font-benzin text-[#2D2D2D] uppercase mb-4'>
+          <h4 className='text-xs font-black font-benzin text-[#4B4B4B] uppercase mb-4'>
             {t('inst_title')}
           </h4>
           <ul className='text-xs text-[#6E6E6E] flex flex-col gap-3 font-rubik leading-relaxed'>

@@ -16,7 +16,7 @@ export const PrizeTabs = ({ activeTab, onChange }: PrizeTabsProps) => {
         className={clsx(
           'flex-1 rounded-full text-[10px] font-bold font-benzin uppercase transition-colors duration-200 relative z-10',
           activeTab === 'received'
-            ? 'text-[#2D2D2D]'
+            ? 'text-[#4B4B4B]'
             : 'text-gray-400 hover:text-gray-600',
         )}
       >
@@ -29,7 +29,7 @@ export const PrizeTabs = ({ activeTab, onChange }: PrizeTabsProps) => {
         className={clsx(
           'flex-1 rounded-full text-[10px] font-bold font-benzin uppercase transition-colors duration-200 relative z-10',
           activeTab === 'waiting'
-            ? 'text-[#2D2D2D]'
+            ? 'text-[#4B4B4B]'
             : 'text-gray-400 hover:text-gray-600',
         )}
       >

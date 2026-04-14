@@ -18,7 +18,7 @@ const PRIZE_TIERS = [
 
 export const DrawRulesBlock = () => {
   return (
-    <section className='mt-12 lg:mt-20 font-rubik text-[#2D2D2D]'>
+    <section className='mt-12 lg:mt-20 font-rubik text-[#4B4B4B]'>
       <Title>ПРАВИЛА ТИРАЖНОЙ ЛОТЕРЕИ &quot;СУПЕРДЖЕКПОТ 5 ИЗ 36&quot;</Title>
 
       <div className='flex flex-col gap-4 lg:gap-6'>

@@ -340,7 +340,7 @@ export const RegisterForm = ({
       <button
         type='submit'
         disabled={sendSmsMutation.isPending || !isFormValid}
-        className='w-full bg-[#F6C635] text-[#2D2D2D] font-black font-rubik uppercase py-4 rounded-full shadow-md hover:bg-[#E5B524] active:scale-95 transition-all text-[11px] disabled:opacity-60 disabled:active:scale-100 flex justify-center items-center mb-4 cursor-pointer'
+        className='w-full bg-[#F6C635] text-[#4B4B4B] font-black font-rubik uppercase py-4 rounded-full shadow-md hover:bg-[#E5B524] active:scale-95 transition-all text-[11px] disabled:opacity-60 disabled:active:scale-100 flex justify-center items-center mb-4 cursor-pointer'
       >
         {sendSmsMutation.isPending ? (
           <Loader2 className='animate-spin' size={16} />
@@ -353,7 +353,7 @@ export const RegisterForm = ({
       <button
         type='button'
         onClick={onSwitchFlow}
-        className='text-xs font-bold text-gray-500 hover:text-[#2D2D2D] transition-colors'
+        className='text-xs font-bold text-gray-500 hover:text-[#4B4B4B] transition-colors'
       >
         Уже есть аккаунт? Войти
       </button>

@@ -117,7 +117,7 @@ export const DrawArchiveBlock = () => {
                 onClick={() => toggleMonth(group.month)}
                 className='flex items-center gap-2 py-4 text-left w-full focus:outline-none'
               >
-                <span className='text-[#2D2D2D] text-[18px] lg:text-[20px] font-bold'>
+                <span className='text-[#4B4B4B] text-[18px] lg:text-[20px] font-bold'>
                   {group.month}
                 </span>
                 <svg
@@ -165,7 +165,7 @@ export const DrawArchiveBlock = () => {
                           ))}
                         </div>
                         <div
-                          className='text-right text-[#4B4B4B] text-[14px] underline cursor-pointer hover:text-[#2D2D2D]'
+                          className='text-right text-[#4B4B4B] text-[14px] underline cursor-pointer hover:text-[#4B4B4B]'
                           onClick={() => setSelectedDrawId(item.id)} // <-- Добавлено
                         >
                           Подробнее
@@ -181,7 +181,7 @@ export const DrawArchiveBlock = () => {
                           <span className='text-gray-500 text-[14px] font-medium'>
                             Тираж
                           </span>
-                          <span className='text-[#2D2D2D] text-[14px] font-bold'>
+                          <span className='text-[#4B4B4B] text-[14px] font-bold'>
                             {item.draw}
                           </span>
                         </div>
@@ -189,7 +189,7 @@ export const DrawArchiveBlock = () => {
                           <span className='text-gray-500 text-[14px] font-medium'>
                             Приз
                           </span>
-                          <span className='text-[#2D2D2D] text-[14px] font-bold'>
+                          <span className='text-[#4B4B4B] text-[14px] font-bold'>
                             {item.prize}
                           </span>
                         </div>
@@ -197,7 +197,7 @@ export const DrawArchiveBlock = () => {
                           <span className='text-gray-500 text-[14px] font-medium'>
                             Дата
                           </span>
-                          <span className='text-[#2D2D2D] text-[14px] font-bold'>
+                          <span className='text-[#4B4B4B] text-[14px] font-bold'>
                             {item.date}
                           </span>
                         </div>

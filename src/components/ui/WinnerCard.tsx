@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import Link from 'next/link';
 
 export const WinnerCard = ({ winner }: { winner: Winner }) => {
-
   return (
     <div className='relative w-full aspect-4/5 rounded-4xl overflow-hidden bg-white shadow-sm border border-gray-100'>
       {/* ЛОГИКА ОТОБРАЖЕНИЯ ФОТО ИЛИ ЗАГЛУШКИ */}
@@ -49,10 +48,10 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
       <div className='absolute bottom-3 left-3 right-3'>
         <div className='bg-white/60 backdrop-blur-md border border-white/40 rounded-3xl p-3 md:p-4 flex flex-col lg:flex-row lg:justify-between items-center text-center shadow-lg'>
           <div className='flex flex-col mb-1'>
-            <h3 className='text-[10px] md:text-xs font-black text-[#2D2D2D] font-benzin uppercase mb-0.5'>
+            <h3 className='text-[10px] md:text-xs font-black text-[#4B4B4B] font-benzin uppercase mb-0.5'>
               {winner.name}
             </h3>
-            <p className='text-[10px] md:text-xs text-[#2D2D2D]/80 font-rubik font-semibold'>
+            <p className='text-[10px] md:text-xs text-[#4B4B4B]/80 font-rubik font-semibold'>
               {winner.city}
             </p>
           </div>

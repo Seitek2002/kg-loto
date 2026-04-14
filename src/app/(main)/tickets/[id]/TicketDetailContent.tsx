@@ -88,7 +88,7 @@ export const TicketDetailContent = ({
         </div>
 
         <div className='mt-40 hidden lg:block'>
-          <h3 className='text-xl font-black font-benzin uppercase text-[#2D2D2D] mb-6'>
+          <h3 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-6'>
             Смотрите также
           </h3>
           {/* 🔥 Вставляем готовый узел, который придет с сервера */}
@@ -96,7 +96,7 @@ export const TicketDetailContent = ({
         </div>
 
         <div className='mt-8 text-center lg:hidden'>
-          <p className='text-xs font-bold font-rubik text-[#2D2D2D]'>
+          <p className='text-xs font-bold font-rubik text-[#4B4B4B]'>
             Правила игры?{' '}
             <Link href='/rules' className='text-[#FFD600] hover:underline'>
               Смотреть правила

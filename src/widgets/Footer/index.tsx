@@ -106,7 +106,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
   ];
 
   return (
-    <footer className='bg-[#F9F9F9] pt-10 md:pt-16 pb-10 border-t border-gray-200 text-[#2D2D2D] font-rubik'>
+    <footer className='bg-[#F9F9F9] pt-10 md:pt-16 pb-10 border-t border-gray-200 text-[#4B4B4B] font-rubik'>
       <div className='max-w-[1400px] mx-auto px-5 md:px-8'>
         <div className='flex flex-col lg:flex-row gap-10 lg:gap-8 mb-8 lg:mb-16'>
           {/* Логотип */}
@@ -141,7 +141,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
                     <li key={lIdx}>
                       <Link
                         href={link.href}
-                        className='text-[13px] md:text-xs font-bold md:uppercase text-[#2D2D2D] hover:text-[#FFD600] transition-colors leading-tight block max-w-full break-words'
+                        className='text-[13px] md:text-xs font-bold md:uppercase text-[#4B4B4B] hover:text-[#FFD600] transition-colors leading-tight block max-w-full break-words'
                       >
                         {link.name}
                       </Link>
@@ -164,19 +164,19 @@ export const Footer = async ({ menuData }: FooterProps) => {
                 <div className='flex flex-col gap-1.5'>
                   <a
                     href={`tel:${phone1.replace(/\s/g, '')}`}
-                    className='text-[16px] md:text-[18px] font-bold text-[#2D2D2D] hover:text-[#FFD600] transition-colors whitespace-nowrap'
+                    className='text-[16px] md:text-[18px] font-bold text-[#4B4B4B] hover:text-[#FFD600] transition-colors whitespace-nowrap'
                   >
                     {phone1}
                   </a>
                   <a
                     href={`tel:${phone2.replace(/\s/g, '')}`}
-                    className='text-[16px] md:text-[18px] font-bold text-[#2D2D2D] hover:text-[#FFD600] transition-colors whitespace-nowrap'
+                    className='text-[16px] md:text-[18px] font-bold text-[#4B4B4B] hover:text-[#FFD600] transition-colors whitespace-nowrap'
                   >
                     {phone2}
                   </a>
                   <a
                     href={`tel:${phone3.replace(/\s/g, '')}`}
-                    className='text-[16px] md:text-[18px] font-bold text-[#2D2D2D] hover:text-[#FFD600] transition-colors whitespace-nowrap'
+                    className='text-[16px] md:text-[18px] font-bold text-[#4B4B4B] hover:text-[#FFD600] transition-colors whitespace-nowrap'
                   >
                     {phone3}
                   </a>
@@ -185,7 +185,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
               <div className='mt-1 lg:mt-0'>
                 <a
                   href={`mailto:${email}`}
-                  className='text-[15px] md:text-sm text-[#2D2D2D] hover:text-[#FFD600]'
+                  className='text-[15px] md:text-sm text-[#4B4B4B] hover:text-[#FFD600]'
                 >
                   {email}
                 </a>
@@ -196,7 +196,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
               <p className='text-[11px] text-gray-500 max-w-[220px] leading-relaxed'>
                 {t('security_guarantee')}
               </p>
-              <span className='font-black text-2xl text-[#2D2D2D]'>18+</span>
+              <span className='font-black text-2xl text-[#4B4B4B]'>18+</span>
             </div>
           </div>
 
@@ -212,13 +212,13 @@ export const Footer = async ({ menuData }: FooterProps) => {
             <div className='w-32 h-32 lg:w-20 lg:h-20 bg-white p-2 rounded-xl shadow-sm relative shrink-0'>
               <QRCodeSVG
                 value='https://kgloto.com'
-                className='w-full h-full text-[#2D2D2D]'
+                className='w-full h-full text-[#4B4B4B]'
                 level='H'
               />
             </div>
 
             <div className='flex flex-col gap-3 lg:hidden'>
-              <p className='text-[13px] text-[#2D2D2D] leading-snug max-w-[120px]'>
+              <p className='text-[13px] text-[#4B4B4B] leading-snug max-w-[120px]'>
                 {t('download_app')}
               </p>
               <div className='flex flex-col gap-2'>
@@ -249,12 +249,12 @@ export const Footer = async ({ menuData }: FooterProps) => {
               href={t('docs.policy_file')}
               target='_blank'
               rel='noopener noreferrer'
-              className='hover:text-[#2D2D2D] leading-relaxed max-w-[150px] lg:max-w-none'
+              className='hover:text-[#4B4B4B] leading-relaxed max-w-[150px] lg:max-w-none'
             >
               {t('docs.policy')}
             </a>
           </div>
-          <div className='hidden lg:block font-black text-xl text-[#2D2D2D]'>
+          <div className='hidden lg:block font-black text-xl text-[#4B4B4B]'>
             18+
           </div>
         </div>

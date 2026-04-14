@@ -89,8 +89,8 @@ export const WinnersListContent = () => {
               className={clsx(
                 'px-5 py-2.5 rounded-full text-xs font-bold font-benzin uppercase transition-all active:scale-95 border',
                 isAllSelected
-                  ? 'bg-[#2D2D2D] text-white border-[#2D2D2D]'
-                  : 'bg-white text-[#2D2D2D] border-transparent shadow-sm hover:bg-gray-50',
+                  ? 'bg-[#4B4B4B] text-white border-[#4B4B4B]'
+                  : 'bg-white text-[#4B4B4B] border-transparent shadow-sm hover:bg-gray-50',
               )}
             >
               Все
@@ -107,8 +107,8 @@ export const WinnersListContent = () => {
                   className={clsx(
                     'px-5 py-2.5 rounded-full text-xs font-bold font-benzin uppercase transition-all active:scale-95 border',
                     isActive
-                      ? 'bg-[#FFD600] text-[#2D2D2D] border-[#FFD600]'
-                      : 'bg-white text-[#2D2D2D] border-transparent shadow-sm hover:bg-gray-50',
+                      ? 'bg-[#FFD600] text-[#4B4B4B] border-[#FFD600]'
+                      : 'bg-white text-[#4B4B4B] border-transparent shadow-sm hover:bg-gray-50',
                   )}
                 >
                   {option.label}
@@ -140,7 +140,7 @@ export const WinnersListContent = () => {
           <div className='mt-12 flex justify-center'>
             <button
               onClick={handleLoadMore}
-              className='bg-white text-[#2D2D2D] font-bold font-benzin uppercase text-xs py-4 px-12 rounded-full shadow-md hover:bg-gray-50 active:scale-95 transition-all'
+              className='bg-white text-[#4B4B4B] font-bold font-benzin uppercase text-xs py-4 px-12 rounded-full shadow-md hover:bg-gray-50 active:scale-95 transition-all'
             >
               Загрузить еще
             </button>

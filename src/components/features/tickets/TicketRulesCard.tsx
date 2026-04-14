@@ -8,7 +8,7 @@ import { TicketDetailData } from './TicketDetailCard';
 export const TicketRulesCard = ({ data }: { data: TicketDetailData }) => {
   const isDark = data.theme === 'dark';
   const labelColor = isDark ? 'text-gray-600' : 'text-white/60';
-  const valueColor = isDark ? 'text-[#2D2D2D]' : 'text-white';
+  const valueColor = isDark ? 'text-[#4B4B4B]' : 'text-white';
   const borderColor = isDark ? 'border-gray-300/50' : 'border-white/20';
 
   return (
