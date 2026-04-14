@@ -133,7 +133,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
           <div className='lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 order-2 lg:order-none'>
             {footerSections.map((section, idx) => (
               <div key={idx} className='flex flex-col gap-4'>
-                <h4 className='text-[13px] md:text-xs text-gray-500 md:text-gray-400'>
+                <h4 className='text-[13px] md:text-xs text-[#737373] md:text-gray-400'>
                   {section.title}
                 </h4>
                 <ul className='flex flex-col gap-3.5'>
@@ -158,7 +158,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
           <div className='flex flex-col gap-6 lg:gap-8'>
             <div className='flex flex-col lg:flex-row gap-8 lg:gap-12'>
               <div>
-                <span className='block text-xs text-gray-500 mb-2 lg:mb-3'>
+                <span className='block text-xs text-[#737373] mb-2 lg:mb-3'>
                   {t('hotline')}
                 </span>
                 <div className='flex flex-col gap-1.5'>
@@ -193,7 +193,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
             </div>
 
             <div className='flex lg:hidden items-center justify-between gap-4 mt-2'>
-              <p className='text-[11px] text-gray-500 max-w-[220px] leading-relaxed'>
+              <p className='text-[11px] text-[#737373] max-w-[220px] leading-relaxed'>
                 {t('security_guarantee')}
               </p>
               <span className='font-black text-2xl text-[#4B4B4B]'>18+</span>
@@ -204,7 +204,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
 
           <div className='flex items-center gap-6'>
             <div className='text-right hidden lg:block'>
-              <p className='text-xs text-gray-500 max-w-25'>
+              <p className='text-xs text-[#737373] max-w-25'>
                 {t('download_app')}
               </p>
             </div>
@@ -243,7 +243,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
           </p>
         </div>
 
-        <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-[11px] text-gray-500 font-medium'>
+        <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-[11px] text-[#737373] font-medium'>
           <div className='grid grid-cols-2 lg:flex lg:flex-row gap-x-4 gap-y-5 lg:gap-6 w-full lg:w-auto'>
             <a
               href={t('docs.policy_file')}

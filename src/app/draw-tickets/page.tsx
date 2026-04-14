@@ -121,7 +121,7 @@ export default async function SuperJackpotPage() {
     <div className='min-h-screen bg-[#F9F9F9] font-rubik pb-20'>
       <div className='max-w-350 mx-auto px-4 pt-6'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
-        <nav className='flex items-center gap-2 text-[12px] font-medium text-gray-500 mb-6'>
+        <nav className='flex items-center gap-2 text-[12px] font-medium text-[#737373] mb-6'>
           <Link href='/' className='hover:text-[#4B4B4B] transition-colors'>
             Главная
           </Link>

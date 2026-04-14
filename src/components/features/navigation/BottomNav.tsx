@@ -101,7 +101,7 @@ export function BottomNav() {
         href='/scan'
         onClick={(e) => handleProtectedClick(e, true)}
         className={clsx(
-          'pointer-events-auto w-14 h-14 border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 flex items-center justify-center active:scale-95 transition-all text-gray-500 hover:text-gray-900 bg-white/70',
+          'pointer-events-auto w-14 h-14 border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 flex items-center justify-center active:scale-95 transition-all text-[#737373] hover:text-gray-900 bg-white/70',
           isIOS ? 'backdrop-blur-xl' : 'glass', // 🔥 Динамический класс
         )}
       >

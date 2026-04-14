@@ -122,7 +122,7 @@ export const DrawArchiveBlock = () => {
                 </span>
                 <svg
                   className={clsx(
-                    'w-5 h-5 text-gray-500 transition-transform duration-300',
+                    'w-5 h-5 text-[#737373] transition-transform duration-300',
                     isOpen && 'rotate-180',
                   )}
                   fill='none'
@@ -178,7 +178,7 @@ export const DrawArchiveBlock = () => {
                         className='flex lg:hidden flex-col gap-3 bg-white p-5 rounded-[20px] shadow-sm border border-gray-100'
                       >
                         <div className='flex justify-between items-center'>
-                          <span className='text-gray-500 text-[14px] font-medium'>
+                          <span className='text-[#737373] text-[14px] font-medium'>
                             Тираж
                           </span>
                           <span className='text-[#4B4B4B] text-[14px] font-bold'>
@@ -186,7 +186,7 @@ export const DrawArchiveBlock = () => {
                           </span>
                         </div>
                         <div className='flex justify-between items-center'>
-                          <span className='text-gray-500 text-[14px] font-medium'>
+                          <span className='text-[#737373] text-[14px] font-medium'>
                             Приз
                           </span>
                           <span className='text-[#4B4B4B] text-[14px] font-bold'>
@@ -194,7 +194,7 @@ export const DrawArchiveBlock = () => {
                           </span>
                         </div>
                         <div className='flex justify-between items-center'>
-                          <span className='text-gray-500 text-[14px] font-medium'>
+                          <span className='text-[#737373] text-[14px] font-medium'>
                             Дата
                           </span>
                           <span className='text-[#4B4B4B] text-[14px] font-bold'>
@@ -202,7 +202,7 @@ export const DrawArchiveBlock = () => {
                           </span>
                         </div>
                         <div className='flex justify-between items-center pt-1'>
-                          <span className='text-gray-500 text-[14px] font-medium'>
+                          <span className='text-[#737373] text-[14px] font-medium'>
                             Комбинации
                           </span>
                           <div className='flex gap-1 flex-wrap justify-end'>

@@ -55,7 +55,7 @@ const InputField = ({
       placeholder={placeholder}
       disabled={disabled}
       className={`w-full border border-[#A3A3A3] rounded-[10px] p-5 text-[20px] text-[#4B4B4B] outline-none transition-colors placeholder:text-gray-400
-        ${disabled ? 'bg-gray-100/60 text-gray-500 cursor-not-allowed border-gray-200' : 'focus:border-[#FF7600] bg-white'}`}
+        ${disabled ? 'bg-gray-100/60 text-[#737373] cursor-not-allowed border-gray-200' : 'focus:border-[#FF7600] bg-white'}`}
     />
   </div>
 );

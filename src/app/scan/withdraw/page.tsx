@@ -36,7 +36,7 @@ export default function WithdrawPage() {
             className='bg-white rounded-3xl h-24 flex flex-col items-center justify-center gap-2 shadow-sm border border-transparent hover:border-yellow-400 hover:shadow-md transition-all'
           >
             {/* Заглушка для лого, если нет картинки */}
-            <div className='w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-[10px] font-bold text-gray-500'>
+            <div className='w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-[10px] font-bold text-[#737373]'>
               {bank.name[0]}
             </div>
             <span className='text-xs font-bold font-rubik text-gray-700'>

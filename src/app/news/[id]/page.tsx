@@ -120,7 +120,7 @@ export default async function NewsDetailsPage({
         <h1 className='text-2xl sm:text-3xl lg:text-[40px] font-black font-benzin text-[#4B4B4B] uppercase leading-tight mb-4 max-w-4xl'>
           {article.title}
         </h1>
-        <div className='text-xs font-bold font-rubik text-gray-500 uppercase mb-8 lg:mb-12'>
+        <div className='text-xs font-bold font-rubik text-[#737373] uppercase mb-8 lg:mb-12'>
           {formattedDate}
         </div>
 

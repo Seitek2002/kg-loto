@@ -21,7 +21,7 @@ const STATUS_CONFIG: Record<
     dot: 'bg-blue-500 animate-pulse',
     textCol: 'text-blue-500',
   },
-  archive: { text: 'АРХИВ', dot: 'bg-gray-400', textCol: 'text-gray-500' },
+  archive: { text: 'АРХИВ', dot: 'bg-gray-400', textCol: 'text-[#737373]' },
 };
 
 interface LotteryCardProps {
@@ -83,7 +83,6 @@ export function LotteryCard({
       theme={theme}
       className='flex flex-col justify-between p-3 transition-all duration-300 hover:shadow-xl'
     >
-
       {/* ВЕРХНЯЯ ЧАСТЬ */}
       <div className='flex justify-between items-start'>
         {statusConfig && (

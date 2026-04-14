@@ -141,11 +141,11 @@ export const DrawDetailsModal = ({
             </h3>
             <div className='flex flex-col gap-2 text-[13px] lg:text-[14px]'>
               <div className='flex justify-between lg:justify-start lg:gap-2'>
-                <span className='text-gray-500'>Дата тиража:</span>
+                <span className='text-[#737373]'>Дата тиража:</span>
                 <span className='text-[#4B4B4B] font-bold'>{data.date}</span>
               </div>
               <div className='flex justify-between lg:justify-start lg:gap-2'>
-                <span className='text-gray-500'>
+                <span className='text-[#737373]'>
                   Время публикации результатов:
                 </span>
                 <span className='text-[#4B4B4B] font-bold'>
@@ -176,7 +176,7 @@ export const DrawDetailsModal = ({
         <div className='bg-white rounded-[16px] lg:rounded-[20px] p-5 shadow-sm mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-5'>
           <div className='flex flex-col gap-2 text-[13px] lg:text-[14px]'>
             <div className='flex justify-between lg:justify-start lg:gap-2'>
-              <span className='text-gray-500'>
+              <span className='text-[#737373]'>
                 Число билетов, принявших участие в розыгрыше:
               </span>
               <span className='text-[#4B4B4B] font-bold'>
@@ -184,13 +184,13 @@ export const DrawDetailsModal = ({
               </span>
             </div>
             <div className='flex justify-between lg:justify-start lg:gap-2'>
-              <span className='text-gray-500'>Общая сумма выигрышей:</span>
+              <span className='text-[#737373]'>Общая сумма выигрышей:</span>
               <span className='text-[#4B4B4B] font-bold'>
                 {data.totalWinAmount} <span className='underline'>с</span>
               </span>
             </div>
             <div className='flex justify-between lg:justify-start lg:gap-2'>
-              <span className='text-gray-500'>Суперприз:</span>
+              <span className='text-[#737373]'>Суперприз:</span>
               <span className='text-[#4B4B4B] font-bold'>
                 {data.superPrize} <span className='underline'>с</span>
               </span>

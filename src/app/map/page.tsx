@@ -149,7 +149,7 @@ function MapContent() {
                   <h3 className='text-xs font-black font-benzin uppercase text-[#4B4B4B] mb-1'>
                     {branch.name}
                   </h3>
-                  <p className='text-xs text-gray-500 font-rubik'>
+                  <p className='text-xs text-[#737373] font-rubik'>
                     {branch.address}
                   </p>
                 </div>

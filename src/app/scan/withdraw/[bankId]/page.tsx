@@ -179,7 +179,7 @@ export default function WithdrawDetailsPage() {
           <h2 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-2 text-center'>
             Успешно!
           </h2>
-          <p className='text-sm text-gray-500 font-rubik text-center max-w-xs mb-10'>
+          <p className='text-sm text-[#737373] font-rubik text-center max-w-xs mb-10'>
             Деньги отправлены на ваш счет. Ожидайте поступления.
           </p>
 

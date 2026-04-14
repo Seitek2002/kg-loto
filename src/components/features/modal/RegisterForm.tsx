@@ -143,7 +143,7 @@ export const RegisterForm = ({
           ) : (
             <>
               <CloudUpload className='text-[#F58220] mb-2' size={24} />
-              <span className='text-[10px] font-medium text-gray-500'>
+              <span className='text-[10px] font-medium text-[#737373]'>
                 Выберите файл
               </span>
             </>
@@ -236,7 +236,7 @@ export const RegisterForm = ({
                     <span className='text-[13px] font-bold text-[#4B4B4B] w-12'>
                       {country.dialCode}
                     </span>
-                    <span className='text-[13px] font-medium text-gray-500 truncate'>
+                    <span className='text-[13px] font-medium text-[#737373] truncate'>
                       {country.name}
                     </span>
                   </div>
@@ -320,7 +320,7 @@ export const RegisterForm = ({
             onChange={(e) => setIsAgreed(e.target.checked)}
             className='w-5 h-5 accent-[#4B4B4B] rounded shrink-0 mt-0.5'
           />
-          <span className='text-[10px] font-medium text-gray-500 leading-tight'>
+          <span className='text-[10px] font-medium text-[#737373] leading-tight'>
             Согласен с{' '}
             <a href='#' className='underline hover:text-[#4B4B4B]'>
               офертой
@@ -353,7 +353,7 @@ export const RegisterForm = ({
       <button
         type='button'
         onClick={onSwitchFlow}
-        className='text-xs font-bold text-gray-500 hover:text-[#4B4B4B] transition-colors'
+        className='text-xs font-bold text-[#737373] hover:text-[#4B4B4B] transition-colors'
       >
         Уже есть аккаунт? Войти
       </button>

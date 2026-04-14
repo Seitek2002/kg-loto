@@ -35,7 +35,7 @@ export const AppRedirectModal = ({
         <h3 className='text-xl font-black font-benzin uppercase text-[#1C2035] mb-4'>
           {t('title')}
         </h3>
-        <p className='text-sm text-gray-500 font-rubik mb-8 leading-relaxed px-2'>
+        <p className='text-sm text-[#737373] font-rubik mb-8 leading-relaxed px-2'>
           {t('description')}
         </p>
 

@@ -92,7 +92,7 @@ export const CheckTicketModal = ({
                 <h2 className='text-2xl font-black text-[#4B4B4B] uppercase font-benzin mb-2'>
                   Победа!
                 </h2>
-                <p className='text-gray-500 font-medium mb-6'>
+                <p className='text-[#737373] font-medium mb-6'>
                   {result.message}
                 </p>
                 <div className='bg-[#FFF0D4] px-6 py-3 rounded-2xl border border-[#F58220]/20'>
@@ -114,7 +114,7 @@ export const CheckTicketModal = ({
                 <h2 className='text-2xl font-black text-[#4B4B4B] uppercase font-benzin mb-2'>
                   Увы...
                 </h2>
-                <p className='text-gray-500 font-medium mb-6'>
+                <p className='text-[#737373] font-medium mb-6'>
                   {result.message || 'Этот билет не выиграл'}
                 </p>
               </>

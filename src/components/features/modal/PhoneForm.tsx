@@ -158,7 +158,7 @@ export const PhoneForm = ({
                     <span className='text-[13px] font-bold text-[#4B4B4B] w-12'>
                       {country.dialCode}
                     </span>
-                    <span className='text-[13px] font-medium text-gray-500 truncate'>
+                    <span className='text-[13px] font-medium text-[#737373] truncate'>
                       {country.name}
                     </span>
                   </div>

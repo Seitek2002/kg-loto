@@ -69,7 +69,7 @@ export const TicketDetailCard = ({ data }: TicketDetailCardProps) => {
         return {
           text: 'АРХИВ',
           bg: 'bg-gray-100',
-          textCol: 'text-gray-500',
+          textCol: 'text-[#737373]',
           dot: 'bg-gray-400',
         };
     }

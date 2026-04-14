@@ -67,7 +67,7 @@ function CheckTicketContent() {
             <h3 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-3'>
               Билет не выиграл
             </h3>
-            <p className='text-xs text-gray-500 font-rubik mb-8 leading-relaxed px-4'>
+            <p className='text-xs text-[#737373] font-rubik mb-8 leading-relaxed px-4'>
               Попробуйте в следующий раз — у вас всё получится!
             </p>
             <div className='flex gap-3'>
@@ -104,7 +104,7 @@ function CheckTicketContent() {
             <h2 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-2 text-left'>
               ПОЗДРАВЛЯЕМ! <br /> ВЫ ВЫИГРАЛИ!
             </h2>
-            <p className='text-xs text-gray-500 font-rubik mb-8 leading-relaxed max-w-xs'>
+            <p className='text-xs text-[#737373] font-rubik mb-8 leading-relaxed max-w-xs'>
               Ваш билет оказался выигрышным. Поздравляем с победой!
             </p>
 

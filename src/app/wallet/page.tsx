@@ -21,7 +21,7 @@ const getStatusProps = (status: string) => {
     case 'rejected':
       return { text: 'Отклонено', classes: 'bg-[#FFD7D7] text-[#FF4B4B]' };
     default:
-      return { text: status, classes: 'bg-gray-100 text-gray-500' };
+      return { text: status, classes: 'bg-gray-100 text-[#737373]' };
   }
 };
 
@@ -58,7 +58,7 @@ export default function WalletPage() {
     <div className='min-h-screen bg-[#F9F9F9] font-rubik pb-20'>
       <div className='max-w-[1000px] mx-auto px-4 pt-6'>
         {/* ХЛЕБНЫЕ КРОШКИ */}
-        <nav className='flex items-center gap-2 text-[12px] font-medium text-gray-500 mb-6 lg:mb-8'>
+        <nav className='flex items-center gap-2 text-[12px] font-medium text-[#737373] mb-6 lg:mb-8'>
           <Link href='/' className='hover:text-[#4B4B4B] transition-colors'>
             Главная
           </Link>
@@ -164,7 +164,7 @@ export default function WalletPage() {
                     className='bg-white rounded-[20px] p-5 shadow-sm border border-gray-100 flex flex-col gap-3'
                   >
                     <div className='flex justify-between items-center'>
-                      <span className='text-gray-500 font-medium text-[14px]'>
+                      <span className='text-[#737373] font-medium text-[14px]'>
                         Дата
                       </span>
                       <span className='text-[#4B4B4B] font-bold text-[14px]'>
@@ -172,7 +172,7 @@ export default function WalletPage() {
                       </span>
                     </div>
                     <div className='flex justify-between items-center'>
-                      <span className='text-gray-500 font-medium text-[14px]'>
+                      <span className='text-[#737373] font-medium text-[14px]'>
                         Сумма
                       </span>
                       <span className='text-[#4B4B4B] font-bold text-[14px]'>
@@ -180,7 +180,7 @@ export default function WalletPage() {
                       </span>
                     </div>
                     <div className='flex justify-between items-center'>
-                      <span className='text-gray-500 font-medium text-[14px]'>
+                      <span className='text-[#737373] font-medium text-[14px]'>
                         Способ
                       </span>
                       <span className='text-[#4B4B4B] font-bold text-[14px]'>
@@ -188,7 +188,7 @@ export default function WalletPage() {
                       </span>
                     </div>
                     <div className='flex justify-between items-center pt-1'>
-                      <span className='text-gray-500 font-medium text-[14px]'>
+                      <span className='text-[#737373] font-medium text-[14px]'>
                         Статус
                       </span>
                       <span

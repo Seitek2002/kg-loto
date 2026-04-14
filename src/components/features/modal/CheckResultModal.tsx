@@ -72,7 +72,7 @@ const CheckResultModal = ({
             <h2 className='text-3xl font-black font-benzin uppercase text-[#4B4B4B] mb-4 leading-tight'>
               ПОПРОБУЙТЕ <br /> ЕЩЕ РАЗ!
             </h2>
-            <p className='text-sm text-gray-500 font-rubik mb-8 leading-relaxed px-2'>
+            <p className='text-sm text-[#737373] font-rubik mb-8 leading-relaxed px-2'>
               Популярные лотереи привлекают внимание благодаря крупным
               джекпотам, частым тиражам и удобным условиям участия.
             </p>

@@ -219,7 +219,7 @@ export const DrawTicketsBlock = () => {
 
                   <div className='flex items-center gap-6 border border-gray-300 rounded-2xl px-5 py-2.5 bg-white/60'>
                     <div className='flex flex-col'>
-                      <span className='text-gray-500 text-[11px] font-medium mb-0.5'>
+                      <span className='text-[#737373] text-[11px] font-medium mb-0.5'>
                         Суперджекпот:
                       </span>
                       <span className='text-[#4B4B4B] font-bold text-[14px]'>
@@ -229,7 +229,7 @@ export const DrawTicketsBlock = () => {
                     </div>
                     <div className='w-px h-8 bg-gray-300'></div>
                     <div className='flex flex-col'>
-                      <span className='text-gray-500 text-[11px] font-medium mb-0.5'>
+                      <span className='text-[#737373] text-[11px] font-medium mb-0.5'>
                         Другой джекпот:
                       </span>
                       <span className='text-[#4B4B4B] font-bold text-[14px]'>
@@ -242,7 +242,7 @@ export const DrawTicketsBlock = () => {
 
                 <div className='flex items-center gap-6'>
                   <div className='flex flex-col text-right'>
-                    <span className='text-gray-500 text-[12px] font-medium mb-0.5'>
+                    <span className='text-[#737373] text-[12px] font-medium mb-0.5'>
                       Итого:
                     </span>
                     <span className='text-[#4B4B4B] font-black text-[16px] leading-none'>
@@ -275,7 +275,7 @@ export const DrawTicketsBlock = () => {
                   className='flex flex-col'
                   onClick={() => setIsExpanded(!isExpanded)}
                 >
-                  <span className='text-gray-500 text-[12px] font-medium mb-1'>
+                  <span className='text-[#737373] text-[12px] font-medium mb-1'>
                     Итого:
                   </span>
                   <span className='text-[#4B4B4B] font-black text-[16px] leading-none flex items-center gap-1.5'>

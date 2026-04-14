@@ -74,17 +74,17 @@ export const TicketsHero = ({ activeTab, onTabChange }: TicketsHeroProps) => {
           </h2>
           <div className='flex flex-col gap-4 text-[13px] lg:text-[16px]'>
             <div className='flex justify-between items-center'>
-              <span className='text-gray-500 font-medium'>Дата тиража:</span>
+              <span className='text-[#737373] font-medium'>Дата тиража:</span>
               <span className='text-[#4B4B4B] font-bold'>4 апреля 2026</span>
             </div>
             <div className='flex justify-between items-center'>
-              <span className='text-gray-500 font-medium'>Суперприз от:</span>
+              <span className='text-[#737373] font-medium'>Суперприз от:</span>
               <span className='text-[#4B4B4B] font-bold'>
                 20 000 <span className='underline'>С</span>
               </span>
             </div>
             <div className='flex justify-between items-center'>
-              <span className='text-gray-500 font-medium'>
+              <span className='text-[#737373] font-medium'>
                 Место проведения:
               </span>
               <span className='text-[#4B4B4B] font-bold'>Бишкек</span>

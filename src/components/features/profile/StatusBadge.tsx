@@ -26,7 +26,7 @@ export const StatusBadge = ({ status }: { status: string }) => {
   }[status] || {
     text: 'Неизвестно',
     bg: 'bg-gray-100',
-    textCol: 'text-gray-500',
+    textCol: 'text-[#737373]',
     Icon: Clock,
   };
 
