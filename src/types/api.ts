@@ -289,3 +289,21 @@ export interface MenuApiResponse {
   data: MenuData;
   meta: any;
 }
+
+export interface BillingTicket {
+  ticketId: string;
+  ticketNumber: string;
+  combination: number[]; // 🔥 Массив чисел, а не строка!
+  price: number;
+  currency: string;
+  status: 'available' | 'reserved' | 'sold' | 'cancelled';
+}
+
+export interface BillingTicketsResponse {
+  lotteryId: string;
+  drawId: string;
+  page: number;
+  limit: number;
+  total: number;
+  tickets: BillingTicket[];
+}

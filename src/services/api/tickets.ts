@@ -1,3 +1,4 @@
+import { BillingTicketsResponse } from '@/types/api';
 import api from './apiClient';
 
 export interface MyTicket {
@@ -19,5 +20,20 @@ export const ticketsApi = {
   getTicketById: async (ticketId: string) => {
     const response = await api.get(`/me/tickets/${ticketId}/`);
     return response.data.data;
+  },
+};
+
+export const TicketService = {
+  getTicketsByDraw: async (params: {
+    lotteryId: string;
+    drawId: string;
+    page?: number;
+    limit?: number;
+    status?: string;
+  }) => {
+    const { data } = await api.get<BillingTicketsResponse>('/tickets', {
+      params, // Тут спокойно передаем camelCase, apiClient его не тронет
+    });
+    return data;
   },
 };
