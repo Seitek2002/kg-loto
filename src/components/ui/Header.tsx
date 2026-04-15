@@ -228,7 +228,7 @@ export const Header = ({
   // Проверяем аватар и в корне объекта, и во вложенном профиле (на случай разных ответов API)
   const userAvatar = user?.avatar || user?.kglotteryProfile?.avatar;
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <>

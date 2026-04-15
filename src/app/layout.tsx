@@ -105,7 +105,7 @@ export default async function RootLayout({
   // 🔥 Получаем данные меню с бэка
   const menuData = await getMenuData();
 
-  console.log(menuData);
+  // console.log(menuData);
 
   return (
     <html lang={locale}>
