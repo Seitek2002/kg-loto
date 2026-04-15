@@ -36,7 +36,7 @@ export const ProfileHeader = () => {
   // Если email нет, можем показать номер телефона как запасной вариант
   const displayContact =
     user?.email ||
-    (user?.phone ? `+${user.phone.dialCode} ${user.phone.number}` : '');
+    (user?.phone ? `${user.phone.dialCode} ${user.phone.number}` : '');
   const avatarUrl = user?.avatar || null;
   const initials = getInitials(user?.firstName, user?.lastName);
 
