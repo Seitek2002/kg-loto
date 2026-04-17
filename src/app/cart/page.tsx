@@ -1,151 +1,249 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2, ShoppingCart } from 'lucide-react';
+import { Trash2, Plus } from 'lucide-react';
 import { NumberedBall } from '@/components/ui/NumberedBall';
+import { useCartStore } from '@/store/cart';
+import { useMounted } from '@/hooks/useMounted';
 
-const INITIAL_CART_ITEMS = [
-  {
-    id: '1',
-    name: 'Суперджекпот 5 из 36',
-    numbers: [1, 20, 32, 16, 8],
-    price: 100,
-    image:
-      'https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=200&auto=format&fit=crop',
-  },
-  {
-    id: '2',
-    name: 'Суперджекпот 5 из 36',
-    numbers: [1, 20, 32, 16, 8],
-    price: 100,
-    image:
-      'https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=200&auto=format&fit=crop',
-  },
-  {
-    id: '3',
-    name: 'Суперджекпот 5 из 36',
-    numbers: [1, 20, 32, 16, 8],
-    price: 100,
-    image:
-      'https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=200&auto=format&fit=crop',
-  },
-];
+const getTicketPlural = (count: number) => {
+  const lastDigit = count % 10;
+  const lastTwo = count % 100;
+  if (lastTwo >= 11 && lastTwo <= 19) return 'билетов';
+  if (lastDigit === 1) return 'билет';
+  if (lastDigit >= 2 && lastDigit <= 4) return 'билета';
+  return 'билетов';
+};
+
+// Визуальный компонент быстрого добавления билета (Левая колонка на ПК)
+const QuickAddTicketMock = ({
+  number,
+  price,
+}: {
+  number: number;
+  price: number;
+}) => {
+  const numbers = Array.from({ length: 36 }, (_, i) => i + 1);
+  const selectedMock = [1, 16, 26, 30]; // Просто для визуала
+
+  return (
+    <div className='bg-white rounded-[24px] p-5 shadow-sm border border-gray-100 flex flex-col relative mb-4'>
+      <div className='absolute -left-2 top-[30px] w-4 h-4 bg-[#F5F5F5] rounded-full border-r border-gray-100' />
+      <div className='absolute -right-2 top-[30px] w-4 h-4 bg-[#F5F5F5] rounded-full border-l border-gray-100' />
+
+      <div className='flex justify-between items-center border-b border-dashed border-gray-300 pb-4 mb-4'>
+        <span className='text-[#737373] font-medium text-sm'>
+          Билет №{number}
+        </span>
+        <span className='font-bold text-[#4B4B4B] text-[16px]'>
+          {price} <span className='underline'>с</span>
+        </span>
+      </div>
+
+      <div className='grid grid-cols-6 gap-2 mb-6'>
+        {numbers.map((num) => {
+          const isSelected = selectedMock.includes(num);
+          return (
+            <div
+              key={num}
+              className={`flex items-center justify-center aspect-square rounded-md text-[13px] font-bold transition-colors cursor-pointer ${
+                isSelected
+                  ? 'bg-[#FF7600] text-white shadow-sm'
+                  : 'bg-[#F9F9F9] text-[#4B4B4B] hover:bg-gray-200'
+              }`}
+            >
+              {num}
+            </div>
+          );
+        })}
+      </div>
+
+      <button className='w-full py-3.5 rounded-2xl font-bold text-sm bg-[#4B4B4B] text-white hover:bg-black transition-all active:scale-95 shadow-sm'>
+        Добавить • {price} с
+      </button>
+    </div>
+  );
+};
 
 export default function CartPage() {
-  const [items, setItems] = useState(INITIAL_CART_ITEMS);
+  const items = useCartStore((state) => state.items);
+  const toggleItem = useCartStore((state) => state.toggleItem);
+  const mounted = useMounted();
 
-  const removeItem = (id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  };
+  const removeItem = (item: any) => toggleItem(item);
 
   const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
   const totalTickets = items.length;
 
+  const superTicketsCount = items.filter((t) => t.type === 'super').length;
+  const superTicketsSum = items
+    .filter((t) => t.type === 'super')
+    .reduce((acc, t) => acc + t.price, 0);
+  const otherTicketsCount = items.filter((t) => t.type === 'other').length;
+  const otherTicketsSum = items
+    .filter((t) => t.type === 'other')
+    .reduce((acc, t) => acc + t.price, 0);
+
+  if (!mounted) return null;
+
   return (
-    <div className='min-h-screen bg-[#F5F5F5] font-rubik pb-32 md:pb-12 select-none'>
-      <div className='max-w-[1045px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10'>
-        {/* Хлебные крошки и заголовок */}
+    <div className='min-h-screen bg-[#F5F5F5] font-rubik pb-32 md:pb-16 select-none'>
+      <div className='max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10'>
+        {/* Хлебные крошки */}
         <div className='flex items-center justify-between mb-6 md:mb-8'>
-          <div className='flex flex-wrap items-center gap-2 text-[13px] md:text-base text-[#4B4B4B] font-medium'>
-            <Link href='/' className='hover:opacity-80 transition-opacity'>
+          <div className='flex flex-wrap items-center gap-2 text-[12px] md:text-[14px] text-[#737373] font-medium'>
+            <Link href='/' className='hover:text-[#4B4B4B] transition-colors'>
               Главная
             </Link>
-            <span className='text-gray-400'>/</span>
+            <span>/</span>
             <Link
-              href='/lotteries'
-              className='hover:opacity-80 transition-opacity'
+              href='/draw-tickets'
+              className='hover:text-[#4B4B4B] transition-colors'
             >
               Тиражные лотереи
             </Link>
-            <span className='text-gray-400'>/</span>
-            <span className='font-bold text-[#2D2D2D]'>Корзина</span>
+            <span>/</span>
+            <span className='font-bold text-[#4B4B4B]'>Корзина</span>
           </div>
-
-          <div className='hidden md:flex items-center gap-2 text-[#4B4B4B] font-bold text-lg'>
-            Корзина <ShoppingCart size={24} />
+          <div className='hidden md:flex items-center gap-2 text-[#4B4B4B] font-bold text-[16px]'>
+            Корзина <ShoppingCart size={20} />
           </div>
         </div>
 
-        {/* Список билетов */}
         {items.length > 0 ? (
-          <div className='flex flex-col gap-4 md:gap-5'>
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className='bg-white rounded-[24px] p-4 md:p-6 flex flex-row items-center justify-between shadow-sm transition-all duration-300 hover:shadow-md'
-              >
-                {/* Левая часть */}
-                <div className='flex items-center gap-4 md:gap-6 flex-1'>
-                  <div className='relative w-[72px] h-[72px] md:w-[96px] md:h-[96px] rounded-[16px] md:rounded-[20px] overflow-hidden shrink-0'>
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className='object-cover'
-                    />
-                  </div>
+          <div className='flex flex-col lg:flex-row gap-6 items-start'>
+            {/* 1. ЛЕВАЯ КОЛОНКА: Быстрое добавление (Только ПК) */}
+            <div className='hidden lg:flex w-[320px] flex-col shrink-0'>
+              <QuickAddTicketMock number={1} price={150} />
+              <QuickAddTicketMock number={2} price={150} />
+            </div>
 
-                  <div className='flex flex-col justify-center gap-1.5 md:gap-2'>
-                    <h3 className='text-[14px] md:text-[18px] font-medium text-[#4B4B4B] leading-tight'>
-                      {item.name}
-                    </h3>
-
-                    {/* 🔥 ИСПОЛЬЗУЕМ NUMBERED BALL */}
-                    <div className='flex flex-wrap gap-1 md:gap-2 items-center'>
-                      {item.numbers.map((num, i) => (
-                        // Используем scale для уменьшения на мобилках без изменения самого компонента
-                        <div
-                          key={i}
-                          className='transform scale-[0.85] origin-left md:scale-100'
-                        >
-                          <NumberedBall number={num} size={28} />
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className='text-[16px] md:text-[20px] font-black text-[#2D2D2D] mt-1'>
-                      {item.price} сом
-                    </div>
-                  </div>
-                </div>
-
-                {/* Правая часть */}
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className='w-[44px] h-[44px] md:w-[56px] md:h-[56px] bg-[#F5F5F5] rounded-full flex items-center justify-center text-[#A3A3A3] hover:bg-[#EBEBEB] hover:text-[#DC2626] active:scale-90 transition-all cursor-pointer shrink-0'
-                  aria-label='Удалить билет'
+            {/* 2. ЦЕНТРАЛЬНАЯ КОЛОНКА: Список билетов */}
+            <div className='flex-1 w-full flex flex-col gap-3 md:gap-4'>
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  className='bg-white rounded-[20px] p-4 md:p-5 flex flex-row items-center justify-between shadow-sm'
                 >
-                  <Trash2 className='w-5 h-5 md:w-6 md:h-6' />
+                  <div className='flex items-center gap-4 flex-1'>
+                    <div className='relative w-[80px] h-[80px] md:w-[96px] md:h-[96px] rounded-[16px] overflow-hidden shrink-0 bg-green-600'>
+                      <Image
+                        src='https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=200&auto=format&fit=crop'
+                        alt={item.name}
+                        fill
+                        className='object-cover opacity-80'
+                      />
+                    </div>
+
+                    <div className='flex flex-col justify-center gap-1.5 md:gap-2'>
+                      <h3 className='text-[14px] md:text-[16px] font-medium text-[#4B4B4B] leading-tight'>
+                        {item.name}
+                      </h3>
+                      <div className='flex flex-wrap gap-1 items-center'>
+                        {item.combination.map((num, i) => (
+                          <NumberedBall key={i} number={num} size={28} />
+                        ))}
+                      </div>
+                      <div className='text-[15px] md:text-[18px] font-black text-[#4B4B4B]'>
+                        {item.price} сом
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => removeItem(item)}
+                    className='w-[44px] h-[44px] md:w-[48px] md:h-[48px] border border-gray-200 rounded-full flex items-center justify-center text-[#A3A3A3] hover:bg-gray-50 hover:text-[#DC2626] transition-colors cursor-pointer shrink-0'
+                  >
+                    <Trash2 className='w-5 h-5' />
+                  </button>
+                </div>
+              ))}
+
+              {/* Кнопка добавить еще билет (особенно важна на мобилках) */}
+              <Link href='/draw-tickets' className='block w-full'>
+                <button className='w-full py-4 rounded-[16px] bg-[#4B4B4B] text-white flex items-center justify-center gap-2 font-bold text-[14px] hover:bg-[#333333] transition-colors active:scale-[0.98]'>
+                  <Plus size={18} /> Добавить еще билет
                 </button>
+              </Link>
+            </div>
+
+            {/* 3. ПРАВАЯ КОЛОНКА: Детали заказа (Только ПК) */}
+            <div className='hidden lg:flex w-[320px] flex-col bg-white rounded-[24px] p-6 shadow-sm shrink-0 sticky top-24'>
+              <h3 className='text-[18px] font-bold text-[#4B4B4B] mb-5'>
+                Детали заказа
+              </h3>
+
+              <div className='flex flex-col gap-3 mb-6'>
+                {superTicketsCount > 0 && (
+                  <div className='flex justify-between items-center text-[14px]'>
+                    <span className='text-[#737373]'>Суперджекпот</span>
+                    <span className='text-[#4B4B4B] font-medium'>
+                      {superTicketsCount} {getTicketPlural(superTicketsCount)} •{' '}
+                      {superTicketsSum} с
+                    </span>
+                  </div>
+                )}
+                {otherTicketsCount > 0 && (
+                  <div className='flex justify-between items-center text-[14px]'>
+                    <span className='text-[#737373]'>Другой джекпот</span>
+                    <span className='text-[#4B4B4B] font-medium'>
+                      {otherTicketsCount} {getTicketPlural(otherTicketsCount)} •{' '}
+                      {otherTicketsSum} с
+                    </span>
+                  </div>
+                )}
               </div>
-            ))}
+
+              <div className='border-t border-gray-100 pt-4 mb-6 flex justify-between items-center'>
+                <span className='text-[#4B4B4B] font-medium'>Итого</span>
+                <span className='text-[20px] font-black text-[#4B4B4B]'>
+                  {totalPrice} <span className='underline'>с</span>
+                </span>
+              </div>
+
+              <button className='w-full bg-[#FF7600] text-white py-4 rounded-xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all'>
+                Купить
+              </button>
+            </div>
           </div>
         ) : (
           <div className='bg-white rounded-[24px] p-10 text-center shadow-sm'>
-            <p className='text-[#4B4B4B] font-bold text-lg'>
+            <p className='text-[#4B4B4B] font-bold text-lg mb-4'>
               Ваша корзина пуста
             </p>
+            <Link
+              href='/draw-tickets'
+              className='text-[#FF7600] font-bold hover:underline'
+            >
+              Выбрать билеты
+            </Link>
           </div>
         )}
 
-        {/* Блок Итого и оплаты */}
+        {/* МОБИЛЬНАЯ ПАНЕЛЬ ОПЛАТЫ (Drawer снизу) */}
         {items.length > 0 && (
-          <div className='fixed bottom-[80px] left-4 right-4 md:static md:w-full bg-white rounded-[24px] p-5 md:p-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-sm md:mt-8 flex items-center justify-between z-40 transition-transform'>
-            <div className='flex flex-col'>
-              <span className='text-[12px] md:text-[14px] text-[#8C8C8C] font-medium'>
-                Итого:
-              </span>
-              <div className='text-[16px] md:text-[20px] font-black text-[#4B4B4B]'>
-                {totalTickets} билета &nbsp;•&nbsp; {totalPrice}{' '}
-                <span className='underline decoration-2 underline-offset-2'>
+          <div className='lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[24px] px-5 pb-8 pt-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-40'>
+            <div className='w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4' />
+
+            <div className='flex items-center justify-between mb-4'>
+              <div className='flex flex-col'>
+                <span className='text-[13px] text-[#737373] font-medium mb-1'>
+                  Итого:
+                </span>
+                <span className='text-[16px] font-bold text-[#4B4B4B] leading-none'>
+                  {totalTickets} {getTicketPlural(totalTickets)}
+                </span>
+              </div>
+              <div className='text-[24px] font-black text-[#4B4B4B]'>
+                {totalPrice}{' '}
+                <span className='underline decoration-2 underline-offset-2 text-[18px]'>
                   с
                 </span>
               </div>
             </div>
 
-            <button className='bg-[#FF7600] text-white px-8 md:px-12 py-3.5 md:py-4 rounded-full text-[14px] md:text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all cursor-pointer tracking-wide'>
+            <button className='w-full bg-[#FF7600] text-white py-4 rounded-2xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all'>
               Оплатить
             </button>
           </div>

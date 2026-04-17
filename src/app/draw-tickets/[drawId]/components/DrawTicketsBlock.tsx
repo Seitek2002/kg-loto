@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { clsx } from 'clsx';
 import { useAuthStore } from '@/store/auth';
-import { useCartStore } from '@/store/cart'; // 🔥 Подключаем наш новый стор корзины
+import { useCartStore } from '@/store/cart';
+import { useCurrentDraws } from '@/hooks/useLotteries';
+import { useDrawTickets } from '@/hooks/useTickets';
 
 const getTicketPlural = (count: number) => {
   const lastDigit = count % 10;
@@ -55,7 +57,7 @@ const TicketCard = ({
 
       <div className='grid grid-cols-6 gap-2 mb-6'>
         {numbers.map((num) => {
-          const isSelected = selectedNumbers.includes(num);
+          const isSelected = selectedNumbers?.includes(num);
           return (
             <div
               key={num}
@@ -89,71 +91,48 @@ const TicketCard = ({
   );
 };
 
-export const DrawTicketsBlock = () => {
-  // 🔥 Берем данные из глобального Zustand стора вместо локального useState
+// Скелетон для загрузки билетов
+const TicketSkeleton = () => (
+  <div className='bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col relative animate-pulse'>
+    <div className='flex justify-between items-center border-b border-dashed border-gray-300 pb-4 mb-4'>
+      <div className='w-24 h-4 bg-gray-200 rounded' />
+      <div className='w-12 h-4 bg-gray-200 rounded' />
+    </div>
+    <div className='grid grid-cols-6 gap-2 mb-6'>
+      {Array.from({ length: 36 }).map((_, i) => (
+        <div key={i} className='aspect-square rounded-md bg-gray-100' />
+      ))}
+    </div>
+    <div className='w-full h-10 bg-gray-200 rounded-full' />
+  </div>
+);
+
+export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
   const cartItems = useCartStore((state) => state.items);
   const toggleItem = useCartStore((state) => state.toggleItem);
 
   const [mounted, setMounted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    // 🔥 Фикс ошибки синхронного стейта
     const timer = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(timer);
   }, []);
 
-  const mockTickets = [
-    {
-      id: 1,
-      selected: [1, 16, 26, 30],
-      price: 100,
-      type: 'super',
-      isOrange: false,
-    },
-    {
-      id: 2,
-      selected: [1, 16, 26, 30],
-      price: 100,
-      type: 'super',
-      isOrange: true,
-    },
-    {
-      id: 3,
-      selected: [1, 16, 26, 30],
-      price: 100,
-      type: 'other',
-      isOrange: true,
-    },
-    {
-      id: 4,
-      selected: [1, 16, 26, 30],
-      price: 100,
-      type: 'other',
-      isOrange: true,
-    },
-    {
-      id: 5,
-      selected: [1, 16, 26, 30],
-      price: 100,
-      type: 'other',
-      isOrange: false,
-    },
-    {
-      id: 6,
-      selected: [1, 16, 26, 30],
-      price: 100,
-      type: 'other',
-      isOrange: true,
-    },
-  ];
+  // 1. Ищем активный тираж
+  const { data: draws, isLoading: isLoadingDraws } = useCurrentDraws(lotteryId);
+  const activeDraw = draws?.find((d) => d.status === 'open');
 
-  // Массив ID билетов, которые сейчас в корзине
+  // 2. Грузим билеты для активного тиража
+  const { data: ticketsData, isLoading: isLoadingTickets } = useDrawTickets(
+    lotteryId,
+    activeDraw?.drawId,
+  );
+
+  const tickets = ticketsData?.tickets || [];
   const basketIds = cartItems.map((item) => item.id);
 
-  // Вычисления для корзины (считаем напрямую из данных Zustand)
   const superTickets = cartItems.filter((t) => t.type === 'super');
   const otherTickets = cartItems.filter((t) => t.type === 'other');
 
@@ -163,40 +142,72 @@ export const DrawTicketsBlock = () => {
   const otherSum = otherTickets.reduce((acc, t) => acc + t.price, 0);
   const totalPrice = superSum + otherSum;
 
+  const isLoading = isLoadingDraws || isLoadingTickets;
+
   return (
     <div>
+      {/* СЕТКА БИЛЕТОВ */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10'>
-        {mockTickets.map((ticket) => (
-          <TicketCard
-            key={ticket.id}
-            ticketNumber={ticket.id}
-            price={ticket.price}
-            selectedNumbers={ticket.selected}
-            isOrangeButton={ticket.isOrange}
-            isInBasket={basketIds.includes(ticket.id)} // Проверяем, есть ли билет в сторе
-            onToggle={() =>
-              toggleItem({
-                id: ticket.id,
-                price: ticket.price,
-                type: ticket.type as 'super' | 'other',
-              })
-            }
-          />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 6 }).map((_, i) => <TicketSkeleton key={i} />)
+        ) : !activeDraw ? (
+          <div className='col-span-full text-center py-10 text-gray-500'>
+            В данный момент нет активных тиражей.
+          </div>
+        ) : tickets.length === 0 ? (
+          <div className='col-span-full text-center py-10 text-gray-500'>
+            Все билеты раскуплены!
+          </div>
+        ) : (
+          tickets.map((ticket, index) => {
+            const type = index % 2 === 0 ? 'super' : 'other';
+            const isOrange = index % 2 === 0;
+
+            // Извлекаем строковый ID
+            const ticketIdStr = String(ticket.ticketId);
+
+            return (
+              <TicketCard
+                key={ticketIdStr}
+                ticketNumber={ticket.ticketNumber || ticketIdStr.slice(-6)}
+                price={ticket.price}
+                selectedNumbers={ticket.combination || []}
+                isOrangeButton={isOrange}
+                isInBasket={basketIds.includes(ticketIdStr)}
+                onToggle={() =>
+                  toggleItem({
+                    id: ticketIdStr,
+                    price: ticket.price,
+                    type: type as 'super' | 'other',
+                    // Данные для корзины и запроса на покупку
+                    ticketNumber: ticket.ticketNumber || ticketIdStr.slice(-6),
+                    combination: ticket.combination || [],
+                    lotteryId: lotteryId,
+                    drawId: activeDraw.drawId,
+                    name: `Тираж №${activeDraw.drawNumber}`,
+                  })
+                }
+              />
+            );
+          })
+        )}
       </div>
 
-      <div className='flex justify-center mb-35 lg:mb-25'>
-        <button className='bg-transparent border border-[#A3A3A3] text-[#4B4B4B] font-medium py-3 px-12 rounded-full hover:bg-gray-50 active:scale-95 transition-all text-sm'>
-          Посмотреть еще
-        </button>
-      </div>
+      {!isLoading && tickets.length > 0 && (
+        <div className='flex justify-center mb-35 lg:mb-25'>
+          <button className='bg-transparent border border-[#A3A3A3] text-[#4B4B4B] font-medium py-3 px-12 rounded-full hover:bg-gray-50 active:scale-95 transition-all text-sm'>
+            Посмотреть еще
+          </button>
+        </div>
+      )}
 
+      {/* ПАПКА КОРЗИНЫ */}
       {mounted &&
         cartItems.length > 0 &&
         createPortal(
           <>
-            <div className='hidden lg:flex fixed bottom-0 left-0 right-0 bg-[#FFF7F0] border-t border-[#FEEEDF] z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.15)] py-4 transition-all'>
-              <div className='max-w-350 w-full mx-auto px-8 flex items-center justify-between'>
+            <div className='hidden lg:flex fixed bottom-0 left-0 right-0 bg-[#FFF7F0] border-t border-[#FEEEDF] z-[100] shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.15)] py-4 transition-all'>
+              <div className='max-w-[1045px] w-full mx-auto px-8 flex items-center justify-between'>
                 <div className='flex items-center gap-6'>
                   <div className='flex gap-2 opacity-90'>
                     <span
@@ -257,9 +268,10 @@ export const DrawTicketsBlock = () => {
               </div>
             </div>
 
+            {/* Мобильная корзина */}
             <div
               className={clsx(
-                'flex lg:hidden fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex-col overflow-hidden',
+                'flex lg:hidden fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-[100] shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex-col overflow-hidden',
                 isExpanded ? 'bottom-0' : 'bottom-0',
               )}
             >

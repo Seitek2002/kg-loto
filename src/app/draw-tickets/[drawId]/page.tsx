@@ -8,7 +8,6 @@ import { DrawTicketsBlock } from './components/DrawTicketsBlock';
 import { LotteryConditions } from '@/components/features/lottery-detail/LotteryConditions';
 import { PopularTickets } from '@/widgets/PopularTickets';
 import { WinnersHistory } from '@/widgets/WinnersHistory';
-import { LotteryItem } from '@/types/api';
 import { DrawArchiveBlock } from './components/DrawArchiveBlock';
 
 const MOCK_TERMS = [
@@ -65,57 +64,13 @@ const MOCK_TERMS = [
   },
 ];
 
-const MOCK_OTHER_LOTTERIES: LotteryItem[] = [
-  {
-    id: 2,
-    title: 'Легкий выигрыш!',
-    titleText: '',
-    subtitle:
-      'Популярные лотереи привлекают внимание благодаря крупным джекпотам, частым тиражам и удобным условиям участия.',
-    logo: 'https://kgloto.com/media/lottery/logos/2026/03/05/Frame_20.png',
-    imageLive:
-      'https://kgloto.com/media/lottery/live/2026/03/04/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA_%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2026-03-04_%D0%B2_18_IYDmT0B.25.03.png',
-    mainPrize1: '500 000 сом',
-    mainPrize2: '2 x 100 000 сом',
-    mainPrize3: '5 x 50 000 сом',
-    prizeText: '500 000 KGS',
-    buttonText: 'Играть',
-    buttonPrice: 50,
-    buttonLabel: 'ИГРАТЬ • 50 СОМ',
-    buttonUrl: undefined,
-    drawTime: '15:00',
-    theme: 'white',
-    backgroundImage:
-      'https://kgloto.com/media/lottery/backgrounds/2026/03/04/onoi_cart_edited.json',
-    font: 'default',
-  },
-  {
-    id: 1,
-    title: 'Забери подарок!',
-    titleText: '',
-    subtitle: '',
-    logo: 'https://kgloto.com/media/lottery/logos/2026/03/05/Frame_19.png',
-    imageLive:
-      'https://kgloto.com/media/lottery/live/2026/03/05/%D1%83%D0%B9%D0%B3%D0%BE_%D0%B1%D0%B5%D0%BB%D0%B5%D0%BA.jpg',
-    mainPrize1: '3 x Ноутбук',
-    mainPrize2: '8 x Смартфон Xiaomi',
-    mainPrize3: '10 x Телевизоры 43 дюйма',
-    prizeText: 'Ноутбук',
-    buttonText: 'Играть',
-    buttonPrice: 200,
-    buttonLabel: 'ИГРАТЬ • 200 СОМ',
-    buttonUrl: 'https://kgloto.com/lottery/1',
-    drawTime: '16:50',
-    theme: 'white',
-    backgroundImage:
-      'https://kgloto.com/media/lottery/backgrounds/2026/03/04/uigo_cart_edited.json',
-    font: 'default',
-  },
-];
+interface PageProps {
+  params: { id: string }; // 🔥 Получаем ID лотереи из URL (например, lotto-001)
+}
 
-export default async function SuperJackpotPage() {
-  // Теперь серверные переводы работают без проблем!
+export default async function SuperJackpotPage({ params }: PageProps) {
   const t = await getTranslations('populartickets');
+  const lotteryId = params.id; // Достали ID
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] font-rubik pb-20'>
@@ -127,7 +82,7 @@ export default async function SuperJackpotPage() {
           </Link>
           <span>/</span>
           <Link
-            href='/draw-lotteries'
+            href='/draw-tickets'
             className='hover:text-[#4B4B4B] transition-colors'
           >
             Тиражные лотереи
@@ -136,19 +91,17 @@ export default async function SuperJackpotPage() {
           <span className='text-[#4B4B4B] font-bold'>Суперджекпот</span>
         </nav>
 
-        {/* 🔥 КЛИЕНТСКАЯ ОБОЛОЧКА С ПЕРЕДАЧЕЙ СЕРВЕРНЫХ ПРОПСОВ */}
+        {/* Передаем lotteryId в нужные блоки! */}
         <DrawTicketsClient
-          // ТАБ 1: Билеты
+          // ТАБ 1: Билеты (Сюда прокинем ID, чтобы вытащить статус "open")
           ticketsTab={
             <div className='mt-16 lg:mt-20'>
               <div className='mb-12'>
-                <WinnersHistory />{' '}
-                {/* Вызываем серверный компонент на сервере! */}
+                <WinnersHistory />
               </div>
-              <DrawTicketsBlock />
+              <DrawTicketsBlock lotteryId={lotteryId} />
             </div>
           }
-          // ТАБ 2: Правила игры
           rulesTab={
             <>
               <DrawRulesBlock />
@@ -158,12 +111,12 @@ export default async function SuperJackpotPage() {
               <LotteryConditions terms={MOCK_TERMS} />
               <PopularTickets
                 title={t('title') || 'Другие лотереи'}
-                initialLotteries={MOCK_OTHER_LOTTERIES}
+                currentLotteryId={lotteryId}
               />
             </>
           }
-          // ТАБ 3: Архив тиражей
-          archiveTab={<DrawArchiveBlock />}
+          // ТАБ 3: Архив тиражей (Сюда прокинем ID, чтобы вытащить статусы "completed")
+          archiveTab={<DrawArchiveBlock lotteryId={lotteryId} />}
         />
       </div>
     </div>

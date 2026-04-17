@@ -1,8 +1,9 @@
 'use client';
 
 import { useMounted } from '@/hooks/useMounted';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { NumberedBall } from '@/components/ui/NumberedBall'; // 🔥 Подключили наш крутой компонент
 
 // Временные моковые данные
 const MOCK_MODAL_DATA = {
@@ -70,7 +71,7 @@ const MOCK_MODAL_DATA = {
 interface DrawDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  drawId: number | null;
+  drawId: string | null; // 🔥 ИСПРАВЛЕНО: Теперь принимаем строку, так как с API приходит UUID
 }
 
 export const DrawDetailsModal = ({
@@ -161,11 +162,13 @@ export const DrawDetailsModal = ({
             </h3>
             <div className='flex gap-2 flex-wrap'>
               {data.combinations.map((num, i) => (
+                // 🔥 ЗАМЕНИЛИ НА NumberedBall
+                // На десктопе size 44, на мобилках scale делает их визуально как 40px
                 <div
                   key={i}
-                  className='w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-[#1FAF38] text-white flex items-center justify-center text-[15px] font-bold shadow-sm'
+                  className='transform scale-[0.9] lg:scale-100 origin-left'
                 >
-                  {num}
+                  <NumberedBall number={num} size={44} />
                 </div>
               ))}
             </div>
@@ -196,7 +199,7 @@ export const DrawDetailsModal = ({
               </span>
             </div>
           </div>
-          <button className='bg-[#4B4B4B] hover:bg-[#4B4B4B] text-white py-3 px-6 rounded-full text-[14px] font-bold transition-colors whitespace-nowrap self-start lg:self-center'>
+          <button className='bg-[#4B4B4B] hover:bg-[#4B4B4B] text-white py-3 px-6 rounded-full text-[14px] font-bold transition-colors whitespace-nowrap self-start lg:self-center active:scale-95'>
             Купить билет
           </button>
         </div>

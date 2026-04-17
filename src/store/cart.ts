@@ -1,9 +1,15 @@
 import { create } from 'zustand';
 
 export interface CartItem {
-  id: number;
+  id: string; // Это ticketId
   price: number;
   type: 'super' | 'other';
+  // 🔥 ДОБАВЛЯЕМ ДАННЫЕ ДЛЯ КОРЗИНЫ И ПОКУПКИ:
+  ticketNumber: string;
+  combination: number[];
+  lotteryId: string;
+  drawId: string;
+  name: string; // Название лотереи или тиража
 }
 
 interface CartStore {
@@ -15,14 +21,13 @@ interface CartStore {
 export const useCartStore = create<CartStore>((set) => ({
   items: [],
 
-  // Добавляем или удаляем билет (в зависимости от того, есть ли он уже в корзине)
   toggleItem: (item) =>
     set((state) => {
       const exists = state.items.find((i) => i.id === item.id);
       if (exists) {
-        return { items: state.items.filter((i) => i.id !== item.id) }; // Удаляем
+        return { items: state.items.filter((i) => i.id !== item.id) };
       }
-      return { items: [...state.items, item] }; // Добавляем
+      return { items: [...state.items, item] };
     }),
 
   clearCart: () => set({ items: [] }),
