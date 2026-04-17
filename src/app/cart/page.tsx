@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2, ShoppingCart } from 'lucide-react';
-import { NumberedBall } from '@/components/ui/NumberedBall'; // 🔥 Импортируем наш компонент
+import { NumberedBall } from '@/components/ui/NumberedBall';
 
 const INITIAL_CART_ITEMS = [
   {
