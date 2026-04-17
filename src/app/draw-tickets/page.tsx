@@ -1,171 +1,96 @@
+'use client';
+
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
+import { Clock } from 'lucide-react';
 
-// Импорты блоков
-import { DrawTicketsClient } from './components/DrawTicketsClient';
-import { DrawRulesBlock } from './components/DrawRulesBlock';
-import { DrawTicketsBlock } from './components/DrawTicketsBlock';
-import { LotteryConditions } from '@/components/features/lottery-detail/LotteryConditions';
-import { PopularTickets } from '@/widgets/PopularTickets';
-import { WinnersHistory } from '@/widgets/WinnersHistory';
-import { LotteryItem } from '@/types/api';
-import { DrawArchiveBlock } from './components/DrawArchiveBlock';
-
-const MOCK_TERMS = [
+// Моковые данные для карточек (позже заменим на данные с API)
+const MOCK_LOTTERIES = [
   {
-    id: 1,
-    text: 'Лицам младше 18-ти лет запрещено приобретать лотерейные билеты.',
-    order: 1,
+    id: '1',
+    title: 'Суперприз',
+    prize: '6 000 000',
+    price: 100,
+    timeLeff: '2 дн. 12:34:17',
+    image:
+      'https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=600&auto=format&fit=crop', // Временно рандомная картинка
   },
   {
-    id: 2,
-    text: 'Участником считается физическое лицо, законно приобретшее лотерейный билет.',
-    order: 2,
-  },
-  {
-    id: 3,
-    text: 'Стоимость билета не должна превышать цену, указанную на билете.',
-    order: 3,
-  },
-  {
-    id: 4,
-    text: 'Оператор не несет ответственности за утрату или повреждение билета после его приобретения.',
-    order: 4,
-  },
-  {
-    id: 5,
-    text: 'Билет возврату или обмену не подлежит. Каждый билет имеет уникальный номер: дублирование номеров в рамках одного тиража исключено.',
-    order: 5,
-  },
-  {
-    id: 6,
-    text: 'Приобретая билет, Участник автоматически соглашается с условиями лотереи, размещенными на сайте www.kgloto.com.',
-    order: 6,
-  },
-  { id: 7, text: 'Розыгрыш проводится в дату, указанную на билете', order: 7 },
-  {
-    id: 8,
-    text: 'Участник обязан самостоятельно проверять результаты на сайте или в точках продаж.',
-    order: 8,
-  },
-  {
-    id: 9,
-    text: 'Трансляция доступна на сайте www.kgloto.com и Youtube-канале.',
-    order: 9,
-  },
-  {
-    id: 10,
-    text: 'Билет является единственным документом, подтверждающим право на получение выигрыша. Необходимо сохранять его до завершения всех процедур.',
-    order: 10,
-  },
-  {
-    id: 11,
-    text: 'Налоги и сборы удерживаются в соответствии с законодательством Кыргызской Республики. Подробная информация размещена на сайте Оператора.',
-    order: 11,
+    id: '2',
+    title: 'Суперприз',
+    prize: '6 000 000',
+    price: 100,
+    timeLeff: '2 дн. 12:34:17',
+    image:
+      'https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=600&auto=format&fit=crop',
   },
 ];
 
-const MOCK_OTHER_LOTTERIES: LotteryItem[] = [
-  {
-    id: 2,
-    title: 'Легкий выигрыш!',
-    titleText: '',
-    subtitle:
-      'Популярные лотереи привлекают внимание благодаря крупным джекпотам, частым тиражам и удобным условиям участия.',
-    logo: 'https://kgloto.com/media/lottery/logos/2026/03/05/Frame_20.png',
-    imageLive:
-      'https://kgloto.com/media/lottery/live/2026/03/04/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA_%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2026-03-04_%D0%B2_18_IYDmT0B.25.03.png',
-    mainPrize1: '500 000 сом',
-    mainPrize2: '2 x 100 000 сом',
-    mainPrize3: '5 x 50 000 сом',
-    prizeText: '500 000 KGS',
-    buttonText: 'Играть',
-    buttonPrice: 50,
-    buttonLabel: 'ИГРАТЬ • 50 СОМ',
-    buttonUrl: undefined,
-    drawTime: '15:00',
-    theme: 'white',
-    backgroundImage:
-      'https://kgloto.com/media/lottery/backgrounds/2026/03/04/onoi_cart_edited.json',
-    font: 'default',
-  },
-  {
-    id: 1,
-    title: 'Забери подарок!',
-    titleText: '',
-    subtitle: '',
-    logo: 'https://kgloto.com/media/lottery/logos/2026/03/05/Frame_19.png',
-    imageLive:
-      'https://kgloto.com/media/lottery/live/2026/03/05/%D1%83%D0%B9%D0%B3%D0%BE_%D0%B1%D0%B5%D0%BB%D0%B5%D0%BA.jpg',
-    mainPrize1: '3 x Ноутбук',
-    mainPrize2: '8 x Смартфон Xiaomi',
-    mainPrize3: '10 x Телевизоры 43 дюйма',
-    prizeText: 'Ноутбук',
-    buttonText: 'Играть',
-    buttonPrice: 200,
-    buttonLabel: 'ИГРАТЬ • 200 СОМ',
-    buttonUrl: 'https://kgloto.com/lottery/1',
-    drawTime: '16:50',
-    theme: 'white',
-    backgroundImage:
-      'https://kgloto.com/media/lottery/backgrounds/2026/03/04/uigo_cart_edited.json',
-    font: 'default',
-  },
-];
-
-export default async function SuperJackpotPage() {
-  // Теперь серверные переводы работают без проблем!
-  const t = await getTranslations('populartickets');
-
+export default function DrawTicketsPage() {
   return (
-    <div className='min-h-screen bg-[#F9F9F9] font-rubik pb-20'>
-      <div className='max-w-350 mx-auto px-4 pt-6'>
-        {/* ХЛЕБНЫЕ КРОШКИ */}
-        <nav className='flex items-center gap-2 text-[12px] font-medium text-[#737373] mb-6'>
-          <Link href='/' className='hover:text-[#4B4B4B] transition-colors'>
+    <div className='min-h-screen bg-[#F5F5F5] font-rubik pb-32 md:pb-12 select-none'>
+      <div className='max-w-[1045px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10'>
+        {/* Хлебные крошки */}
+        <div className='flex items-center gap-2 text-[13px] md:text-base text-[#4B4B4B] font-medium mb-6 md:mb-8'>
+          <Link href='/' className='hover:opacity-80 transition-opacity'>
             Главная
           </Link>
-          <span>/</span>
-          <Link
-            href='/draw-lotteries'
-            className='hover:text-[#4B4B4B] transition-colors'
-          >
-            Тиражные лотереи
-          </Link>
-          <span>/</span>
-          <span className='text-[#4B4B4B] font-bold'>Суперджекпот</span>
-        </nav>
+          <span className='text-gray-400'>/</span>
+          <span className='font-bold text-[#2D2D2D]'>Тиражные лотереи</span>
+        </div>
 
-        {/* 🔥 КЛИЕНТСКАЯ ОБОЛОЧКА С ПЕРЕДАЧЕЙ СЕРВЕРНЫХ ПРОПСОВ */}
-        <DrawTicketsClient
-          // ТАБ 1: Билеты
-          ticketsTab={
-            <div className='mt-16 lg:mt-20'>
-              <div className='mb-12'>
-                <WinnersHistory />{' '}
-                {/* Вызываем серверный компонент на сервере! */}
-              </div>
-              <DrawTicketsBlock />
-            </div>
-          }
-          // ТАБ 2: Правила игры
-          rulesTab={
-            <>
-              <DrawRulesBlock />
-              <div className='mt-16 lg:mt-24'>
-                <WinnersHistory />
-              </div>
-              <LotteryConditions terms={MOCK_TERMS} />
-              <PopularTickets
-                title={t('title') || 'Другие лотереи'}
-                initialLotteries={MOCK_OTHER_LOTTERIES}
-              />
-            </>
-          }
-          // ТАБ 3: Архив тиражей
-          archiveTab={<DrawArchiveBlock />}
-        />
+        {/* Сетка карточек лотерей */}
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6'>
+          {MOCK_LOTTERIES.map((lottery) => (
+            <LotteryCard key={lottery.id} lottery={lottery} />
+          ))}
+        </div>
       </div>
     </div>
+  );
+}
+
+// 🔥 Компонент Карточки
+function LotteryCard({ lottery }: { lottery: any }) {
+  return (
+    <Link
+      href={`/draw-tickets/${lottery.id}`} // Ссылка на наш динамический роут
+      className='group relative w-full aspect-[16/9] sm:aspect-[4/2.5] rounded-[24px] overflow-hidden block active:scale-[0.98] transition-transform duration-200'
+    >
+      {/* Фоновая картинка */}
+      <Image
+        src={lottery.image}
+        alt='Фон лотереи'
+        fill
+        className='object-cover transition-transform duration-500 group-hover:scale-105'
+      />
+
+      {/* Затемнение для читаемости текста */}
+      <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10' />
+
+      {/* Таймер (Слева сверху) */}
+      <div className='absolute top-4 left-4 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full px-3 py-1.5 flex items-center gap-2 text-[12px] md:text-[14px] font-medium shadow-sm'>
+        <Clock size={16} />
+        {lottery.timeLeff}
+      </div>
+
+      {/* Контент (Слева снизу) */}
+      <div className='absolute bottom-5 left-5 md:bottom-6 md:left-6 flex flex-col gap-1 md:gap-2'>
+        <span className='text-white font-bold text-[14px] md:text-[18px]'>
+          {lottery.title}
+        </span>
+
+        <div className='text-[#FFD600] font-black text-[28px] md:text-[40px] leading-none drop-shadow-md flex items-end gap-2'>
+          {lottery.prize}
+          <span className='text-white text-[20px] md:text-[28px] underline decoration-2 underline-offset-4'>
+            с
+          </span>
+        </div>
+
+        <button className='mt-2 bg-white text-[#2D2D2D] rounded-full px-5 py-2 md:py-2.5 text-[12px] md:text-[14px] font-black uppercase tracking-wide w-max shadow-md group-hover:bg-[#FFD600] transition-colors duration-300'>
+          Играть • {lottery.price} СОМ
+        </button>
+      </div>
+    </Link>
   );
 }
