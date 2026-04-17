@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import { DrawDetailsModal } from './DrawDetailsModal';
+import { NumberedBall } from '@/components/ui/NumberedBall'; // 🔥 Импортируем компонент
 
 // Моковые данные для архива
 const MOCK_ARCHIVE_DATA = [
@@ -156,17 +157,13 @@ export const DrawArchiveBlock = () => {
                         </div>
                         <div className='flex gap-1.5 flex-wrap'>
                           {item.combinations.map((num, i) => (
-                            <div
-                              key={i}
-                              className='w-8 h-8 rounded-full bg-[#1FAF38] text-white flex items-center justify-center text-[13px] font-black'
-                            >
-                              {num}
-                            </div>
+                            // 🔥 Заменили на NumberedBall, выставили размер 32px (w-8 h-8)
+                            <NumberedBall key={i} number={num} size={32} />
                           ))}
                         </div>
                         <div
                           className='text-right text-[#4B4B4B] text-[14px] underline cursor-pointer hover:text-[#4B4B4B]'
-                          onClick={() => setSelectedDrawId(item.id)} // <-- Добавлено
+                          onClick={() => setSelectedDrawId(item.id)}
                         >
                           Подробнее
                         </div>
@@ -207,12 +204,8 @@ export const DrawArchiveBlock = () => {
                           </span>
                           <div className='flex gap-1 flex-wrap justify-end'>
                             {item.combinations.map((num, i) => (
-                              <div
-                                key={i}
-                                className='w-[28px] h-[28px] rounded-full bg-[#1FAF38] text-white flex items-center justify-center text-[12px] font-bold'
-                              >
-                                {num}
-                              </div>
+                              // 🔥 Заменили на NumberedBall, выставили размер 28px
+                              <NumberedBall key={i} number={num} size={28} />
                             ))}
                           </div>
                         </div>
