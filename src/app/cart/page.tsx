@@ -2,10 +2,20 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2, Plus } from 'lucide-react';
+import {
+  Trash2,
+  Plus,
+  ShoppingCart,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+} from 'lucide-react';
 import { NumberedBall } from '@/components/ui/NumberedBall';
 import { useCartStore } from '@/store/cart';
 import { useMounted } from '@/hooks/useMounted';
+
+import { usePurchaseTickets } from '@/entities/ticket/api';
+import { useState } from 'react';
 
 const getTicketPlural = (count: number) => {
   const lastDigit = count % 10;
@@ -25,7 +35,7 @@ const QuickAddTicketMock = ({
   price: number;
 }) => {
   const numbers = Array.from({ length: 36 }, (_, i) => i + 1);
-  const selectedMock = [1, 16, 26, 30]; // Просто для визуала
+  const selectedMock = [1, 16, 26, 30];
 
   return (
     <div className='bg-white rounded-[24px] p-5 shadow-sm border border-gray-100 flex flex-col relative mb-4'>
@@ -69,7 +79,14 @@ const QuickAddTicketMock = ({
 export default function CartPage() {
   const items = useCartStore((state) => state.items);
   const toggleItem = useCartStore((state) => state.toggleItem);
+  const clearCart = useCartStore((state) => state.clearCart);
+
   const mounted = useMounted();
+  const { mutate: purchaseTickets, isPending } = usePurchaseTickets();
+
+  // Локальные стейты для обработки результата покупки
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const removeItem = (item: any) => toggleItem(item);
 
@@ -85,7 +102,73 @@ export default function CartPage() {
     .filter((t) => t.type === 'other')
     .reduce((acc, t) => acc + t.price, 0);
 
+  // 🔥 ФУНКЦИЯ ОПЛАТЫ
+  const handleCheckout = () => {
+    setErrorMessage(null);
+
+    // Генерируем уникальный orderId на фронте
+    const orderId =
+      typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `order-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
+    const payload = {
+      orderId: orderId,
+      purchaseDatetime: new Date().toISOString(),
+      items: items.map((item) => ({
+        lotteryId: item.lotteryId,
+        drawId: item.drawId,
+        ticketId: item.id,
+        price: String(item.price), // Бэкенд ждет цену как строку (decimal)
+        currency: 'KGS',
+      })),
+    };
+
+    purchaseTickets(payload, {
+      onSuccess: () => {
+        clearCart(); // Чистим корзину
+        setIsSuccessModalOpen(true); // Показываем модалку успеха
+      },
+      onError: (error: any) => {
+        // Обработка ошибок (например, статус 402 - недостаточно средств)
+        const status = error?.response?.status;
+        if (status === 402) {
+          setErrorMessage(
+            'Недостаточно средств на балансе. Пожалуйста, пополните кошелек.',
+          );
+        } else {
+          setErrorMessage('Произошла ошибка при покупке. Попробуйте позже.');
+        }
+      },
+    });
+  };
+
   if (!mounted) return null;
+
+  // Если покупка успешна, рендерим только красивый экран успеха
+  if (isSuccessModalOpen) {
+    return (
+      <div className='min-h-[70vh] flex flex-col items-center justify-center px-4 bg-[#F5F5F5] font-rubik'>
+        <div className='bg-white p-8 md:p-12 rounded-[32px] shadow-sm max-w-md w-full text-center flex flex-col items-center animate-in zoom-in-95 duration-500'>
+          <div className='w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6'>
+            <CheckCircle2 size={40} strokeWidth={2.5} />
+          </div>
+          <h2 className='text-[24px] font-black text-[#4B4B4B] mb-3'>
+            Покупка успешна!
+          </h2>
+          <p className='text-[#737373] text-[15px] mb-8 leading-relaxed'>
+            Ваши билеты успешно приобретены и добавлены в личный кабинет. Желаем
+            удачи в розыгрыше!
+          </p>
+          <Link href='/profile' className='w-full'>
+            <button className='w-full bg-[#FF7600] text-white py-4 rounded-xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all'>
+              Перейти к моим билетам
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-screen bg-[#F5F5F5] font-rubik pb-32 md:pb-16 select-none'>
@@ -113,13 +196,13 @@ export default function CartPage() {
 
         {items.length > 0 ? (
           <div className='flex flex-col lg:flex-row gap-6 items-start'>
-            {/* 1. ЛЕВАЯ КОЛОНКА: Быстрое добавление (Только ПК) */}
+            {/* 1. ЛЕВАЯ КОЛОНКА */}
             <div className='hidden lg:flex w-[320px] flex-col shrink-0'>
               <QuickAddTicketMock number={1} price={150} />
               <QuickAddTicketMock number={2} price={150} />
             </div>
 
-            {/* 2. ЦЕНТРАЛЬНАЯ КОЛОНКА: Список билетов */}
+            {/* 2. ЦЕНТРАЛЬНАЯ КОЛОНКА */}
             <div className='flex-1 w-full flex flex-col gap-3 md:gap-4'>
               {items.map((item) => (
                 <div
@@ -160,7 +243,6 @@ export default function CartPage() {
                 </div>
               ))}
 
-              {/* Кнопка добавить еще билет (особенно важна на мобилках) */}
               <Link href='/draw-tickets' className='block w-full'>
                 <button className='w-full py-4 rounded-[16px] bg-[#4B4B4B] text-white flex items-center justify-center gap-2 font-bold text-[14px] hover:bg-[#333333] transition-colors active:scale-[0.98]'>
                   <Plus size={18} /> Добавить еще билет
@@ -168,7 +250,7 @@ export default function CartPage() {
               </Link>
             </div>
 
-            {/* 3. ПРАВАЯ КОЛОНКА: Детали заказа (Только ПК) */}
+            {/* 3. ПРАВАЯ КОЛОНКА (Десктоп оплата) */}
             <div className='hidden lg:flex w-[320px] flex-col bg-white rounded-[24px] p-6 shadow-sm shrink-0 sticky top-24'>
               <h3 className='text-[18px] font-bold text-[#4B4B4B] mb-5'>
                 Детали заказа
@@ -202,8 +284,21 @@ export default function CartPage() {
                 </span>
               </div>
 
-              <button className='w-full bg-[#FF7600] text-white py-4 rounded-xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all'>
-                Купить
+              {/* Вывод ошибки */}
+              {errorMessage && (
+                <div className='bg-red-50 text-red-500 p-3 rounded-xl flex items-start gap-2 text-sm font-medium mb-4'>
+                  <AlertCircle size={16} className='shrink-0 mt-0.5' />
+                  <p>{errorMessage}</p>
+                </div>
+              )}
+
+              <button
+                onClick={handleCheckout}
+                disabled={isPending}
+                className='w-full bg-[#FF7600] text-white py-4 rounded-xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] disabled:bg-[#ffb073] disabled:cursor-wait active:scale-95 transition-all flex items-center justify-center gap-2'
+              >
+                {isPending && <Loader2 size={18} className='animate-spin' />}
+                {isPending ? 'Оплата...' : 'Купить'}
               </button>
             </div>
           </div>
@@ -221,10 +316,18 @@ export default function CartPage() {
           </div>
         )}
 
-        {/* МОБИЛЬНАЯ ПАНЕЛЬ ОПЛАТЫ (Drawer снизу) */}
+        {/* МОБИЛЬНАЯ ПАНЕЛЬ ОПЛАТЫ */}
         {items.length > 0 && (
           <div className='lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[24px] px-5 pb-8 pt-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-40'>
             <div className='w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4' />
+
+            {/* Ошибка на мобилке */}
+            {errorMessage && (
+              <div className='bg-red-50 text-red-500 p-3 rounded-xl flex items-center gap-2 text-xs font-medium mb-4'>
+                <AlertCircle size={14} className='shrink-0' />
+                <p>{errorMessage}</p>
+              </div>
+            )}
 
             <div className='flex items-center justify-between mb-4'>
               <div className='flex flex-col'>
@@ -243,8 +346,13 @@ export default function CartPage() {
               </div>
             </div>
 
-            <button className='w-full bg-[#FF7600] text-white py-4 rounded-2xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all'>
-              Оплатить
+            <button
+              onClick={handleCheckout}
+              disabled={isPending}
+              className='w-full bg-[#FF7600] text-white py-4 rounded-2xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] disabled:bg-[#ffb073] disabled:cursor-wait active:scale-95 transition-all flex items-center justify-center gap-2'
+            >
+              {isPending && <Loader2 size={18} className='animate-spin' />}
+              {isPending ? 'Обработка...' : 'Оплатить'}
             </button>
           </div>
         )}

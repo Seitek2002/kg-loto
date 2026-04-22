@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { clsx } from 'clsx';
+import Link from 'next/link';
 import { useAuthStore } from '@/store/auth';
 import { useCartStore } from '@/store/cart';
-import { useCurrentDraws } from '@/hooks/useLotteries';
-import { useDrawTickets } from '@/hooks/useTickets';
+import { useCurrentDraw, useTickets } from '@/entities/ticket/api';
 
 const getTicketPlural = (count: number) => {
   const lastDigit = count % 10;
@@ -121,17 +121,24 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
   }, []);
 
   // 1. Ищем активный тираж
-  const { data: draws, isLoading: isLoadingDraws } = useCurrentDraws(lotteryId);
-  const activeDraw = draws?.find((d) => d.status === 'open');
+  const { data: activeDraw, isLoading: isLoadingDraws } =
+    useCurrentDraw(lotteryId);
 
   // 2. Грузим билеты для активного тиража
-  const { data: ticketsData, isLoading: isLoadingTickets } = useDrawTickets(
-    lotteryId,
-    activeDraw?.drawId,
+  const { data: ticketsData, isLoading: isLoadingTickets } = useTickets(
+    {
+      lotteryId: lotteryId,
+      drawId: activeDraw?.drawId || '',
+      limit: 30, // 🔥 Изменил на 30, как в webview
+    },
+    !!activeDraw?.drawId,
   );
 
-  const tickets = ticketsData?.tickets || [];
-  const basketIds = cartItems.map((item) => item.id);
+  // 🔥 Фильтруем только ДОСТУПНЫЕ билеты (решение проблемы пустоты)
+  const availableTickets =
+    ticketsData?.tickets?.filter((t) => t.status === 'available') || [];
+
+  const basketIds = cartItems.map((item) => String(item.id));
 
   const superTickets = cartItems.filter((t) => t.type === 'super');
   const otherTickets = cartItems.filter((t) => t.type === 'other');
@@ -149,21 +156,29 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
       {/* СЕТКА БИЛЕТОВ */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10'>
         {isLoading ? (
-          Array.from({ length: 6 }).map((_, i) => <TicketSkeleton key={i} />)
+          Array.from({ length: 4 }).map((_, i) => <TicketSkeleton key={i} />)
         ) : !activeDraw ? (
-          <div className='col-span-full text-center py-10 text-gray-500'>
-            В данный момент нет активных тиражей.
+          <div className='col-span-full text-center py-20 bg-white rounded-4xl border border-gray-100 shadow-sm'>
+            <h3 className='text-xl font-bold text-[#4B4B4B] mb-2'>
+              Тираж закрыт
+            </h3>
+            <p className='text-gray-500'>
+              В данный момент нет активных тиражей для этой лотереи.
+            </p>
           </div>
-        ) : tickets.length === 0 ? (
-          <div className='col-span-full text-center py-10 text-gray-500'>
-            Все билеты раскуплены!
+        ) : availableTickets.length === 0 ? (
+          <div className='col-span-full text-center py-20 bg-white rounded-4xl border border-gray-100 shadow-sm'>
+            <h3 className='text-xl font-bold text-[#4B4B4B] mb-2'>
+              Билеты раскуплены
+            </h3>
+            <p className='text-gray-500'>
+              Дождитесь следующего тиража или выберите другую лотерею.
+            </p>
           </div>
         ) : (
-          tickets.map((ticket, index) => {
+          availableTickets.map((ticket, index) => {
             const type = index % 2 === 0 ? 'super' : 'other';
             const isOrange = index % 2 === 0;
-
-            // Извлекаем строковый ID
             const ticketIdStr = String(ticket.ticketId);
 
             return (
@@ -179,7 +194,6 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
                     id: ticketIdStr,
                     price: ticket.price,
                     type: type as 'super' | 'other',
-                    // Данные для корзины и запроса на покупку
                     ticketNumber: ticket.ticketNumber || ticketIdStr.slice(-6),
                     combination: ticket.combination || [],
                     lotteryId: lotteryId,
@@ -193,7 +207,7 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
         )}
       </div>
 
-      {!isLoading && tickets.length > 0 && (
+      {!isLoading && availableTickets.length > 0 && (
         <div className='flex justify-center mb-35 lg:mb-25'>
           <button className='bg-transparent border border-[#A3A3A3] text-[#4B4B4B] font-medium py-3 px-12 rounded-full hover:bg-gray-50 active:scale-95 transition-all text-sm'>
             Посмотреть еще
@@ -261,9 +275,11 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
                       &bull; {totalPrice} <span className='underline'>с</span>
                     </span>
                   </div>
-                  <button className='bg-[#F58220] hover:bg-[#E5761A] text-white font-bold text-[14px] py-3.5 px-8 rounded-xl transition-colors shadow-md active:scale-95'>
-                    {user ? 'Оплатить' : 'Войдите для покупки'}
-                  </button>
+                  <Link href='/cart'>
+                    <button className='bg-[#F58220] hover:bg-[#E5761A] text-white font-bold text-[14px] py-3.5 px-8 rounded-xl transition-colors shadow-md active:scale-95'>
+                      {user ? 'Оплатить' : 'Войдите для покупки'}
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -296,9 +312,11 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
                     <span className='underline text-sm'>с</span>
                   </span>
                 </div>
-                <button className='bg-[#F58220] hover:bg-[#E5761A] text-white font-bold text-[13px] py-3.5 px-5 rounded-xl transition-colors shadow-md active:scale-95 shrink-0'>
-                  {user ? 'Оплатить' : 'Войдите для покупки'}
-                </button>
+                <Link href='/cart'>
+                  <button className='bg-[#F58220] hover:bg-[#E5761A] text-white font-bold text-[13px] py-3.5 px-5 rounded-xl transition-colors shadow-md active:scale-95 shrink-0'>
+                    {user ? 'Оплатить' : 'Войдите для покупки'}
+                  </button>
+                </Link>
               </div>
 
               <div

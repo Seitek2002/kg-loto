@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom'; // 🔥 Импортируем Портал
 import { X, Trophy, Frown, Loader2 } from 'lucide-react';
-import { useCheckTicket } from '@/hooks/useTickets';
 import { useMounted } from '@/hooks/useMounted';
+import { useCheckTicket } from '@/entities/ticket/api';
 
 interface CheckTicketModalProps {
   isOpen: boolean;

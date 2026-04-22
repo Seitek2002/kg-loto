@@ -65,12 +65,13 @@ const MOCK_TERMS = [
 ];
 
 interface PageProps {
-  params: { id: string }; // 🔥 Получаем ID лотереи из URL (например, lotto-001)
+  params: Promise<{ drawId: string }>;
 }
 
 export default async function SuperJackpotPage({ params }: PageProps) {
   const t = await getTranslations('populartickets');
-  const lotteryId = params.id; // Достали ID
+  const resolvedParams = await params;
+  const lotteryId = resolvedParams.drawId;
 
   return (
     <div className='min-h-screen bg-[#F9F9F9] font-rubik pb-20'>
@@ -91,9 +92,8 @@ export default async function SuperJackpotPage({ params }: PageProps) {
           <span className='text-[#4B4B4B] font-bold'>Суперджекпот</span>
         </nav>
 
-        {/* Передаем lotteryId в нужные блоки! */}
+        {/* Передаем lotteryId в нужные блоки */}
         <DrawTicketsClient
-          // ТАБ 1: Билеты (Сюда прокинем ID, чтобы вытащить статус "open")
           ticketsTab={
             <div className='mt-16 lg:mt-20'>
               <div className='mb-12'>
@@ -115,7 +115,6 @@ export default async function SuperJackpotPage({ params }: PageProps) {
               />
             </>
           }
-          // ТАБ 3: Архив тиражей (Сюда прокинем ID, чтобы вытащить статусы "completed")
           archiveTab={<DrawArchiveBlock lotteryId={lotteryId} />}
         />
       </div>
