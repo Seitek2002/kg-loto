@@ -94,6 +94,7 @@ export default async function SuperJackpotPage({ params }: PageProps) {
 
         {/* Передаем lotteryId в нужные блоки */}
         <DrawTicketsClient
+          lotteryId={lotteryId}
           ticketsTab={
             <div className='mt-16 lg:mt-20'>
               <div className='mb-12'>

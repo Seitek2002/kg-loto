@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import api from '@/services/api/apiClient';
-import { useAuthStore } from '@/shared/model/auth';
+import api from '@/services/api/apiClient'; // Проверь, правильный ли путь у тебя в проекте
+import { useAuthStore } from '@/store/auth'; // Проверь путь к стору
 
 interface BalanceResponse {
   data: {
@@ -13,6 +13,24 @@ interface BalanceResponse {
 interface PaylinkResponse {
   data: {
     paylinkUrl: string;
+  };
+}
+
+// 🔥 Добавляем интерфейсы для транзакций из Swagger
+export interface WalletTransaction {
+  date: string;
+  amount: string;
+  currency: string;
+  paymentMethod: string;
+  paymentStatus: string;
+}
+
+interface TransactionsResponse {
+  data: {
+    page: number;
+    limit: number;
+    total: number;
+    items: WalletTransaction[];
   };
 }
 
@@ -42,9 +60,15 @@ export const financeApi = {
     return data.data; // Возвращает { paylinkUrl: "https://..." }
   },
 
-  // 3. История выводов (пока оставляем заглушку, если апи для истории еще нет)
-  getWithdrawals: async () => {
-    return [];
+  // 3. Общая история транзакций (пополнения, покупки, выводы, выигрыши)
+  getTransactions: async (page = 1, limit = 20) => {
+    const { data } = await api.get<TransactionsResponse>(
+      '/me/balance/transactions/',
+      {
+        params: { page, limit },
+      },
+    );
+    return data.data.items; // Сразу возвращаем массив транзакций
   },
 };
 
@@ -66,7 +90,7 @@ export const useBalance = () => {
     },
     // Запрашиваем только если есть токен (юзер авторизован)
     enabled: !!token,
-    // Обновляем раз в 30 секунд (полезно для WebView)
+    // Обновляем раз в 30 секунд (полезно для WebView и веба)
     refetchInterval: 30000,
   });
 };
@@ -78,9 +102,13 @@ export const useTopUp = () => {
   });
 };
 
-export const useWithdrawals = () => {
+// 🔥 Хук для истории транзакций
+export const useTransactions = (page = 1, limit = 20) => {
+  const token = useAuthStore((state) => state.accessToken);
+
   return useQuery({
-    queryKey: ['withdrawals'],
-    queryFn: financeApi.getWithdrawals,
+    queryKey: ['transactions', page, limit],
+    queryFn: () => financeApi.getTransactions(page, limit),
+    enabled: !!token, // Запрашиваем только если авторизован
   });
 };

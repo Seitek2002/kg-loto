@@ -118,6 +118,9 @@ export const ticketApi = {
     const { data } = await api.get<{ data: MyTicketDto[] }>(
       '/me/balance/tickets/',
     );
+
+    console.log(data);
+
     return data.data;
   },
 

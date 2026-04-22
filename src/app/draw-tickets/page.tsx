@@ -98,6 +98,7 @@ export default function DrawTicketsPage() {
 
 // 🔥 Компонент Карточки
 function LotteryCard({ lottery }: { lottery: CurrentLottery }) {
+
   // Заглушки, пока бэкенд не добавит эти поля
   const fallbackImage =
     'https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=600&auto=format&fit=crop';
@@ -110,7 +111,7 @@ function LotteryCard({ lottery }: { lottery: CurrentLottery }) {
     >
       {/* Фоновая картинка (единая заглушка) */}
       <Image
-        src={fallbackImage}
+        src={lottery.imageUrl || fallbackImage}
         alt={lottery.name}
         fill
         sizes='(max-width: 768px) 100vw, 50vw'

@@ -29,6 +29,7 @@ export interface CurrentLottery {
   saleStatus: string;
   saleStartAt: string;
   saleEndAt: string;
+  imageUrl?: string;
 }
 
 // 3. 🔥 Тип для Тиражей (Активные и архивные)

@@ -4,30 +4,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { TicketCard } from '@/components/features/profile/TicketCard';
 import { EmptyTickets } from '@/components/features/profile/EmptyTickets';
 import { ProfileSubTabs } from '@/components/features/profile/ProfileSubTabs';
-import { useMyTickets } from '@/hooks/useTickets'; // 🔥 Подключаем наш хук
 import { Loader2 } from 'lucide-react';
-
-interface RawTicket {
-  id?: string | number;
-  ticketId?: string;
-  ticket_number?: string;
-  is_winning?: boolean;
-  status?: string;
-  win_amount?: string | number;
-  prize_amount?: string | number;
-  prize?: string | number;
-  lottery_name?: string;
-  lottery?: {
-    name?: string;
-    logo?: string;
-  };
-  price?: number;
-  draw_date?: string;
-  created_at?: string;
-  lottery_logo?: string;
-  // Добавляем индексную сигнатуру на случай, если бэкенд пришлет еще какие-то поля
-  [key: string]: unknown;
-}
+import { MyTicketDto, useMyTickets } from '@/entities/ticket/api';
 
 interface MappedTicket {
   id: string | number;
@@ -45,7 +23,7 @@ export default function ProfilePage() {
   const [activeSubTab, setActiveSubTab] = useState('Выигрышные');
 
   // 🔥 Запрашиваем билеты (передаем страницу 1 и лимит 50)
-  const { data, isLoading } = useMyTickets(1, 50);
+  const { data, isLoading } = useMyTickets();
 
   // Для отладки: выведет в консоль то, что реально пришло с сервера
   useEffect(() => {
@@ -54,33 +32,32 @@ export default function ProfilePage() {
 
   // 🔥 Превращаем данные с бэкенда в формат, который понимает TicketCard
   const mappedTickets: MappedTicket[] = useMemo(() => {
+    // Если данных нет, возвращаем пустой массив
     if (!data) return [];
 
-    // Бэкенд может отдавать массив напрямую, либо оборачивать в data / results
-    const ticketsArray = Array.isArray(data)
-      ? data
-      : data.data || data.results || [];
-
-    return ticketsArray.map((t: RawTicket) => {
-      // Логика определения статуса (зависит от того, что присылает бэкенд)
+    // Так как ticketApi.getMyTickets уже возвращает массив MyTicketDto[],
+    // TypeScript теперь понимает, что data — это массив.
+    return data.map((t: MyTicketDto) => {
       let mappedStatus: 'winning' | 'unchecked' | 'losing' = 'unchecked';
 
-      // Предполагаем, что бэкенд присылает is_winning или статус
-      if (t.is_winning === true || t.status === 'winning') {
+      if (t.status === 'winning') {
         mappedStatus = 'winning';
-      } else if (t.is_winning === false || t.status === 'losing') {
+      } else if (t.status === 'losing') {
         mappedStatus = 'losing';
+      } else if (t.status === 'sold') {
+        // Если куплен, но еще не разыгран
+        mappedStatus = 'unchecked';
       }
 
       return {
-        id: t.id || t.ticketId || t.ticket_number,
-        // Ищем поле с призом (win_amount, prize_amount или prize)
-        prize: t.win_amount || t.prize_amount || t.prize || '0',
-        // Ищем название лотереи
-        name: t.lottery_name || t.lottery?.name || 'Лотерея',
+        id: t.ticketId || t.ticketNumber,
+        prize: t.prizeAmount ? String(t.prizeAmount) : '0',
+        name: `Лотерея (Тираж ${t.drawId})`, // Бэкенд пока не отдает красивое имя в этом эндпоинте, используем заглушку
         price: t.price || 0,
-        date: t.draw_date || t.created_at || 'Скоро',
-        logo: t.lottery_logo || t.lottery?.logo || '/lotteries-logo/1.png',
+        date: t.purchaseDate
+          ? new Date(t.purchaseDate).toLocaleDateString('ru-RU')
+          : 'Скоро',
+        logo: '/lotteries-logo/1.png', // Бэкенд пока не отдает логотип в этом эндпоинте
         status: mappedStatus,
       };
     });
