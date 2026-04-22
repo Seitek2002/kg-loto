@@ -6,7 +6,8 @@ import { clsx } from 'clsx';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth';
 import { useCartStore } from '@/store/cart';
-import { useCurrentDraw, useTickets } from '@/entities/ticket/api';
+// 🔥 ДОБАВЛЕН ИМПОРТ TicketDto:
+import { useCurrentDraw, useTickets, TicketDto } from '@/entities/ticket/api';
 
 const getTicketPlural = (count: number) => {
   const lastDigit = count % 10;
@@ -129,14 +130,15 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
     {
       lotteryId: lotteryId,
       drawId: activeDraw?.drawId || '',
-      limit: 30, // 🔥 Изменил на 30, как в webview
+      limit: 30, // Изменил на 30, как в webview
     },
     !!activeDraw?.drawId,
   );
 
-  // 🔥 Фильтруем только ДОСТУПНЫЕ билеты (решение проблемы пустоты)
+  // 🔥 ИСПРАВЛЕНА ТИПИЗАЦИЯ: Указали (t: TicketDto)
   const availableTickets =
-    ticketsData?.tickets?.filter((t) => t.status === 'available') || [];
+    ticketsData?.tickets?.filter((t: TicketDto) => t.status === 'available') ||
+    [];
 
   const basketIds = cartItems.map((item) => String(item.id));
 
@@ -176,7 +178,7 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
             </p>
           </div>
         ) : (
-          availableTickets.map((ticket, index) => {
+          availableTickets.map((ticket: TicketDto, index: number) => {
             const type = index % 2 === 0 ? 'super' : 'other';
             const isOrange = index % 2 === 0;
             const ticketIdStr = String(ticket.ticketId);

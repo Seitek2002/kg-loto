@@ -3,7 +3,6 @@ import { User } from '@/types/api';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// 🔥 ДОБАВИЛИ updateTokens В ИНТЕРФЕЙС
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
@@ -15,6 +14,8 @@ interface AuthState {
   setTokens: (access: string, refresh: string) => void;
   updateTokens: (newAccessToken: string, newRefreshToken?: string) => void;
   setUser: (user: User) => void;
+  // 🔥 ДОБАВЛЯЕМ МЕТОД updateUser в интерфейс
+  updateUser: (data: Partial<User>) => void;
   logout: () => void;
 }
 
@@ -30,7 +31,6 @@ export const useAuthStore = create<AuthState>()(
         set((state) => ({
           ...state,
           accessToken: newAccessToken,
-          // Обновляем refreshToken только если сервер его прислал
           ...(newRefreshToken && { refreshToken: newRefreshToken }),
         })),
 
@@ -39,7 +39,6 @@ export const useAuthStore = create<AuthState>()(
           const { data } = await AuthService.getMe();
           const userData = data.data;
 
-          // 🔥 ХАК: Если бэкенд прислал профиль строкой (JSON), парсим его в объект
           if (
             userData.kglotteryProfile &&
             typeof userData.kglotteryProfile === 'string'
@@ -63,6 +62,12 @@ export const useAuthStore = create<AuthState>()(
 
       setUser: (user) => set({ user }),
 
+      // 🔥 РЕАЛИЗАЦИЯ МЕТОДА updateUser: обновляем только переданные поля у текущего юзера
+      updateUser: (data) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, ...data } : null,
+        })),
+
       logout: () =>
         set({
           accessToken: null,
@@ -72,7 +77,7 @@ export const useAuthStore = create<AuthState>()(
         }),
     }),
     {
-      name: 'auth-storage', // Имя ключа в localStorage
+      name: 'auth-storage',
     },
   ),
 );

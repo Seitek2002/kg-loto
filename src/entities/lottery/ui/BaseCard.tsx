@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import { ReactNode } from 'react';
-import { cn } from '@/shared/lib/utils';
 import dynamic from 'next/dynamic';
 import { BACKGROUND_VARIANTS } from '@/shared/config/lottery-styles';
+import clsx from 'clsx';
 
 const LottiePlayer = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), { ssr: false });
 
@@ -23,7 +23,7 @@ export const BaseCard = ({ children, backgroundId, imageSrc, lottieSrc, classNam
   const bgPath = imageSrc ? imageSrc : backgroundId ? BACKGROUND_VARIANTS[backgroundId] || BACKGROUND_VARIANTS['default'] : null;
 
   return (
-    <div className={cn('relative w-full rounded-3xl flex flex-col shadow-xl overflow-hidden', !bgPath && !lottieSrc && 'bg-transparent', textColor, className)} style={{ aspectRatio }}>
+    <div className={clsx('relative w-full rounded-3xl flex flex-col shadow-xl overflow-hidden', !bgPath && !lottieSrc && 'bg-transparent', textColor, className)} style={{ aspectRatio }}>
       {lottieSrc ? (
         <div className='absolute inset-0 z-0 overflow-hidden'>
           <LottiePlayer src={lottieSrc} loop autoplay renderer='svg' style={{ width: '100%', height: '100%' }} rendererSettings={{ preserveAspectRatio: 'xMidYMid slice' }} />
