@@ -90,7 +90,7 @@ export default function SettingsPage() {
           const MobileComponent = tab.Component;
 
           return (
-            <div key={tab.id} className='bg-white rounded-[24px] p-5 shadow-sm'>
+            <div key={tab.id} className='bg-white rounded-3xl p-5 shadow-sm'>
               <button
                 onClick={() => setOpenMobileTab(isOpen ? null : tab.id)}
                 className='w-full flex justify-between items-center uppercase font-benzin text-[13px] font-bold text-[#4B4B4B]'

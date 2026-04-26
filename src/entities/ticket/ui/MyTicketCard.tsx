@@ -38,7 +38,7 @@ export const MyTicketCard = ({
   const isHighlighted = !isNumeric || numericValue >= 10000;
 
   return (
-    <div className='flex flex-col h-fit bg-white border border-[#EAEAEA] rounded-[24px] p-5 shadow-sm'>
+    <div className='flex flex-col h-fit bg-white border border-[#EAEAEA] rounded-3xl p-5 shadow-sm'>
       {/* ВЕРХНЯЯ ЧАСТЬ: Приз и Бейджик */}
       {status !== 'unchecked' && (
         <div className='mb-4 border-b border-[#EAEAEA] pb-4 flex justify-between items-center'>
@@ -120,7 +120,7 @@ export const MyTicketCard = ({
       {status !== 'losing' && showButton && (
         <Button
           onClick={onAction}
-          className='w-full bg-[#4B4B4B] text-white py-3.5 rounded-[16px] text-[14px]'
+          className='w-full bg-[#4B4B4B] text-white py-3.5 rounded-2xl text-[14px]'
         >
           {status === 'unchecked' ? 'ПРОВЕРИТЬ' : 'ПОЛУЧИТЬ'}
         </Button>

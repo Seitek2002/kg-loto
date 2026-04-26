@@ -81,7 +81,7 @@ export default function ProfilePage() {
   ) : undefined;
 
   return (
-    <div className='bg-white rounded-[24px] sm:rounded-[40px] shadow-sm p-4 sm:p-8 lg:p-10 min-h-[400px]'>
+    <div className='bg-white rounded-3xl sm:rounded-[40px] shadow-sm p-4 sm:p-8 lg:p-10 min-h-[400px]'>
       {/* Универсальные вкладки */}
       <ProfileSubTabs
         tabs={SUB_TABS}

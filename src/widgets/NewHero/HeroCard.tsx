@@ -60,7 +60,7 @@ export const HeroCard = ({
     <div
       className={clsx(
         // 🔥 Добавили тень для карточки: shadow-[0px_0px_20px_rgba(0,0,0,0.5)]
-        'relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-[0px_0px_20px_rgba(0,0,0,0.5)] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center  text-center text-white',
+        'relative w-full rounded-3xl md:rounded-[40px] overflow-hidden shadow-[0px_0px_20px_rgba(0,0,0,0.5)] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col items-center justify-center  text-center text-white',
         isActive
           ? 'scale-100 opacity-100 z-20'
           : 'scale-[0.9] md:scale-[0.85] opacity-60 blur-[2px] z-10',

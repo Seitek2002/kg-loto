@@ -34,7 +34,7 @@ export const LotteryConditions = async ({
         <Description>{t('conditions_desc')}</Description>
       </div>
 
-      <div className='bg-white rounded-[24px] md:rounded-[40px] shadow-sm border border-gray-100 p-6 md:p-10'>
+      <div className='bg-white rounded-3xl md:rounded-[40px] shadow-sm border border-gray-100 p-6 md:p-10'>
         <div
           className={clsx(
             'grid grid-cols-1 lg:grid-cols-2 lg:grid-flow-col',

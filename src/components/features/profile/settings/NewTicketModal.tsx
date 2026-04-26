@@ -97,7 +97,7 @@ export const NewTicketModal = ({ isOpen, onClose }: NewTicketModalProps) => {
       />
 
       {/* Modal Container */}
-      <div className='relative w-full max-w-[500px] bg-white rounded-[24px] lg:rounded-4xl p-6 lg:p-8 shadow-2xl z-10'>
+      <div className='relative w-full max-w-[500px] bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-2xl z-10'>
         {/* Кнопка закрытия */}
         <button
           onClick={onClose}

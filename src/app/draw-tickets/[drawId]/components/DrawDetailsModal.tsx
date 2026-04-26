@@ -128,7 +128,7 @@ export const DrawDetailsModal = ({
       </button>
 
       {/* Контейнер модального окна */}
-      <div className='relative w-full max-w-[800px] max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-[24px] lg:rounded-4xl p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar'>
+      <div className='relative w-full max-w-[800px] max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-3xl lg:rounded-4xl p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar'>
         {/* Заголовок */}
         <h2 className='text-[20px] lg:text-[24px] font-black text-[#4B4B4B] mb-4 lg:mb-6'>
           {data.title}
@@ -136,7 +136,7 @@ export const DrawDetailsModal = ({
 
         {/* Верхний блок: Итоги тиража и Комбинация (Сетка на ПК) */}
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4'>
-          <div className='bg-white rounded-[16px] lg:rounded-[20px] p-5 shadow-sm'>
+          <div className='bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm'>
             <h3 className='text-[#4B4B4B] text-[16px] lg:text-[18px] font-bold mb-4'>
               Итоги тиража {data.drawNumber}
             </h3>
@@ -156,7 +156,7 @@ export const DrawDetailsModal = ({
             </div>
           </div>
 
-          <div className='bg-white rounded-[16px] lg:rounded-[20px] p-5 shadow-sm'>
+          <div className='bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm'>
             <h3 className='text-[#4B4B4B] text-[16px] lg:text-[18px] font-bold mb-4'>
               Выигрышная комбинация
             </h3>
@@ -176,7 +176,7 @@ export const DrawDetailsModal = ({
         </div>
 
         {/* Средний блок: Статистика и Кнопка */}
-        <div className='bg-white rounded-[16px] lg:rounded-[20px] p-5 shadow-sm mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-5'>
+        <div className='bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-5'>
           <div className='flex flex-col gap-2 text-[13px] lg:text-[14px]'>
             <div className='flex justify-between lg:justify-start lg:gap-2'>
               <span className='text-[#737373]'>
@@ -205,7 +205,7 @@ export const DrawDetailsModal = ({
         </div>
 
         {/* Нижний блок: Таблица Итогов розыгрыша */}
-        <div className='bg-white rounded-[16px] lg:rounded-[20px] p-5 shadow-sm'>
+        <div className='bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm'>
           <h3 className='text-[#4B4B4B] text-[18px] font-bold mb-4'>
             Итоги розыгрыша
           </h3>

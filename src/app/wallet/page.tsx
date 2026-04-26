@@ -61,7 +61,7 @@ export default function WalletPage() {
         </nav>
 
         {/* КАРТОЧКА БАЛАНСА */}
-        <div className='bg-white rounded-[24px] lg:rounded-4xl p-6 lg:p-10 shadow-sm border border-gray-100 mb-8 lg:mb-10'>
+        <div className='bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-10 shadow-sm border border-gray-100 mb-8 lg:mb-10'>
           <h2 className='text-[14px] lg:text-[16px] font-bold text-[#4B4B4B] uppercase tracking-wide mb-2 lg:mb-4'>
             Баланс
           </h2>

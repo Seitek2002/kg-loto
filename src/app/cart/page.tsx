@@ -40,7 +40,7 @@ const QuickAddTicketMock = ({
   const selectedMock = [1, 16, 26, 30];
 
   return (
-    <div className='bg-white rounded-[24px] p-5 shadow-sm border border-gray-100 flex flex-col relative mb-4'>
+    <div className='bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col relative mb-4'>
       <div className='absolute -left-2 top-[30px] w-4 h-4 bg-[#F5F5F5] rounded-full border-r border-gray-100' />
       <div className='absolute -right-2 top-[30px] w-4 h-4 bg-[#F5F5F5] rounded-full border-l border-gray-100' />
 
@@ -227,7 +227,7 @@ export default function CartPage() {
                   className='bg-white rounded-[20px] p-4 md:p-5 flex flex-row items-center justify-between shadow-sm'
                 >
                   <div className='flex items-center gap-4 flex-1'>
-                    <div className='relative w-[80px] h-[80px] md:w-[96px] md:h-[96px] rounded-[16px] overflow-hidden shrink-0 bg-green-600'>
+                    <div className='relative w-[80px] h-[80px] md:w-[96px] md:h-[96px] rounded-2xl overflow-hidden shrink-0 bg-green-600'>
                       <Image
                         src='https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=200&auto=format&fit=crop'
                         alt={item.name}
@@ -261,14 +261,14 @@ export default function CartPage() {
               ))}
 
               <Link href='/draw-tickets' className='block w-full'>
-                <button className='w-full py-4 rounded-[16px] bg-[#4B4B4B] text-white flex items-center justify-center gap-2 font-bold text-[14px] hover:bg-[#333333] transition-colors active:scale-[0.98]'>
+                <button className='w-full py-4 rounded-2xl bg-[#4B4B4B] text-white flex items-center justify-center gap-2 font-bold text-[14px] hover:bg-[#333333] transition-colors active:scale-[0.98]'>
                   <Plus size={18} /> Добавить еще билет
                 </button>
               </Link>
             </div>
 
             {/* 3. ПРАВАЯ КОЛОНКА (Десктоп оплата) */}
-            <div className='hidden lg:flex w-[320px] flex-col bg-white rounded-[24px] p-6 shadow-sm shrink-0 sticky top-24'>
+            <div className='hidden lg:flex w-[320px] flex-col bg-white rounded-3xl p-6 shadow-sm shrink-0 sticky top-24'>
               <h3 className='text-[18px] font-bold text-[#4B4B4B] mb-5'>
                 Детали заказа
               </h3>
@@ -320,7 +320,7 @@ export default function CartPage() {
             </div>
           </div>
         ) : (
-          <div className='bg-white rounded-[24px] p-10 text-center shadow-sm'>
+          <div className='bg-white rounded-3xl p-10 text-center shadow-sm'>
             <p className='text-[#4B4B4B] font-bold text-lg mb-4'>
               Ваша корзина пуста
             </p>

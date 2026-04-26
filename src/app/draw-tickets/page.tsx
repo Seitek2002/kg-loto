@@ -98,7 +98,6 @@ export default function DrawTicketsPage() {
 
 // 🔥 Компонент Карточки
 function LotteryCard({ lottery }: { lottery: CurrentLottery }) {
-
   // Заглушки, пока бэкенд не добавит эти поля
   const fallbackImage =
     'https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=600&auto=format&fit=crop';
@@ -107,7 +106,7 @@ function LotteryCard({ lottery }: { lottery: CurrentLottery }) {
   return (
     <Link
       href={`/draw-tickets/${lottery.lotteryId}`} // Переход на детали по lotteryId
-      className='group relative w-full aspect-[16/9] sm:aspect-[4/2.5] rounded-[24px] overflow-hidden block active:scale-[0.98] transition-transform duration-200'
+      className='group relative w-full aspect-[16/9] sm:aspect-[4/2.5] rounded-3xl overflow-hidden block active:scale-[0.98] transition-transform duration-200'
     >
       {/* Фоновая картинка (единая заглушка) */}
       <Image
@@ -148,7 +147,7 @@ function LotteryCard({ lottery }: { lottery: CurrentLottery }) {
 // 🔥 Нативный Скелетон
 function LotteryCardSkeleton() {
   return (
-    <div className='relative w-full aspect-[16/9] sm:aspect-[4/2.5] rounded-[24px] overflow-hidden bg-gray-200 animate-pulse'>
+    <div className='relative w-full aspect-[16/9] sm:aspect-[4/2.5] rounded-3xl overflow-hidden bg-gray-200 animate-pulse'>
       <div className='absolute top-4 left-4 bg-gray-300 rounded-full w-32 h-8' />
       <div className='absolute bottom-5 left-5 md:bottom-6 md:left-6 flex flex-col gap-3 z-10 w-full'>
         <div className='bg-gray-300 rounded-md w-3/4 h-5 md:h-6' />

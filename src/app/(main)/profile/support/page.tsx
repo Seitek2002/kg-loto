@@ -59,7 +59,7 @@ export default function SupportPage() {
   );
 
   return (
-    <div className='bg-white rounded-[24px] sm:rounded-[40px] shadow-sm p-4 sm:p-8 lg:p-10 min-h-[400px]'>
+    <div className='bg-white rounded-3xl sm:rounded-[40px] shadow-sm p-4 sm:p-8 lg:p-10 min-h-[400px]'>
       <ProfileSubTabs
         tabs={SUB_TABS}
         activeTab={activeSubTab}

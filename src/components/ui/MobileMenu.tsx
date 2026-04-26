@@ -27,7 +27,7 @@ export const MobileMenu = ({
           transition={{ duration: 0.2 }}
           className='fixed inset-x-0 top-[64px] bottom-0 z-[100] bg-black/40 backdrop-blur-sm flex flex-col pb-24 overflow-y-auto'
         >
-          <div className='m-4 bg-white rounded-[24px] p-5 shadow-2xl flex flex-col gap-4 font-rubik'>
+          <div className='m-4 bg-white rounded-3xl p-5 shadow-2xl flex flex-col gap-4 font-rubik'>
             {/* Навигация */}
             <div className='flex flex-col'>
               <Link

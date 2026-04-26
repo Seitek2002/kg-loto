@@ -19,7 +19,7 @@ export const LotteryPrizeFund = async ({
       </div>
 
       {/* --- МОБИЛЬНАЯ ВЕРСИЯ --- */}
-      <div className='md:hidden bg-white rounded-[24px] shadow-sm border border-gray-100 p-5 sm:p-6 mt-4'>
+      <div className='md:hidden bg-white rounded-3xl shadow-sm border border-gray-100 p-5 sm:p-6 mt-4'>
         <div className='grid grid-cols-2 gap-4 mb-5 border-b border-gray-100 pb-4'>
           <div className='text-center text-[11px] sm:text-xs font-medium text-[#4B4B4B] font-rubik leading-snug'>
             {t('win_amount')}
