@@ -24,7 +24,7 @@ export const AndroidUploadModal = ({
         onClick={onClose}
       />
 
-      <div className='relative bg-white w-full max-w-xs rounded-[32px] p-6 animate-in fade-in zoom-in-95 duration-200'>
+      <div className='relative bg-white w-full max-w-xs rounded-4xl p-6 animate-in fade-in zoom-in-95 duration-200'>
         <button
           onClick={onClose}
           className='absolute top-4 right-4 text-gray-400'

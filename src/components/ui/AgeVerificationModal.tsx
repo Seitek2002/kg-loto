@@ -21,7 +21,7 @@ export const AgeVerificationModal = () => {
   return (
     <div className='fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4'>
       {/* Анимация появления (zoom-in) */}
-      <div className='bg-white rounded-[32px] p-6 sm:p-10 max-w-[560px] w-full flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-300'>
+      <div className='bg-white rounded-4xl p-6 sm:p-10 max-w-[560px] w-full flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-300'>
         <h2 className='text-[20px] sm:text-[24px] font-black font-benzin uppercase text-[#4B4B4B] mb-4'>
           Подтверждение возраста
         </h2>

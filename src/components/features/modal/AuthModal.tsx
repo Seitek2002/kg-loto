@@ -67,7 +67,7 @@ export const AuthModal = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      className='max-w-[480px] p-0 rounded-[32px] overflow-hidden bg-[#F5F5F5]'
+      className='max-w-[480px] p-0 rounded-4xl overflow-hidden bg-[#F5F5F5]'
     >
       <div className='p-8 pt-12 relative'>
         <button

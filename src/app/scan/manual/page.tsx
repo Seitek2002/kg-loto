@@ -63,7 +63,7 @@ function CheckTicketContent() {
             className='absolute inset-0 bg-black/60 backdrop-blur-sm'
             onClick={() => setModalState('none')}
           />
-          <div className='relative bg-white w-full max-w-sm rounded-[32px] p-8 text-center animate-in fade-in zoom-in-95'>
+          <div className='relative bg-white w-full max-w-sm rounded-4xl p-8 text-center animate-in fade-in zoom-in-95'>
             <h3 className='text-xl font-black font-benzin uppercase text-[#4B4B4B] mb-3'>
               Билет не выиграл
             </h3>

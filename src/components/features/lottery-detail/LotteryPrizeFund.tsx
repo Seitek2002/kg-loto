@@ -43,7 +43,7 @@ export const LotteryPrizeFund = async ({
       </div>
 
       {/* --- ДЕСКТОПНАЯ ВЕРСИЯ --- */}
-      <div className='hidden md:block w-full mt-4 bg-white shadow-sm rounded-[32px] border border-gray-100 overflow-hidden relative'>
+      <div className='hidden md:block w-full mt-4 bg-white shadow-sm rounded-4xl border border-gray-100 overflow-hidden relative'>
         {/* 🔥 Обертка, которая дает нам скролл мышкой */}
         <DraggableScroll
           className={clsx(

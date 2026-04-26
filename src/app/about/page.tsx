@@ -121,7 +121,7 @@ export default async function AboutPage() {
         </nav>
 
         {/* ГЛАВНОЕ ФОТО (Баннер) */}
-        <div className='w-full aspect-[21/9] min-h-[200px] relative rounded-[32px] overflow-hidden mb-12 bg-blue-100'>
+        <div className='w-full aspect-[21/9] min-h-[200px] relative rounded-4xl overflow-hidden mb-12 bg-blue-100'>
           <Image
             src={bannerImage}
             alt={displayTitle}

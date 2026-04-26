@@ -86,7 +86,7 @@ export const Modal = ({
       {/* КОНТЕНТ МОДАЛКИ */}
       <div
         className={clsx(
-          'relative w-full max-w-[480px] bg-white rounded-[32px] shadow-2xl overflow-hidden transform transition-all duration-300 ease-out',
+          'relative w-full max-w-[480px] bg-white rounded-4xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out',
           // Анимация масштаба и прозрачности самого окна
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'

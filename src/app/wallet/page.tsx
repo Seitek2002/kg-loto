@@ -61,7 +61,7 @@ export default function WalletPage() {
         </nav>
 
         {/* КАРТОЧКА БАЛАНСА */}
-        <div className='bg-white rounded-[24px] lg:rounded-[32px] p-6 lg:p-10 shadow-sm border border-gray-100 mb-8 lg:mb-10'>
+        <div className='bg-white rounded-[24px] lg:rounded-4xl p-6 lg:p-10 shadow-sm border border-gray-100 mb-8 lg:mb-10'>
           <h2 className='text-[14px] lg:text-[16px] font-bold text-[#4B4B4B] uppercase tracking-wide mb-2 lg:mb-4'>
             Баланс
           </h2>
@@ -94,13 +94,13 @@ export default function WalletPage() {
             <Loader2 className='w-10 h-10 animate-spin text-[#F58220]' />
           </div>
         ) : transactions.length === 0 ? (
-          <div className='bg-white rounded-[32px] p-10 text-center text-gray-400 font-medium shadow-sm'>
+          <div className='bg-white rounded-4xl p-10 text-center text-gray-400 font-medium shadow-sm'>
             История операций пуста
           </div>
         ) : (
           <>
             {/* ДЕСКТОПНАЯ ТАБЛИЦА */}
-            <div className='hidden lg:block bg-white rounded-[32px] p-8 shadow-sm border border-gray-100'>
+            <div className='hidden lg:block bg-white rounded-4xl p-8 shadow-sm border border-gray-100'>
               <div className='grid grid-cols-4 pb-4 text-[#737373] font-bold text-[14px] uppercase text-center border-b border-gray-50'>
                 <div className='text-left pl-4'>Операция</div>
                 <div>Дата</div>

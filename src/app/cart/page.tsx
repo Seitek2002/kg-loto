@@ -150,7 +150,7 @@ export default function CartPage() {
       {/* МОДАЛКА УСПЕХА */}
       {isSuccessModalOpen && (
         <div className='fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
-          <div className='bg-white p-8 md:p-12 rounded-[32px] shadow-2xl max-w-md w-full relative flex flex-col items-center animate-in zoom-in-95 duration-300'>
+          <div className='bg-white p-8 md:p-12 rounded-4xl shadow-2xl max-w-md w-full relative flex flex-col items-center animate-in zoom-in-95 duration-300'>
             {/* Кнопка закрытия модалки */}
             <button
               onClick={() => setIsSuccessModalOpen(false)}

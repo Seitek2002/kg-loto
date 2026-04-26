@@ -8,7 +8,7 @@ import { Button } from '@/shared/ui/Button';
 
 export const WinnerCard = ({ winner }: { winner: Winner }) => {
   return (
-    <div className='relative w-full aspect-[4/5] rounded-[32px] overflow-hidden bg-white shadow-sm border border-gray-100'>
+    <div className='relative w-full aspect-[4/5] rounded-4xl overflow-hidden bg-white shadow-sm border border-gray-100'>
       {winner.image ? (
         <Image
           src={winner.image}
@@ -61,9 +61,15 @@ export const WinnerCard = ({ winner }: { winner: Winner }) => {
           </span>
         </div>
         <div className='flex justify-center mt-2'>
-          <Link href={winner.buttonUrl || `/lottery/${winner.lotteryId}`} className="w-auto">
+          <Link
+            href={winner.buttonUrl || `/lottery/${winner.lotteryId}`}
+            className='w-auto'
+          >
             {/* Используем наш Button */}
-            <Button variant="secondary" className="px-6 py-3 md:px-8 text-[10px] md:text-xs shadow-lg bg-white text-[#1E1E1E]">
+            <Button
+              variant='secondary'
+              className='px-6 py-3 md:px-8 text-[10px] md:text-xs shadow-lg bg-white text-[#1E1E1E]'
+            >
               ИГРАТЬ • 100 с
             </Button>
           </Link>

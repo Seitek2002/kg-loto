@@ -128,7 +128,7 @@ export const DrawDetailsModal = ({
       </button>
 
       {/* Контейнер модального окна */}
-      <div className='relative w-full max-w-[800px] max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-[24px] lg:rounded-[32px] p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar'>
+      <div className='relative w-full max-w-[800px] max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-[24px] lg:rounded-4xl p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar'>
         {/* Заголовок */}
         <h2 className='text-[20px] lg:text-[24px] font-black text-[#4B4B4B] mb-4 lg:mb-6'>
           {data.title}
