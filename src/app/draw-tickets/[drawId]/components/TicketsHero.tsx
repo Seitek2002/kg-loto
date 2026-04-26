@@ -85,8 +85,8 @@ export const TicketsHero = ({
           priority
         />
 
-        <div className='relative z-10 flex flex-col items-center self-start pt-6 sm:pt-10 lg:pt-16 pl-4 sm:pl-8 lg:pl-16'>
-          <div className='relative w-[200px] h-[75px] sm:w-[280px] sm:h-[100px] lg:w-[400px] lg:h-[140px] mb-2 sm:mb-4'>
+        <div className='relative z-10 flex flex-col items-left self-start pt-6 sm:pt-10 lg:pt-16 pl-4 sm:pl-8 lg:pl-16'>
+          <div className='relative w-[100px] h-[75px] sm:h-[100px] lg:w-[200px] mb-2 sm:mb-4'>
             <Image
               src='/images/draw-tickets/super-jackpot-logo.png'
               alt='Супер Джекпот'
@@ -96,15 +96,17 @@ export const TicketsHero = ({
               priority
             />
           </div>
-          <div className='text-white text-[13px] sm:text-sm lg:text-xl font-bold mb-1 drop-shadow-md'>
-            Суперприз от
-          </div>
-          <div className='text-[#E2FF5A] text-[32px] sm:text-4xl lg:text-[64px] leading-none font-black font-benzin drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)]'>
-            {isLoading ? (
-              <Skeleton className='w-[200px] h-[40px] lg:h-[70px] bg-white/20 mt-2' />
-            ) : (
-              currentDraw?.jackpotAmountDisplay || '0 с'
-            )}
+          <div className='text-center'>
+            <div className='text-white text-[13px] sm:text-sm lg:text-xl font-bold mb-1 drop-shadow-md'>
+              Суперприз от
+            </div>
+            <div className='text-[#E2FF5A] text-[32px] sm:text-4xl lg:text-[64px] leading-none font-black font-benzin drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)]'>
+              {isLoading ? (
+                <Skeleton className='w-[200px] h-[40px] lg:h-[70px] bg-white/20 mt-2' />
+              ) : (
+                currentDraw?.jackpotAmountDisplay || '0 с'
+              )}
+            </div>
           </div>
         </div>
 
@@ -199,7 +201,7 @@ export const TicketsHero = ({
                   {isLoading ? '-' : timeLeft.days}
                 </span>
               </div>
-              <div className='flex flex-col bg-white/10 backdrop-blur-md border border-white/40 rounded-[12px] lg:rounded-[16px] p-2 lg:p-3 w-[140px] lg:w-[200px] items-center'>
+              <div className='flex flex-col bg-white/10 backdrop-blur-md border border-white/40 rounded-[12px] lg:rounded-[16px] py-2 lg:py-3 px-5 items-center'>
                 <span className='text-white text-[11px] lg:text-[14px] font-medium mb-1'>
                   Часов
                 </span>

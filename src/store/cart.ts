@@ -1,10 +1,10 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface CartItem {
   id: string; // Это ticketId
   price: number;
   type: 'super' | 'other';
-  // 🔥 ДОБАВЛЯЕМ ДАННЫЕ ДЛЯ КОРЗИНЫ И ПОКУПКИ:
   ticketNumber: string;
   combination: number[];
   lotteryId: string;
@@ -18,17 +18,26 @@ interface CartStore {
   clearCart: () => void;
 }
 
-export const useCartStore = create<CartStore>((set) => ({
-  items: [],
+export const useCartStore = create<CartStore>()(
+  // 🔥 Оборачиваем стор в persist
+  persist(
+    (set) => ({
+      items: [],
 
-  toggleItem: (item) =>
-    set((state) => {
-      const exists = state.items.find((i) => i.id === item.id);
-      if (exists) {
-        return { items: state.items.filter((i) => i.id !== item.id) };
-      }
-      return { items: [...state.items, item] };
+      toggleItem: (item) =>
+        set((state) => {
+          const exists = state.items.find((i) => i.id === item.id);
+          if (exists) {
+            return { items: state.items.filter((i) => i.id !== item.id) };
+          }
+          return { items: [...state.items, item] };
+        }),
+
+      clearCart: () => set({ items: [] }),
     }),
-
-  clearCart: () => set({ items: [] }),
-}));
+    {
+      // Имя ключа, под которым данные будут сохранены в localStorage
+      name: 'cart-storage',
+    },
+  ),
+);
