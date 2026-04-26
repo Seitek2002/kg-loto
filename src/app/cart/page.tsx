@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Trash2,
   Plus,
@@ -9,6 +10,7 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  X,
 } from 'lucide-react';
 import { NumberedBall } from '@/components/ui/NumberedBall';
 import { useCartStore } from '@/store/cart';
@@ -26,7 +28,7 @@ const getTicketPlural = (count: number) => {
   return 'билетов';
 };
 
-// Визуальный компонент быстрого добавления билета (Левая колонка на ПК)
+// Визуальный компонент быстрого добавления билета
 const QuickAddTicketMock = ({
   number,
   price,
@@ -82,9 +84,9 @@ export default function CartPage() {
   const clearCart = useCartStore((state) => state.clearCart);
 
   const mounted = useMounted();
+  const router = useRouter();
   const { mutate: purchaseTickets, isPending } = usePurchaseTickets();
 
-  // Локальные стейты для обработки результата покупки
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -106,7 +108,6 @@ export default function CartPage() {
   const handleCheckout = () => {
     setErrorMessage(null);
 
-    // Генерируем уникальный orderId на фронте
     const orderId =
       typeof crypto !== 'undefined' && crypto.randomUUID
         ? crypto.randomUUID()
@@ -119,18 +120,17 @@ export default function CartPage() {
         lotteryId: item.lotteryId,
         drawId: item.drawId,
         ticketId: item.id,
-        price: String(item.price), // Бэкенд ждет цену как строку (decimal)
+        price: String(item.price),
         currency: 'KGS',
       })),
     };
 
     purchaseTickets(payload, {
       onSuccess: () => {
-        clearCart(); // Чистим корзину
-        setIsSuccessModalOpen(true); // Показываем модалку успеха
+        clearCart();
+        setIsSuccessModalOpen(true);
       },
       onError: (error: any) => {
-        // Обработка ошибок (например, статус 402 - недостаточно средств)
         const status = error?.response?.status;
         if (status === 402) {
           setErrorMessage(
@@ -145,33 +145,50 @@ export default function CartPage() {
 
   if (!mounted) return null;
 
-  // Если покупка успешна, рендерим только красивый экран успеха
-  if (isSuccessModalOpen) {
-    return (
-      <div className='min-h-[70vh] flex flex-col items-center justify-center px-4 bg-[#F5F5F5] font-rubik'>
-        <div className='bg-white p-8 md:p-12 rounded-[32px] shadow-sm max-w-md w-full text-center flex flex-col items-center animate-in zoom-in-95 duration-500'>
-          <div className='w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6'>
-            <CheckCircle2 size={40} strokeWidth={2.5} />
-          </div>
-          <h2 className='text-[24px] font-black text-[#4B4B4B] mb-3'>
-            Покупка успешна!
-          </h2>
-          <p className='text-[#737373] text-[15px] mb-8 leading-relaxed'>
-            Ваши билеты успешно приобретены и добавлены в личный кабинет. Желаем
-            удачи в розыгрыше!
-          </p>
-          <Link href='/profile' className='w-full'>
-            <button className='w-full bg-[#FF7600] text-white py-4 rounded-xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all'>
-              Перейти к моим билетам
-            </button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className='min-h-screen bg-[#F5F5F5] font-rubik pb-32 md:pb-16 select-none'>
+      {/* МОДАЛКА УСПЕХА */}
+      {isSuccessModalOpen && (
+        <div className='fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
+          <div className='bg-white p-8 md:p-12 rounded-[32px] shadow-2xl max-w-md w-full relative flex flex-col items-center animate-in zoom-in-95 duration-300'>
+            {/* Кнопка закрытия модалки */}
+            <button
+              onClick={() => setIsSuccessModalOpen(false)}
+              className='absolute top-6 right-6 text-gray-400 hover:text-[#4B4B4B] transition-colors'
+            >
+              <X size={24} />
+            </button>
+
+            <div className='w-20 h-20 bg-[#D1F5D3] rounded-full flex items-center justify-center mb-6 shadow-sm'>
+              <CheckCircle2 className='w-10 h-10 text-[#1FAF38]' />
+            </div>
+
+            <h2 className='text-[24px] font-black text-[#4B4B4B] mb-3'>
+              Покупка успешна!
+            </h2>
+            <p className='text-[#737373] text-[15px] mb-8 text-center leading-relaxed'>
+              Ваши билеты успешно приобретены и добавлены в личный кабинет.
+              Желаем удачи в розыгрыше!
+            </p>
+
+            <div className='flex flex-col gap-3 w-full'>
+              <button
+                onClick={() => router.push('/profile')}
+                className='w-full bg-[#FF7600] text-white py-4 rounded-xl text-[16px] font-bold shadow-md hover:bg-[#E66A00] active:scale-95 transition-all'
+              >
+                Перейти в личный кабинет
+              </button>
+              <button
+                onClick={() => setIsSuccessModalOpen(false)}
+                className='w-full bg-[#F5F5F5] text-[#4B4B4B] py-4 rounded-xl text-[16px] font-bold hover:bg-[#EBEBEB] active:scale-95 transition-all'
+              >
+                Остаться в корзине
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className='max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10'>
         {/* Хлебные крошки */}
         <div className='flex items-center justify-between mb-6 md:mb-8'>

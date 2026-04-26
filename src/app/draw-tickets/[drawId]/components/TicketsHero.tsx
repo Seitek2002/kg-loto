@@ -11,7 +11,6 @@ interface TicketsHeroProps {
   onTabChange: (tab: string) => void;
 }
 
-// Простой Skeleton-заглушка (замени на свой, если у тебя есть ui/Skeleton)
 const Skeleton = ({ className }: { className?: string }) => (
   <div className={clsx('animate-pulse bg-gray-200 rounded-md', className)} />
 );
@@ -40,7 +39,6 @@ export const TicketsHero = ({
   useEffect(() => {
     if (!currentDraw) return;
 
-    // Собираем полную дату тиража: "2026-04-10T20:00:00"
     const targetDate = new Date(
       `${currentDraw.drawDate}T${currentDraw.drawTime}`,
     );
@@ -61,13 +59,12 @@ export const TicketsHero = ({
       }
     };
 
-    updateTimer(); // Вызываем сразу
-    const interval = setInterval(updateTimer, 1000); // И каждую секунду
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
 
     return () => clearInterval(interval);
   }, [currentDraw]);
 
-  // Форматируем время с ведущими нулями (09:05:01)
   const formattedTime = `${String(timeLeft.hours).padStart(2, '0')}:${String(
     timeLeft.minutes,
   ).padStart(2, '0')}:${String(timeLeft.seconds).padStart(2, '0')}`;
@@ -129,8 +126,14 @@ export const TicketsHero = ({
         </div>
       </div>
 
-      {/* ПРАВАЯ КОЛОНКА */}
-      <div className='flex flex-col gap-4 lg:gap-6'>
+      {/* ПРАВАЯ КОЛОНКА (Инфо о тираже + Таймер) */}
+      {/* 🔥 Добавили логику скрытия: скрыто на мобилках если таб не 'tickets', но всегда видно на десктопе (lg:flex) */}
+      <div
+        className={clsx(
+          'flex flex-col gap-4 lg:gap-6',
+          activeTab === 'tickets' ? 'flex' : 'hidden lg:flex',
+        )}
+      >
         {/* КАРТОЧКА ТИРАЖА */}
         <div className='bg-white rounded-[24px] lg:rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-center flex-1'>
           <h2 className='text-[20px] lg:text-[26px] font-bold text-[#4B4B4B] text-center mb-6 lg:mb-8'>

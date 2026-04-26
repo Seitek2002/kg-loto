@@ -17,10 +17,10 @@ interface MappedTicket {
   status: 'winning' | 'unchecked' | 'losing';
 }
 
-const SUB_TABS = ['Выигрышные', 'Не проверены', 'Все билеты'];
+const SUB_TABS = ['Все билеты', 'Выигрышные', 'Не проверены'];
 
 export default function ProfilePage() {
-  const [activeSubTab, setActiveSubTab] = useState('Выигрышные');
+  const [activeSubTab, setActiveSubTab] = useState('Все билеты');
 
   // 🔥 Запрашиваем билеты (передаем страницу 1 и лимит 50)
   const { data, isLoading } = useMyTickets();
