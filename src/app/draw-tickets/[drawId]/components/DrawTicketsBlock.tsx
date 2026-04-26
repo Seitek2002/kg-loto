@@ -228,14 +228,6 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
                       <br />
                       ДЖЕКПОТ
                     </span>
-                    <span
-                      className='font-benzin font-black text-[#F6C635] text-[11px] leading-tight italic drop-shadow-sm'
-                      style={{ WebkitTextStroke: '0.5px #D4AF37' }}
-                    >
-                      СУПЕР
-                      <br />
-                      ДЖЕКПОТ
-                    </span>
                   </div>
 
                   <div className='flex items-center gap-6 border border-gray-300 rounded-2xl px-5 py-2.5 bg-white/60'>
