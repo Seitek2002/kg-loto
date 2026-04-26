@@ -41,8 +41,8 @@ const QuickAddTicketMock = ({
 
   return (
     <div className='bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col relative mb-4'>
-      <div className='absolute -left-2 top-[30px] w-4 h-4 bg-[#F5F5F5] rounded-full border-r border-gray-100' />
-      <div className='absolute -right-2 top-[30px] w-4 h-4 bg-[#F5F5F5] rounded-full border-l border-gray-100' />
+      <div className='absolute -left-2 top-7.5 w-4 h-4 bg-[#F5F5F5] rounded-full border-r border-gray-100' />
+      <div className='absolute -right-2 top-7.5 w-4 h-4 bg-[#F5F5F5] rounded-full border-l border-gray-100' />
 
       <div className='flex justify-between items-center border-b border-dashed border-gray-300 pb-4 mb-4'>
         <span className='text-[#737373] font-medium text-sm'>
@@ -335,7 +335,7 @@ export default function CartPage() {
 
         {/* МОБИЛЬНАЯ ПАНЕЛЬ ОПЛАТЫ */}
         {items.length > 0 && (
-          <div className='lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[24px] px-5 pb-8 pt-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-40'>
+          <div className='lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl px-5 pb-8 pt-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-40'>
             <div className='w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4' />
 
             {/* Ошибка на мобилке */}

@@ -14,13 +14,17 @@ export interface MyTicketDto {
   ticketId: string;
   lotteryId: string;
   drawId: string;
+  name: string | null;
+  logo: string | null;
+  purchaseDateDisplay: string;
   ticketNumber: string;
   combination: number[];
-  price: number;
+  price: string | number;
   currency: string;
-  status: 'sold' | 'winning' | 'losing'; // Бэк отдает sold для купленных
+  status: 'sold' | 'winning' | 'losing';
   purchaseDate: string;
-  prizeAmount?: number; // На случай, если бэк отдает выигрыш для статуса winning
+  prizeAmount?: number | string;
+  prizeProduct?: string | null;
 }
 
 export interface DrawDto {
