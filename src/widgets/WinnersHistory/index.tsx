@@ -20,9 +20,21 @@ async function getWinnersData(): Promise<Winner[]> {
 }
 
 // Серверный компонент (может быть async)
-export const WinnersHistory = async () => {
+export const WinnersHistory = async ({
+  title,
+  description,
+}: {
+  title?: string;
+  description?: string;
+}) => {
   const winners = await getWinnersData();
 
   // Передаем данные в клиентскую часть
-  return <WinnersHistoryClient winners={winners} />;
+  return (
+    <WinnersHistoryClient
+      winners={winners}
+      title={title}
+      description={description}
+    />
+  );
 };

@@ -6,7 +6,6 @@ import { clsx } from 'clsx';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth';
 import { useCartStore } from '@/store/cart';
-// 🔥 ДОБАВЛЕН ИМПОРТ TicketDto:
 import { useCurrentDraw, useTickets, TicketDto } from '@/entities/ticket/api';
 
 const getTicketPlural = (count: number) => {
@@ -22,7 +21,6 @@ interface TicketCardProps {
   ticketNumber: number | string;
   price: number;
   selectedNumbers: number[];
-  isOrangeButton: boolean;
   isInBasket: boolean;
   onToggle: () => void;
 }
@@ -31,7 +29,6 @@ const TicketCard = ({
   ticketNumber,
   price,
   selectedNumbers,
-  isOrangeButton,
   isInBasket,
   onToggle,
 }: TicketCardProps) => {
@@ -47,7 +44,7 @@ const TicketCard = ({
       <div className='absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-[#F9F9F9] rounded-full border-r border-gray-100' />
       <div className='absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-[#F9F9F9] rounded-full border-l border-gray-100' />
 
-      <div className='flex justify-between items-center border-b border-dashed border-gray-300 pb-4 mb-4'>
+      <div className='flex font-benzin justify-between items-center border-b border-dashed border-gray-300 pb-4 mb-4'>
         <span className='text-gray-400 font-medium text-sm'>
           Билет №{ticketNumber}
         </span>
@@ -81,9 +78,7 @@ const TicketCard = ({
           'w-full py-3.5 rounded-full font-bold text-xs uppercase transition-all active:scale-95 shadow-sm',
           isInBasket
             ? 'bg-[#4B4B4B] text-white hover:bg-[#4B4B4B]'
-            : isOrangeButton
-              ? 'bg-[#F58220] text-white hover:bg-[#E5761A]'
-              : 'bg-[#FFD600] text-[#4B4B4B] hover:bg-[#F5C700]',
+            : 'bg-[#F58220] text-white hover:bg-[#E5761A]', // 🔥 Убрали чередование, всегда оранжевая
         )}
       >
         {isInBasket ? 'Убрать' : `Играть • ${price} с`}
@@ -178,9 +173,9 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
             </p>
           </div>
         ) : (
-          availableTickets.map((ticket: TicketDto, index: number) => {
-            const type = index % 2 === 0 ? 'super' : 'other';
-            const isOrange = index % 2 === 0;
+          availableTickets.map((ticket: TicketDto) => {
+            // 🔥 Убрали index
+            const type = 'other'; // Всегда один тип
             const ticketIdStr = String(ticket.ticketId);
 
             return (
@@ -189,8 +184,7 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
                 ticketNumber={ticket.ticketNumber || ticketIdStr.slice(-6)}
                 price={ticket.price}
                 selectedNumbers={ticket.combination || []}
-                isOrangeButton={isOrange}
-                isInBasket={basketIds.includes(ticketIdStr)}
+                isInBasket={basketIds.includes(ticketIdStr)} // 🔥 Убрали isOrangeButton
                 onToggle={() =>
                   toggleItem({
                     id: ticketIdStr,
@@ -222,8 +216,8 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
         cartItems.length > 0 &&
         createPortal(
           <>
-            <div className='hidden lg:flex fixed bottom-0 left-0 right-0 bg-[#FFF7F0] border-t border-[#FEEEDF] z-[100] shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.15)] py-4 transition-all'>
-              <div className='max-w-[1045px] w-full mx-auto px-8 flex items-center justify-between'>
+            <div className='hidden lg:flex fixed bottom-0 left-0 right-0 bg-[#FFF7F0] border-t border-[#FEEEDF] z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.15)] py-4 transition-all'>
+              <div className='w-full mx-auto px-8 flex items-center justify-between'>
                 <div className='flex items-center gap-6'>
                   <div className='flex gap-2 opacity-90'>
                     <span
@@ -289,7 +283,7 @@ export const DrawTicketsBlock = ({ lotteryId }: { lotteryId: string }) => {
             {/* Мобильная корзина */}
             <div
               className={clsx(
-                'flex lg:hidden fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-[100] shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex-col overflow-hidden',
+                'flex lg:hidden fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex-col overflow-hidden',
                 isExpanded ? 'bottom-0' : 'bottom-0',
               )}
             >

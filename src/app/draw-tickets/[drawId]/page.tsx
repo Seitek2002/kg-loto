@@ -98,7 +98,7 @@ export default async function SuperJackpotPage({ params }: PageProps) {
           ticketsTab={
             <div className='mt-16 lg:mt-20'>
               <div className='mb-12'>
-                <WinnersHistory />
+                <WinnersHistory description=' ' />
               </div>
               <DrawTicketsBlock lotteryId={lotteryId} />
             </div>
@@ -107,7 +107,7 @@ export default async function SuperJackpotPage({ params }: PageProps) {
             <>
               <DrawRulesBlock />
               <div className='mt-16 lg:mt-24'>
-                <WinnersHistory />
+                <WinnersHistory description=' ' />
               </div>
               <LotteryConditions terms={MOCK_TERMS} />
               <PopularTickets
