@@ -1,0 +1,290 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+
+import { clsx } from "clsx";
+import { Menu, ShoppingCart, Wallet, X } from "lucide-react";
+
+import { AuthModal } from "@/features/auth/ui/AuthModal";
+import { LanguageSwitcher } from "@/features/language-switcher/ui/LanguageSwitcher";
+
+// import { useTranslations } from "next-intl"; // Раскомментируй позже
+
+import { useCartStore } from "@/entities/cart/model/cartStore";
+import { useBalance } from "@/entities/finance/api/financeApi";
+import { useAuthStore } from "@/entities/user/model/authStore";
+
+import { getRelativeUrl } from "@/shared/lib/utils";
+import { MenuItem } from "@/shared/types/api";
+
+import { MobileMenu } from "./MobileMenu";
+
+interface HeaderProps {
+  theme?: "light" | "dark";
+  headerMenu?: MenuItem[];
+  headerUpperMenu?: MenuItem[];
+}
+
+export const Header = ({
+  theme = "light",
+  headerMenu = [],
+  headerUpperMenu = [],
+}: HeaderProps) => {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authFlow, setAuthFlow] = useState<"login" | "register">("login");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+
+  const isDark = theme === "dark";
+
+  const user = useAuthStore((state) => state.user);
+  const cartCount = useCartStore((state) => state.items.length);
+
+  // Вызываем хук баланса
+  useBalance();
+
+  const handleAuthClick = (flow: "login" | "register" = "login") => {
+    setIsMobileMenuOpen(false);
+    setAuthFlow(flow);
+    setIsAuthModalOpen(true);
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "auto";
+  }, [isMobileMenuOpen]);
+
+  const userInitial = user?.firstName?.charAt(0).toUpperCase() || "U";
+  const userAvatar = user?.avatar || user?.kglotteryProfile?.avatar;
+
+  const navLinkClass = clsx(
+    "text-sm font-medium uppercase transition-colors",
+    isDark
+      ? "text-[#4B4B4B]/70 hover:text-[#4B4B4B]"
+      : "text-white/80 hover:text-white",
+  );
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleCheckClick = () => {
+    if (!user) {
+      handleAuthClick("login");
+      return;
+    }
+
+    if (pathname === "/") {
+      // 🔥 Если мы УЖЕ на главной, просто плавно скроллим к элементу
+      const checkBlock = document.getElementById("check");
+      if (checkBlock) {
+        checkBlock.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      // 🔥 Если мы на другой странице (корзина, карта и т.д.), переходим на главную
+      router.push("/#check");
+    }
+  };
+
+  return (
+    <>
+      <header className="relative z-50">
+        {/* ВЕРХНЯЯ ПОЛОСКА */}
+        <div className="hidden lg:flex bg-[#0B1F3B] justify-between text-white py-3 px-8 text-xs font-rubik">
+          {headerUpperMenu.length >= 3 && (
+            <>
+              <Link
+                href={getRelativeUrl(headerUpperMenu[2].link)}
+                className="hover:underline"
+              >
+                {headerUpperMenu[2].title}
+              </Link>
+              <button
+                onClick={handleCheckClick}
+                className="cursor-pointer hover:underline"
+              >
+                {headerUpperMenu[0].title}
+              </button>
+              <Link
+                href={`tel:${getRelativeUrl(headerUpperMenu[1].link)}`}
+                className="cursor-pointer hover:underline"
+              >
+                {headerUpperMenu[1].title}
+              </Link>
+            </>
+          )}
+        </div>
+
+        {/* ОСНОВНОЙ ХЕДЕР */}
+        <div className="hidden lg:flex py-3 font-rubik w-full items-center justify-between px-8 bg-white shadow-sm relative z-20">
+          <Link href="/" className="relative w-32 h-12">
+            <Image
+              src="/logo.png"
+              alt="KGLOTO"
+              fill
+              className="object-contain"
+            />
+          </Link>
+
+          <nav className="flex items-center gap-10">
+            {headerMenu.map((item) => (
+              <Link
+                key={item.id}
+                href={getRelativeUrl(item.link)}
+                className={navLinkClass}
+              >
+                {item.title}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-5">
+            {/* 🔥 Наш настоящий свитчер */}
+            <LanguageSwitcher isDark={false} />
+
+            {user ? (
+              <div className="flex items-center gap-6">
+                <Link
+                  href="/cart"
+                  className="flex items-center gap-2 text-[#4B4B4B] hover:text-[#FFD600] transition-colors cursor-pointer"
+                >
+                  <span className="text-[15px] font-medium">Мои билеты</span>
+                  <div className="relative">
+                    <ShoppingCart size={24} strokeWidth={2} />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-[#F58220] text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+
+                <Link
+                  href="/wallet"
+                  className="flex items-center gap-2 cursor-pointer group"
+                >
+                  <Wallet
+                    size={24}
+                    strokeWidth={2}
+                    className="text-[#4B4B4B] group-hover:text-[#F58220] transition-colors"
+                  />
+                  <div className="text-[22px] font-black text-[#F58220] flex items-end gap-1">
+                    {user.balance || "0"}{" "}
+                    <span className="text-[16px] underline mb-0.5">с</span>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/profile"
+                  className="w-11 h-11 rounded-full overflow-hidden bg-[#CBA3D3] flex items-center justify-center shrink-0 shadow-sm"
+                >
+                  {userAvatar && !avatarError ? (
+                    <Image
+                      src={userAvatar}
+                      alt="Аватар"
+                      fill
+                      sizes="44px"
+                      className="object-cover"
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : (
+                    <span className="text-[#331C39] font-medium text-lg">
+                      {userInitial}
+                    </span>
+                  )}
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 pl-2">
+                <button
+                  onClick={() => handleAuthClick("register")}
+                  className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase bg-[#4B4B4B] text-white hover:bg-black"
+                >
+                  Регистрация
+                </button>
+                <button
+                  onClick={() => handleAuthClick("login")}
+                  className="bg-[#FFD600] text-[#4B4B4B] px-6 py-2.5 rounded-full text-[10px] font-black uppercase hover:bg-[#FFC000]"
+                >
+                  Войти
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* МОБИЛЬНЫЙ ХЕДЕР */}
+        <div
+          className={clsx(
+            "flex lg:hidden items-center justify-between px-4 py-3 z-50 relative",
+            isMobileMenuOpen
+              ? "bg-[#f9f9f9]"
+              : isDark
+                ? "bg-[#0B1F3B]"
+                : "bg-[#f9f9f9]",
+          )}
+        >
+          <Link
+            href="/"
+            className="relative w-24 h-10"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <Image
+              src="/logo.png"
+              alt="KGLOTO"
+              fill
+              className="object-contain object-left"
+            />
+          </Link>
+
+          <div className="flex items-center gap-4">
+            {/* 🔥 И тут тоже настоящий свитчер */}
+            <LanguageSwitcher isDark={!isMobileMenuOpen} />
+
+            {user && (
+              <Link
+                href="/cart"
+                className={clsx(
+                  "relative",
+                  isMobileMenuOpen || !isDark ? "text-[#4B4B4B]" : "text-white",
+                )}
+              >
+                <ShoppingCart size={24} strokeWidth={2} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-[#F58220] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={clsx(
+                "p-1",
+                isMobileMenuOpen || !isDark ? "text-[#4B4B4B]" : "text-white",
+              )}
+            >
+              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+        </div>
+
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          onAuthClick={handleAuthClick}
+          menuItems={headerMenu}
+        />
+      </header>
+
+      {/* 🔥 2. НАША НАСТОЯЩАЯ МОДАЛКА */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialFlow={authFlow}
+      />
+    </>
+  );
+};

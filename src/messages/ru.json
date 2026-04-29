@@ -1,0 +1,14 @@
+{
+  "profile_header": {
+    "breadcrumbs": {
+      "home": "Главная",
+      "profile": "Профиль"
+    },
+    "tabs": {
+      "my_tickets": "Мои билеты",
+      "my_prizes": "Мои призы",
+      "support": "Поддержка",
+      "settings": "Настройки"
+    }
+  }
+}

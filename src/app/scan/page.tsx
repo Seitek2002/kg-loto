@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import { useRef, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import jsQR from 'jsqr'; // 🔥 Импортируем сканер
+import { useEffect, useRef, useState } from "react";
 
-import { ScanControls } from './sections/ScanControls';
-import { ScannerOverlay } from './sections/ScannerOverlay';
-import { AndroidUploadModal } from './sections/AndroidUploadModal';
-import { useOs } from '@/hooks/useOs';
-import { useCamera } from '@/hooks/useCamera';
+import { useRouter } from "next/navigation";
+
+import jsQR from "jsqr";
+import { ArrowLeft } from "lucide-react";
+
+import { AndroidUploadModal } from "@/widgets/scanner/ui/AndroidUploadModal";
+import { ScanControls } from "@/widgets/scanner/ui/ScanControls";
+import { ScannerOverlay } from "@/widgets/scanner/ui/ScannerOverlay";
+
+import { useCamera } from "@/shared/lib/hooks/useCamera";
+import { useOs } from "@/shared/lib/hooks/useOs";
 
 export default function ScanPage() {
   const router = useRouter();
@@ -19,61 +22,44 @@ export default function ScanPage() {
   const [showAndroidModal, setShowAndroidModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 🔥 1. ЛОГИКА ЖИВОГО СКАНИРОВАНИЯ С КАМЕРЫ
+  // Живой скан через requestAnimationFrame
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-    let animationFrameId: number;
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    let animationId: number;
 
-    const tick = () => {
+    const scan = () => {
       if (video.readyState === video.HAVE_ENOUGH_DATA && context) {
         canvas.height = video.videoHeight;
         canvas.width = video.videoWidth;
-
-        // Рисуем текущий кадр из видео на скрытый canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Получаем пиксели
         const imageData = context.getImageData(
           0,
           0,
           canvas.width,
           canvas.height,
         );
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
 
-        // Ищем QR-код
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: 'dontInvert',
-        });
-
-        // Если нашли — останавливаем сканирование и переходим на проверку
-        if (code && code.data) {
-          console.log('QR Найден с камеры:', code.data);
+        if (code?.data) {
           router.push(`/scan/manual?ticket=${encodeURIComponent(code.data)}`);
-          return;
+          return; // Выходим из цикла при успехе
         }
       }
-
-      // Продолжаем цикл
-      animationFrameId = requestAnimationFrame(tick);
+      animationId = requestAnimationFrame(scan);
     };
 
-    animationFrameId = requestAnimationFrame(tick);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
+    animationId = requestAnimationFrame(scan);
+    return () => cancelAnimationFrame(animationId);
   }, [videoRef, router]);
 
   const handleUploadClick = () => {
-    if (isAndroid) {
-      setShowAndroidModal(true);
-    } else {
-      triggerFileInput('image/*');
-    }
+    if (isAndroid) setShowAndroidModal(true);
+    else triggerFileInput("image/*");
   };
 
   const triggerFileInput = (acceptType: string) => {
@@ -84,57 +70,52 @@ export default function ScanPage() {
     setShowAndroidModal(false);
   };
 
-  // 🔥 2. ЛОГИКА СКАНИРОВАНИЯ ЗАГРУЖЕННОГО ФАЙЛА
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    const imageUrl = URL.createObjectURL(file);
     const img = new Image();
-
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
-
       canvas.width = img.width;
       canvas.height = img.height;
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      const code = jsQR(
+        ctx.getImageData(0, 0, canvas.width, canvas.height).data,
+        canvas.width,
+        canvas.height,
+      );
 
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-      if (code && code.data) {
-        console.log('QR Найден на фото:', code.data);
+      if (code?.data) {
         router.push(`/scan/manual?ticket=${encodeURIComponent(code.data)}`);
       } else {
-        alert('QR код не найден на изображении. Попробуйте другое фото.');
+        alert("QR-код не распознан. Попробуйте другое фото.");
       }
-      URL.revokeObjectURL(imageUrl); // Очищаем память
     };
-
-    img.src = imageUrl;
-    event.target.value = ''; // Сбрасываем инпут
+    img.src = URL.createObjectURL(file);
   };
 
   return (
-    <div className='relative h-screen w-full bg-black overflow-hidden'>
+    <div className="relative h-screen w-full bg-black overflow-hidden">
       <input
-        type='file'
+        type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        className='hidden'
+        className="hidden"
       />
 
-      <div className='absolute inset-0 z-0'>
+      {/* Video Stream */}
+      <div className="absolute inset-0 z-0">
         {error ? (
-          <div className='flex items-center justify-center h-full bg-gray-900 text-white p-6 text-center'>
-            <p>Пожалуйста, разрешите доступ к камере для сканирования.</p>
+          <div className="flex items-center justify-center h-full bg-gray-900 text-white p-10 text-center">
+            <p className="font-rubik opacity-60">{error}</p>
           </div>
         ) : (
           <video
             ref={videoRef}
-            className='w-full h-full object-cover'
+            className="w-full h-full object-cover"
             autoPlay
             playsInline
             muted
@@ -142,19 +123,20 @@ export default function ScanPage() {
         )}
       </div>
 
-      <div className='absolute top-4 left-4 z-20'>
+      {/* Кнопка Назад */}
+      <div className="absolute top-6 left-6 z-20">
         <button
           onClick={() => router.back()}
-          className='w-10 h-10 flex items-center justify-center text-white transition-transform active:scale-95 bg-black/30 backdrop-blur-xl rounded-full border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]'
+          className="w-12 h-12 flex items-center justify-center text-white bg-black/20 backdrop-blur-xl rounded-full border border-white/10 shadow-lg active:scale-90 transition-all"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeft size={28} />
         </button>
       </div>
 
       <ScannerOverlay />
 
       <ScanControls
-        onManualClick={() => router.push('/scan/manual')}
+        onManualClick={() => router.push("/scan/manual")}
         onUploadClick={handleUploadClick}
         onFlashlightClick={toggleFlash}
         isFlashOn={isFlashOn}
@@ -163,8 +145,8 @@ export default function ScanPage() {
       <AndroidUploadModal
         isOpen={showAndroidModal}
         onClose={() => setShowAndroidModal(false)}
-        onSelectGallery={() => triggerFileInput('image/*')}
-        onSelectFiles={() => triggerFileInput('*/*')}
+        onSelectGallery={() => triggerFileInput("image/*")}
+        onSelectFiles={() => triggerFileInput("*/*")}
       />
     </div>
   );

@@ -1,30 +1,23 @@
-import api from '@/services/api/apiClient';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-export interface CheckCombinationResponse {
-  isWinning: boolean;
-  combinationId: number;
-  message: string;
-  prizeType: string;
-  prizeAmount: string | null;
-  prizeProduct: string | null;
-}
+import api from "@/shared/api/apiClient";
 
 export interface MyTicketDto {
   ticketId: string;
   lotteryId: string;
   drawId: string;
-  name: string | null;
+  name: string;
   logo: string | null;
   purchaseDateDisplay: string;
   ticketNumber: string;
   combination: number[];
-  price: string | number;
+  price: string;
   currency: string;
-  status: 'sold' | 'winning' | 'losing';
+  status: "sold" | "winning" | "losing";
   purchaseDate: string;
   prizeAmount?: number | string;
-  prizeProduct?: string | null;
+  drawDate?: string;
+  drawDateDisplay?: string;
 }
 
 export interface DrawDto {
@@ -39,7 +32,7 @@ export interface DrawDto {
   jackpotAmount: number;
   jackpotAmountDisplay: string;
   location: string;
-  status: 'open' | 'closed' | 'completed';
+  status: "open" | "closed" | "completed";
   salesStartAt: string;
   salesStartAtDisplay: string;
   salesEndAt: string;
@@ -75,7 +68,7 @@ export interface TicketDto {
   combination: number[];
   price: number;
   currency: string;
-  status: 'available' | 'sold' | 'reserved' | 'cancelled';
+  status: "available" | "sold" | "reserved" | "cancelled";
 }
 
 export interface TicketsResponseData {
@@ -87,51 +80,62 @@ export interface TicketsResponseData {
   tickets: TicketDto[];
 }
 
+export interface LotteryRuleDto {
+  id: number;
+  image: string;
+  text: string;
+  order: number;
+}
+
+export interface LotteryUiDto {
+  backgroundImage: string | null;
+  logo: string | null;
+  rules: LotteryRuleDto[];
+}
+
+export interface RawDrawDto extends Omit<DrawDto, "title"> {
+  winningCombination: number[] | null;
+  currency: string;
+}
+
 // --- API ОБЪЕКТ ---
 export const ticketApi = {
   // Получение доступных билетов
   getTickets: async (params: FetchTicketsParams) => {
-    const response = await api.get('/tickets', { params });
-    return response.data.data;
+    const { data } = await api.get<{
+      success: boolean;
+      data: TicketsResponseData;
+    }>("/tickets", { params });
+    return data.data;
   },
 
   // Покупка билетов с баланса
   purchaseTickets: async (payload: PurchasePayload) => {
-    const { data } = await api.post('/me/balance/purchases/', payload);
+    const { data } = await api.post("/me/balance/purchases/", payload);
     return data;
   },
 
   getCurrentDraw: async (lotteryId: string) => {
-    const response = await api.get<{
-      data: DrawDto[]; // 🔥 Теперь массив тиражей лежит прямо в data
-      meta: any;
-    }>('/draws/current', {
+    const response = await api.get<any>("/draws/current", {
       params: { lotteryId },
     });
 
-    // Берем массив тиражей из response.data.data
-    const draws = response.data?.data || [];
+    // 🔥 Ищем и camelCase, и snake_case, чтобы наверняка
+    const drawCards =
+      response.data?.meta?.drawCards || response.data?.meta?.draw_cards || [];
 
-    // Ищем открытый тираж
-    const openDraw = draws.find((draw) => draw.status === 'open');
+    const openDraw =
+      drawCards.find((draw: any) => draw.status === "open") || null;
 
-    return openDraw || null;
+    return {
+      draw: openDraw,
+      rules: response.data?.meta?.rules || [],
+    };
   },
 
   getMyTickets: async () => {
     const { data } = await api.get<{ data: MyTicketDto[] }>(
-      '/me/balance/tickets/',
-    );
-
-    console.log(data);
-
-    return data.data;
-  },
-
-  checkCombination: async (code: string) => {
-    const { data } = await api.post<{ data: CheckCombinationResponse }>(
-      '/me/combination/check/',
-      { code },
+      "/me/balance/tickets/",
     );
     return data.data;
   },
@@ -143,7 +147,7 @@ export const useTickets = (
   enabled: boolean = true,
 ) => {
   return useQuery({
-    queryKey: ['tickets', params.lotteryId, params.drawId, params.page],
+    queryKey: ["tickets", params.lotteryId, params.drawId, params.page],
     queryFn: () => ticketApi.getTickets(params),
     enabled: enabled && !!params.lotteryId && !!params.drawId,
   });
@@ -157,7 +161,7 @@ export const usePurchaseTickets = () => {
 
 export const useCurrentDraw = (lotteryId: string) => {
   return useQuery({
-    queryKey: ['currentDraw', lotteryId],
+    queryKey: ["currentDraw", lotteryId],
     queryFn: () => ticketApi.getCurrentDraw(lotteryId),
     enabled: !!lotteryId,
   });
@@ -165,13 +169,7 @@ export const useCurrentDraw = (lotteryId: string) => {
 
 export const useMyTickets = () => {
   return useQuery({
-    queryKey: ['myTickets'],
+    queryKey: ["myTickets"],
     queryFn: ticketApi.getMyTickets,
-  });
-};
-
-export const useCheckTicket = () => {
-  return useMutation({
-    mutationFn: ticketApi.checkCombination,
   });
 };

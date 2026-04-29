@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import clsx from 'clsx';
+import { cn } from "@/shared/lib/utils";
 
 interface NumberedBallProps {
   number: number;
@@ -17,15 +17,15 @@ export const NumberedBall = ({
 
   return (
     <div
-      className={clsx(
-        'relative flex items-center justify-center rounded-full font-black text-white shrink-0 select-none overflow-hidden',
-        'bg-[#00C304]',
-        'shadow-[inset_0px_2px_4px_0px_#009A03]',
+      className={cn(
+        "relative flex items-center justify-center rounded-full font-black text-white shrink-0 select-none overflow-hidden",
+        "bg-[#00C304]",
+        "shadow-[inset_0px_2px_4px_0px_#009A03]",
         className,
       )}
       style={{ width: `${size}px`, height: `${size}px` }}
     >
-      <span className='relative z-10' style={{ fontSize }}>
+      <span className="relative z-10" style={{ fontSize }}>
         {number}
       </span>
     </div>

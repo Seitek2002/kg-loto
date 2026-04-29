@@ -1,7 +1,7 @@
 // src/entities/draw/api.ts
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import api from '@/services/api/apiClient';
+import api from "@/shared/api/apiClient";
 
 export interface CurrentDraw {
   drawId: string;
@@ -11,7 +11,7 @@ export interface CurrentDraw {
   drawTime: string;
   salesStartAt: string;
   salesEndAt: string;
-  status: 'open' | 'closed' | 'completed' | 'cancelled';
+  status: "open" | "closed" | "completed" | "cancelled";
   winningCombination: number[] | null;
   jackpotAmount: number;
   currency: string;
@@ -19,9 +19,9 @@ export interface CurrentDraw {
 
 export const useCurrentDraws = (lotteryId?: string) => {
   return useQuery({
-    queryKey: ['draws', lotteryId],
+    queryKey: ["draws", lotteryId],
     queryFn: async () => {
-      const { data } = await api.get('/draws/current', {
+      const { data } = await api.get("/draws/current", {
         params: { lotteryId },
       });
       return data.data;

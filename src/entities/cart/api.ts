@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
-import api from '@/services/api/apiClient';
+import api from "@/shared/api/apiClient";
 
 // Интерфейс того, что ждет бэкенд (как на скрине)
 export interface PurchaseItem {
@@ -20,7 +20,7 @@ export interface PurchasePayload {
 export const ticketApi = {
   // Реальный запрос на покупку
   purchaseWithBalance: async (payload: PurchasePayload) => {
-    const { data } = await api.post('/me/balance/purchases/', payload);
+    const { data } = await api.post("/me/balance/purchases/", payload);
     return data;
   },
 };
