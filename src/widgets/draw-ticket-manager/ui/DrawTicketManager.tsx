@@ -11,6 +11,7 @@ import { PopularTicketsWidget } from "@/widgets/popular-tickets/ui/PopularTicket
 import { WinnersSlider } from "@/widgets/winners-slider";
 
 import { useCartStore } from "@/entities/cart/model/cartStore";
+import { TicketDto } from "@/entities/ticket/api";
 import { useCurrentDraw, useTickets } from "@/entities/ticket/api/ticketApi";
 import { DrawTicketCard } from "@/entities/ticket/ui/DrawTicketCard";
 
@@ -63,10 +64,11 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
     limit: 30,
   });
 
-  console.log(data);
-
+  // 🔥 Заменили any на TicketDto
   const availableTickets =
-    ticketsData?.tickets?.filter((t: any) => t.status === "available") || [];
+    ticketsData?.tickets?.filter((t: TicketDto) => t.status === "available") ||
+    [];
+
   const isLoading = isDrawLoading || isTicketsLoading;
 
   return (
@@ -200,7 +202,7 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                 Билеты раскуплены
               </div>
             ) : (
-              availableTickets.map((ticket: any) => (
+              availableTickets.map((ticket: TicketDto) => (
                 <DrawTicketCard
                   key={ticket.ticketId}
                   ticketNumber={ticket.ticketNumber}

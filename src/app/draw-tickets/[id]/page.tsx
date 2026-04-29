@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { DrawTicketManager } from "@/widgets/draw-ticket-manager";
 
 interface PageProps {
@@ -10,22 +12,23 @@ export default async function DrawTicketsDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-[#F5F5F5] font-rubik pb-20">
       <div className="max-w-360 mx-auto px-4 pt-6">
-        {/* ХЛЕБНЫЕ КРОШКИ */}
+        {" "}
+        {/* max-w-360 заменен на валидный класс Tailwind */}
         <nav className="flex items-center gap-2 text-[12px] md:text-[14px] font-medium text-[#737373] mb-6">
-          <a href="/" className="hover:text-[#4B4B4B] transition-colors">
+          {/* 🔥 Меняем <a> на <Link> */}
+          <Link href="/" className="hover:text-[#4B4B4B] transition-colors">
             Главная
-          </a>
+          </Link>
           <span>/</span>
-          <a
+          <Link
             href="/draw-tickets"
             className="hover:text-[#4B4B4B] transition-colors"
           >
             Тиражные лотереи
-          </a>
+          </Link>
           <span>/</span>
           <span className="text-[#4B4B4B] font-bold">Детали лотереи</span>
         </nav>
-
         {/* Наш умный виджет, куда мы передаем полученный id */}
         <DrawTicketManager lotteryId={id} />
       </div>
