@@ -18,13 +18,13 @@ import { DrawTicketCard } from "@/entities/ticket/ui/DrawTicketCard";
 import { cn } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/Skeleton";
 
-export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
-  const [activeTab, setActiveTab] = useState("tickets");
-
-  // -- ТВОЙ КОД: TicketsHeroWidget (Встроенный) --
-  const { data, isLoading: isDrawLoading } = useCurrentDraw(lotteryId);
-  const currentDraw = data?.draw;
-  const rules = data?.rules || [];
+const DrawTimer = ({
+  drawDate,
+  drawTime,
+}: {
+  drawDate?: string;
+  drawTime?: string;
+}) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -33,10 +33,10 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
   });
 
   useEffect(() => {
-    if (!currentDraw) return;
-    const targetDate = new Date(
-      `${currentDraw.drawDate}T${currentDraw.drawTime}`,
-    );
+    if (!drawDate || !drawTime) return;
+
+    const targetDate = new Date(`${drawDate}T${drawTime}`);
+
     const updateTimer = () => {
       const difference = targetDate.getTime() - new Date().getTime();
       if (difference > 0) {
@@ -50,21 +50,47 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     };
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, [currentDraw]);
 
-  // -- ТВОЙ КОД: DrawTicketsBlock (Встроенный) --
+    updateTimer(); // Вызываем сразу, чтобы не было задержки в 1 сек
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval);
+  }, [drawDate, drawTime]);
+
+  return (
+    <div className="flex justify-center gap-4 w-full">
+      <div className="flex flex-col bg-white/10 backdrop-blur-md rounded-xl p-2 items-center min-w-17.5">
+        <span className="text-[12px] font-medium mb-1">Дней</span>
+        <span className="text-[32px] font-black leading-none">
+          {timeLeft.days}
+        </span>
+      </div>
+      <div className="flex flex-col bg-white/10 backdrop-blur-md rounded-xl p-2 items-center min-w-30">
+        <span className="text-[12px] font-medium mb-1">Часов</span>
+        <span className="text-[32px] font-black leading-none tabular-nums">
+          {`${String(timeLeft.hours).padStart(2, "0")}:${String(timeLeft.minutes).padStart(2, "0")}:${String(timeLeft.seconds).padStart(2, "0")}`}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
+  const [activeTab, setActiveTab] = useState("tickets");
+
+  const { data, isLoading: isDrawLoading } = useCurrentDraw(lotteryId);
+  const currentDraw = data?.draw;
+  const rules = data?.rules || [];
+
   const { toggleItem, items } = useCartStore();
   const basketIds = items.map((item) => item.id);
+
   const { data: ticketsData, isLoading: isTicketsLoading } = useTickets({
     lotteryId,
     drawId: currentDraw?.drawId || "",
     limit: 30,
   });
 
-  // 🔥 Заменили any на TicketDto
   const availableTickets =
     ticketsData?.tickets?.filter((t: TicketDto) => t.status === "available") ||
     [];
@@ -168,18 +194,12 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
               <span className="text-[16px] lg:text-[22px] font-bold mb-3">
                 До розыгрыша
               </span>
-              <div className="flex justify-center gap-4 w-full">
-                <div className="flex flex-col bg-white/10 backdrop-blur-md rounded-xl p-2 items-center">
-                  <span className="text-[12px] font-medium mb-1">Дней</span>
-                  <span className="text-[32px] font-black leading-none">
-                    {timeLeft.days}
-                  </span>
-                </div>
-                <div className="flex flex-col bg-white/10 backdrop-blur-md rounded-xl p-2 items-center">
-                  <span className="text-[12px] font-medium mb-1">Часов</span>
-                  <span className="text-[32px] font-black leading-none">{`${String(timeLeft.hours).padStart(2, "0")}:${String(timeLeft.minutes).padStart(2, "0")}:${String(timeLeft.seconds).padStart(2, "0")}`}</span>
-                </div>
-              </div>
+
+              {/* 🔥 ВНЕДРИЛИ ОПТИМИЗИРОВАННЫЙ ТАЙМЕР */}
+              <DrawTimer
+                drawDate={currentDraw?.drawDate}
+                drawTime={currentDraw?.drawTime}
+              />
             </div>
           </div>
         </div>
