@@ -21,6 +21,10 @@ import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/Button";
 import { ErrorModal } from "@/shared/ui/ErrorModal";
 import { NumberedBall } from "@/shared/ui/NumberedBall";
+import {
+  SuccessPurchaseModal,
+  TicketDetails,
+} from "@/shared/ui/SuccessPurchaseModal";
 
 const getTicketPlural = (count: number) => {
   const lastDigit = count % 10;
@@ -109,7 +113,6 @@ export const CartClient = () => {
   const mounted = useMounted();
   const router = useRouter();
 
-  // 🔥 Достаем юзера для проверки баланса
   const user = useAuthStore((state) => state.user);
 
   const { mutate: purchase, isPending: isPurchasing } = usePurchaseTickets();
@@ -118,6 +121,9 @@ export const CartClient = () => {
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [isTopUpOpen, setIsTopUpOpen] = useState(false); // 🔥 Стейт модалки пополнения
   const [missingAmount, setMissingAmount] = useState<number>(0); // 🔥 Стейт нехватки средств
+  const [successDetails, setSuccessDetails] = useState<TicketDetails | null>(
+    null,
+  );
 
   const firstItem = items[0];
   const { data: ticketsData, isLoading: isTicketsLoading } = useTickets(
@@ -141,7 +147,6 @@ export const CartClient = () => {
   const handleCheckout = () => {
     if (items.length === 0) return;
 
-    // 🔥 ПРОВЕРКА БАЛАНСА
     const currentBalance = Number(user?.balance || 0);
     if (currentBalance < totalPrice) {
       setMissingAmount(totalPrice - currentBalance);
@@ -163,9 +168,19 @@ export const CartClient = () => {
 
     purchase(payload, {
       onSuccess: () => {
+        setSuccessDetails({
+          drawNumber: `№${items[0].drawId.split("-").pop()}`,
+          price: totalPrice,
+          prize: "Суперприз",
+          date: new Date().toLocaleDateString("ru-RU", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
+          combinations: items[0].combination,
+        });
         clearCart();
         refetchBalance();
-        router.push("/tickets");
       },
       onError: (error) => {
         console.error("Ошибка покупки:", error);
@@ -334,6 +349,15 @@ export const CartClient = () => {
         onClose={() => setIsErrorOpen(false)}
         title="Оплата не прошла"
         message="Возможно, выбранные билеты уже выкуплены. Пожалуйста, попробуйте еще раз."
+      />
+
+      <SuccessPurchaseModal
+        isOpen={!!successDetails}
+        onClose={() => {
+          setSuccessDetails(null);
+          router.push("/tickets"); // Уходим в билеты при закрытии
+        }}
+        details={successDetails!}
       />
     </>
   );

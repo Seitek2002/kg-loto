@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 
+import { useMounted } from "@/hooks/useMounted";
 import { clsx } from "clsx";
 import { X } from "lucide-react";
 
@@ -21,32 +21,18 @@ export const Modal = ({
   className,
   hideCloseButton = false,
 }: ModalProps) => {
-  const [mounted, setMounted] = useState(false);
-  const [isRendered, setIsRendered] = useState(false);
+  const mounted = useMounted();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Отслеживаем, нужно ли держать DOM-узлы (для анимации закрытия)
+  const [isRendered, setIsRendered] = useState(isOpen);
 
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+  // 🔥 Паттерн "Derived State": синхронизируем стейт без useEffect
+  // Это решает проблему каскадных рендеров и предупреждений React
+  if (isOpen && !isRendered) {
+    setIsRendered(true);
+  }
 
-    if (isOpen) {
-      setIsRendered(true);
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-      timeoutId = setTimeout(() => {
-        setIsRendered(false);
-      }, 300); // Синхронизировано с duration-300
-    }
-
-    return () => {
-      clearTimeout(timeoutId);
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
+  // Закрытие по Escape
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -59,9 +45,16 @@ export const Modal = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, handleKeyDown]);
 
+  // 🔥 Выгружаем компонент из DOM только когда CSS-транзакция затухания завершилась
+  const handleTransitionEnd = () => {
+    if (!isOpen) {
+      setIsRendered(false);
+    }
+  };
+
   if (!mounted || (!isOpen && !isRendered)) return null;
 
-  return createPortal(
+  return (
     <div
       className={clsx(
         "fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6",
@@ -70,6 +63,7 @@ export const Modal = ({
       role="dialog"
       aria-modal="true"
     >
+      {/* Фон модалки. Вешаем onTransitionEnd сюда */}
       <div
         className={clsx(
           "absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-in-out",
@@ -77,11 +71,12 @@ export const Modal = ({
         )}
         onClick={onClose}
         aria-hidden="true"
+        onTransitionEnd={handleTransitionEnd}
       />
 
       <div
         className={clsx(
-          "relative w-full max-w-120 bg-[#F5F5F5] rounded-4xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out",
+          "relative w-full max-w-120 bg-[#F5F5F5] rounded-4xl sm:rounded-4xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out",
           isOpen
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-4",
@@ -101,7 +96,6 @@ export const Modal = ({
           {children}
         </div>
       </div>
-    </div>,
-    document.body,
+    </div>
   );
 };
