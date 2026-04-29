@@ -11,7 +11,7 @@ export interface MyTicketCardProps {
   ticketName: string;
   price: number;
   date: string;
-  logoSrc: string;
+  logoSrc?: string;
   status?: "winning" | "unchecked" | "losing";
   badge?: { text: string; variant: "success" | "waiting" | "processing" };
   showButton?: boolean;
@@ -33,7 +33,7 @@ export const MyTicketCard = ({
   drawNumber,
   combination,
   onAction,
-  drawDateDisplay
+  drawDateDisplay,
 }: MyTicketCardProps) => {
   const cleanAmount = prizeAmount.replace(/\s/g, "");
   const isNumeric = !isNaN(Number(cleanAmount)) && cleanAmount !== "";
@@ -41,6 +41,8 @@ export const MyTicketCard = ({
 
   // Оранжевый цвет, если это техника или сумма >= 10 000
   const isHighlighted = !isNumeric || numericValue >= 10000;
+
+  console.log(logoSrc);
 
   return (
     <div className="flex flex-col h-fit bg-white border border-[#EAEAEA] rounded-3xl p-5 shadow-sm">
@@ -103,18 +105,24 @@ export const MyTicketCard = ({
             {drawNumber && <span>Тираж №{drawNumber}</span>}
             <span>Стоимость: {price}</span>
             <span>Дата покупки: {date}</span>
-            {drawDateDisplay && <span className="text-[#4B4B4B]">Дата розыгрыша: {drawDateDisplay}</span>}
+            {drawDateDisplay && (
+              <span className="text-[#4B4B4B]">
+                Дата розыгрыша: {drawDateDisplay}
+              </span>
+            )}
           </div>
         </div>
-        <div className="relative w-22.5 h-8.75 shrink-0 mt-1">
-          <Image
-            src={logoSrc}
-            alt={ticketName}
-            fill
-            unoptimized
-            className="object-contain object-right"
-          />
-        </div>
+        {logoSrc && (
+          <div className="relative w-22.5 h-8.75 shrink-0 mt-1">
+            <Image
+              src={logoSrc}
+              alt={ticketName}
+              fill
+              unoptimized
+              className="object-contain object-right"
+            />
+          </div>
+        )}
       </div>
 
       {/* 🔥 ОТРИСОВКА ВЫБРАННОЙ КОМБИНАЦИИ (через компонент NumberedBall) */}

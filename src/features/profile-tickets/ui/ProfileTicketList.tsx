@@ -39,7 +39,7 @@ export const ProfileTicketList = () => {
           (t.purchaseDate
             ? new Date(t.purchaseDate).toLocaleDateString("ru-RU")
             : "Скоро"),
-        logo: t.logo || "/images/draw-tickets/super-jackpot-logo.png",
+        logo: t.logo,
         status: mappedStatus,
         combination: t.combination || [],
         drawNumber: drawNumberStr,
@@ -89,7 +89,7 @@ export const ProfileTicketList = () => {
                 ticketName={ticket.name}
                 price={ticket.price}
                 date={ticket.date}
-                logoSrc={ticket.logo}
+                logoSrc={ticket.logo || undefined}
                 status={ticket.status}
                 showButton={ticket.status !== "losing"}
                 drawNumber={ticket.drawNumber}
