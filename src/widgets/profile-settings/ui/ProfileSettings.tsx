@@ -1,0 +1,127 @@
+"use client";
+
+import { useState } from "react";
+
+import { clsx } from "clsx";
+import { ChevronDown } from "lucide-react";
+
+import { AccountForm } from "@/features/profile-settings/ui/AccountForm";
+import { FaqSettings } from "@/features/profile-settings/ui/FaqSettings";
+import { LanguageForm } from "@/features/profile-settings/ui/LanguageForm";
+
+const TABS = [
+  { id: "account", title: "Аккаунт", Component: AccountForm },
+  { id: "language", title: "Язык", Component: LanguageForm },
+  {
+    id: "terms",
+    title: "Условия использования",
+    Component: () => (
+      <div className="text-sm text-[#6E6E6E]">Текст условий...</div>
+    ),
+  },
+  { id: "faq", title: "FAQ", Component: FaqSettings },
+];
+
+export const ProfileSettings = () => {
+  const [activeTab, setActiveTab] = useState("account");
+  const [openMobileTab, setOpenMobileTab] = useState<string | null>("account");
+
+  const activeIndex = TABS.findIndex((t) => t.id === activeTab);
+  const ActiveComponent = TABS[activeIndex !== -1 ? activeIndex : 0].Component;
+
+  return (
+    <div className="mt-4 sm:mt-10 overflow-y-hidden max-w-261.25 mx-auto">
+      {/* ======================================= */}
+      {/* 🔥 ДЕСКТОПНАЯ ВЕРСИЯ (С плавающим ползунком) */}
+      {/* ======================================= */}
+      <div className="hidden lg:flex w-full items-start">
+        {/* Сайдбар */}
+        <div className="w-96.5 shrink-0 relative z-10">
+          <div className="relative flex flex-col">
+            {/* ТОТ САМЫЙ ПЛАВАЮЩИЙ ПОЛЗУНОК */}
+            <div
+              className="absolute left-0 w-full h-16 bg-white rounded-l-4xl transition-transform duration-300 ease-in-out pointer-events-none z-0"
+              style={{ transform: `translateY(${activeIndex * 100}%)` }}
+            >
+              <div className="absolute -top-8 right-0 w-8 h-8 bg-white">
+                <div className="w-full h-full bg-[#F5F5F5] rounded-br-4xl" />
+              </div>
+
+              <div className="absolute -bottom-8 right-0 w-8 h-8 bg-white">
+                <div className="w-full h-full bg-[#F5F5F5] rounded-tr-4xl" />
+              </div>
+            </div>
+
+            {/* САМИ КНОПКИ ТАБОВ */}
+            {TABS.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={clsx(
+                    "relative z-10 cursor-pointer w-full text-[#4B4B4B] h-16 text-left px-8 text-[18px] font-benzin uppercase transition-colors tracking-wide",
+                    isActive ? "font-extrabold" : "font-medium",
+                  )}
+                >
+                  {tab.title}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Контентная часть */}
+        <div
+          className={clsx(
+            "flex-1 bg-white rounded-[40px] min-h-150 p-10 relative z-0 shadow-sm transition-all duration-200",
+            activeIndex == 0 && "rounded-tl-none",
+          )}
+        >
+          <ActiveComponent />
+        </div>
+      </div>
+
+      {/* ======================================= */}
+      {/* 🔥 МОБИЛЬНАЯ ВЕРСИЯ (Аккордеоны) */}
+      {/* ======================================= */}
+      <div className="flex flex-col gap-3 lg:hidden">
+        {TABS.map((tab) => {
+          const isOpen = openMobileTab === tab.id;
+          const MobileComponent = tab.Component;
+
+          return (
+            <div key={tab.id} className="bg-white rounded-3xl p-5 shadow-sm">
+              <button
+                onClick={() => setOpenMobileTab(isOpen ? null : tab.id)}
+                className="w-full flex justify-between items-center uppercase font-benzin text-[13px] font-bold text-[#4B4B4B]"
+              >
+                {tab.title}
+                <ChevronDown
+                  size={20}
+                  className={clsx(
+                    "transition-transform duration-300 text-[#4B4B4B]",
+                    isOpen && "rotate-180",
+                  )}
+                />
+              </button>
+
+              <div
+                className={clsx(
+                  "grid transition-all duration-300 ease-in-out",
+                  isOpen
+                    ? "grid-rows-[1fr] mt-6 opacity-100"
+                    : "grid-rows-[0fr] opacity-0",
+                )}
+              >
+                <div className="overflow-hidden">
+                  <MobileComponent />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};

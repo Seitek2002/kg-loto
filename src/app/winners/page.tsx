@@ -1,18 +1,12 @@
-import { getTranslations } from 'next-intl/server';
-import { WinnersListContent } from './WinnersListContent';
+import { Metadata } from "next";
 
-// 🔥 Серверная генерация заголовка
-export async function generateMetadata() {
-  const tSeo = await getTranslations('seo');
-  const siteName =
-    tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
+import { WinnersList } from "@/widgets/winners-list";
 
-  return {
-    title: `Победители | ${siteName}`,
-  };
-}
+export const metadata: Metadata = {
+  title: "Зал славы | KGLOTO",
+  description: "История победителей наших лотерей.",
+};
 
-// 🔥 Серверная страница, которая просто рендерит твой клиентский компонент
 export default function WinnersPage() {
-  return <WinnersListContent />;
+  return <WinnersList />;
 }

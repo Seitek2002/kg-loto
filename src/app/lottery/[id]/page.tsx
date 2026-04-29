@@ -1,49 +1,36 @@
-import { notFound } from 'next/navigation';
-import { api } from '@/lib/api';
-import { getLocaleHeader } from '@/lib/locale';
-import { LotteryHero } from '@/components/features/lottery-detail/LotteryHero';
-import { LotteryPrizeFund } from '@/components/features/lottery-detail/LotteryPrizeFund';
-import { LotteryHowToPlay } from '@/components/features/lottery-detail/LotteryHowToPlay';
-import { LotteryConditions } from '@/components/features/lottery-detail/LotteryConditions';
-import { PopularTickets } from '@/widgets/PopularTickets';
-import { WinnersHistory } from '@/widgets/WinnersHistory';
-import { getTranslations } from 'next-intl/server';
-// 🔥 Импортируем наш новый тип
-import { LotteryDetail } from '@/types/api';
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
 
-async function getLotteryDetail(id: string): Promise<LotteryDetail | null> {
-  try {
-    const { data } = await api.get(`/lotteries/${id}/`, {
-      headers: await getLocaleHeader(),
-    });
-    return data.data;
-  } catch (error) {
-    console.error('Lottery Detail Error:', error);
-    return null;
-  }
+import { LotteryConditions } from "@/widgets/lottery-detail/LotteryConditions";
+import { LotteryHero } from "@/widgets/lottery-detail/LotteryHero";
+import { LotteryHowToPlay } from "@/widgets/lottery-detail/LotteryHowToPlay";
+import { LotteryPrizeFund } from "@/widgets/lottery-detail/LotteryPrizeFund";
+import { PopularTickets } from "@/widgets/popular-tickets";
+import { WinnersSlider } from "@/widgets/winners-slider";
+
+import { getLotteryDetail } from "@/entities/lottery/api/lotteryServerApi";
+
+interface LotteryDetailPageProps {
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const resolvedParams = await params;
-  const lottery = await getLotteryDetail(resolvedParams.id);
-  const tSeo = await getTranslations('seo');
+}: LotteryDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const lottery = await getLotteryDetail(id);
+  const tSeo = await getTranslations("seo");
 
   const siteName =
-    tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
+    tSeo("site_name") === "site_name" ? "KGLOTO" : tSeo("site_name");
 
-  // Если лотерея не найдена, отдаем дефолтный заголовок
   if (!lottery) {
     return { title: `Лотерея не найдена | ${siteName}` };
   }
 
-  // Шаблон: "Название Лотереи | KGLOTO"
   return {
     title: `${lottery.title} | ${siteName}`,
-    // Можно заодно подтянуть описание лотереи для SEO сниппета в Google:
     description:
       lottery.subtitle ||
       `Участвуйте в лотерее ${lottery.title} и выигрывайте призы!`,
@@ -52,34 +39,33 @@ export async function generateMetadata({
 
 export default async function LotteryDetailPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const resolvedParams = await params;
-  const lottery = await getLotteryDetail(resolvedParams.id);
-  const t = await getTranslations('lottery');
+}: LotteryDetailPageProps) {
+  const { id } = await params;
+  const lottery = await getLotteryDetail(id);
+  // Временно замокаем переводы, пока не подключишь next-intl
+  // const t = await getTranslations('lottery');
+  const t = (key: string) =>
+    key === "other_lotteries" ? "Другие лотереи" : key;
 
   if (!lottery) return notFound();
 
   return (
-    <div className='min-h-screen bg-[#F9F9F9] pt-6 pb-20'>
-      <div className='max-w-[1520px] mx-auto px-4 md:px-8'>
+    <div className="min-h-screen bg-[#F9F9F9] pt-6 pb-20">
+      <div className="max-w-380 mx-auto px-4 md:px-8">
         <LotteryHero data={lottery} />
 
-        {/* Призовой фонд */}
         <LotteryPrizeFund prizeTiers={lottery.prizeTiers} />
 
-        {/* 🔥 ВНИМАНИЕ: Сюда передаем rules, так как в них картинки! */}
         <LotteryHowToPlay rules={lottery.rules} />
 
-        {/* 🔥 А сюда передаем terms, так как это просто текст */}
         <LotteryConditions terms={lottery.terms} />
 
-        <WinnersHistory />
+        <WinnersSlider title={`Победители "${lottery.title}"`} lotteryId={id} />
 
         <PopularTickets
-          title={t('other_lotteries')}
+          title={t("other_lotteries")}
           initialLotteries={lottery.otherLotteries}
+          currentLotteryId={id}
         />
       </div>
     </div>

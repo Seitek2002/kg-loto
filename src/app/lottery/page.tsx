@@ -1,48 +1,34 @@
-import { api } from '@/lib/api';
-import { getLocaleHeader } from '@/lib/locale';
-import { ApiResponse, LotteryItem } from '@/types/api';
-import { getTranslations } from 'next-intl/server';
-import { LotteryListContent } from './LotteryListContent';
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
-export async function generateMetadata() {
-  const t = await getTranslations('populartickets');
-  const tSeo = await getTranslations('seo');
+import { LotteryList } from "@/widgets/lottery-list";
+
+import { getLotteriesData } from "@/entities/lottery/api/lotteryServerApi";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("populartickets");
+  const tSeo = await getTranslations("seo");
   const siteName =
-    tSeo('site_name') === 'site_name' ? 'KGLOTO' : tSeo('site_name');
+    tSeo("site_name") === "site_name" ? "KGLOTO" : tSeo("site_name");
 
   return {
-    title: `${t('title')} | ${siteName}`, // Получится "Популярные лотереи | KGLOTO"
+    title: `${t("title")} | ${siteName}`,
   };
 }
 
-async function getAllLotteries(): Promise<LotteryItem[]> {
-  try {
-    const { data } = await api.get<ApiResponse<LotteryItem[]>>('/lotteries/', {
-      headers: await getLocaleHeader(),
-      // Если у вас есть пагинация лотерей, бэкенд может отдавать PaginatedResult,
-      // но в PopularTickets мы получали просто массив data.data.
-      // Оставляю как было в PopularTickets!
-    });
-    return data.data || [];
-  } catch (error) {
-    console.error('Error fetching lotteries page:', error);
-    return [];
-  }
-}
-
 export default async function LotteriesPage() {
-  const lotteries = await getAllLotteries();
+  const lotteries = await getLotteriesData();
 
-  // 🔥 Берем переводы, которые ты уже добавлял для главной страницы и хедера
-  const t = await getTranslations('populartickets');
-  const tHeader = await getTranslations('header');
+  // Берем переводы
+  const t = await getTranslations("populartickets");
+  const tHeader = await getTranslations("header");
 
   return (
-    <LotteryListContent
+    <LotteryList
       initialLotteries={lotteries}
-      pageTitle={tHeader('instant')} // "Моментальные"
-      title={t('title')} // "Популярные лотереи"
-      description={t('desc')} // Описание
+      pageTitle={tHeader("instant")} // "Моментальные"
+      title={t("title")} // "Популярные лотереи"
+      description={t("desc")} // Описание
     />
   );
 }
