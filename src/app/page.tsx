@@ -48,7 +48,7 @@ export default function HomePage() {
           </ScrollReveal>
         </Suspense>
 
-        <ScrollReveal direction="up">
+        <ScrollReveal direction="up" className="hidden lg:block">
           <OurApp />
         </ScrollReveal>
 
