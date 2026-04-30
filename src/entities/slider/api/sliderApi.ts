@@ -10,7 +10,7 @@ export const getHeroSlides = async (): Promise<SliderItem[]> => {
     const baseUrl =
       process.env.NEXT_PUBLIC_API_URL || "https://kgloto.com/api/v1";
 
-    const res = await fetch(`${baseUrl}/slider/`, {
+    const res = await fetch(`${baseUrl}/slider/?webview=false`, {
       headers: { "Accept-Language": locale },
       next: { revalidate: 600 }, // Кеш на 10 минут
     });

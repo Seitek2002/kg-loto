@@ -23,13 +23,13 @@ export interface TransactionsResponse {
 
 export const financeApi = {
   getBalance: async () => {
-    const { data } = await api.get<BalanceResponse>("/profile/balance");
+    const { data } = await api.get<BalanceResponse>("/profile/balance/");
     return data.data;
   },
   createPaylink: async (amount: string) => {
     const bodyString = `amount=${encodeURIComponent(amount)}`;
     const { data } = await api.post<PaylinkResponse>(
-      "/balance/paylink",
+      "/balance/paylink/",
       bodyString,
       {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },

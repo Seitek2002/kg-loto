@@ -4,8 +4,6 @@ import api from "@/shared/api/apiClient";
 
 import { DrawDto, LotteryRuleDto, RawDrawDto } from "../api";
 
-// Импортируем типы из соседнего файла
-
 interface CheckTicketResponse {
   isWinning: boolean;
   combinationId: number;
@@ -37,7 +35,7 @@ export const useCurrentDraw = (lotteryId: string) => {
           drawCards?: DrawDto[]; // Для подстраховки (camelCase)
           rules?: LotteryRuleDto[];
         };
-      }>("/draws/current", {
+      }>("/draws/current/", {
         params: { lotteryId },
       });
 
@@ -66,7 +64,7 @@ export const useTickets = (params: {
   return useQuery({
     queryKey: ["tickets", params.lotteryId, params.drawId],
     queryFn: async () => {
-      const { data } = await api.get("/tickets", { params });
+      const { data } = await api.get("/tickets/", { params });
       return data.data;
     },
     enabled: !!params.lotteryId && !!params.drawId,
@@ -78,7 +76,7 @@ export const useCurrentDraws = (lotteryId: string) => {
     queryKey: ["currentDraws", lotteryId],
     queryFn: async () => {
       const response = await api.get<{ success: boolean; data: RawDrawDto[] }>(
-        "/draws/current",
+        "/draws/current/",
         { params: { lotteryId } },
       );
       return response.data.data || [];

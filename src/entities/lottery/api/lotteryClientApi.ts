@@ -7,7 +7,7 @@ export const useCurrentLotteries = () => {
     queryKey: ["current-lotteries"],
     queryFn: async () => {
       // Эндпоинт из Swagger: /api/v1/lotteries/current
-      const { data } = await api.get("/lotteries/current");
+      const { data } = await api.get("/lotteries/current/");
       return data.data; // Возвращает массив BillingLottery
     },
   });
