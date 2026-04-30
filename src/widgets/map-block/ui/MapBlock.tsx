@@ -118,7 +118,7 @@ export const MapBlock = ({ branches }: MapBlockProps) => {
         </div>
 
         {/* Список карточек */}
-        <div className="flex flex-col gap-3 max-h-[35vh] lg:max-h-none lg:flex-1 overflow-y-auto pb-safe pointer-events-auto custom-scrollbar pr-2">
+        <div className="flex flex-col gap-3 max-h-[35vh] rounded-3xl lg:max-h-none lg:flex-1 overflow-y-auto pb-safe pointer-events-auto custom-scrollbar pr-2">
           {filteredBranches.length > 0 ? (
             filteredBranches.map((branch) => {
               const isActive = branch.id === targetBranchId;
