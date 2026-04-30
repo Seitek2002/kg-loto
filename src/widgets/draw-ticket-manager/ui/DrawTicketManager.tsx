@@ -81,6 +81,8 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
   const { data, isLoading: isDrawLoading } = useCurrentDraw(lotteryId);
   const currentDraw = data?.draw;
   const rules = data?.rules || [];
+  // 🔥 Вытаскиваем наши мета-картинки из ответа
+  const metaAssets = data?.metaAssets;
 
   const { toggleItem, items } = useCartStore();
   const basketIds = items.map((item) => item.id);
@@ -97,13 +99,20 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
 
   const isLoading = isDrawLoading || isTicketsLoading;
 
+  // Логотип лотереи (берем lotteryLogo, если нет - обычный logo)
+  const displayLogo = metaAssets?.lotteryLogo || metaAssets?.logo;
+
   return (
     <>
       {/* --- HERO SECTION --- */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mt-6">
         <div className="lg:col-span-2 relative min-h-65 sm:min-h-87.5 lg:min-h-105 rounded-3xl lg:rounded-4xl overflow-hidden flex flex-col justify-between shadow-sm">
+          {/* 🔥 ДИНАМИЧЕСКИЙ ФОН */}
           <Image
-            src="/images/draw-tickets/big-block-bg.png"
+            src={
+              metaAssets?.backgroundImage ||
+              "/images/draw-tickets/big-block-bg.png"
+            }
             alt="Background"
             fill
             unoptimized
@@ -111,6 +120,19 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
             priority
           />
           <div className="relative z-10 flex flex-col items-left self-start pt-6 sm:pt-10 lg:pt-16 pl-4 sm:pl-8 lg:pl-16">
+            {/* 🔥 ДИНАМИЧЕСКИЙ ЛОГОТИП (если есть) */}
+            {displayLogo && (
+              <div className="relative w-24 h-8 sm:w-32 sm:h-10 mb-2">
+                <Image
+                  src={displayLogo}
+                  alt="Lottery Logo"
+                  fill
+                  className="object-contain object-left"
+                  unoptimized
+                />
+              </div>
+            )}
+
             <div className="text-white text-[13px] sm:text-sm lg:text-xl font-bold mb-1 drop-shadow-md">
               Суперприз от
             </div>
@@ -183,8 +205,12 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
           </div>
 
           <div className="relative h-32.5 sm:h-37.5 lg:h-45 rounded-3xl lg:rounded-4xl overflow-hidden flex flex-col items-center justify-center shadow-sm">
+            {/* 🔥 ДИНАМИЧЕСКИЙ ФОН ТАЙМЕРА */}
             <Image
-              src="/images/draw-tickets/timer-block-bg.png"
+              src={
+                metaAssets?.timerBackgroundImage ||
+                "/images/draw-tickets/timer-block-bg.png"
+              }
               alt="Timer Background"
               fill
               unoptimized
@@ -195,7 +221,6 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                 До розыгрыша
               </span>
 
-              {/* 🔥 ВНЕДРИЛИ ОПТИМИЗИРОВАННЫЙ ТАЙМЕР */}
               <DrawTimer
                 drawDate={currentDraw?.drawDate}
                 drawTime={currentDraw?.drawTime}

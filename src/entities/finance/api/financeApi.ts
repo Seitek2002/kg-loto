@@ -4,6 +4,14 @@ import { useAuthStore } from "@/entities/user/model/authStore";
 
 import api from "@/shared/api/apiClient";
 
+export interface PaymentMethodDto {
+  id: string;
+  name: string;
+  logo: string | null; // 🔥 Может быть null
+  minAmount: number | null;
+  maxAmount: number | null;
+}
+
 interface BalanceResponse {
   data: { amount: string; currency: string };
 }
@@ -43,6 +51,12 @@ export const financeApi = {
     );
     return data.data.items;
   },
+  getPaymentMethods: async () => {
+    const { data } = await api.get<{ data: PaymentMethodDto[] }>(
+      "/payment-methods/",
+    );
+    return data.data;
+  },
 };
 
 export const useBalance = () => {
@@ -65,3 +79,11 @@ export const useTopUp = () =>
   useMutation({ mutationFn: financeApi.createPaylink });
 export const useTransactions = () =>
   useQuery({ queryKey: ["transactions"], queryFn: financeApi.getTransactions });
+
+export const usePaymentMethods = () => {
+  return useQuery({
+    queryKey: ["payment-methods"],
+    queryFn: financeApi.getPaymentMethods,
+    staleTime: 5 * 60 * 1000,
+  });
+};

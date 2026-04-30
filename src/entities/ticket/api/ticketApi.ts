@@ -22,7 +22,6 @@ export const useCheckTicket = () => {
   });
 };
 
-// 🔥 ИСПРАВЛЕННЫЙ ХУК
 export const useCurrentDraw = (lotteryId: string) => {
   return useQuery({
     queryKey: ["current-draw", lotteryId],
@@ -31,25 +30,33 @@ export const useCurrentDraw = (lotteryId: string) => {
         success: boolean;
         data: RawDrawDto[];
         meta: {
-          draw_cards?: DrawDto[]; // Для подстраховки (snake_case)
-          drawCards?: DrawDto[]; // Для подстраховки (camelCase)
+          draw_cards?: DrawDto[];
+          drawCards?: DrawDto[];
           rules?: LotteryRuleDto[];
+          // 🔥 ДОБАВЛЯЕМ НОВЫЕ ПОЛЯ ИЗ ТЗ
+          backgroundImage?: string | null;
+          timerBackgroundImage?: string | null;
+          logo?: string | null;
+          lotteryLogo?: string | null;
         };
-      }>("/draws/current/", {
-        params: { lotteryId },
-      });
+      }>("/draws/current/", { params: { lotteryId } });
 
-      // 1. Ищем инфо о тираже в meta.draw_cards (там есть поле title)
       const drawCards =
         response.data?.meta?.drawCards || response.data?.meta?.draw_cards || [];
       const openDraw = drawCards.find((draw) => draw.status === "open") || null;
-
-      // 2. Достаем правила
       const rules = response.data?.meta?.rules || [];
 
       return {
         draw: openDraw,
         rules: rules,
+        // 🔥 ВОЗВРАЩАЕМ ИХ ИЗ ХУКА
+        metaAssets: {
+          backgroundImage: response.data?.meta?.backgroundImage || null,
+          timerBackgroundImage:
+            response.data?.meta?.timerBackgroundImage || null,
+          logo: response.data?.meta?.logo || null,
+          lotteryLogo: response.data?.meta?.lotteryLogo || null,
+        },
       };
     },
     enabled: !!lotteryId,

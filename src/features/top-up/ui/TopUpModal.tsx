@@ -8,10 +8,11 @@ import { useMounted } from "@/hooks/useMounted";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
-import { useTopUp } from "@/entities/finance/api/financeApi";
+import { usePaymentMethods, useTopUp } from "@/entities/finance/api/financeApi";
 
 import { Button } from "@/shared/ui/Button";
 import { ErrorModal } from "@/shared/ui/ErrorModal";
+import { Skeleton } from "@/shared/ui/Skeleton";
 
 interface TopUpModalProps {
   isOpen: boolean;
@@ -32,11 +33,8 @@ export const TopUpModal = ({
   const [amount, setAmount] = useState("");
   const [isErrorOpen, setIsErrorOpen] = useState(false);
 
-  // 🔥 Создаем стейт для отслеживания предыдущего значения isOpen
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  // 🔥 Best Practice от React: обновляем стейт прямо во время рендера,
-  // избегая каскадных обновлений через useEffect
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen);
     if (isOpen) {
@@ -45,6 +43,11 @@ export const TopUpModal = ({
   }
 
   const { mutate: createPaylink, isPending } = useTopUp();
+
+  // 🔥 Вызываем хук получения методов оплаты
+  // Запрос пойдет только когда модалка открыта (enabled: isOpen), чтобы экономить ресурсы
+  const { data: paymentMethods, isLoading: isMethodsLoading } =
+    usePaymentMethods();
 
   useEffect(() => {
     if (isOpen && !isErrorOpen) document.body.style.overflow = "hidden";
@@ -104,12 +107,10 @@ export const TopUpModal = ({
                 <X size={24} strokeWidth={2} />
               </button>
 
-              {/* 🔥 Кастомный заголовок (если есть) или дефолтный */}
               <h2 className="text-[20px] lg:text-[24px] font-black text-[#4B4B4B] uppercase leading-tight mb-2">
                 {title || "Пополнение баланса"}
               </h2>
 
-              {/* 🔥 Кастомное описание (если есть) или дефолтное */}
               <div className="text-[#8C8C8C] text-[11px] lg:text-[13px] mb-6 lg:mb-8 font-medium leading-relaxed">
                 {description ||
                   "Деньги поступят на счет моментально после оплаты"}
@@ -134,21 +135,39 @@ export const TopUpModal = ({
                   <div className="text-[12px] font-bold text-[#4B4B4B] mb-3 opacity-60 uppercase tracking-tight">
                     Доступные способы:
                   </div>
-                  <div className="flex flex-wrap items-center gap-4 mb-4 pb-4 border-b border-gray-50">
-                    {["mbank", "o-bank", "bakai", "optima", "elkart"].map(
-                      (bank) => (
-                        <Image
-                          key={bank}
-                          src={`/banks-logo/${bank}.png`}
-                          alt={bank}
-                          width={24}
-                          height={24}
-                          className="grayscale-[0.5]"
-                          unoptimized
-                        />
-                      ),
-                    )}
+
+                  <div className="flex flex-wrap items-center gap-4 mb-4 pb-4 border-b border-gray-50 min-h-10">
+                    {isMethodsLoading
+                      ? // Скелетон, пока грузятся методы
+                        Array.from({ length: 4 }).map((_, i) => (
+                          <Skeleton key={i} className="w-6 h-6 rounded-full" />
+                        ))
+                      : paymentMethods?.map((method) =>
+                          method.logo ? (
+                            <Image
+                              key={method.id}
+                              src={method.logo}
+                              alt={method.name}
+                              width={24}
+                              height={24}
+                              className="grayscale-[0.5] object-contain h-6 w-auto"
+                              unoptimized
+                            />
+                          ) : (
+                            // UI-заглушка для банков без логотипа
+                            <div
+                              key={method.id}
+                              className="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full grayscale-[0.5] shrink-0"
+                              title={method.name}
+                            >
+                              <span className="text-[10px] font-bold text-gray-500">
+                                {method.name.charAt(0)}
+                              </span>
+                            </div>
+                          ),
+                        )}
                   </div>
+
                   <div className="flex items-center gap-2">
                     <div className="text-[#1A1F71] font-black italic text-lg tracking-tighter">
                       VISA
