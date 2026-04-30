@@ -12,8 +12,6 @@ import { Menu, ShoppingCart, Wallet, X } from "lucide-react";
 import { AuthModal } from "@/features/auth/ui/AuthModal";
 import { LanguageSwitcher } from "@/features/language-switcher/ui/LanguageSwitcher";
 
-// import { useTranslations } from "next-intl"; // Раскомментируй позже
-
 import { useCartStore } from "@/entities/cart/model/cartStore";
 import { useBalance } from "@/entities/finance/api/financeApi";
 import { useAuthStore } from "@/entities/user/model/authStore";
@@ -34,23 +32,22 @@ export const Header = ({
   headerMenu = [],
   headerUpperMenu = [],
 }: HeaderProps) => {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authFlow, setAuthFlow] = useState<"login" | "register">("login");
+  // 🔥 Удаляем локальные стейты модалки и берем их из глобального стора
+  const { isAuthModalOpen, authFlow, openAuthModal, closeAuthModal, user } =
+    useAuthStore();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
 
   const isDark = theme === "dark";
-
-  const user = useAuthStore((state) => state.user);
   const cartCount = useCartStore((state) => state.items.length);
 
-  // Вызываем хук баланса
   useBalance();
 
   const handleAuthClick = (flow: "login" | "register" = "login") => {
     setIsMobileMenuOpen(false);
-    setAuthFlow(flow);
-    setIsAuthModalOpen(true);
+    // 🔥 Вызываем экшен из стора
+    openAuthModal(flow);
   };
 
   useEffect(() => {
@@ -77,13 +74,11 @@ export const Header = ({
     }
 
     if (pathname === "/") {
-      // 🔥 Если мы УЖЕ на главной, просто плавно скроллим к элементу
       const checkBlock = document.getElementById("check");
       if (checkBlock) {
         checkBlock.scrollIntoView({ behavior: "smooth" });
       }
     } else {
-      // 🔥 Если мы на другой странице (корзина, карта и т.д.), переходим на главную
       router.push("/#check");
     }
   };
@@ -141,7 +136,6 @@ export const Header = ({
           </nav>
 
           <div className="flex items-center gap-5">
-            {/* 🔥 Наш настоящий свитчер */}
             <LanguageSwitcher isDark={false} />
 
             {user ? (
@@ -240,7 +234,6 @@ export const Header = ({
           </Link>
 
           <div className="flex items-center gap-4">
-            {/* 🔥 И тут тоже настоящий свитчер */}
             <LanguageSwitcher isDark={!isMobileMenuOpen} />
 
             {user && (
@@ -279,10 +272,10 @@ export const Header = ({
         />
       </header>
 
-      {/* 🔥 2. НАША НАСТОЯЩАЯ МОДАЛКА */}
+      {/* 🔥 3. Модалка теперь реагирует на глобальный стейт */}
       <AuthModal
         isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
+        onClose={closeAuthModal}
         initialFlow={authFlow}
       />
     </>

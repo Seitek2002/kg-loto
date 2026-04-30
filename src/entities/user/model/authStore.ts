@@ -31,21 +31,32 @@ interface AuthState {
   isAuth: boolean;
   user: User | null;
 
+  // 🔥 ГЛОБАЛЬНЫЙ СТЕЙТ ДЛЯ МОДАЛКИ
+  isAuthModalOpen: boolean;
+  authFlow: "login" | "register";
+
   setTokens: (access: string, refresh?: string) => void;
   setUser: (user: User) => void;
   updateUser: (updates: Partial<User>) => void;
   logout: () => void;
   checkAuth: () => void;
   fetchUser: () => Promise<void>;
+
+  // 🔥 ФУНКЦИИ ДЛЯ УПРАВЛЕНИЯ МОДАЛКОЙ
+  openAuthModal: (flow?: "login" | "register") => void;
+  closeAuthModal: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       // --- Начальное состояние ---
-      // По умолчанию isAuth false, проверим куки при загрузке
       isAuth: false,
       user: null,
+
+      // 🔥 По умолчанию модалка закрыта
+      isAuthModalOpen: false,
+      authFlow: "login",
 
       // --- Экшены ---
       setTokens: (access, refresh) => {
@@ -76,21 +87,24 @@ export const useAuthStore = create<AuthState>()(
 
       fetchUser: async () => {
         try {
-          // Вызываем наш API
-          const { authApi } = await import("../api/authApi"); // Динамический импорт, чтобы избежать circular dependency
+          const { authApi } = await import("../api/authApi");
           const response = await authApi.getMe();
           const userData = response.data.data || response.data;
-
           set({ user: userData, isAuth: true });
         } catch (error) {
           console.error("Ошибка при обновлении профиля:", error);
-          // Если токен протух, logout отработает через интерцептор axios
         }
       },
+
+      // 🔥 ЭКШЕНЫ ДЛЯ МОДАЛКИ
+      openAuthModal: (flow = "login") =>
+        set({ isAuthModalOpen: true, authFlow: flow }),
+      closeAuthModal: () => set({ isAuthModalOpen: false }),
     }),
     {
-      name: "auth-storage", // В localStorage сохраняем только user data для быстрого UI
-      partialize: (state) => ({ user: state.user }), // Игнорируем isAuth, его берем из кук
+      name: "auth-storage",
+      // 🔥 Игнорируем состояние модалки при сохранении в localStorage
+      partialize: (state) => ({ user: state.user }),
     },
   ),
 );
