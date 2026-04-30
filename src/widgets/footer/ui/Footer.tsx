@@ -100,7 +100,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
   ];
 
   return (
-    <footer className="bg-[#F9F9F9] pt-10 md:pt-16 pb-10 border-t border-gray-200 text-[#4B4B4B] font-rubik">
+    <footer className="bg-[#F9F9F9] pt-10 md:pt-16 pb-22 lg:pb-10 border-t border-gray-200 text-[#4B4B4B] font-rubik">
       <div className="max-w-350 mx-auto px-5 md:px-8">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-8 mb-8 lg:mb-16">
           <div className="lg:w-1/3 flex flex-col justify-between order-1 lg:order-0">
