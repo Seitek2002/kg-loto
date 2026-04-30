@@ -32,7 +32,6 @@ export const Header = ({
   headerMenu = [],
   headerUpperMenu = [],
 }: HeaderProps) => {
-  // 🔥 Удаляем локальные стейты модалки и берем их из глобального стора
   const { isAuthModalOpen, authFlow, openAuthModal, closeAuthModal, user } =
     useAuthStore();
 
@@ -46,7 +45,6 @@ export const Header = ({
 
   const handleAuthClick = (flow: "login" | "register" = "login") => {
     setIsMobileMenuOpen(false);
-    // 🔥 Вызываем экшен из стора
     openAuthModal(flow);
   };
 
@@ -54,8 +52,17 @@ export const Header = ({
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "auto";
   }, [isMobileMenuOpen]);
 
+  // 🔥 1. Формируем инициал (первая буква имени или "U")
   const userInitial = user?.firstName?.charAt(0).toUpperCase() || "U";
-  const userAvatar = user?.avatar || user?.kglotteryProfile?.avatar;
+
+  // 🔥 2. Достаем сырой аватар
+  const rawAvatar = user?.avatar || user?.kglotteryProfile?.avatar;
+
+  // 🔥 3. СТРОГАЯ ПРОВЕРКА: убеждаемся, что это реальная строка с ссылкой, а не "null"
+  const hasValidAvatar =
+    typeof rawAvatar === "string" &&
+    rawAvatar !== "null" &&
+    rawAvatar.trim() !== "";
 
   const navLinkClass = clsx(
     "text-sm font-medium uppercase transition-colors",
@@ -172,15 +179,16 @@ export const Header = ({
 
                 <Link
                   href="/profile"
-                  className="w-11 h-11 rounded-full overflow-hidden bg-[#CBA3D3] flex items-center justify-center shrink-0 shadow-sm"
+                  className="w-11 h-11 relative rounded-full overflow-hidden bg-[#CBA3D3] flex items-center justify-center shrink-0 shadow-sm"
                 >
-                  {userAvatar && !avatarError ? (
+                  {/* 🔥 ИСПОЛЬЗУЕМ НОВУЮ ЛОГИКУ ПРОВЕРКИ */}
+                  {hasValidAvatar && !avatarError ? (
                     <Image
-                      src={userAvatar}
+                      src={rawAvatar}
                       alt="Аватар"
                       fill
                       sizes="44px"
-                      className="object-cover"
+                      className="object-cover size-full"
                       onError={() => setAvatarError(true)}
                     />
                   ) : (
@@ -272,7 +280,6 @@ export const Header = ({
         />
       </header>
 
-      {/* 🔥 3. Модалка теперь реагирует на глобальный стейт */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={closeAuthModal}
