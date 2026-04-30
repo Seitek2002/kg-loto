@@ -99,8 +99,11 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
 
   const isLoading = isDrawLoading || isTicketsLoading;
 
-  // Логотип лотереи (берем lotteryLogo, если нет - обычный logo)
-  const displayLogo = metaAssets?.lotteryLogo || metaAssets?.logo;
+  // 🔥 Логотип лотереи: берем из API, либо используем дефолтный как в webview
+  const displayLogo =
+    metaAssets?.lotteryLogo ||
+    metaAssets?.logo ||
+    "/images/draw-tickets/super-jackpot-logo.png";
 
   return (
     <>
@@ -120,18 +123,17 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
             priority
           />
           <div className="relative z-10 flex flex-col items-left self-start pt-6 sm:pt-10 lg:pt-16 pl-4 sm:pl-8 lg:pl-16">
-            {/* 🔥 ДИНАМИЧЕСКИЙ ЛОГОТИП (если есть) */}
-            {displayLogo && (
-              <div className="relative w-24 h-8 sm:w-32 sm:h-10 mb-2">
-                <Image
-                  src={displayLogo}
-                  alt="Lottery Logo"
-                  fill
-                  className="object-contain object-left"
-                  unoptimized
-                />
-              </div>
-            )}
+            {/* 🔥 ДИНАМИЧЕСКИЙ ЛОГОТИП (с размерами из webview) */}
+            <div className="relative w-25 h-18.75 sm:h-25 mb-2 sm:mb-4">
+              <Image
+                src={displayLogo}
+                alt="Lottery Logo"
+                fill
+                className="object-contain object-left"
+                unoptimized
+                priority
+              />
+            </div>
 
             <div className="text-white text-[13px] sm:text-sm lg:text-xl font-bold mb-1 drop-shadow-md">
               Суперприз от
