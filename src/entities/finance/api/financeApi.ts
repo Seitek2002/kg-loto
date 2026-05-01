@@ -34,23 +34,26 @@ export const financeApi = {
     const { data } = await api.get<BalanceResponse>("/profile/balance/");
     return data.data;
   },
+
   createPaylink: async (amount: string) => {
-    const bodyString = `amount=${encodeURIComponent(amount)}`;
-    const { data } = await api.post<PaylinkResponse>(
-      "/balance/paylink/",
-      bodyString,
-      {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      },
-    );
+    // 🔥 Формируем динамический URL для возврата пользователя обратно в кошелек
+    const redirectUrl = `${window.location.origin}/wallet`;
+
+    // 🔥 Отправляем обычный JSON (Axios сам добавит Content-Type: application/json)
+    const { data } = await api.post<PaylinkResponse>("/balance/paylink/", {
+      amount: amount,
+      redirect_url: redirectUrl,
+    });
     return data.data;
   },
+
   getTransactions: async () => {
     const { data } = await api.get<TransactionsResponse>(
       "/me/balance/transactions/",
     );
     return data.data.items;
   },
+
   getPaymentMethods: async () => {
     const { data } = await api.get<{ data: PaymentMethodDto[] }>(
       "/payment-methods/",
@@ -77,6 +80,7 @@ export const useBalance = () => {
 
 export const useTopUp = () =>
   useMutation({ mutationFn: financeApi.createPaylink });
+
 export const useTransactions = () =>
   useQuery({ queryKey: ["transactions"], queryFn: financeApi.getTransactions });
 
