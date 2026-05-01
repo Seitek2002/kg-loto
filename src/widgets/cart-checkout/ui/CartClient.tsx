@@ -113,14 +113,15 @@ export const CartClient = () => {
   const mounted = useMounted();
   const router = useRouter();
 
-  const user = useAuthStore((state) => state.user);
+  // 🔥 ДОБАВИЛИ openAuthModal из глобального стора
+  const { user, openAuthModal } = useAuthStore();
 
   const { mutate: purchase, isPending: isPurchasing } = usePurchaseTickets();
   const { refetch: refetchBalance } = useBalance();
 
   const [isErrorOpen, setIsErrorOpen] = useState(false);
-  const [isTopUpOpen, setIsTopUpOpen] = useState(false); // 🔥 Стейт модалки пополнения
-  const [missingAmount, setMissingAmount] = useState<number>(0); // 🔥 Стейт нехватки средств
+  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
+  const [missingAmount, setMissingAmount] = useState<number>(0);
   const [successDetails, setSuccessDetails] = useState<TicketDetails | null>(
     null,
   );
@@ -147,13 +148,22 @@ export const CartClient = () => {
   const handleCheckout = () => {
     if (items.length === 0) return;
 
+    // 🔥 ПРОВЕРКА НА АВТОРИЗАЦИЮ
+    if (!user) {
+      openAuthModal("login"); // Открываем модалку входа
+      return; // Останавливаем выполнение функции
+    }
+
     const currentBalance = Number(user?.balance || 0);
+
+    // 1. Денег не хватает -> Открываем модалку пополнения
     if (currentBalance < totalPrice) {
       setMissingAmount(totalPrice - currentBalance);
       setIsTopUpOpen(true);
       return;
     }
 
+    // 2. Денег хватает -> Формируем Payload
     const payload = {
       orderId: `ORD-${Date.now()}`,
       purchaseDatetime: new Date().toISOString(),
@@ -355,7 +365,7 @@ export const CartClient = () => {
         isOpen={!!successDetails}
         onClose={() => {
           setSuccessDetails(null);
-          router.push("/tickets"); // Уходим в билеты при закрытии
+          router.push("/tickets");
         }}
         details={successDetails!}
       />

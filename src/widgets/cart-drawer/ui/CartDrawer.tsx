@@ -14,8 +14,11 @@ import { useAuthStore } from "@/entities/user/model/authStore";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/Button";
 import { ErrorModal } from "@/shared/ui/ErrorModal";
-
-// Проверь путь к модалке пополнения
+// 🔥 ИМПОРТИРУЕМ НАШУ МОДАЛКУ УСПЕХА
+import {
+  SuccessPurchaseModal,
+  TicketDetails,
+} from "@/shared/ui/SuccessPurchaseModal";
 
 export const CartDrawer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,7 +26,7 @@ export const CartDrawer = () => {
 
   // Сторы
   const { items, clearCart } = useCartStore();
-  const user = useAuthStore((state) => state.user);
+  const { user, openAuthModal } = useAuthStore();
 
   // API
   const { mutate: purchase, isPending } = usePurchaseTickets();
@@ -34,6 +37,11 @@ export const CartDrawer = () => {
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [missingAmount, setMissingAmount] = useState<number>(0);
 
+  // 🔥 СТЕЙТ ДЛЯ УСПЕШНОЙ МОДАЛКИ
+  const [successDetails, setSuccessDetails] = useState<TicketDetails | null>(
+    null,
+  );
+
   if (items.length === 0) return null;
 
   const superCount = items.filter((t) => t.type === "super").length;
@@ -41,8 +49,15 @@ export const CartDrawer = () => {
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
 
   const handleCheckout = () => {
+    if (!user) {
+      setIsExpanded(false); // Закрываем шторку корзины
+      openAuthModal("login"); // Открываем модалку входа
+      return;
+    }
+
     const currentBalance = Number(user?.balance || 0);
 
+    // 1. Денег не хватает -> Открываем модалку пополнения
     if (currentBalance < totalPrice) {
       setMissingAmount(totalPrice - currentBalance);
       setIsTopUpOpen(true);
@@ -65,15 +80,26 @@ export const CartDrawer = () => {
     // 3. Отправляем запрос на покупку
     purchase(payload, {
       onSuccess: () => {
+        // 🔥 ВМЕСТО ALERT ОТКРЫВАЕМ КРАСИВУЮ МОДАЛКУ
+        setSuccessDetails({
+          drawNumber: `№${items[0].drawId.split("-").pop()}`,
+          price: totalPrice,
+          prize: "Суперприз",
+          date: new Date().toLocaleDateString("ru-RU", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
+          combinations: items[0].combination,
+        });
+
         clearCart();
         refetchBalance();
-        setIsExpanded(false);
-        alert("Билеты успешно приобретены!"); // Позже заменим на красивый SuccessModal
-        router.push("/tickets");
+        setIsExpanded(false); // Прячем шторку корзины
       },
       onError: (error) => {
         console.error("Ошибка при покупке:", error);
-        setIsErrorOpen(true); // Билет уже кто-то купил или сбой сервера
+        setIsErrorOpen(true);
       },
     });
   };
@@ -83,7 +109,6 @@ export const CartDrawer = () => {
       <div
         className={cn(
           "fixed left-0 right-0 bg-[#F9F9F9] rounded-t-3xl z-100 shadow-[0_-15px_40px_-10px_rgba(245,130,32,0.2)] transition-all duration-300 flex flex-col overflow-hidden",
-          // В WebView мы приподнимаем корзину над BottomNav
           isExpanded ? "bottom-0" : "bottom-0",
         )}
       >
@@ -168,6 +193,16 @@ export const CartDrawer = () => {
         onClose={() => setIsErrorOpen(false)}
         title="Сбой при оплате"
         message="Возможно, выбранные вами билеты уже были выкуплены другим участником. Пожалуйста, обновите список и попробуйте снова."
+      />
+
+      {/* 🔥 КРАСИВАЯ МОДАЛКА УСПЕШНОЙ ПОКУПКИ */}
+      <SuccessPurchaseModal
+        isOpen={!!successDetails}
+        onClose={() => {
+          setSuccessDetails(null);
+          router.push("/tickets"); // Переходим к билетам только после того, как юзер закроет окно успеха
+        }}
+        details={successDetails!}
       />
     </>
   );
