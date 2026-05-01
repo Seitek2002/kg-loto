@@ -200,7 +200,7 @@ export const CartDrawer = () => {
         isOpen={!!successDetails}
         onClose={() => {
           setSuccessDetails(null);
-          router.push("/tickets"); // Переходим к билетам только после того, как юзер закроет окно успеха
+          router.push("/profile"); // Переходим к билетам только после того, как юзер закроет окно успеха
         }}
         details={successDetails!}
       />
