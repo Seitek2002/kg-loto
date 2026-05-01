@@ -108,7 +108,7 @@ export default function WalletPage() {
               >
                 Пополнить
               </button>
-              <button className="bg-white border-2 border-[#F58220] text-[#F58220] hover:bg-orange-50 active:scale-95 py-4 px-8 rounded-full font-bold text-[14px] lg:text-[16px] transition-all w-full sm:w-auto shadow-sm">
+              <button className="bg-white hidden border-2 border-[#F58220] text-[#F58220] hover:bg-orange-50 active:scale-95 py-4 px-8 rounded-full font-bold text-[14px] lg:text-[16px] transition-all w-full sm:w-auto shadow-sm">
                 Вывести
               </button>
             </div>
