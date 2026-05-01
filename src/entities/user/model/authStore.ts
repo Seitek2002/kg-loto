@@ -104,7 +104,7 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth-storage",
       // 🔥 Игнорируем состояние модалки при сохранении в localStorage
-      partialize: (state) => ({ user: state.user }),
+      partialize: (state) => ({ user: state.user ? { ...state.user, balance: undefined } : null }),
     },
   ),
 );
