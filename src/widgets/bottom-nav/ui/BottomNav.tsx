@@ -13,7 +13,6 @@ import { useAuthStore } from "@/entities/user/model/authStore";
 export function BottomNav() {
   const pathname = usePathname();
 
-  // 🔥 ДОСТАЕМ user ВМЕСТО isAuth
   const { user, openAuthModal } = useAuthStore();
 
   const [isIOS, setIsIOS] = useState(false);
