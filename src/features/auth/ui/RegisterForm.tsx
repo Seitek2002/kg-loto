@@ -80,8 +80,23 @@ export const RegisterForm = ({
       });
     },
     onError: (err: any) => {
+      // 🔥 Вытаскиваем ошибку бэкенда
+      const backendErrorDetail = err.response?.data?.errors?.[0]?.detail;
+      const backendMessage = err.response?.data?.message;
+
+      // 🔥 АВТО-ПЕРЕКЛЮЧЕНИЕ НА ЛОГИН
+      // Если юзер уже есть в базе, просто кидаем его на форму входа
+      if (backendErrorDetail === "Пользователь уже существует") {
+        setError(""); // Убираем красную надпись
+        onSwitchFlow(); // Переключаем на логин
+        return; // Тормозим выполнение
+      }
+
+      // Если это другая ошибка (например, слишком частые запросы)
       setError(
-        err.response?.data?.message || "Ошибка отправки СМС. Проверьте номер.",
+        backendErrorDetail ||
+          backendMessage ||
+          "Ошибка отправки СМС. Проверьте номер.",
       );
     },
   });
@@ -171,10 +186,7 @@ export const RegisterForm = ({
   );
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col font-rubik"
-    >
+    <form onSubmit={handleSubmit} className="flex flex-col font-rubik">
       <h2 className="text-3xl font-black font-benzin uppercase text-[#4B4B4B] mb-2">
         РЕГИСТРАЦИЯ
       </h2>
@@ -225,7 +237,6 @@ export const RegisterForm = ({
         />
       </div>
 
-      {/* Чекбоксы и кнопка (без изменений) ... */}
       <div className="flex flex-col gap-4 text-left mb-6 pl-1">
         <label className="flex items-center gap-3 cursor-pointer">
           <input

@@ -2,12 +2,12 @@
 
 import { useRef, useState } from "react";
 
-// import { AuthService } from "@/services/auth";
-import { authApi } from '@/entities/user/api/authApi';
 import { useMutation } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import { Loader2 } from "lucide-react";
 
+// import { AuthService } from "@/services/auth";
+import { authApi } from "@/entities/user/api/authApi";
 import { useAuthStore } from "@/entities/user/model/authStore";
 
 interface OTPFormProps {
@@ -30,21 +30,20 @@ export const OTPForm = ({
   const setTokens = useAuthStore((state) => state.setTokens);
   const isLogin = flow === "login";
 
-  // 🔥 ИСПРАВЛЕНО: Заменили phone_number на phoneNumber
   const verifyMutation = useMutation({
     mutationFn: (variables: {
-      phoneNumber: string; // <-- здесь
+      phoneNumber: string;
       code: string;
       purpose?: string;
     }) => {
       if (isLogin) {
         return authApi.loginVerify({
-          phoneNumber: variables.phoneNumber, // <-- здесь
+          phoneNumber: variables.phoneNumber,
           code: variables.code,
         });
       }
       return authApi.registerVerify({
-        phoneNumber: variables.phoneNumber, // <-- и здесь
+        phoneNumber: variables.phoneNumber,
         code: variables.code,
         purpose: variables.purpose!,
       });
@@ -62,13 +61,12 @@ export const OTPForm = ({
     },
   });
 
-  // 🔥 ИСПРАВЛЕНО: Заменили phone_number на phoneNumber
   const resendMutation = useMutation({
     mutationFn: () => {
       if (isLogin) {
-        return authApi.loginPhone({ phoneNumber: phoneNumber }); // <-- здесь
+        return authApi.loginPhone({ phoneNumber: phoneNumber });
       }
-      return authApi.registerPhone({ phoneNumber: phoneNumber }); // <-- здесь
+      return authApi.registerPhone({ phoneNumber: phoneNumber });
     },
     onSuccess: () => setError("Код отправлен заново"),
   });
@@ -78,7 +76,7 @@ export const OTPForm = ({
     if (code.length < 4) return;
 
     verifyMutation.mutate({
-      phoneNumber: phoneNumber, // 🔥 ИСПРАВЛЕНО: Заменили phone_number на phoneNumber
+      phoneNumber: phoneNumber,
       code,
       purpose: isLogin ? undefined : "register",
     });
@@ -101,6 +99,34 @@ export const OTPForm = ({
   ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // 🔥 ИСПРАВЛЕНО: Добавлен обработчик вставки из буфера обмена (Paste)
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, ""); // Берем только цифры
+    if (!pastedData) return;
+
+    const newOtp = [...otp];
+    let focusIndex = 0;
+
+    for (let i = 0; i < 4; i++) {
+      if (pastedData[i]) {
+        newOtp[i] = pastedData[i];
+        focusIndex = i; // Запоминаем последний заполненный индекс
+      }
+    }
+
+    setOtp(newOtp);
+    if (error) setError("");
+
+    // Если код полный (4 цифры) - отправляем, если нет - фокусимся на последней цифре
+    if (pastedData.length >= 4) {
+      inputRefs.current[3]?.focus();
+      handleSubmit(newOtp);
+    } else {
+      inputRefs.current[focusIndex + 1]?.focus();
     }
   };
 
@@ -127,6 +153,7 @@ export const OTPForm = ({
             value={digit}
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
+            onPaste={handlePaste} // 🔥 ИСПРАВЛЕНО: Привязали обработчик
             disabled={verifyMutation.isPending}
             className={clsx(
               "w-17.5 h-17.5 rounded-2xl bg-white shadow-sm text-center font-black text-3xl text-[#4B4B4B] focus:ring-2 outline-none transition-all disabled:opacity-50",

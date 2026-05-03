@@ -16,7 +16,7 @@ import { PhoneForm } from "./PhoneForm";
 import { RegisterData, RegisterForm } from "./RegisterForm";
 
 type AuthFlow = "login" | "register";
-type AuthStep = "form" | "otp"; // 🔥 Оставили только 2 шага
+type AuthStep = "form" | "otp";
 
 interface AuthModalProps {
   isOpen: boolean;

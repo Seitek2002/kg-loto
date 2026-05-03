@@ -56,10 +56,25 @@ export const PhoneForm = ({
   const mutation = useMutation({
     mutationFn: isLogin ? authApi.loginPhone : authApi.registerPhone,
     onSuccess: (_, variables) => onSuccess(variables.phoneNumber),
-    onError: (err: any) =>
+    onError: (err: any) => {
+      const backendErrorDetail = err.response?.data?.errors?.[0]?.detail;
+      const backendMessage = err.response?.data?.message;
+
+      // 🔥 АВТО-ПЕРЕКЛЮЧЕНИЕ НА РЕГИСТРАЦИЮ
+      // Если мы пытались войти, но бэкенд сказал, что такого юзера нет
+      if (isLogin && backendErrorDetail === "Пользователь не найден") {
+        setError(""); // Очищаем ошибку
+        onSwitchFlow(); // Перекидываем на форму регистрации
+        return; // Останавливаем дальнейшее выполнение, чтобы не показать красный текст
+      }
+
+      // В остальных случаях показываем ошибку как обычно
       setError(
-        err.response?.data?.message || "Произошла ошибка. Попробуйте еще раз.",
-      ),
+        backendErrorDetail ||
+          backendMessage ||
+          "Произошла ошибка. Попробуйте еще раз.",
+      );
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
