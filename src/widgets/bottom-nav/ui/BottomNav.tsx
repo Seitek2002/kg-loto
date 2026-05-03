@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// useRouter убрали
-
 import { clsx } from "clsx";
 import { ScanLine, Star, Ticket, User } from "lucide-react";
 
@@ -15,9 +13,8 @@ import { useAuthStore } from "@/entities/user/model/authStore";
 export function BottomNav() {
   const pathname = usePathname();
 
-  // 🔥 Достаем функцию открытия модалки из стора
-  // (замени 'openAuthModal' на свое реальное название функции)
-  const { isAuth, openAuthModal } = useAuthStore();
+  // 🔥 ДОСТАЕМ user ВМЕСТО isAuth
+  const { user, openAuthModal } = useAuthStore();
 
   const [isIOS, setIsIOS] = useState(false);
 
@@ -44,7 +41,7 @@ export function BottomNav() {
     },
     {
       label: "Билеты",
-      href: "/tickets",
+      href: "/lottery",
       icon: Ticket,
       protected: true,
     },
@@ -60,11 +57,12 @@ export function BottomNav() {
     e: React.MouseEvent<HTMLAnchorElement>,
     isProtected: boolean,
   ) => {
-    if (isProtected && !isAuth) {
+    // 🔥 ПРОВЕРЯЕМ !user ВМЕСТО !isAuth
+    if (isProtected && !user) {
       e.preventDefault();
-      // 🔥 Вместо редиректа вызываем открытие модалки
+      // Вызываем открытие модалки
       if (openAuthModal) {
-        openAuthModal();
+        openAuthModal("login");
       }
     }
   };
