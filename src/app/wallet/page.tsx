@@ -10,10 +10,8 @@ import { ArrowDownLeft, ArrowUpRight, Loader2 } from "lucide-react";
 import { TopUpModal } from "@/features/top-up/ui/TopUpModal";
 
 import { useBalance, useTransactions } from "@/entities/finance/api/financeApi";
-// 🔥 Правильные FSD импорты
 import { useAuthStore } from "@/entities/user/model/authStore";
 
-// 🔥 Умные статусы из Webview
 const getStatusProps = (status: string) => {
   const s = status?.toLowerCase() || "";
   if (s.includes("оплачено") || s === "completed" || s === "success") {
@@ -42,7 +40,6 @@ const getStatusProps = (status: string) => {
   };
 };
 
-// 🔥 Красивые названия методов оплаты из Webview
 const getMethodName = (method: string) => {
   if (!method) return "Внутренний счет";
   const knownMethods: Record<string, string> = {
@@ -54,7 +51,6 @@ const getMethodName = (method: string) => {
   return knownMethods[method.toLowerCase()] || method;
 };
 
-// Форматирование даты
 const formatDate = (dateString: string) => {
   if (!dateString) return "-";
   return new Date(dateString).toLocaleDateString("ru-RU", {
@@ -68,9 +64,12 @@ export default function WalletPage() {
   const user = useAuthStore((state) => state.user);
   const [isTopUpModalOpen, setIsTopUpModalOpen] = useState(false);
 
-  // Запросы к API
-  useBalance();
+  // 🔥 Достаем состояние загрузки из хука баланса
+  const { isLoading: isBalanceLoading } = useBalance();
   const { data: transactions = [], isLoading } = useTransactions();
+
+  // 🔥 Удобная переменная: если баланс пустой и идет загрузка, показываем лоадер
+  const showBalanceLoader = isBalanceLoading && user?.balance === undefined;
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] font-rubik pb-20">
@@ -97,10 +96,20 @@ export default function WalletPage() {
             Баланс
           </h2>
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="text-[48px] lg:text-[64px] font-black text-[#4B4B4B] leading-none">
-              {user?.balance || "0"}{" "}
-              <span className="underline text-[36px] lg:text-[48px]">с</span>
+            {/* 🔥 ЕСЛИ ИДЕТ ПЕРВАЯ ЗАГРУЗКА, ПОКАЗЫВАЕМ СПИННЕР */}
+            <div className="text-[48px] lg:text-[64px] font-black text-[#4B4B4B] leading-none flex items-center h-[48px] lg:h-[64px]">
+              {showBalanceLoader ? (
+                <Loader2 className="animate-spin text-[#F58220] w-10 h-10 lg:w-14 lg:h-14" />
+              ) : (
+                <>
+                  {user?.balance || "0"}{" "}
+                  <span className="underline text-[36px] lg:text-[48px] ml-2">
+                    с
+                  </span>
+                </>
+              )}
             </div>
+
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
               <button
                 onClick={() => setIsTopUpModalOpen(true)}
@@ -130,7 +139,7 @@ export default function WalletPage() {
           </div>
         ) : (
           <>
-            {/* 🔥 ДЕСКТОПНАЯ ТАБЛИЦА (Видна только на ПК) */}
+            {/* 🔥 ДЕСКТОПНАЯ ТАБЛИЦА */}
             <div className="hidden lg:block bg-white rounded-[40px] p-8 shadow-sm border border-gray-100">
               <div className="grid grid-cols-4 pb-4 text-[#737373] font-bold text-[14px] uppercase text-center border-b border-gray-50">
                 <div className="text-left pl-4">Операция</div>
@@ -205,7 +214,7 @@ export default function WalletPage() {
               </div>
             </div>
 
-            {/* 🔥 МОБИЛЬНЫЙ СПИСОК (Виден только на телефонах) */}
+            {/* 🔥 МОБИЛЬНЫЙ СПИСОК */}
             <div className="flex lg:hidden flex-col gap-4">
               {transactions.map((tx, idx) => {
                 const status = getStatusProps(tx.paymentStatus);

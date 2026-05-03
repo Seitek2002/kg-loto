@@ -20,6 +20,9 @@ export const ProfileTicketList = () => {
   const mappedTickets = useMemo(() => {
     if (!tickets) return [];
 
+    // Получаем текущее время один раз для всего цикла
+    const now = new Date().getTime();
+
     return tickets.map((t: MyTicketDto) => {
       // Маппинг статусов (на бэке "sold", в UI "unchecked")
       let mappedStatus: "winning" | "unchecked" | "losing" = "unchecked";
@@ -28,6 +31,19 @@ export const ProfileTicketList = () => {
 
       // Достаем номер тиража (например, из "draw-20260410-001" -> "001")
       const drawNumberStr = t.drawId?.split("-").pop() || "";
+
+      // 🔥 Логика: Наступила ли дата розыгрыша?
+      // Если даты нет (например, моментальная лотерея), считаем, что проверять можно сразу (true)
+      const isDrawPassed = t.drawDate
+        ? new Date(t.drawDate).getTime() <= now
+        : true;
+
+      // 🔥 Показываем кнопку, только если билет не проигрышный.
+      // Но если статус "unchecked", прячем её до наступления даты розыгрыша.
+      let showButton = mappedStatus !== "losing";
+      if (mappedStatus === "unchecked" && !isDrawPassed) {
+        showButton = false;
+      }
 
       return {
         id: t.ticketId || t.ticketNumber,
@@ -43,7 +59,8 @@ export const ProfileTicketList = () => {
         status: mappedStatus,
         combination: t.combination || [],
         drawNumber: drawNumberStr,
-        drawDateDisplay: t.drawDateDisplay, // Добавили из твоего нового интерфейса
+        drawDateDisplay: t.drawDateDisplay,
+        showButton, // <-- Передаем вычисленный флаг
       };
     });
   }, [tickets]);
@@ -91,7 +108,7 @@ export const ProfileTicketList = () => {
                 date={ticket.date}
                 logoSrc={ticket.logo || undefined}
                 status={ticket.status}
-                showButton={ticket.status !== "losing"}
+                showButton={ticket.showButton} // 🔥 Прокидываем флаг в карточку
                 drawNumber={ticket.drawNumber}
                 combination={ticket.combination}
                 drawDateDisplay={ticket.drawDateDisplay}

@@ -63,7 +63,8 @@ export const financeApi = {
 };
 
 export const useBalance = () => {
-  const isAuth = useAuthStore((state) => state.isAuth);
+  // 🔥 Берем user вместо isAuth, так как user моментально достается из localStorage
+  const user = useAuthStore((state) => state.user);
   const updateUser = useAuthStore((state) => state.updateUser);
 
   return useQuery({
@@ -73,7 +74,7 @@ export const useBalance = () => {
       updateUser({ balance: Number(data.amount) });
       return data;
     },
-    enabled: isAuth,
+    enabled: !!user, // 🔥 Теперь запрос 100% улетит, как только Zustand восстановит юзера!
     refetchInterval: 30000,
   });
 };
