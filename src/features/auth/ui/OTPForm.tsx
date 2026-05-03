@@ -82,15 +82,48 @@ export const OTPForm = ({
     });
   };
 
+  // 🔥 ИСПРАВЛЕНО: Умный handleChange, который понимает автовставку от iOS
   const handleChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return;
+    const cleanValue = value.replace(/\D/g, ""); // Оставляем только цифры
+
+    // Если пользователь стер значение
+    if (!cleanValue) {
+      const newOtp = [...otp];
+      newOtp[index] = "";
+      setOtp(newOtp);
+      return;
+    }
+
+    // Если прилетело сразу несколько цифр (сработал iOS AutoFill)
+    if (cleanValue.length > 1) {
+      const newOtp = [...otp];
+      let focusIndex = index;
+
+      for (let i = 0; i < cleanValue.length && index + i < 4; i++) {
+        newOtp[index + i] = cleanValue[i];
+        focusIndex = index + i;
+      }
+
+      setOtp(newOtp);
+      if (error) setError("");
+
+      if (newOtp.join("").length === 4) {
+        inputRefs.current[3]?.focus();
+        handleSubmit(newOtp);
+      } else if (focusIndex < 3) {
+        inputRefs.current[focusIndex + 1]?.focus();
+      }
+      return;
+    }
+
+    // Обычный ввод одной цифры
     const newOtp = [...otp];
-    newOtp[index] = value.substring(value.length - 1);
+    newOtp[index] = cleanValue.substring(cleanValue.length - 1);
     setOtp(newOtp);
 
-    if (value && index < 3) inputRefs.current[index + 1]?.focus();
+    if (cleanValue && index < 3) inputRefs.current[index + 1]?.focus();
     if (error) setError("");
-    if (value && index === 3) handleSubmit(newOtp);
+    if (cleanValue && index === 3) handleSubmit(newOtp);
   };
 
   const handleKeyDown = (
@@ -102,10 +135,9 @@ export const OTPForm = ({
     }
   };
 
-  // 🔥 ИСПРАВЛЕНО: Добавлен обработчик вставки из буфера обмена (Paste)
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData("text").replace(/\D/g, ""); // Берем только цифры
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "");
     if (!pastedData) return;
 
     const newOtp = [...otp];
@@ -114,14 +146,13 @@ export const OTPForm = ({
     for (let i = 0; i < 4; i++) {
       if (pastedData[i]) {
         newOtp[i] = pastedData[i];
-        focusIndex = i; // Запоминаем последний заполненный индекс
+        focusIndex = i;
       }
     }
 
     setOtp(newOtp);
     if (error) setError("");
 
-    // Если код полный (4 цифры) - отправляем, если нет - фокусимся на последней цифре
     if (pastedData.length >= 4) {
       inputRefs.current[3]?.focus();
       handleSubmit(newOtp);
@@ -148,12 +179,14 @@ export const OTPForm = ({
             ref={(el) => {
               inputRefs.current[i] = el;
             }}
-            type="text"
-            maxLength={1}
+            type="text" // Оставляем text для максимальной совместимости
+            inputMode="numeric" // 🔥 Вызывает цифровую клавиатуру на смартфонах
+            autoComplete="one-time-code" // 🔥 ГЛАВНАЯ МАГИЯ ДЛЯ iOS И ANDROID SMS AUTOFILL
+            maxLength={4} // 🔥 Позволяем iOS вставить все 4 цифры разом (мы их обработаем в onChange)
             value={digit}
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
-            onPaste={handlePaste} // 🔥 ИСПРАВЛЕНО: Привязали обработчик
+            onPaste={handlePaste}
             disabled={verifyMutation.isPending}
             className={clsx(
               "w-17.5 h-17.5 rounded-2xl bg-white shadow-sm text-center font-black text-3xl text-[#4B4B4B] focus:ring-2 outline-none transition-all disabled:opacity-50",
