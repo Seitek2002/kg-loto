@@ -40,7 +40,7 @@ export default function HomePage() {
           <Kindness />
         </ScrollReveal>
 
-        <ScrollReveal direction="up" className="">
+        <ScrollReveal direction="up">
           <div>
             <Title>тиражные лотереи</Title>
             <Description>
