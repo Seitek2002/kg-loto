@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { CheckLottery } from "@/widgets/check-lottery";
 import { FAQ } from "@/widgets/faq";
 import { HeroSlider } from "@/widgets/hero-slider";
+import { Kindness } from "@/widgets/kindness";
 import { OurApp } from "@/widgets/our-app";
 import { PopularTickets } from "@/widgets/popular-tickets";
 import { WhereToBuy } from "@/widgets/where-to-buy";
@@ -27,10 +28,14 @@ export default function HomePage() {
       {/* Спейсер под Hero (вместо UnderHero, если там был просто отступ) */}
       <div className="h-10" />
 
-      <div className="max-w-310 mx-auto px-4">
+      <div className="max-w-380 mx-auto px-4">
         <Suspense fallback={<BlockSkeleton />}>
           <PopularTickets />
         </Suspense>
+
+        <ScrollReveal direction="up" className="flex lg:items-center">
+          <Kindness />
+        </ScrollReveal>
 
         <ScrollReveal direction="up">
           <CheckLottery />
