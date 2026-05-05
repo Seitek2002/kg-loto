@@ -9,7 +9,7 @@ import { Clock } from "lucide-react";
 
 import { useCurrentLotteries } from "@/entities/lottery/api/lotteryClientApi";
 
-// 🔥 Таймер из твоего кода
+// 🔥 Таймер
 const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState<string>("");
 
@@ -53,7 +53,7 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   );
 };
 
-// 🔥 Карточка из твоего кода
+// 🔥 Карточка
 function LotteryCard({ lottery }: { lottery: any }) {
   const fallbackImage =
     "https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=600&auto=format&fit=crop";
@@ -89,6 +89,7 @@ function LotteryCard({ lottery }: { lottery: any }) {
   );
 }
 
+// Скелетон карточки
 function LotteryCardSkeleton() {
   return (
     <div className="relative w-full aspect-video sm:aspect-4/2.5 rounded-3xl overflow-hidden bg-gray-200 animate-pulse">
@@ -102,40 +103,27 @@ function LotteryCardSkeleton() {
   );
 }
 
+// Основной компонент-виджет
 export const DrawLotteryList = () => {
   const { data: lotteries, isLoading, isError } = useCurrentLotteries();
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] font-rubik pb-32 md:pb-12 select-none">
-      <div className="max-w-261.25 mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10">
-        <div className="flex items-center gap-2 text-[13px] md:text-base text-[#4B4B4B] font-medium mb-6 md:mb-8">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
-            Главная
-          </Link>
-          <span className="text-gray-400">/</span>
-          <span className="font-bold text-[#2D2D2D]">Тиражные лотереи</span>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      {isLoading ? (
+        Array.from({ length: 4 }).map((_, i) => <LotteryCardSkeleton key={i} />)
+      ) : isError ? (
+        <div className="col-span-full flex flex-col items-center justify-center py-10 text-red-500 font-medium gap-2">
+          Ошибка при загрузке лотерей
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          {isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <LotteryCardSkeleton key={i} />
-            ))
-          ) : isError ? (
-            <div className="col-span-full flex flex-col items-center justify-center py-10 text-red-500 font-medium gap-2">
-              Ошибка при загрузке лотерей
-            </div>
-          ) : lotteries && lotteries.length > 0 ? (
-            lotteries.map((lottery: any) => (
-              <LotteryCard key={lottery.lotteryId} lottery={lottery} />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-10 text-gray-500 font-medium">
-              Нет доступных лотерей
-            </div>
-          )}
+      ) : lotteries && lotteries.length > 0 ? (
+        lotteries.map((lottery: any) => (
+          <LotteryCard key={lottery.lotteryId} lottery={lottery} />
+        ))
+      ) : (
+        <div className="col-span-full text-center py-10 text-gray-500 font-medium">
+          Нет доступных лотерей
         </div>
-      </div>
+      )}
     </div>
   );
 };
