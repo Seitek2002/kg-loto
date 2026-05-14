@@ -16,6 +16,7 @@ export default function PaymentSuccessPage() {
             Главная
           </Link>
           <span>/</span>
+          {/* Раздел "Тиражные лотереи" временно скрыт.
           <Link
             href="/tickets"
             className="hover:text-[#4B4B4B] transition-colors"
@@ -23,6 +24,7 @@ export default function PaymentSuccessPage() {
             Тиражные лотереи
           </Link>
           <span>/</span>
+          */}
           <Link
             href="/wallet"
             className="hover:text-[#4B4B4B] transition-colors"
