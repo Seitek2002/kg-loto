@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { Rubik } from "next/font/google";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
+import Script from "next/script";
 
 import { Footer } from "@/widgets/footer";
 import { Header } from "@/widgets/header";
@@ -119,6 +120,18 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-DK612GGJC5"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-DK612GGJC5');
+        `}
+      </Script>
       <body
         className={`${rubik.variable} ${benzin.variable} antialiased font-rubik bg-[#F5F5F5]`}
       >
