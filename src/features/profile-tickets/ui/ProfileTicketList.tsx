@@ -29,8 +29,8 @@ export const ProfileTicketList = () => {
       if (t.status === "winning") mappedStatus = "winning";
       if (t.status === "losing") mappedStatus = "losing";
 
-      // Достаем номер тиража (например, из "draw-20260410-001" -> "001")
-      const drawNumberStr = t.drawId?.split("-").pop() || "";
+      // drawId теперь число (ltt_id); поддерживаем и старые строковые id
+      const drawNumberStr = String(t.drawId ?? "").split("-").pop() || "";
 
       // 🔥 Логика: Наступила ли дата розыгрыша?
       // Если даты нет (например, моментальная лотерея), считаем, что проверять можно сразу (true)

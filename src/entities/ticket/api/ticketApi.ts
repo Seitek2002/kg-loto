@@ -43,7 +43,18 @@ export const useCurrentDraw = (lotteryId: string) => {
 
       const drawCards =
         response.data?.meta?.drawCards || response.data?.meta?.draw_cards || [];
-      const openDraw = drawCards.find((draw) => draw.status === "open") || null;
+      // status у LTT-тиражей — произвольная строка (активный тираж на проде имеет
+      // статус "printing"), поэтому не полагаемся строго на "open": берём открытый
+      // по статусу, иначе тираж с ещё не завершёнными продажами, иначе первый.
+      const openDraw =
+        drawCards.find((draw) => draw.status === "open") ||
+        drawCards.find(
+          (draw) =>
+            !!draw.salesEndAt &&
+            new Date(draw.salesEndAt).getTime() > Date.now(),
+        ) ||
+        drawCards[0] ||
+        null;
       const rules = response.data?.meta?.rules || [];
 
       return {
@@ -65,7 +76,7 @@ export const useCurrentDraw = (lotteryId: string) => {
 
 export const useTickets = (params: {
   lotteryId: string;
-  drawId: string;
+  drawId: number | string;
   limit?: number;
 }) => {
   return useQuery({

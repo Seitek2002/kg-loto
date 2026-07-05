@@ -8,7 +8,7 @@ import { TopUpModal } from "@/features/top-up/ui/TopUpModal";
 
 import { useCartStore } from "@/entities/cart/model/cartStore";
 import { useBalance } from "@/entities/finance/api/financeApi";
-import { usePurchaseTickets } from "@/entities/ticket/api";
+import { useLttPurchase } from "@/entities/ticket/api";
 import { useAuthStore } from "@/entities/user/model/authStore";
 
 import { cn } from "@/shared/lib/utils";
@@ -29,12 +29,15 @@ export const CartDrawer = () => {
   const { user, openAuthModal } = useAuthStore();
 
   // API
-  const { mutate: purchase, isPending } = usePurchaseTickets();
+  const { mutate: purchase, isPending } = useLttPurchase();
   const { refetch: refetchBalance } = useBalance();
 
   // Модалки
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const [isErrorOpen, setIsErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>(
+    "Возможно, выбранные вами билеты уже были выкуплены другим участником. Пожалуйста, обновите список и попробуйте снова.",
+  );
   const [missingAmount, setMissingAmount] = useState<number>(0);
 
   // 🔥 СТЕЙТ ДЛЯ УСПЕШНОЙ МОДАЛКИ
@@ -55,6 +58,16 @@ export const CartDrawer = () => {
       return;
     }
 
+    // Для покупки LTT-билета за баланс бэку нужен год рождения (из профиля).
+    if (!user?.birthDate) {
+      setErrorMessage(
+        "Для покупки заполните дату рождения в профиле (Настройки → Личные данные).",
+      );
+      setIsExpanded(false);
+      setIsErrorOpen(true);
+      return;
+    }
+
     const currentBalance = Number(user?.balance || 0);
 
     // 1. Денег не хватает -> Открываем модалку пополнения
@@ -64,25 +77,28 @@ export const CartDrawer = () => {
       return;
     }
 
-    // 2. Денег хватает -> Формируем Payload
+    // 2. Денег хватает -> Путь B: покупка реального LTT-билета за баланс
     const payload = {
       orderId: `ORD-${Date.now()}`,
-      purchaseDatetime: new Date().toISOString(),
-      items: items.map((t) => ({
-        lotteryId: t.lotteryId,
-        drawId: t.drawId,
-        ticketId: t.id,
-        price: String(t.price),
-        currency: "KGS",
-      })),
+      tickets: items.map((t) => t.id), // short_id билетов
+      note: "",
     };
 
     // 3. Отправляем запрос на покупку
     purchase(payload, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        if (res?.status && res.status !== "confirmed") {
+          setErrorMessage(
+            "Покупка отклонена. Средства возвращены на баланс. Попробуйте ещё раз.",
+          );
+          setIsErrorOpen(true);
+          refetchBalance();
+          return;
+        }
+
         // 🔥 ВМЕСТО ALERT ОТКРЫВАЕМ КРАСИВУЮ МОДАЛКУ
         setSuccessDetails({
-          drawNumber: `№${items[0].drawId.split("-").pop()}`,
+          drawNumber: `№${String(items[0].drawId).split("-").pop()}`,
           price: totalPrice,
           prize: "Суперприз",
           date: new Date().toLocaleDateString("ru-RU", {
@@ -90,7 +106,7 @@ export const CartDrawer = () => {
             month: "short",
             year: "numeric",
           }),
-          combinations: items[0].combination,
+          combinations: items[0].combination ?? [],
         });
 
         clearCart();
@@ -99,6 +115,30 @@ export const CartDrawer = () => {
       },
       onError: (error) => {
         console.error("Ошибка при покупке:", error);
+        const status = (error as { response?: { status?: number } })?.response
+          ?.status;
+
+        if (status === 402) {
+          const bal = Number(user?.balance || 0);
+          setMissingAmount(Math.max(totalPrice - bal, 0));
+          setIsTopUpOpen(true);
+          refetchBalance();
+          return;
+        }
+
+        if (status === 400) {
+          setErrorMessage(
+            "Не удалось оформить покупку: билет уже продан или не заполнен профиль (дата рождения).",
+          );
+        } else if (status === 409) {
+          setErrorMessage(
+            "Заказ ещё обрабатывается. Подождите пару секунд и попробуйте снова.",
+          );
+        } else {
+          setErrorMessage(
+            "Возможно, выбранные билеты уже выкуплены. Пожалуйста, попробуйте снова.",
+          );
+        }
         setIsErrorOpen(true);
       },
     });
@@ -192,7 +232,7 @@ export const CartDrawer = () => {
         isOpen={isErrorOpen}
         onClose={() => setIsErrorOpen(false)}
         title="Сбой при оплате"
-        message="Возможно, выбранные вами билеты уже были выкуплены другим участником. Пожалуйста, обновите список и попробуйте снова."
+        message={errorMessage}
       />
 
       {/* 🔥 КРАСИВАЯ МОДАЛКА УСПЕШНОЙ ПОКУПКИ */}

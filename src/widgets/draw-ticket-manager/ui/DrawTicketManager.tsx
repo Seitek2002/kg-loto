@@ -11,7 +11,7 @@ import { PopularTicketsWidget } from "@/widgets/popular-tickets/ui/PopularTicket
 import { WinnersSlider } from "@/widgets/winners-slider";
 
 import { useCartStore } from "@/entities/cart/model/cartStore";
-import { TicketDto } from "@/entities/ticket/api";
+import { TicketDto, isTicketAvailable } from "@/entities/ticket/api";
 import { useCurrentDraw, useTickets } from "@/entities/ticket/api/ticketApi";
 import { DrawTicketCard } from "@/entities/ticket/ui/DrawTicketCard";
 
@@ -93,9 +93,10 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
     limit: 30,
   });
 
+  // Статусы LTT произвольные (реальный статус доступного билета — "at_web_service"),
+  // поэтому фильтруем чёрным списком через isTicketAvailable
   const availableTickets =
-    ticketsData?.tickets?.filter((t: TicketDto) => t.status === "available") ||
-    [];
+    ticketsData?.tickets?.filter((t: TicketDto) => isTicketAvailable(t)) || [];
 
   const isLoading = isDrawLoading || isTicketsLoading;
 
@@ -249,27 +250,30 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                 Билеты раскуплены
               </div>
             ) : (
-              availableTickets.map((ticket: TicketDto) => (
-                <DrawTicketCard
-                  key={ticket.ticketId}
-                  ticketNumber={ticket.ticketNumber}
-                  price={ticket.price}
-                  selectedNumbers={ticket.combination}
-                  isInBasket={basketIds.includes(ticket.ticketId)}
-                  onToggle={() =>
-                    toggleItem({
-                      id: ticket.ticketId,
-                      price: ticket.price,
-                      type: "other",
-                      ticketNumber: ticket.ticketNumber,
-                      combination: ticket.combination,
-                      lotteryId,
-                      drawId: currentDraw.drawId,
-                      name: `Тираж №${currentDraw.drawNumber}`,
-                    })
-                  }
-                />
-              ))
+              availableTickets.map((ticket: TicketDto) => {
+                const cartId = ticket.shortId || ticket.ticketId;
+                return (
+                  <DrawTicketCard
+                    key={ticket.ticketId}
+                    ticketNumber={ticket.ticketNumber}
+                    price={ticket.price}
+                    selectedNumbers={ticket.combination ?? []}
+                    isInBasket={basketIds.includes(cartId)}
+                    onToggle={() =>
+                      toggleItem({
+                        id: cartId,
+                        price: ticket.price,
+                        type: "other",
+                        ticketNumber: ticket.ticketNumber,
+                        combination: ticket.combination,
+                        lotteryId,
+                        drawId: currentDraw.drawId,
+                        name: `Тираж №${currentDraw.drawNumber}`,
+                      })
+                    }
+                  />
+                );
+              })
             )}
           </div>
           <WinnersSlider title="История победителей" lotteryId={lotteryId} />
