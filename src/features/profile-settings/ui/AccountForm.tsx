@@ -11,6 +11,7 @@ import { Loader2, Trash2 } from "lucide-react";
 import { authApi } from "@/entities/user/api/authApi";
 import { useAuthStore } from "@/entities/user/model/authStore";
 
+import { ErrorModal } from "@/shared/ui/ErrorModal";
 import { Input } from "@/shared/ui/Input";
 
 interface FormData {
@@ -65,14 +66,18 @@ export const AccountForm = () => {
     setFormData(initialData);
   }, [initialData]);
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const updateMutation = useMutation({
     mutationFn: async (dataToUpdate: Partial<FormData>) => {
+      // 🔥 Пустые поля не отправляем: бэк отклоняет весь PATCH,
+      // если, например, email = "" (и дата рождения молча не сохранялась)
       return authApi.updateProfile({
-        lastName: dataToUpdate.lastName,
-        firstName: dataToUpdate.firstName,
-        middleName: dataToUpdate.middleName,
-        birthDate: dataToUpdate.birthDate,
-        email: dataToUpdate.email,
+        lastName: dataToUpdate.lastName || undefined,
+        firstName: dataToUpdate.firstName || undefined,
+        middleName: dataToUpdate.middleName || undefined,
+        birthDate: dataToUpdate.birthDate || undefined,
+        email: dataToUpdate.email || undefined,
       });
     },
     onSuccess: async () => {
@@ -81,7 +86,17 @@ export const AccountForm = () => {
       setPassportFront(null);
       setPassportBack(null);
     },
-    onError: (err) => console.error("Ошибка обновления профиля", err),
+    onError: (err) => {
+      console.error("Ошибка обновления профиля", err);
+      const detail = (
+        err as { response?: { data?: { detail?: unknown } } }
+      )?.response?.data?.detail;
+      setErrorMessage(
+        typeof detail === "string"
+          ? detail
+          : "Не удалось сохранить изменения. Проверьте данные и попробуйте ещё раз.",
+      );
+    },
   });
 
   const handleImageUpload = (
@@ -110,7 +125,15 @@ export const AccountForm = () => {
     setPassportBack(null);
   };
 
-  const handleSave = () => updateMutation.mutate(formData);
+  const handleSave = () => {
+    // Дата рождения нужна бэку в формате YYYY-MM-DD (уходит в LTT как birthYear
+    // при покупке билетов) — валидируем до запроса, чтобы PATCH не падал молча
+    if (formData.birthDate && !/^\d{4}-\d{2}-\d{2}$/.test(formData.birthDate)) {
+      setErrorMessage("Дата рождения должна быть в формате ГГГГ-ММ-ДД, например 2002-02-21.");
+      return;
+    }
+    updateMutation.mutate(formData);
+  };
 
   if (!user)
     return (
@@ -288,6 +311,13 @@ export const AccountForm = () => {
           Выйти
         </button>
       </div>
+
+      <ErrorModal
+        isOpen={errorMessage !== null}
+        onClose={() => setErrorMessage(null)}
+        title="Не сохранилось"
+        message={errorMessage ?? undefined}
+      />
     </div>
   );
 };
