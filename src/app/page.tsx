@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 
 import { CheckLottery } from "@/widgets/check-lottery";
-// Раздел "Тиражные лотереи" временно скрыт.
-// import { DrawLotteryList } from "@/widgets/draw-lottery-list/ui/DrawLotteryList";
+import { DrawLotteryList } from "@/widgets/draw-lottery-list/ui/DrawLotteryList";
 import { FAQ } from "@/widgets/faq";
 import { HeroSlider } from "@/widgets/hero-slider";
 import { Kindness } from "@/widgets/kindness";
@@ -41,7 +40,6 @@ export default function HomePage() {
           <Kindness />
         </ScrollReveal>
 
-        {/* Раздел "Тиражные лотереи" временно скрыт.
         <ScrollReveal direction="up">
           <div>
             <Title>тиражные лотереи</Title>
@@ -54,7 +52,6 @@ export default function HomePage() {
             <DrawLotteryList />
           </div>
         </ScrollReveal>
-        */}
 
         <ScrollReveal direction="up">
           <CheckLottery />
