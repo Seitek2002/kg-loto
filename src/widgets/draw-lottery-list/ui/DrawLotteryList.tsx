@@ -57,6 +57,9 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
 function LotteryCard({ lottery }: { lottery: any }) {
   const fallbackImage =
     "https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=600&auto=format&fit=crop";
+
+  console.log(lottery);
+
   return (
     <Link
       href={`/draw-tickets/${lottery.lotteryId}`}

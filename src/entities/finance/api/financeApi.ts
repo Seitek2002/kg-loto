@@ -15,8 +15,9 @@ export interface PaymentMethodDto {
 interface BalanceResponse {
   data: { amount: string; currency: string };
 }
+// Ответ POST /balance/paylink/ приходит плоским объектом, без обёртки data
 interface PaylinkResponse {
-  data: { paylinkUrl: string };
+  paylinkUrl: string;
 }
 export interface TransactionDto {
   date: string;
@@ -31,42 +32,22 @@ export interface TransactionsResponse {
 
 export const financeApi = {
   getBalance: async () => {
-    // Актуальный контракт бэка: GET /api/v1/me/balance/.
-    // Пока он не задеплоен (404), откатываемся на старый /profile/balance/.
-    try {
-      const { data } = await api.get<BalanceResponse>("/me/balance/");
-      return data.data;
-    } catch (error) {
-      if ((error as { response?: { status?: number } })?.response?.status !== 404)
-        throw error;
-      const { data } = await api.get<BalanceResponse>("/profile/balance/");
-      return data.data;
-    }
+    // Подтверждено бэком: актуальный (и единственный работающий) путь — /profile/balance/
+    const { data } = await api.get<BalanceResponse>("/profile/balance/");
+    return data.data;
   },
 
   createPaylink: async (amount: string) => {
     // 🔥 Формируем динамический URL для возврата пользователя обратно в кошелек
     const redirectUrl = `${window.location.origin}/wallet`;
-    // redirectUrl -> redirect_url через интерцептор
-    const body = { amount: amount, redirectUrl };
 
-    // Актуальный контракт бэка: POST /api/v1/me/balance/paylink/.
-    // Пока он не задеплоен (404), откатываемся на старый /balance/paylink/.
-    try {
-      const { data } = await api.post<PaylinkResponse>(
-        "/me/balance/paylink/",
-        body,
-      );
-      return data.data;
-    } catch (error) {
-      if ((error as { response?: { status?: number } })?.response?.status !== 404)
-        throw error;
-      const { data } = await api.post<PaylinkResponse>(
-        "/balance/paylink/",
-        body,
-      );
-      return data.data;
-    }
+    // Подтверждено бэком (июль 2026): эндпоинт снова включён на старом пути
+    // POST /balance/paylink/ (не /me/balance/paylink/), ответ приходит плоским
+    const { data } = await api.post<PaylinkResponse>("/balance/paylink/", {
+      amount: amount,
+      redirectUrl,
+    });
+    return data;
   },
 
   getTransactions: async () => {
