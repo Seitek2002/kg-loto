@@ -26,57 +26,61 @@ export default function HomePage() {
     <>
       {/* Hero идет без Suspense, так как это LCP (первый экран), он должен быть в SSR */}
       <HeroSlider />
+      <div className="max-w-380 mx-auto px-4 py-4">
+        <Title>тиражные лотереи</Title>
+        <Description>
+          Популярные лотереи привлекают внимание благодаря крупным джекпотам,
+          частым тиражам и удобным условиям участия. Тысячи игроков ежедневно
+          выбирают именно эти розыгрыши, чтобы испытать удачу и побороться за
+          выигрыш.
+        </Description>
+        <DrawLotteryList />
+      </div>
       <RecentWinnersHistory />
 
       {/* Спейсер под Hero (вместо UnderHero, если там был просто отступ) */}
       <div className="h-10" />
 
       <div className="max-w-380 mx-auto px-4">
+        {/* <ScrollReveal direction="up"> */}
+        {/* </ScrollReveal> */}
+
         <Suspense fallback={<BlockSkeleton />}>
-          <PopularTickets />
-        </Suspense>
-
-        <ScrollReveal direction="up" className="flex lg:items-center">
-          <Kindness />
-        </ScrollReveal>
-
-        <ScrollReveal direction="up">
-          <div>
-            <Title>тиражные лотереи</Title>
-            <Description>
-              Популярные лотереи привлекают внимание благодаря крупным
-              джекпотам, частым тиражам и удобным условиям участия. Тысячи
-              игроков ежедневно выбирают именно эти розыгрыши, чтобы испытать
-              удачу и побороться за выигрыш.
-            </Description>
-            <DrawLotteryList />
+          {/* <ScrollReveal direction="up"> */}
+          <div className="w-full bg-[#f9f9f9]">
+            <PopularTickets />
           </div>
-        </ScrollReveal>
+          {/* </ScrollReveal> */}
+        </Suspense>
 
-        <ScrollReveal direction="up">
-          <CheckLottery />
-        </ScrollReveal>
+        {/* <ScrollReveal direction="up" className="flex lg:items-center"> */}
+        <Kindness />
+        {/* </ScrollReveal> */}
+
+        {/* <ScrollReveal direction="up"> */}
+        <CheckLottery />
+        {/* </ScrollReveal> */}
 
         <Suspense fallback={<BlockSkeleton />}>
-          <ScrollReveal direction="left">
-            <WinnersSlider />
-          </ScrollReveal>
+          {/* <ScrollReveal direction="left"> */}
+          <WinnersSlider />
+          {/* </ScrollReveal> */}
         </Suspense>
 
         <Suspense fallback={<BlockSkeleton />}>
-          <ScrollReveal direction="up">
-            <WhereToBuy />
-          </ScrollReveal>
+          {/* <ScrollReveal direction="up"> */}
+          <WhereToBuy />
+          {/* </ScrollReveal> */}
         </Suspense>
 
-        <ScrollReveal direction="up" className="hidden lg:block">
-          <OurApp />
-        </ScrollReveal>
+        {/* <ScrollReveal direction="up" className="hidden lg:block"> */}
+        <OurApp />
+        {/* </ScrollReveal> */}
 
         <Suspense fallback={<BlockSkeleton />}>
-          <ScrollReveal direction="up">
-            <FAQ />
-          </ScrollReveal>
+          {/* <ScrollReveal direction="up"> */}
+          <FAQ />
+          {/* </ScrollReveal> */}
         </Suspense>
       </div>
 
