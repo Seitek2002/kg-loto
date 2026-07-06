@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import api from "@/shared/api/apiClient";
 
-import { DrawDto, LotteryRuleDto, RawDrawDto } from "../api";
+import { DrawDto, LotteryRuleDto, RawDrawDto, TicketsResponseData } from "../api";
 
 interface CheckTicketResponse {
   isWinning: boolean;
@@ -82,7 +82,10 @@ export const useTickets = (params: {
   return useQuery({
     queryKey: ["tickets", params.lotteryId, params.drawId],
     queryFn: async () => {
-      const { data } = await api.get("/tickets/", { params });
+      const { data } = await api.get<{
+        success: boolean;
+        data: TicketsResponseData;
+      }>("/tickets/", { params });
       return data.data;
     },
     enabled: !!params.lotteryId && !!params.drawId,

@@ -7,6 +7,9 @@ interface TicketCardProps {
   selectedNumbers: number[];
   isInBasket: boolean;
   onToggle: () => void;
+  // Параметры игровой сетки из ответа /tickets/ (game): 36 для 5/36, 42 для 5/42
+  maxNumber?: number;
+  gridCols?: number;
 }
 
 export const DrawTicketCard = ({
@@ -15,8 +18,10 @@ export const DrawTicketCard = ({
   selectedNumbers,
   isInBasket,
   onToggle,
+  maxNumber = 36,
+  gridCols = 6,
 }: TicketCardProps) => {
-  const numbers = Array.from({ length: 36 }, (_, i) => i + 1);
+  const numbers = Array.from({ length: maxNumber }, (_, i) => i + 1);
 
   return (
     <div
@@ -38,7 +43,10 @@ export const DrawTicketCard = ({
         </span>
       </div>
 
-      <div className="grid grid-cols-6 gap-2 mb-6">
+      <div
+        className="grid gap-2 mb-6"
+        style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}
+      >
         {numbers.map((num) => (
           <div
             key={num}

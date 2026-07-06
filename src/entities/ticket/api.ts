@@ -94,11 +94,31 @@ export interface TicketDto {
   // short_id физического LTT-билета (нужен для покупки по пути B)
   shortId?: string;
   ticketNumber: string;
-  // LTT-билеты не содержат пользовательской комбинации — поле опциональное
+  // Устаревшее поле от моков — сохранено для обратной совместимости, используй combinations
   combination?: number[];
+  // Реальный контракт LTT (июль 2026): массив комбинаций, по одной на каждую
+  // "сетку" физического билета. Обычно 1 элемент, но бывает больше (мультибилет).
+  // Может прийти пустым массивом, если числа ещё не распакованы.
+  combinations?: number[][];
+  gridCount?: number | null;
+  barcodeValue?: string;
+  serial?: string;
+  drawCode?: string;
+  drawName?: string;
   price: number;
   currency: string;
   status: string; // "available" | "sold" | "reserved" | "cancelled" | иные строки LTT
+  logo?: string | null;
+}
+
+// Параметры игровой сетки — приходят на уровне всего ответа /tickets/,
+// одинаковые для всех билетов в выдаче
+export interface TicketGameInfo {
+  code: string; // "5/36" | "5/42"
+  maxNumber: number; // 36 | 42
+  pickCount: number; // всегда 5
+  gridCols: number;
+  gridRows: number;
 }
 
 export interface TicketsResponseData {
@@ -109,7 +129,14 @@ export interface TicketsResponseData {
   limit: number;
   total: number;
   tickets: TicketDto[];
+  game?: TicketGameInfo;
 }
+
+// Числа на билете для отрисовки сетки: первая комбинация из combinations,
+// либо старое singular-поле combination для обратной совместимости
+export const getTicketNumbers = (
+  ticket: Pick<TicketDto, "combinations" | "combination">,
+): number[] => ticket.combinations?.[0] ?? ticket.combination ?? [];
 
 // Ответ v2-эндпоинта /api/v2/lottery/tickets/ (работает напрямую с LttTicket)
 export interface LttTicketDto {

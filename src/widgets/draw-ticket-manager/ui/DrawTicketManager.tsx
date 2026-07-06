@@ -11,7 +11,11 @@ import { PopularTicketsWidget } from "@/widgets/popular-tickets/ui/PopularTicket
 import { WinnersSlider } from "@/widgets/winners-slider";
 
 import { useCartStore } from "@/entities/cart/model/cartStore";
-import { TicketDto, isTicketAvailable } from "@/entities/ticket/api";
+import {
+  TicketDto,
+  getTicketNumbers,
+  isTicketAvailable,
+} from "@/entities/ticket/api";
 import { useCurrentDraw, useTickets } from "@/entities/ticket/api/ticketApi";
 import { DrawTicketCard } from "@/entities/ticket/ui/DrawTicketCard";
 
@@ -97,6 +101,9 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
   // поэтому фильтруем чёрным списком через isTicketAvailable
   const availableTickets =
     ticketsData?.tickets?.filter((t: TicketDto) => isTicketAvailable(t)) || [];
+
+  // Параметры игровой сетки (36 для 5/36, 42 для 5/42) — приходят вместе с билетами
+  const game = ticketsData?.game;
 
   const isLoading = isDrawLoading || isTicketsLoading;
 
@@ -252,12 +259,15 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
             ) : (
               availableTickets.map((ticket: TicketDto) => {
                 const cartId = ticket.shortId || ticket.ticketId;
+                const numbers = getTicketNumbers(ticket);
                 return (
                   <DrawTicketCard
                     key={ticket.ticketId}
                     ticketNumber={ticket.ticketNumber}
                     price={ticket.price}
-                    selectedNumbers={ticket.combination ?? []}
+                    selectedNumbers={numbers}
+                    maxNumber={game?.maxNumber}
+                    gridCols={game?.gridCols}
                     isInBasket={basketIds.includes(cartId)}
                     onToggle={() =>
                       toggleItem({
@@ -265,7 +275,7 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                         price: ticket.price,
                         type: "other",
                         ticketNumber: ticket.ticketNumber,
-                        combination: ticket.combination,
+                        combination: numbers,
                         lotteryId,
                         drawId: currentDraw.drawId,
                         name: `Тираж №${currentDraw.drawNumber}`,

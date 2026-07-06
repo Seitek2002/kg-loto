@@ -15,6 +15,7 @@ import { type CartItem, useCartStore } from "@/entities/cart/model/cartStore";
 import { useBalance } from "@/entities/finance/api/financeApi";
 import {
   TicketDto,
+  getTicketNumbers,
   isTicketAvailable,
   useLttPurchase,
   useTickets,
@@ -47,14 +48,19 @@ const RealQuickAddTicket = ({
   ticket,
   lotteryId,
   drawId,
+  maxNumber = 36,
+  gridCols = 6,
 }: {
   ticket: TicketDto;
   lotteryId: string;
   drawId: number | string;
+  maxNumber?: number;
+  gridCols?: number;
 }) => {
   const { toggleItem, items } = useCartStore();
-  const numbers = Array.from({ length: 36 }, (_, i) => i + 1);
+  const numbers = Array.from({ length: maxNumber }, (_, i) => i + 1);
   const isInCart = items.some((i) => i.id === ticket.ticketId);
+  const ticketNumbers = getTicketNumbers(ticket);
 
   const handleAdd = () => {
     toggleItem({
@@ -62,7 +68,7 @@ const RealQuickAddTicket = ({
       price: ticket.price,
       type: "other",
       ticketNumber: ticket.ticketNumber,
-      combination: ticket.combination,
+      combination: ticketNumbers,
       lotteryId: lotteryId,
       drawId: drawId,
       name: `Тираж №${getDrawLabel(drawId)}`,
@@ -83,9 +89,12 @@ const RealQuickAddTicket = ({
         </span>
       </div>
 
-      <div className="grid grid-cols-6 gap-2 mb-6">
+      <div
+        className="grid gap-2 mb-6"
+        style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}
+      >
         {numbers.map((num) => {
-          const isSelected = ticket.combination?.includes(num) ?? false;
+          const isSelected = ticketNumbers.includes(num);
           return (
             <div
               key={num}
@@ -282,6 +291,8 @@ export const CartClient = () => {
                 ticket={ticket}
                 lotteryId={ticketsData!.lotteryId}
                 drawId={ticketsData!.drawId}
+                maxNumber={ticketsData?.game?.maxNumber}
+                gridCols={ticketsData?.game?.gridCols}
               />
             ))
           ) : (

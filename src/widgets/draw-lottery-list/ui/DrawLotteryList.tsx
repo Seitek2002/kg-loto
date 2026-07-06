@@ -7,7 +7,10 @@ import Link from "next/link";
 
 import { Clock } from "lucide-react";
 
-import { useCurrentLotteries } from "@/entities/lottery/api/lotteryClientApi";
+import {
+  CurrentLotteryDto,
+  useCurrentLotteries,
+} from "@/entities/lottery/api/lotteryClientApi";
 
 // 🔥 Таймер
 const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
@@ -54,11 +57,14 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
 };
 
 // 🔥 Карточка
-function LotteryCard({ lottery }: { lottery: any }) {
+function LotteryCard({ lottery }: { lottery: CurrentLotteryDto }) {
   const fallbackImage =
     "https://images.unsplash.com/photo-1621360841013-c76831f1dbce?q=80&w=600&auto=format&fit=crop";
 
-  console.log(lottery);
+  const info = lottery.lotteryInfo;
+  // Пока в CMS не заведена карточка для этой лотереи (lotteryInfo === null),
+  // используем то, что есть из реального тиража LTT
+  const title = info?.title || lottery.name;
 
   return (
     <Link
@@ -66,26 +72,26 @@ function LotteryCard({ lottery }: { lottery: any }) {
       className="group relative w-full aspect-video sm:aspect-4/2.5 rounded-3xl overflow-hidden block active:scale-[0.98] transition-transform duration-200"
     >
       <Image
-        src={lottery.imageUrl || fallbackImage}
-        alt={lottery.name}
+        src={info?.drawLogo || lottery.imageUrl || fallbackImage}
+        alt={title}
         fill
         sizes="(max-width: 768px) 100vw, 50vw"
+        unoptimized
         className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-black/10" />
       <CountdownTimer targetDate={lottery.saleEndAt} />
       <div className="absolute bottom-5 left-5 md:bottom-6 md:left-6 flex flex-col gap-1 md:gap-2 z-10">
         <span className="text-white font-bold text-[14px] md:text-[18px]">
-          {lottery.name}
+          {title}
         </span>
-        <div className="text-[#FFD600] font-black text-[28px] md:text-[40px] leading-none drop-shadow-md flex items-end gap-2">
-          {lottery.ticketPrice * 1000} {/* Заглушка суперприза */}
-          <span className="text-white text-[20px] md:text-[28px] underline decoration-2 underline-offset-4 mb-1">
-            с
-          </span>
-        </div>
+        {info?.prizeText && (
+          <div className="text-[#FFD600] font-black text-[28px] md:text-[40px] leading-none drop-shadow-md">
+            {info.prizeText}
+          </div>
+        )}
         <button className="mt-2 bg-white text-[#2D2D2D] rounded-full px-5 py-2 md:py-2.5 text-[12px] md:text-[14px] font-black uppercase tracking-wide w-max shadow-md group-hover:bg-[#FFD600] transition-colors duration-300">
-          Играть • {lottery.ticketPrice} СОМ
+          Играть{lottery.ticketPrice > 0 ? ` • ${lottery.ticketPrice} СОМ` : ""}
         </button>
       </div>
     </Link>
@@ -119,7 +125,7 @@ export const DrawLotteryList = () => {
           Ошибка при загрузке лотерей
         </div>
       ) : lotteries && lotteries.length > 0 ? (
-        lotteries.map((lottery: any) => (
+        lotteries.map((lottery) => (
           <LotteryCard key={lottery.lotteryId} lottery={lottery} />
         ))
       ) : (
