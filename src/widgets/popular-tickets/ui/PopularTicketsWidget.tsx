@@ -44,9 +44,6 @@ export const PopularTicketsWidget = ({
 
   // 🔥 useCurrentLotteries() отдаёт тиражные лотереи (CurrentLotteryDto), а
   // PopularTicketsClient рассчитан на LotteryItem (моментальные билеты) — адаптируем.
-  // ВАЖНО: PopularTicketsClient ведёт по `/lottery/${id}`, а не `/draw-tickets/${lotteryId}`,
-  // так что клик по карточке в этом виджете уводит не туда — это уже существующий баг,
-  // не относящийся к типам.
   const items: LotteryItem[] = filteredLotteries.map((loto, i) => ({
     id: i,
     billingLotteryId: loto.lotteryId,
@@ -58,12 +55,14 @@ export const PopularTicketsWidget = ({
     backgroundImage: loto.lotteryInfo?.drawLogo || loto.imageUrl,
   }));
 
-  // Передаем готовые данные в твой красивый клиентский компонент
+  // Передаем готовые данные в твой красивый клиентский компонент.
+  // Это тиражные лотереи — ведём на /draw-tickets/[lotteryId], а не на дефолтный /lottery/[id]
   return (
     <PopularTicketsClient
       lotteries={items}
       title={title}
       description={description}
+      getHref={(loto) => `/draw-tickets/${loto.billingLotteryId}`}
     />
   );
 };

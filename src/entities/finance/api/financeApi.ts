@@ -15,9 +15,9 @@ export interface PaymentMethodDto {
 interface BalanceResponse {
   data: { amount: string; currency: string };
 }
-// Ответ POST /balance/paylink/ приходит плоским объектом, без обёртки data
+// Реальный ответ POST /balance/paylink/ обёрнут: { data: { paylinkUrl }, meta: {} }
 interface PaylinkResponse {
-  paylinkUrl: string;
+  data: { paylinkUrl: string };
 }
 export interface TransactionDto {
   date: string;
@@ -42,12 +42,12 @@ export const financeApi = {
     const redirectUrl = `${window.location.origin}/wallet`;
 
     // Подтверждено бэком (июль 2026): эндпоинт снова включён на старом пути
-    // POST /balance/paylink/ (не /me/balance/paylink/), ответ приходит плоским
+    // POST /balance/paylink/ (не /me/balance/paylink/), ответ обёрнут в data
     const { data } = await api.post<PaylinkResponse>("/balance/paylink/", {
       amount: amount,
       redirectUrl,
     });
-    return data;
+    return data.data;
   },
 
   getTransactions: async () => {

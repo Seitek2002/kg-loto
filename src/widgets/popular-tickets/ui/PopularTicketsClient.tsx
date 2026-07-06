@@ -113,10 +113,15 @@ export const PopularTicketsClient = ({
   lotteries,
   title,
   description,
+  // По умолчанию — моментальные лотереи (карточка ведёт на /lottery/[id]).
+  // Для тиражных лотерей (виджет "Другие лотереи") передаётся своя функция,
+  // ведущая на /draw-tickets/[lotteryId] — раньше эти карточки уводили не туда.
+  getHref = (loto) => `/lottery/${loto.id}`,
 }: {
   lotteries: LotteryItem[];
   title?: string;
   description?: string;
+  getHref?: (lottery: LotteryItem) => string;
 }) => {
   const t = useTranslations("populartickets");
 
@@ -152,7 +157,7 @@ export const PopularTicketsClient = ({
             >
               <TiltCard>
                 <Link
-                  href={`/lottery/${loto.id}`}
+                  href={getHref(loto)}
                   className="block w-full h-full transition-transform active:scale-[0.98]"
                 >
                   <LotteryCard
