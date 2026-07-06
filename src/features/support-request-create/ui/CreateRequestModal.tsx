@@ -84,7 +84,7 @@ export const CreateRequestModal = ({
               Выберите тему
             </option>
             <option value="tech">Техническая ошибка</option>
-            <option value="finance">Вопросы по оплате/выводу</option>
+            <option value="finance">Вопросы по оплате</option>
             <option value="game">Вопросы по правилам игры</option>
             <option value="other">Другое</option>
           </select>

@@ -12,6 +12,11 @@ import { TopUpModal } from "@/features/top-up/ui/TopUpModal";
 import { useBalance, useTransactions } from "@/entities/finance/api/financeApi";
 import { useAuthStore } from "@/entities/user/model/authStore";
 
+// Функционала вывода средств на сайте нет — если бэк вдруг пришлёт это слово
+// в свободном текстовом поле (статус, способ оплаты), на экране оно появиться не должно
+const containsWithdrawWord = (value: string) =>
+  /вывод|вывест|withdraw/i.test(value);
+
 const getStatusProps = (status: string) => {
   const s = status?.toLowerCase() || "";
   if (s.includes("оплачено") || s === "completed" || s === "success") {
@@ -35,7 +40,7 @@ const getStatusProps = (status: string) => {
     return { text: status || "Ошибка", classes: "bg-[#FFD7D7] text-[#FF4B4B]" };
   }
   return {
-    text: status || "Неизвестно",
+    text: status && !containsWithdrawWord(status) ? status : "Неизвестно",
     classes: "bg-[#FFF0D4] text-[#F58220]",
   };
 };
@@ -48,7 +53,9 @@ const getMethodName = (method: string) => {
     elcart: "Элкарт",
     баланс: "С баланса",
   };
-  return knownMethods[method.toLowerCase()] || method;
+  const known = knownMethods[method.toLowerCase()];
+  if (known) return known;
+  return containsWithdrawWord(method) ? "Внутренний счет" : method;
 };
 
 const formatDate = (dateString: string) => {
@@ -116,9 +123,6 @@ export default function WalletPage() {
                 className="bg-[#F58220] hover:bg-[#E57210] active:scale-95 text-white py-4 px-8 rounded-full font-bold text-[14px] lg:text-[16px] transition-all w-full sm:w-auto shadow-sm"
               >
                 Пополнить
-              </button>
-              <button className="bg-white hidden border-2 border-[#F58220] text-[#F58220] hover:bg-orange-50 active:scale-95 py-4 px-8 rounded-full font-bold text-[14px] lg:text-[16px] transition-all w-full sm:w-auto shadow-sm">
-                Вывести
               </button>
             </div>
           </div>
