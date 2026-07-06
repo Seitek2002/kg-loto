@@ -239,12 +239,12 @@ export const Footer = async ({ menuData }: FooterProps) => {
 
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-[11px] text-[#737373] font-medium">
           <div className="grid grid-cols-2 lg:flex lg:flex-row gap-x-4 gap-y-5 lg:gap-6 w-full lg:w-auto">
-            <a
-              href="#"
+            <Link
+              href="/news/privacy-policy"
               className="hover:text-[#4B4B4B] leading-relaxed max-w-37.5 lg:max-w-none"
             >
               Политика конфиденциальности
-            </a>
+            </Link>
           </div>
           <div className="hidden lg:block font-black text-xl text-[#4B4B4B]">
             18+
