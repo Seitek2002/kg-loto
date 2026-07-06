@@ -12,7 +12,7 @@ import { RecentWinnersHistory } from "@/widgets/winners-history";
 import { WinnersSlider } from "@/widgets/winners-slider";
 
 import { Description } from "@/shared/ui/Description";
-import { ScrollReveal } from "@/shared/ui/ScrollReveal";
+// import { ScrollReveal } from "@/shared/ui/ScrollReveal";
 import { Title } from "@/shared/ui/Title";
 
 export const revalidate = 600;
