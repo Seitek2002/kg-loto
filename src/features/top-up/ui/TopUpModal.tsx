@@ -2,17 +2,14 @@
 
 import { ReactNode, useEffect, useState } from "react";
 
-import Image from "next/image";
-
 import { useMounted } from "@/hooks/useMounted";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
-import { usePaymentMethods, useTopUp } from "@/entities/finance/api/financeApi";
+import { useTopUp } from "@/entities/finance/api/financeApi";
 
 import { Button } from "@/shared/ui/Button";
 import { ErrorModal } from "@/shared/ui/ErrorModal";
-import { Skeleton } from "@/shared/ui/Skeleton";
 
 interface TopUpModalProps {
   isOpen: boolean;
@@ -43,11 +40,6 @@ export const TopUpModal = ({
   }
 
   const { mutate: createPaylink, isPending } = useTopUp();
-
-  // 🔥 Вызываем хук получения методов оплаты
-  // Запрос пойдет только когда модалка открыта (enabled: isOpen), чтобы экономить ресурсы
-  const { data: paymentMethods, isLoading: isMethodsLoading } =
-    usePaymentMethods();
 
   useEffect(() => {
     if (isOpen && !isErrorOpen) document.body.style.overflow = "hidden";
@@ -130,6 +122,7 @@ export const TopUpModal = ({
                 />
               </div>
 
+              {/* Блок "Доступные способы" временно скрыт.
               <div className="flex flex-col gap-3 mb-6">
                 <div className="bg-white rounded-[20px] p-4 border border-gray-100 shadow-sm">
                   <div className="text-[12px] font-bold text-[#4B4B4B] mb-3 opacity-60 uppercase tracking-tight">
@@ -178,6 +171,7 @@ export const TopUpModal = ({
                   </div>
                 </div>
               </div>
+              */}
 
               <Button
                 onClick={handleTopUp}

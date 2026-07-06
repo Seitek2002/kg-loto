@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { clsx } from "clsx";
-import { ScanLine, Star, Ticket, User } from "lucide-react";
+import { Star, Ticket, User } from "lucide-react";
 
 import { useAuthStore } from "@/entities/user/model/authStore";
 
@@ -104,6 +104,7 @@ export function BottomNav() {
         })}
       </nav>
 
+      {/* Раздел "Сканер билетов" временно скрыт.
       <Link
         href="/scan"
         onClick={(e) => handleProtectedClick(e, true)}
@@ -114,6 +115,7 @@ export function BottomNav() {
       >
         <ScanLine size={24} />
       </Link>
+      */}
     </div>
   );
 }
