@@ -425,7 +425,7 @@ export const CartClient = () => {
         isOpen={!!successDetails}
         onClose={() => {
           setSuccessDetails(null);
-          router.push("/tickets");
+          router.push("/profile");
         }}
         details={successDetails!}
       />
