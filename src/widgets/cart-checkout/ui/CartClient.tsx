@@ -19,6 +19,7 @@ import {
   getSoldTicketErrorMessage,
   getTicketNumbers,
   isTicketAvailable,
+  useDownloadTicketPdf,
   useLttPurchase,
   useTickets,
 } from "@/entities/ticket/api";
@@ -137,6 +138,8 @@ export const CartClient = () => {
   const { user, openAuthModal } = useAuthStore();
 
   const { mutate: purchase, isPending: isPurchasing } = useLttPurchase();
+  const { mutate: downloadPdf, isPending: isDownloading } =
+    useDownloadTicketPdf();
   const { refetch: refetchBalance } = useBalance();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.showToast);
@@ -207,20 +210,26 @@ export const CartClient = () => {
           return;
         }
 
+        const purchasedTickets = res?.tickets ?? [];
+        const ticketCount = purchasedTickets.length || items.length;
+
         setSuccessDetails({
           drawNumber: `№${getDrawLabel(items[0].drawId)}`,
-          price: totalPrice,
-          prize: "Суперприз",
+          price: res?.amount ? Number(res.amount) : totalPrice,
+          balance: res?.balance ?? String(user?.balance ?? "0"),
           date: new Date().toLocaleDateString("ru-RU", {
             day: "numeric",
             month: "short",
             year: "numeric",
           }),
           combinations: items[0].combination ?? [],
+          ticketIds: purchasedTickets.map((t) => t.shortId),
         });
         clearCart();
         refetchBalance();
-        showToast("Билет успешно куплен!");
+        showToast(
+          `Куплено ${ticketCount} ${getTicketPlural(ticketCount)}! Списано ${res?.amount ?? totalPrice} с`,
+        );
         // Купленные билеты не должны продолжать висеть в сетке как доступные
         queryClient.invalidateQueries({ queryKey: ["tickets"] });
       },
@@ -436,6 +445,10 @@ export const CartClient = () => {
           router.push("/profile");
         }}
         details={successDetails!}
+        isDownloading={isDownloading}
+        onDownload={() => {
+          successDetails?.ticketIds.forEach((id) => downloadPdf(id));
+        }}
       />
     </>
   );

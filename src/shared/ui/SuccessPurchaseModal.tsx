@@ -9,30 +9,39 @@ import { Modal } from "@/shared/ui/Modal";
 
 export interface TicketDetails {
   drawNumber: string;
+  // Сумма списания — берём из ответа /me/balance/ltt-purchase/ (amount), а не считаем на фронте
   price: number;
-  prize: string;
+  // Баланс после покупки — из ответа бэка (balance)
+  balance: string;
   date: string;
   combinations: number[];
+  // short_id купленных билетов — для скачивания PDF (tickets[].shortId из ответа)
+  ticketIds: string[];
 }
 
 interface SuccessPurchaseModalProps {
   isOpen: boolean;
   onClose: () => void;
   details?: TicketDetails;
+  onDownload?: () => void;
+  isDownloading?: boolean;
 }
 
 export const SuccessPurchaseModal = ({
   isOpen,
   onClose,
   details,
+  onDownload,
+  isDownloading,
 }: SuccessPurchaseModalProps) => {
   // Моковые данные на случай, если пропсы не передали
   const data = details || {
     drawNumber: "№005034",
     price: 100,
-    prize: "6 000 000",
+    balance: "0",
     date: "2 апр, 2026. 16:00",
     combinations: [1, 20, 32, 16, 8],
+    ticketIds: [],
   };
 
   return (
@@ -84,10 +93,10 @@ export const SuccessPurchaseModal = ({
 
           <div className="flex justify-between items-center">
             <span className="text-[13px] sm:text-[14px] font-medium text-[#737373]">
-              Приз
+              Баланс после покупки
             </span>
             <span className="text-[14px] sm:text-[15px] font-bold text-[#4B4B4B]">
-              {data.prize} <span className="underline text-[12px]">с</span>
+              {data.balance} <span className="underline text-[12px]">с</span>
             </span>
           </div>
 
@@ -119,13 +128,16 @@ export const SuccessPurchaseModal = ({
 
         {/* Кнопки */}
         <div className="w-full flex flex-col sm:flex-row gap-3">
-          <Button
-            variant="ghost" // Используем ghost, чтобы затереть дефолтный фон и поставить свой
-            onClick={() => console.log("Скачивание PDF...")}
-            className="flex-1 bg-[#FFD600]! hover:bg-[#FFC000]! text-[#4B4B4B] text-[11px]! sm:text-[12px]! shadow-sm uppercase font-black py-4 sm:py-3.5"
-          >
-            Скачать билет
-          </Button>
+          {data.ticketIds.length > 0 && (
+            <Button
+              variant="ghost" // Используем ghost, чтобы затереть дефолтный фон и поставить свой
+              onClick={onDownload}
+              disabled={isDownloading}
+              className="flex-1 bg-[#FFD600]! hover:bg-[#FFC000]! text-[#4B4B4B] text-[11px]! sm:text-[12px]! shadow-sm uppercase font-black py-4 sm:py-3.5 disabled:opacity-50"
+            >
+              {isDownloading ? "Скачивание..." : "Скачать билет"}
+            </Button>
+          )}
 
           <Link href="/tickets" className="flex-1 contents">
             <Button

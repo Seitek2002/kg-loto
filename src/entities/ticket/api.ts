@@ -251,13 +251,14 @@ export const ticketApi = {
   },
 
   // Путь B (актуальный): покупка реального LTT-билета за баланс
-  lttPurchase: async (payload: LttPurchasePayload) => {
-    const { data } = await api.post<{ data: LttPurchaseResponse } | LttPurchaseResponse>(
-      "/me/balance/ltt-purchase/",
-      payload,
-    );
+  lttPurchase: async (
+    payload: LttPurchasePayload,
+  ): Promise<LttPurchaseResponse> => {
+    const { data } = await api.post<
+      { data: LttPurchaseResponse } | LttPurchaseResponse
+    >("/me/balance/ltt-purchase/", payload);
     // Бэк может обернуть в { data } или вернуть плоский объект
-    return "data" in (data as any) ? (data as any).data : (data as LttPurchaseResponse);
+    return "data" in data ? data.data : data;
   },
 
   getCurrentDraw: async (lotteryId: string) => {

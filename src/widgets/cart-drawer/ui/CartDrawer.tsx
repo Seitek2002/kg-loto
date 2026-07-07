@@ -10,7 +10,11 @@ import { TopUpModal } from "@/features/top-up/ui/TopUpModal";
 
 import { useCartStore } from "@/entities/cart/model/cartStore";
 import { useBalance } from "@/entities/finance/api/financeApi";
-import { getSoldTicketErrorMessage, useLttPurchase } from "@/entities/ticket/api";
+import {
+  getSoldTicketErrorMessage,
+  useDownloadTicketPdf,
+  useLttPurchase,
+} from "@/entities/ticket/api";
 import { useAuthStore } from "@/entities/user/model/authStore";
 
 import { cn } from "@/shared/lib/utils";
@@ -23,6 +27,15 @@ import {
 } from "@/shared/ui/SuccessPurchaseModal";
 import { useToastStore } from "@/shared/ui/Toast/toastStore";
 
+const getTicketPlural = (count: number) => {
+  const lastTwo = count % 100;
+  const lastDigit = count % 10;
+  if (lastTwo >= 11 && lastTwo <= 19) return "билетов";
+  if (lastDigit === 1) return "билет";
+  if (lastDigit >= 2 && lastDigit <= 4) return "билета";
+  return "билетов";
+};
+
 export const CartDrawer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
@@ -33,6 +46,8 @@ export const CartDrawer = () => {
 
   // API
   const { mutate: purchase, isPending } = useLttPurchase();
+  const { mutate: downloadPdf, isPending: isDownloading } =
+    useDownloadTicketPdf();
   const { refetch: refetchBalance } = useBalance();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.showToast);
@@ -91,23 +106,29 @@ export const CartDrawer = () => {
           return;
         }
 
-        // 🔥 ВМЕСТО ALERT ОТКРЫВАЕМ КРАСИВУЮ МОДАЛКУ
+        // 🔥 ВМЕСТО ALERT ОТКРЫВАЕМ КРАСИВУЮ МОДАЛКУ — используем данные из реального ответа бэка
+        const purchasedTickets = res?.tickets ?? [];
+        const ticketCount = purchasedTickets.length || items.length;
+
         setSuccessDetails({
           drawNumber: `№${String(items[0].drawId).split("-").pop()}`,
-          price: totalPrice,
-          prize: "Суперприз",
+          price: res?.amount ? Number(res.amount) : totalPrice,
+          balance: res?.balance ?? String(user?.balance ?? "0"),
           date: new Date().toLocaleDateString("ru-RU", {
             day: "numeric",
             month: "short",
             year: "numeric",
           }),
           combinations: items[0].combination ?? [],
+          ticketIds: purchasedTickets.map((t) => t.shortId),
         });
 
         clearCart();
         refetchBalance();
         setIsExpanded(false); // Прячем шторку корзины
-        showToast("Билет успешно куплен!");
+        showToast(
+          `Куплено ${ticketCount} ${getTicketPlural(ticketCount)}! Списано ${res?.amount ?? totalPrice} с`,
+        );
         // Купленные билеты не должны продолжать висеть в сетке как доступные
         queryClient.invalidateQueries({ queryKey: ["tickets"] });
       },
@@ -250,6 +271,10 @@ export const CartDrawer = () => {
           router.push("/profile"); // Переходим к билетам только после того, как юзер закроет окно успеха
         }}
         details={successDetails!}
+        isDownloading={isDownloading}
+        onDownload={() => {
+          successDetails?.ticketIds.forEach((id) => downloadPdf(id));
+        }}
       />
     </>
   );
