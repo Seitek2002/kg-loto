@@ -89,6 +89,10 @@ export const useTickets = (params: {
       return data.data;
     },
     enabled: !!params.lotteryId && !!params.drawId,
+    // Доступность билетов быстро меняется (несколько человек могут покупать
+    // одновременно), поэтому не полагаемся на общий минутный staleTime из QueryProvider
+    staleTime: 15 * 1000,
+    refetchOnMount: "always",
   });
 };
 

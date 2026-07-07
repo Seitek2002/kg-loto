@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useMounted } from "@/hooks/useMounted";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 
 import { TopUpModal } from "@/features/top-up/ui/TopUpModal";
@@ -15,6 +16,7 @@ import { type CartItem, useCartStore } from "@/entities/cart/model/cartStore";
 import { useBalance } from "@/entities/finance/api/financeApi";
 import {
   TicketDto,
+  getSoldTicketErrorMessage,
   getTicketNumbers,
   isTicketAvailable,
   useLttPurchase,
@@ -135,6 +137,7 @@ export const CartClient = () => {
 
   const { mutate: purchase, isPending: isPurchasing } = useLttPurchase();
   const { refetch: refetchBalance } = useBalance();
+  const queryClient = useQueryClient();
 
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>(
@@ -224,6 +227,8 @@ export const CartClient = () => {
         });
         clearCart();
         refetchBalance();
+        // Купленные билеты не должны продолжать висеть в сетке как доступные
+        queryClient.invalidateQueries({ queryKey: ["tickets"] });
       },
       onError: (error) => {
         console.error("Ошибка покупки:", error);
@@ -236,6 +241,15 @@ export const CartClient = () => {
           setMissingAmount(Math.max(totalPrice - bal, 0));
           setIsTopUpOpen(true);
           refetchBalance();
+          return;
+        }
+
+        const soldMessage = getSoldTicketErrorMessage(error);
+        if (soldMessage) {
+          // Билет успели купить раньше нас — освежаем список, чтобы он пропал из сетки
+          setErrorMessage(soldMessage);
+          setIsErrorOpen(true);
+          queryClient.invalidateQueries({ queryKey: ["tickets"] });
           return;
         }
 
