@@ -32,6 +32,7 @@ import {
   SuccessPurchaseModal,
   TicketDetails,
 } from "@/shared/ui/SuccessPurchaseModal";
+import { useToastStore } from "@/shared/ui/Toast/toastStore";
 
 const getTicketPlural = (count: number) => {
   const lastDigit = count % 10;
@@ -138,6 +139,7 @@ export const CartClient = () => {
   const { mutate: purchase, isPending: isPurchasing } = useLttPurchase();
   const { refetch: refetchBalance } = useBalance();
   const queryClient = useQueryClient();
+  const showToast = useToastStore((s) => s.showToast);
 
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>(
@@ -218,6 +220,7 @@ export const CartClient = () => {
         });
         clearCart();
         refetchBalance();
+        showToast("Билет успешно куплен!");
         // Купленные билеты не должны продолжать висеть в сетке как доступные
         queryClient.invalidateQueries({ queryKey: ["tickets"] });
       },

@@ -13,6 +13,7 @@ import { Header } from "@/widgets/header";
 import { AgeVerificationModal } from "@/features/age-verification";
 
 import { LiquidFilterDef } from "@/shared/ui/LiquidFilterDef";
+import { ToastContainer } from "@/shared/ui/Toast";
 
 import "./globals.css";
 import QueryProvider from "./providers";
@@ -139,6 +140,7 @@ export default async function RootLayout({
           <LiquidFilterDef />
 
           <QueryProvider>
+            <ToastContainer />
             {!isAgeVerified && <AgeVerificationModal />}
 
             <div className="relative min-h-screen flex flex-col">

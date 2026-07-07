@@ -21,6 +21,7 @@ import {
   SuccessPurchaseModal,
   TicketDetails,
 } from "@/shared/ui/SuccessPurchaseModal";
+import { useToastStore } from "@/shared/ui/Toast/toastStore";
 
 export const CartDrawer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -34,6 +35,7 @@ export const CartDrawer = () => {
   const { mutate: purchase, isPending } = useLttPurchase();
   const { refetch: refetchBalance } = useBalance();
   const queryClient = useQueryClient();
+  const showToast = useToastStore((s) => s.showToast);
 
   // Модалки
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
@@ -105,6 +107,7 @@ export const CartDrawer = () => {
         clearCart();
         refetchBalance();
         setIsExpanded(false); // Прячем шторку корзины
+        showToast("Билет успешно куплен!");
         // Купленные билеты не должны продолжать висеть в сетке как доступные
         queryClient.invalidateQueries({ queryKey: ["tickets"] });
       },
