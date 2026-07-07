@@ -25,6 +25,9 @@ export interface TransactionDto {
   currency: string;
   paymentMethod: string;
   paymentStatus: string;
+  // Надёжные структурные поля (замена парсингу paymentMethod/amount)
+  type?: "topup" | "purchase";
+  direction?: "in" | "out";
 }
 export interface TransactionsResponse {
   data: { page: number; limit: number; total: number; items: TransactionDto[] };

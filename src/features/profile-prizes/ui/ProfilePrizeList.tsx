@@ -1,15 +1,31 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { Loader2 } from "lucide-react";
 
-import { MyTicketDto, useMyTickets } from "@/entities/ticket/api";
+import {
+  MyTicketDto,
+  useDownloadTicketPdf,
+  useMyTickets,
+} from "@/entities/ticket/api";
 import { EmptyPrizes } from "@/entities/ticket/ui/EmptyPrizes";
 import { MyTicketCard } from "@/entities/ticket/ui/MyTicketCard";
 
+import { ErrorModal } from "@/shared/ui/ErrorModal";
+
 export const ProfilePrizeList = () => {
   const { data: tickets, isLoading } = useMyTickets();
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
+  const {
+    mutate: downloadPdf,
+    isPending: isDownloading,
+    variables: downloadingTicketId,
+  } = useDownloadTicketPdf();
+
+  const handleDownload = (ticketId: string) => {
+    downloadPdf(ticketId, { onError: () => setIsErrorOpen(true) });
+  };
 
   // Приз — это выигрышный билет, пришедший с бэкенда (GET /me/balance/tickets/).
   // Бэк не отдаёт отдельный статус получения приза (получен/ожидает/в обработке),
@@ -33,6 +49,7 @@ export const ProfilePrizeList = () => {
               ? new Date(t.purchaseDate).toLocaleDateString("ru-RU")
               : "Скоро"),
           logo: t.logo || undefined,
+          canDownload: !!t.barcodeValue,
         };
       });
   }, [tickets]);
@@ -65,6 +82,11 @@ export const ProfilePrizeList = () => {
                 logoSrc={prize.logo}
                 status="winning"
                 showButton={false}
+                canDownload={prize.canDownload}
+                isDownloading={
+                  isDownloading && downloadingTicketId === prize.id
+                }
+                onDownload={() => handleDownload(prize.id)}
               />
             ))}
           </div>
@@ -75,6 +97,13 @@ export const ProfilePrizeList = () => {
       ) : (
         <EmptyPrizes />
       )}
+
+      <ErrorModal
+        isOpen={isErrorOpen}
+        onClose={() => setIsErrorOpen(false)}
+        title="Не удалось скачать билет"
+        message="Билет не найден или ещё не оплачен. Попробуйте позже."
+      />
     </div>
   );
 };

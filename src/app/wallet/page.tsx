@@ -154,7 +154,10 @@ export default function WalletPage() {
               <div className="flex flex-col">
                 {transactions.map((tx, idx) => {
                   const status = getStatusProps(tx.paymentStatus);
-                  const isNegative = tx.amount.toString().startsWith("-");
+                  // direction — надёжное поле с бэка, парсинг знака суммы — запасной вариант
+                  const isNegative = tx.direction
+                    ? tx.direction === "out"
+                    : tx.amount.toString().startsWith("-");
                   const absAmount = tx.amount.toString().replace("-", "");
 
                   return (
@@ -222,7 +225,10 @@ export default function WalletPage() {
             <div className="flex lg:hidden flex-col gap-4">
               {transactions.map((tx, idx) => {
                 const status = getStatusProps(tx.paymentStatus);
-                const isNegative = tx.amount.toString().startsWith("-");
+                // direction — надёжное поле с бэка, парсинг знака суммы — запасной вариант
+                const isNegative = tx.direction
+                  ? tx.direction === "out"
+                  : tx.amount.toString().startsWith("-");
                 const absAmount = tx.amount.toString().replace("-", "");
 
                 return (
