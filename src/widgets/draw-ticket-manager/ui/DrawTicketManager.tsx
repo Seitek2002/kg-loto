@@ -260,28 +260,32 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
               availableTickets.map((ticket: TicketDto) => {
                 const cartId = ticket.shortId || ticket.ticketId;
                 const numbers = getTicketNumbers(ticket);
+                const gridCount = ticket.combinations?.length ?? 1;
+                const span = gridCount >= 2 ? "md:col-span-2" : "";
                 return (
-                  <DrawTicketCard
-                    key={ticket.ticketId}
-                    ticketNumber={ticket.ticketNumber}
-                    price={ticket.price}
-                    selectedNumbers={numbers}
-                    maxNumber={game?.maxNumber}
-                    gridCols={game?.gridCols}
-                    isInBasket={basketIds.includes(cartId)}
-                    onToggle={() =>
-                      toggleItem({
-                        id: cartId,
-                        price: ticket.price,
-                        type: "other",
-                        ticketNumber: ticket.ticketNumber,
-                        combination: numbers,
-                        lotteryId,
-                        drawId: currentDraw.drawId,
-                        name: `Тираж №${currentDraw.drawNumber}`,
-                      })
-                    }
-                  />
+                  <div key={ticket.ticketId} className={span}>
+                    <DrawTicketCard
+                      ticketNumber={ticket.ticketNumber}
+                      price={ticket.price}
+                      selectedNumbers={numbers}
+                      combinations={ticket.combinations}
+                      maxNumber={game?.maxNumber}
+                      gridCols={game?.gridCols}
+                      isInBasket={basketIds.includes(cartId)}
+                      onToggle={() =>
+                        toggleItem({
+                          id: cartId,
+                          price: ticket.price,
+                          type: "other",
+                          ticketNumber: ticket.ticketNumber,
+                          combination: numbers,
+                          lotteryId,
+                          drawId: currentDraw.drawId,
+                          name: `Тираж №${currentDraw.drawNumber}`,
+                        })
+                      }
+                    />
+                  </div>
                 );
               })
             )}
