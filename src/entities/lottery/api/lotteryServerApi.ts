@@ -16,7 +16,10 @@ export const getLotteriesData = async (): Promise<LotteryItem[]> => {
 
     if (!res.ok) return [];
     const json = await res.json();
-    return json.data || [];
+    const lotteries: LotteryItem[] = json.data || [];
+    // /lotteries/ отдаёт и моментальные, и тиражные лотереи вперемешку —
+    // этот список используется только для моментальных (главная, /lottery)
+    return lotteries.filter((lottery) => lottery.lotteryType !== "draw");
   } catch (error) {
     console.error("Lotteries Error:", error);
     return [];
