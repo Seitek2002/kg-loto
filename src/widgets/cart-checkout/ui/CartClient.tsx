@@ -177,15 +177,6 @@ export const CartClient = () => {
       return; // Останавливаем выполнение функции
     }
 
-    // Для покупки LTT-билета за баланс бэку нужен год рождения (из профиля).
-    if (!user?.birthDate) {
-      setErrorMessage(
-        "Для покупки заполните дату рождения в профиле (Настройки → Личные данные).",
-      );
-      setIsErrorOpen(true);
-      return;
-    }
-
     const currentBalance = Number(user?.balance || 0);
 
     // 1. Денег не хватает -> Открываем модалку пополнения
