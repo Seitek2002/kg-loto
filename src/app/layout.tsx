@@ -14,6 +14,7 @@ import { AgeVerificationModal } from "@/features/age-verification";
 
 import { LiquidFilterDef } from "@/shared/ui/LiquidFilterDef";
 import { ToastContainer } from "@/shared/ui/Toast";
+import { WhatsAppHelpPopup } from "@/shared/ui/WhatsAppHelpPopup";
 
 import "./globals.css";
 import QueryProvider from "./providers";
@@ -141,6 +142,7 @@ export default async function RootLayout({
 
           <QueryProvider>
             <ToastContainer />
+            <WhatsAppHelpPopup />
             {!isAgeVerified && <AgeVerificationModal />}
 
             <div className="relative min-h-screen flex flex-col">
