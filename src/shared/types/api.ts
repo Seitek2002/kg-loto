@@ -14,6 +14,8 @@ export interface MenuData {
   "header.uppermenu": MenuItem[];
   "footer.company": MenuItem[];
   "footer.purchases": MenuItem[];
+  // Соцсети — у каждого пункта заполнено file (иконка), в отличие от остальных меню
+  "footer.socials"?: MenuItem[];
 }
 
 export interface MenuApiResponse {

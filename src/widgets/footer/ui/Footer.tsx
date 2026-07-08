@@ -77,6 +77,10 @@ export const Footer = async ({ menuData }: FooterProps) => {
       }));
   };
 
+  const socialLinks = (menuData?.["footer.socials"] || [])
+    .filter((item) => item.isActive && item.file)
+    .sort((a, b) => a.order - b.order);
+
   const footerSections = [
     {
       title: "Лотереи", // t('lotteries')
@@ -117,6 +121,30 @@ export const Footer = async ({ menuData }: FooterProps) => {
                 />
               </Link>
             </div>
+
+            {socialLinks.length > 0 && (
+              <div className="flex items-center gap-3 mb-4">
+                {socialLinks.map((item) => (
+                  <a
+                    key={item.id}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.title}
+                    className="relative w-9 h-9 shrink-0 opacity-90 hover:opacity-100 active:scale-95 transition-all"
+                  >
+                    <Image
+                      src={item.file!}
+                      alt={item.title}
+                      fill
+                      unoptimized
+                      className="object-contain"
+                    />
+                  </a>
+                ))}
+              </div>
+            )}
+
             <p className="text-xs font-medium text-[#6E6E6E]">
               © {new Date().getFullYear()} KGLOTO. Все права защищены.{" "}
               {/* t('copyright') */}
