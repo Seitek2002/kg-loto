@@ -67,12 +67,11 @@ export const useAuthStore = create<AuthState>()(
 
       setUser: (user) => set({ user, isAuth: true }),
 
+      // Обновляем только существующего пользователя — иначе запрос (например,
+      // фоновый опрос баланса), который завершается уже после logout(),
+      // воскрешает user из null и интерфейс снова выглядит залогиненным
       updateUser: (updates) =>
-        set((state) => ({
-          user: state.user
-            ? { ...state.user, ...updates }
-            : ({ ...updates } as User),
-        })),
+        set((state) => (state.user ? { user: { ...state.user, ...updates } } : {})),
 
       logout: () => {
         Cookies.remove("accessToken");

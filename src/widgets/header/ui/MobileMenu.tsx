@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingCart, Wallet } from "lucide-react";
@@ -31,6 +32,7 @@ export const MobileMenu = ({
   menuItems,
 }: MobileMenuProps) => {
   const t = useTranslations("header");
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
 
@@ -94,6 +96,8 @@ export const MobileMenu = ({
                     onClick={() => {
                       logout();
                       onClose();
+                      // Уходим со страниц, требующих авторизации (профиль, кошелек и т.д.)
+                      router.push("/");
                     }}
                     className="flex-1 bg-[#4A4A4A] text-white py-4 rounded-full font-black text-[10px] uppercase tracking-wider active:scale-95 transition-transform"
                   >
