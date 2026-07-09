@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { CheckLottery } from "@/widgets/check-lottery";
 import { DrawLotteryList } from "@/widgets/draw-lottery-list/ui/DrawLotteryList";
 import { FAQ } from "@/widgets/faq";
+import { HeroCountdownBlock } from "@/widgets/hero-countdown";
 import { HeroSlider } from "@/widgets/hero-slider";
 import { Kindness } from "@/widgets/kindness";
 import { OurApp } from "@/widgets/our-app";
@@ -26,6 +27,7 @@ export default function HomePage() {
     <>
       {/* Hero идет без Suspense, так как это LCP (первый экран), он должен быть в SSR */}
       <HeroSlider />
+      <HeroCountdownBlock />
       <div className="max-w-380 mx-auto px-4 py-4">
         <Title>тиражные лотереи</Title>
         <Description>
