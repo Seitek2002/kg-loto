@@ -77,6 +77,7 @@ export interface LttPurchasePayload {
   orderId: string; // уникальный ключ идемпотентности, генерируется на фронте
   tickets: string[]; // short_id билетов из LttTicket
   note?: string;
+  referralCode?: string; // реферальный код агента из localStorage
 }
 
 export interface LttPurchaseTicketResult {

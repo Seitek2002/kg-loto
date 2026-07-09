@@ -88,10 +88,12 @@ export const CartDrawer = () => {
     }
 
     // 2. Денег хватает -> Путь B: покупка реального LTT-билета за баланс
+    const referralCode = localStorage.getItem("referral_code") ?? "";
     const payload = {
       orderId: `ORD-${Date.now()}`,
       tickets: items.map((t) => t.id), // short_id билетов
       note: "",
+      referralCode,
     };
 
     // 3. Отправляем запрос на покупку
