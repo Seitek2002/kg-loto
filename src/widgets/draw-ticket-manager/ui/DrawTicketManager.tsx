@@ -83,6 +83,7 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
   const [activeTab, setActiveTab] = useState("tickets");
 
   const { data, isLoading: isDrawLoading } = useCurrentDraw(lotteryId);
+
   const currentDraw = data?.draw;
   const rules = data?.rules || [];
   // 🔥 Вытаскиваем наши мета-картинки из ответа
@@ -132,7 +133,7 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
           />
           <div className="relative z-10 flex flex-col items-left self-start pt-6 sm:pt-10 lg:pt-16 pl-4 sm:pl-8 lg:pl-16">
             {/* 🔥 ДИНАМИЧЕСКИЙ ЛОГОТИП (с размерами из webview) */}
-            <div className="relative w-25 h-18.75 sm:h-25 mb-2 sm:mb-4">
+            {/* <div className="relative w-25 h-18.75 sm:h-25 mb-2 sm:mb-4">
               <Image
                 src={displayLogo}
                 alt="Lottery Logo"
@@ -141,9 +142,9 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                 unoptimized
                 priority
               />
-            </div>
+            </div> */}
 
-            <div className="text-white text-[13px] sm:text-sm lg:text-xl font-bold mb-1 drop-shadow-md">
+            {/* <div className="text-white text-[13px] sm:text-sm lg:text-xl font-bold mb-1 drop-shadow-md">
               Суперприз от
             </div>
             <div className="text-[#E2FF5A] text-[32px] sm:text-4xl lg:text-[64px] leading-none font-black font-benzin">
@@ -152,7 +153,7 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
               ) : (
                 currentDraw?.jackpotAmountDisplay || "0 с"
               )}
-            </div>
+            </div> */}
           </div>
           <div className="relative z-10 mx-3 mb-3 p-1.5 bg-white/20 backdrop-blur-md rounded-[14px] border border-white/30 flex items-center justify-between gap-1">
             {[
