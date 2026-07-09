@@ -39,10 +39,14 @@ export interface DrawDto {
   drawDateHuman: string;
   drawTime: string;
   drawTimeDisplay: string;
+  drawDatetimeDisplay?: string;
   // jackpotAmount у LTT-тиражей больше нет — оставлено опциональным
   jackpotAmount?: number;
   jackpotAmountDisplay?: string;
   location: string;
+  tvBroadcast?: string;
+  onlineBroadcastUrl?: string;
+  onlineBroadcastLabel?: string;
   // status — произвольная строка из LTT
   status: string;
   salesStartAt: string;

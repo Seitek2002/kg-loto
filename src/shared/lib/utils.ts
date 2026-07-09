@@ -27,22 +27,3 @@ export const getRelativeUrl = (url: string) => {
     return url.startsWith("/") ? url : `/${url}`;
   }
 };
-
-// Временный костыль: пока бэк не завёл отдельные поля под тиражные лотереи,
-// контент (телетрансляция, дата и т.д.) кладут в PageText как JS-объект-литерал
-// (незакавыченные ключи, одинарные кавычки, висячая запятая) — не строгий JSON.
-// Приводим к JSON и парсим, без eval/Function.
-export const parseLooseObject = (
-  raw: string,
-): Record<string, string> | null => {
-  try {
-    const json = raw
-      .replace(/'/g, '"')
-      .replace(/([{,]\s*)([A-Za-z0-9_]+)(\s*:)/g, '$1"$2"$3')
-      .replace(/,(\s*[}\]])/g, "$1");
-    const parsed = JSON.parse(json);
-    return parsed && typeof parsed === "object" ? parsed : null;
-  } catch {
-    return null;
-  }
-};
