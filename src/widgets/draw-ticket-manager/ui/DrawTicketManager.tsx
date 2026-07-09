@@ -198,14 +198,14 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                   {currentDraw?.drawDateHuman || "-"}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
+              {/* <div className="flex justify-between items-center">
                 <span className="text-[#737373] font-medium">
                   Суперприз от:
                 </span>
                 <span className="text-[#4B4B4B] font-bold">
                   {currentDraw?.jackpotAmountDisplay || "-"}
                 </span>
-              </div>
+              </div> */}
               <div className="flex justify-between items-center">
                 <span className="text-[#737373] font-medium">Место:</span>
                 <span className="text-[#4B4B4B] font-bold">
