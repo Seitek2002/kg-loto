@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 
@@ -11,6 +11,7 @@ import { PopularTicketsWidget } from "@/widgets/popular-tickets/ui/PopularTicket
 import { WinnersSlider } from "@/widgets/winners-slider";
 
 import { useCartStore } from "@/entities/cart/model/cartStore";
+import { usePageTexts } from "@/entities/page-text/api/pageTextApi";
 import {
   TicketDto,
   getTicketNumbers,
@@ -19,8 +20,17 @@ import {
 import { useCurrentDraw, useTickets } from "@/entities/ticket/api/ticketApi";
 import { DrawTicketCard } from "@/entities/ticket/ui/DrawTicketCard";
 
-import { cn } from "@/shared/lib/utils";
+import { cn, parseLooseObject } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/Skeleton";
+
+// Поля временного объекта из PageText (см. parseLooseObject) — держим на
+// уровне модуля, чтобы не плодить any в компоненте
+interface DrawBroadcastInfo {
+  channelName?: string;
+  onlineTranslationText?: string;
+  onlineTranslationLink?: string;
+  date?: string;
+}
 
 const DrawTimer = ({
   drawDate,
@@ -88,6 +98,17 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
   const rules = data?.rules || [];
   // 🔥 Вытаскиваем наши мета-картинки из ответа
   const metaAssets = data?.metaAssets;
+
+  // Временно (пока бек не завёл отдельные поля под тиражные лотереи):
+  // телетрансляция/дата/онлайн-трансляция лежат в PageText под ключом вида
+  // "t_5_36" — по одному объекту-строке на lotteryId
+  const { data: pageTexts } = usePageTexts();
+  const broadcastInfo = useMemo<DrawBroadcastInfo | null>(() => {
+    const raw = pageTexts?.find(
+      (p) => p.key === lotteryId?.toLowerCase(),
+    )?.text;
+    return raw ? parseLooseObject(raw) : null;
+  }, [pageTexts, lotteryId]);
 
   const { toggleItem, items } = useCartStore();
   const basketIds = items.map((item) => item.id);
@@ -193,23 +214,38 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
             </h2>
             <div className="flex flex-col gap-4 text-[13px] lg:text-[16px]">
               <div className="flex justify-between items-center">
-                <span className="text-[#737373] font-medium">Дата тиража:</span>
+                <span className="text-[#737373] font-medium">Дата розыгрыша:</span>
                 <span className="text-[#4B4B4B] font-bold">
-                  {currentDraw?.drawDateHuman || "-"}
+                  {broadcastInfo?.date ||
+                    [currentDraw?.drawTime, currentDraw?.drawDateHuman]
+                      .filter(Boolean)
+                      .join(" ") ||
+                    "-"}
                 </span>
               </div>
-              {/* <div className="flex justify-between items-center">
-                <span className="text-[#737373] font-medium">
-                  Суперприз от:
-                </span>
-                <span className="text-[#4B4B4B] font-bold">
-                  {currentDraw?.jackpotAmountDisplay || "-"}
-                </span>
-              </div> */}
               <div className="flex justify-between items-center">
-                <span className="text-[#737373] font-medium">Место:</span>
+                <span className="text-[#737373] font-medium">
+                  Телетрансляция:
+                </span>
                 <span className="text-[#4B4B4B] font-bold">
-                  {currentDraw?.location || "Бишкек"}
+                  {broadcastInfo?.channelName || "-"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#737373] font-medium">Онлайн трансляция:</span>
+                <span className="text-[#4B4B4B] font-bold">
+                  {broadcastInfo?.onlineTranslationLink ? (
+                    <a
+                      href={broadcastInfo.onlineTranslationLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-[#FF7600] transition-colors"
+                    >
+                      {broadcastInfo.onlineTranslationText}
+                    </a>
+                  ) : (
+                    broadcastInfo?.onlineTranslationText || "-"
+                  )}
                 </span>
               </div>
             </div>

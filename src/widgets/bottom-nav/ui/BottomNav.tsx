@@ -72,7 +72,7 @@ export function BottomNav() {
       <nav
         className={clsx(
           "flex-1 pointer-events-auto border border-gray-100 rounded-full shadow-2xl shadow-gray-200/50 p-1 flex justify-between items-center",
-          isIOS ? "backdrop-blur-sm bg-white/50" : "glass bg-white/70",
+          isIOS ? "backdrop-blur-sm bg-white/50" : "glass bg-white/40",
         )}
       >
         {navItems.map((item) => {
