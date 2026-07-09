@@ -1,12 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import api from "@/shared/api/apiClient";
 
 import { PaginatedWinnerList, WinnerLotteryOption } from "../model/types";
 
-// Максимум страниц, которые пройдём вслед за курсором next — просто защита
-// от зацикливания при некорректном ответе бэка, реальных данных сильно меньше
-const MAX_PAGES = 50;
+// Бэк отдаёт /winners/ постранично, размер страницы задаётся camelCase
+// параметром pageSize (подтверждено бек-разработчиком)
+const PAGE_SIZE = 10;
 
 // Лотереи, по которым есть отмеченные победители — источник фильтра на
 // экране /winners. Не пагинируется, авторизация не нужна.
@@ -24,35 +24,25 @@ export const useWinnerLotteries = () => {
 };
 
 export const useWinners = (lotteryIds: (number | string)[] = []) => {
-  return useQuery({
-    queryKey: ["winners-all", lotteryIds],
-    queryFn: async () => {
-      // 🔥 /winners/ отдаёт результаты постранично (по 10 на страницу),
-      // поэтому проходим по всем страницам через `next`. Фильтр по лотерее
-      // передаём только в первом запросе — `next` уже несёт его в query-строке.
-      const results: PaginatedWinnerList["results"] = [];
-      let nextUrl: string | null = "/winners/";
-      let isFirstRequest = true;
+  return useInfiniteQuery<PaginatedWinnerList>({
+    queryKey: ["winners", lotteryIds],
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.next ? allPages.length + 1 : undefined,
+    queryFn: async ({ pageParam }) => {
+      const params: Record<string, unknown> = {
+        pageSize: PAGE_SIZE,
+        page: pageParam,
+      };
+      if (lotteryIds.length === 1) params.lotteryId = lotteryIds[0];
+      else if (lotteryIds.length > 1)
+        params.lotteryIds = lotteryIds.join(",");
 
-      for (let page = 0; page < MAX_PAGES; page++) {
-        if (!nextUrl) break;
-
-        const params =
-          isFirstRequest && lotteryIds.length > 0
-            ? lotteryIds.length === 1
-              ? { lotteryId: lotteryIds[0] }
-              : { lotteryIds: lotteryIds.join(",") }
-            : undefined;
-        isFirstRequest = false;
-
-        const response: { data: PaginatedWinnerList } = (
-          await api.get<{ data: PaginatedWinnerList }>(nextUrl, { params })
-        ).data;
-        results.push(...response.data.results);
-        nextUrl = response.data.next;
-      }
-
-      return results;
+      const { data } = await api.get<{ data: PaginatedWinnerList }>(
+        "/winners/",
+        { params },
+      );
+      return data.data;
     },
   });
 };

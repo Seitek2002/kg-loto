@@ -19,22 +19,28 @@ import { Button } from "@/shared/ui/Button";
 import { Description } from "@/shared/ui/Description";
 import { Title } from "@/shared/ui/Title";
 
-const ITEMS_PER_PAGE = 12;
-
 export const WinnersList = () => {
   const mounted = useMounted();
 
   const [selectedFilters, setSelectedFilters] = useState<number[]>([]);
-  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
   // Реальный список лотерей, по которым есть отмеченные победители —
   // источник фильтра, а не то, что случайно встретилось в данных победителей
   const { data: lotteryOptions } = useWinnerLotteries();
-  const { data: rawData, isLoading } = useWinners(selectedFilters);
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useWinners(selectedFilters);
 
-  const allWinners = useMemo<Winner[]>(() => {
-    return (rawData as Winner[]) || [];
-  }, [rawData]);
+  // Победители грузятся с бэка постранично (по 10), здесь просто
+  // разворачиваем уже загруженные страницы в плоский список
+  const visibleWinners = useMemo<Winner[]>(
+    () => data?.pages.flatMap((page) => page.results) || [],
+    [data],
+  );
 
   const dynamicFilters = useMemo(
     () =>
@@ -45,12 +51,6 @@ export const WinnersList = () => {
     [lotteryOptions],
   );
 
-  // Фильтрация теперь на бэке (?lotteryId=/&lotteryIds=), поэтому allWinners
-  // уже соответствует выбранным фильтрам
-  const filteredWinners = allWinners;
-
-  const visibleWinners = filteredWinners.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredWinners.length;
   const isAllSelected = selectedFilters.length === 0;
 
   const toggleFilter = (value: number) => {
@@ -59,16 +59,10 @@ export const WinnersList = () => {
         ? prev.filter((item) => item !== value)
         : [...prev, value],
     );
-    setVisibleCount(ITEMS_PER_PAGE);
   };
 
   const clearFilters = () => {
     setSelectedFilters([]);
-    setVisibleCount(ITEMS_PER_PAGE);
-  };
-
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + ITEMS_PER_PAGE);
   };
 
   if (!mounted) return null;
@@ -150,14 +144,15 @@ export const WinnersList = () => {
         </div>
 
         {/* КНОПКА ЗАГРУЗИТЬ ЕЩЕ */}
-        {hasMore && (
+        {hasNextPage && (
           <div className="mt-12 flex justify-center">
             <Button
               variant="outline"
-              onClick={handleLoadMore}
-              className="bg-white text-[#4B4B4B] uppercase text-xs py-4 px-12 rounded-full border-transparent shadow-md"
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="bg-white text-[#4B4B4B] uppercase text-xs py-4 px-12 rounded-full border-transparent shadow-md disabled:opacity-60"
             >
-              Загрузить еще
+              {isFetchingNextPage ? "Загрузка..." : "Загрузить еще"}
             </Button>
           </div>
         )}

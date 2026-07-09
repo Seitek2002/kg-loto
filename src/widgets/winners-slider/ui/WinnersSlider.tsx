@@ -22,10 +22,10 @@ export const WinnersSlider = ({
   description,
   lotteryId,
 }: WinnersSliderProps) => {
-  const { data: winners, isLoading } = useWinners(); // Используем клиентский хук для простоты
+  const { data, isLoading } = useWinners(); // Используем клиентский хук для простоты
   // const t = useTranslations('winners_history');
 
-  const displayWinners = winners?.slice(0, 6) || [];
+  const displayWinners = data?.pages[0]?.results.slice(0, 6) || [];
 
   if (isLoading)
     return <div className="h-64 animate-pulse bg-gray-100 rounded-[40px]" />;
