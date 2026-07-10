@@ -17,6 +17,8 @@ interface TopUpModalProps {
   title?: ReactNode;
   description?: ReactNode;
   initialAmount?: number | string;
+  // Куда вернуть пользователя после оплаты (по умолчанию /wallet)
+  redirectPath?: string;
 }
 
 export const TopUpModal = ({
@@ -25,6 +27,7 @@ export const TopUpModal = ({
   title,
   description,
   initialAmount,
+  redirectPath,
 }: TopUpModalProps) => {
   const mounted = useMounted();
   const [amount, setAmount] = useState("");
@@ -57,17 +60,20 @@ export const TopUpModal = ({
     const numAmount = Number(amount);
     if (!amount || isNaN(numAmount) || numAmount <= 0) return;
 
-    createPaylink(amount, {
-      onSuccess: (data) => {
-        if (data.paylinkUrl) {
-          window.location.href = data.paylinkUrl;
-        }
+    createPaylink(
+      { amount, redirectPath },
+      {
+        onSuccess: (data) => {
+          if (data.paylinkUrl) {
+            window.location.href = data.paylinkUrl;
+          }
+        },
+        onError: (error) => {
+          console.error("Ошибка пополнения:", error);
+          setIsErrorOpen(true);
+        },
       },
-      onError: (error) => {
-        console.error("Ошибка пополнения:", error);
-        setIsErrorOpen(true);
-      },
-    });
+    );
   };
 
   const isFormValid = amount.trim() !== "" && Number(amount) > 0;

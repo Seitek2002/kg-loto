@@ -248,6 +248,7 @@ export const CartDrawer = () => {
         isOpen={isTopUpOpen}
         onClose={() => setIsTopUpOpen(false)}
         initialAmount={missingAmount}
+        redirectPath="/cart"
         title="Выберите кошелек пополнения"
         description={
           <span className="text-[#EB5757] text-[13px] lg:text-[15px] block leading-relaxed">

@@ -40,9 +40,11 @@ export const financeApi = {
     return data.data;
   },
 
-  createPaylink: async (amount: string) => {
-    // 🔥 Формируем динамический URL для возврата пользователя обратно в кошелек
-    const redirectUrl = `${window.location.origin}/wallet`;
+  createPaylink: async (amount: string, redirectPath = "/wallet") => {
+    // 🔥 Формируем динамический URL для возврата пользователя после оплаты —
+    // /wallet по умолчанию, но корзина передаёт /cart, чтобы вернуть человека
+    // туда, где он остановился на пополнении
+    const redirectUrl = `${window.location.origin}${redirectPath}`;
 
     // Подтверждено бэком (июль 2026): эндпоинт снова включён на старом пути
     // POST /balance/paylink/ (не /me/balance/paylink/), ответ обёрнут в data
@@ -86,7 +88,15 @@ export const useBalance = () => {
 };
 
 export const useTopUp = () =>
-  useMutation({ mutationFn: financeApi.createPaylink });
+  useMutation({
+    mutationFn: ({
+      amount,
+      redirectPath,
+    }: {
+      amount: string;
+      redirectPath?: string;
+    }) => financeApi.createPaylink(amount, redirectPath),
+  });
 
 export const useTransactions = () =>
   useQuery({ queryKey: ["transactions"], queryFn: financeApi.getTransactions });

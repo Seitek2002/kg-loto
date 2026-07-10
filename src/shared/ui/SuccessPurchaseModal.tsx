@@ -139,7 +139,7 @@ export const SuccessPurchaseModal = ({
             </Button>
           )}
 
-          <Link href="/tickets" className="flex-1 contents">
+          <Link href="/profile" className="flex-1 contents">
             <Button
               variant="ghost"
               onClick={onClose}
