@@ -133,6 +133,9 @@ export const CartDrawer = () => {
         );
         // Купленные билеты не должны продолжать висеть в сетке как доступные
         queryClient.invalidateQueries({ queryKey: ["tickets"] });
+        // Сразу после успешного ltt-purchase переводим в "Мои билеты" —
+        // не дожидаясь, пока пользователь закроет модалку успеха
+        router.push("/profile");
       },
       onError: (error) => {
         console.error("Ошибка при покупке:", error);
