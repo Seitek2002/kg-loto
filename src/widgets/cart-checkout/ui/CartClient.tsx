@@ -25,6 +25,7 @@ import {
 } from "@/entities/ticket/api";
 import { useAuthStore } from "@/entities/user/model/authStore";
 
+import { trackPurchase } from "@/shared/lib/analytics";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/Button";
 import { ErrorModal } from "@/shared/ui/ErrorModal";
@@ -230,6 +231,15 @@ export const CartClient = () => {
         showToast(
           `Куплено ${ticketCount} ${getTicketPlural(ticketCount)}! Списано ${res?.amount ?? totalPrice} с`,
         );
+        trackPurchase({
+          transactionId: res?.orderId || payload.orderId,
+          value: res?.amount ? Number(res.amount) : totalPrice,
+          items: items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+          })),
+        });
         // Купленные билеты не должны продолжать висеть в сетке как доступные
         queryClient.invalidateQueries({ queryKey: ["tickets"] });
         // Сразу после успешного ltt-purchase переводим в "Мои билеты" —
