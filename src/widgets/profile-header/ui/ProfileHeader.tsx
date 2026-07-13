@@ -5,21 +5,17 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { clsx } from "clsx";
-import {
-  ChevronDown,
-  Headphones,
-  Settings,
-  Ticket,
-  Trophy,
-} from "lucide-react";
+import { Headphones, Settings, Ticket, Trophy } from "lucide-react";
 
 import { ProfileQuickEditMenu } from "@/features/profile-quick-edit/ui/ProfileQuickEditMenu";
 
 import { useAuthStore } from "@/entities/user/model/authStore";
 import { User } from "@/entities/user/model/types";
+
+import { ProfileTabsMobileDropdown } from "./ProfileTabsMobileDropdown";
 
 interface ProfileHeaderProps {
   initialUser: User | null;
@@ -32,7 +28,6 @@ const getInitials = (firstName?: string, lastName?: string) => {
 
 export const ProfileHeader = ({ initialUser }: ProfileHeaderProps) => {
   const pathname = usePathname();
-  const router = useRouter();
   const t = useTranslations("profile_header");
 
   const { user: storeUser, setUser } = useAuthStore();
@@ -109,23 +104,9 @@ export const ProfileHeader = ({ initialUser }: ProfileHeaderProps) => {
         </p>
       </div>
 
-      {/* Моб. версия: вместо скролла табов — дропдаун */}
-      <div className="w-full sm:hidden relative">
-        <select
-          value={pathname}
-          onChange={(e) => router.push(e.target.value)}
-          className="w-full appearance-none bg-[#4B4B4B] text-white rounded-full pl-6 pr-12 py-3 font-benzin uppercase text-[13px] outline-none cursor-pointer"
-        >
-          {TABS.map((tab) => (
-            <option key={tab.href} value={tab.href}>
-              {tab.name}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          className="absolute right-6 top-1/2 -translate-y-1/2 text-white pointer-events-none"
-          size={18}
-        />
+      {/* Моб. версия: вместо скролла табов — свой дропдаун */}
+      <div className="w-full sm:hidden">
+        <ProfileTabsMobileDropdown tabs={TABS} activeHref={pathname} />
       </div>
 
       {/* Десктоп: прежние таб-сегменты */}
