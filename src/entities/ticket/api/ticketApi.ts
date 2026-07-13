@@ -2,7 +2,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import api from "@/shared/api/apiClient";
 
-import { DrawDto, LotteryRuleDto, RawDrawDto, TicketsResponseData } from "../api";
+import {
+  DrawDto,
+  LotteryRuleDto,
+  RawDrawDto,
+  TicketsResponseData,
+} from "../api";
 
 interface CheckTicketResponse {
   isWinning: boolean;
@@ -16,8 +21,14 @@ interface CheckTicketResponse {
 export const useCheckTicket = () => {
   return useMutation({
     mutationFn: async (code: string) => {
-      const { data } = await api.post("/me/combination/check/", { code });
-      return data.data as CheckTicketResponse;
+      // Эндпоинт принимает только application/x-www-form-urlencoded (не JSON) —
+      // иначе бэк отвечает 415 Unsupported Media Type
+      const { data } = await api.post<{ data: CheckTicketResponse }>(
+        "/me/combination/check/",
+        `code=${encodeURIComponent(code)}`,
+        { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
+      );
+      return data.data;
     },
   });
 };
