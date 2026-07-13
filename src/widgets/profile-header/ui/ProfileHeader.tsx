@@ -16,6 +16,8 @@ import {
   Trophy,
 } from "lucide-react";
 
+import { ProfileQuickEditMenu } from "@/features/profile-quick-edit/ui/ProfileQuickEditMenu";
+
 import { useAuthStore } from "@/entities/user/model/authStore";
 import { User } from "@/entities/user/model/types";
 
@@ -70,14 +72,18 @@ export const ProfileHeader = ({ initialUser }: ProfileHeaderProps) => {
 
   return (
     <div className="flex flex-col items-center max-w-261.25 mb-4 mx-auto">
-      <div className="w-full flex justify-start mb-6 text-base text-[#4B4B4B]">
-        <Link href="/" className="hover:opacity-80">
-          {t("breadcrumbs.home")}
-        </Link>
-        <span className="mx-2 md:mx-6">/</span>
-        <span className="text-[#4B4B4B] font-semibold">
-          {t("breadcrumbs.profile")}
-        </span>
+      <div className="w-full flex justify-between items-center mb-6 text-base text-[#4B4B4B]">
+        <div className="flex items-center">
+          <Link href="/" className="hover:opacity-80">
+            {t("breadcrumbs.home")}
+          </Link>
+          <span className="mx-2 md:mx-6">/</span>
+          <span className="text-[#4B4B4B] font-semibold">
+            {t("breadcrumbs.profile")}
+          </span>
+        </div>
+
+        <ProfileQuickEditMenu />
       </div>
 
       <div className="flex flex-col items-center mb-10">
