@@ -41,12 +41,16 @@ export const ProfileTicketList = () => {
   const [checkErrorMessage, setCheckErrorMessage] = useState<string | null>(
     null,
   );
+  // Бэк отвечает 409 { code: "draw_not_completed" }, если тираж ещё не прошёл —
+  // по факту (а не по документации бэка, где обещали 200 с is_winning: false)
+  const [isDrawPending, setIsDrawPending] = useState(false);
   const { mutate: checkTicket, isPending: isChecking } = useCheckTicketResult();
 
   const handleCheck = (ticketId: string) => {
     setIsCheckModalOpen(true);
     setCheckResult(null);
     setCheckErrorMessage(null);
+    setIsDrawPending(false);
 
     checkTicket(ticketId, {
       onSuccess: (res) => {
@@ -56,11 +60,18 @@ export const ProfileTicketList = () => {
         refetch();
       },
       onError: (err) => {
-        const detail = (err as { response?: { data?: { detail?: unknown } } })
-          ?.response?.data?.detail;
+        const data = (
+          err as { response?: { data?: { detail?: unknown; code?: unknown } } }
+        )?.response?.data;
+
+        if (data?.code === "draw_not_completed") {
+          setIsDrawPending(true);
+          return;
+        }
+
         setCheckErrorMessage(
-          typeof detail === "string"
-            ? detail
+          typeof data?.detail === "string"
+            ? data.detail
             : "Не удалось проверить билет. Попробуйте ещё раз.",
         );
       },
@@ -200,6 +211,7 @@ export const ProfileTicketList = () => {
         isLoading={isChecking}
         result={checkResult}
         errorMessage={checkErrorMessage}
+        isDrawPending={isDrawPending}
       />
     </div>
   );

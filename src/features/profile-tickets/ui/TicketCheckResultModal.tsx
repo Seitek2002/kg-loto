@@ -1,6 +1,6 @@
 "use client";
 
-import { Frown, Loader2, Trophy } from "lucide-react";
+import { Clock, Frown, Loader2, Trophy } from "lucide-react";
 
 import { TicketCheckResultResponse } from "@/entities/ticket/api";
 
@@ -14,6 +14,9 @@ interface TicketCheckResultModalProps {
   isLoading: boolean;
   result: TicketCheckResultResponse | null;
   errorMessage: string | null;
+  // Бэк отвечает 409 draw_not_completed, если тираж ещё не прошёл — это не
+  // ошибка по сути, поэтому показываем отдельный нейтральный экран, а не "Не удалось"
+  isDrawPending: boolean;
 }
 
 export const TicketCheckResultModal = ({
@@ -22,6 +25,7 @@ export const TicketCheckResultModal = ({
   isLoading,
   result,
   errorMessage,
+  isDrawPending,
 }: TicketCheckResultModalProps) => {
   const isDrawFinalized = result?.draw.resultState === "finalized";
 
@@ -32,6 +36,18 @@ export const TicketCheckResultModal = ({
           <Loader2 className="w-12 h-12 text-[#FFD600] animate-spin mb-4" />
           <p className="text-[#4B4B4B] font-bold font-rubik">
             Проверяем билет...
+          </p>
+        </div>
+      ) : isDrawPending ? (
+        <div className="flex flex-col items-center text-center pt-4">
+          <div className="w-20 h-20 bg-[#FFF0D4] rounded-full flex items-center justify-center mb-4 shadow-sm">
+            <Clock className="w-10 h-10 text-[#F58220]" />
+          </div>
+          <h2 className="text-2xl font-black text-[#4B4B4B] uppercase font-benzin mb-2">
+            Тираж ещё не завершён
+          </h2>
+          <p className="text-[#737373] font-medium">
+            Результаты появятся после розыгрыша — попробуйте проверить позже
           </p>
         </div>
       ) : errorMessage ? (
