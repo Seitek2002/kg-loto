@@ -6,6 +6,8 @@ import { Loader2 } from "lucide-react";
 
 import {
   MyTicketDto,
+  TicketCheckResultResponse,
+  useCheckTicketResult,
   useDownloadTicketPdf,
   useMyTickets,
 } from "@/entities/ticket/api";
@@ -15,11 +17,13 @@ import { MyTicketCard } from "@/entities/ticket/ui/MyTicketCard";
 import { ErrorModal } from "@/shared/ui/ErrorModal";
 import { ProfileSubTabs } from "@/shared/ui/ProfileSubTabs";
 
+import { TicketCheckResultModal } from "./TicketCheckResultModal";
+
 const SUB_TABS = ["Все билеты", "Выигрышные", "Не проверены"];
 
 export const ProfileTicketList = () => {
   const [activeSubTab, setActiveSubTab] = useState("Все билеты");
-  const { data: tickets, isLoading } = useMyTickets();
+  const { data: tickets, isLoading, refetch } = useMyTickets();
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const {
     mutate: downloadPdf,
@@ -29,6 +33,38 @@ export const ProfileTicketList = () => {
 
   const handleDownload = (ticketId: string) => {
     downloadPdf(ticketId, { onError: () => setIsErrorOpen(true) });
+  };
+
+  const [isCheckModalOpen, setIsCheckModalOpen] = useState(false);
+  const [checkResult, setCheckResult] =
+    useState<TicketCheckResultResponse | null>(null);
+  const [checkErrorMessage, setCheckErrorMessage] = useState<string | null>(
+    null,
+  );
+  const { mutate: checkTicket, isPending: isChecking } = useCheckTicketResult();
+
+  const handleCheck = (ticketId: string) => {
+    setIsCheckModalOpen(true);
+    setCheckResult(null);
+    setCheckErrorMessage(null);
+
+    checkTicket(ticketId, {
+      onSuccess: (res) => {
+        setCheckResult(res);
+        // Билет мог сменить статус (проигрышный -> помечен как проверенный) —
+        // обновляем список, чтобы бейджи/кнопки в карточках были актуальны
+        refetch();
+      },
+      onError: (err) => {
+        const detail = (err as { response?: { data?: { detail?: unknown } } })
+          ?.response?.data?.detail;
+        setCheckErrorMessage(
+          typeof detail === "string"
+            ? detail
+            : "Не удалось проверить билет. Попробуйте ещё раз.",
+        );
+      },
+    });
   };
 
   // 1. Трансформируем DTO с бэкенда в удобный формат для UI
@@ -45,7 +81,10 @@ export const ProfileTicketList = () => {
       if (t.status === "losing") mappedStatus = "losing";
 
       // drawId теперь число (ltt_id); поддерживаем и старые строковые id
-      const drawNumberStr = String(t.drawId ?? "").split("-").pop() || "";
+      const drawNumberStr =
+        String(t.drawId ?? "")
+          .split("-")
+          .pop() || "";
 
       // 🔥 Логика: Наступила ли дата розыгрыша?
       // Если даты нет (например, моментальная лотерея), считаем, что проверять можно сразу (true)
@@ -129,7 +168,7 @@ export const ProfileTicketList = () => {
                 drawNumber={ticket.drawNumber}
                 combination={ticket.combination}
                 drawDateDisplay={ticket.drawDateDisplay}
-                onAction={() => console.log("Клик по билету", ticket.id)}
+                onAction={() => handleCheck(ticket.id)}
                 canDownload={ticket.canDownload}
                 isDownloading={
                   isDownloading && downloadingTicketId === ticket.id
@@ -153,6 +192,14 @@ export const ProfileTicketList = () => {
         onClose={() => setIsErrorOpen(false)}
         title="Не удалось скачать билет"
         message="Билет не найден или ещё не оплачен. Попробуйте позже."
+      />
+
+      <TicketCheckResultModal
+        isOpen={isCheckModalOpen}
+        onClose={() => setIsCheckModalOpen(false)}
+        isLoading={isChecking}
+        result={checkResult}
+        errorMessage={checkErrorMessage}
       />
     </div>
   );

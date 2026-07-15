@@ -30,6 +30,50 @@ export interface MyTicketDto {
   drawName?: string;
 }
 
+// GET /me/balance/tickets/{ticketId}/check-result/ — сырой ответ от LTT
+// (без обёртки {success, data}), просто конвертированный в camelCase
+export interface TicketCheckGrid {
+  position: number;
+  numbers: number[];
+  matchedNumbers: number[];
+  matchedCount: number;
+  isWinning: boolean;
+  levelId: number | null;
+  prizeAmount: string | null;
+  prizeProduct: string | null;
+}
+
+export interface TicketCheckResultResponse {
+  ticket: {
+    id: string;
+    shortId: string;
+    serial: string;
+    ticketNo: number;
+  };
+  draw: {
+    id: number;
+    code: string;
+    status: string;
+    resultState: string;
+    isPublished: boolean;
+    winningNumbers: number[];
+  };
+  result: {
+    status: string;
+    isWinning: boolean;
+    totalPrizeAmount: string;
+    currency: string;
+    winningGridsCount: number;
+    grids: TicketCheckGrid[];
+  };
+  payout: {
+    status: string;
+    prizeClaimed: boolean;
+    prizeClaimedAt: string | null;
+    isUsedAsPayment: boolean;
+  };
+}
+
 export interface DrawDto {
   drawId: number;
   title: string;
@@ -184,9 +228,8 @@ export const isTicketAvailable = (ticket: Pick<TicketDto, "status">) =>
 // { tickets: ["Билет <ticketId> уже продан"] } — показывать пользователю
 // сырой текст с id билета нельзя, поэтому вырезаем понятную часть
 export const getSoldTicketErrorMessage = (error: unknown): string | null => {
-  const tickets = (
-    error as { response?: { data?: { tickets?: unknown } } }
-  )?.response?.data?.tickets;
+  const tickets = (error as { response?: { data?: { tickets?: unknown } } })
+    ?.response?.data?.tickets;
 
   if (
     Array.isArray(tickets) &&
@@ -308,6 +351,17 @@ export const ticketApi = {
     );
     return data;
   },
+
+  // Проверка результата розыгрыша купленного за баланс билета — сервер сам
+  // достаёт данные билета и проверяет владение, QR/pdf417 передавать не нужно
+  checkTicketResult: async (
+    ticketId: string,
+  ): Promise<TicketCheckResultResponse> => {
+    const { data } = await api.get<TicketCheckResultResponse>(
+      `/me/balance/tickets/${ticketId}/check-result/`,
+    );
+    return data;
+  },
 };
 
 // Инициирует скачивание Blob-файла браузером под заданным именем
@@ -372,5 +426,11 @@ export const useDownloadTicketPdf = () => {
       const blob = await ticketApi.downloadTicketPdf(ticketId);
       downloadBlob(blob, `kgloto_ticket_${ticketId}.pdf`);
     },
+  });
+};
+
+export const useCheckTicketResult = () => {
+  return useMutation({
+    mutationFn: ticketApi.checkTicketResult,
   });
 };
