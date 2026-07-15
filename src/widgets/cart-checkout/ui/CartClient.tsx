@@ -73,7 +73,10 @@ const RealQuickAddTicket = ({
       price: ticket.price,
       type: "other",
       ticketNumber: ticket.ticketNumber,
-      combination: ticketNumbers,
+      combinations:
+        ticket.combinations && ticket.combinations.length > 0
+          ? ticket.combinations
+          : [ticketNumbers],
       lotteryId: lotteryId,
       drawId: drawId,
       name: `Тираж №${getDrawLabel(drawId)}`,
@@ -223,7 +226,7 @@ export const CartClient = () => {
             month: "short",
             year: "numeric",
           }),
-          combinations: items[0].combination ?? [],
+          combinations: items[0].combinations ?? [],
           ticketIds: purchasedTickets.map((t) => t.shortId),
         });
         clearCart();
@@ -353,9 +356,21 @@ export const CartClient = () => {
                   <h3 className="text-[14px] md:text-[16px] font-medium text-[#4B4B4B] leading-tight">
                     {item.name}
                   </h3>
-                  <div className="flex flex-wrap gap-1 items-center">
-                    {item.combination?.map((num, i) => (
-                      <NumberedBall key={i} number={num} size={28} />
+                  <div className="flex flex-col gap-1">
+                    {item.combinations?.map((numbers, gridIdx) => (
+                      <div
+                        key={gridIdx}
+                        className="flex flex-wrap gap-1 items-center"
+                      >
+                        {(item.combinations?.length ?? 0) > 1 && (
+                          <span className="text-[10px] font-bold text-[#A3A3A3] uppercase mr-1">
+                            Сетка {gridIdx + 1}:
+                          </span>
+                        )}
+                        {numbers.map((num, i) => (
+                          <NumberedBall key={i} number={num} size={28} />
+                        ))}
+                      </div>
                     ))}
                   </div>
                   <div className="text-[15px] md:text-[18px] font-black text-[#4B4B4B]">

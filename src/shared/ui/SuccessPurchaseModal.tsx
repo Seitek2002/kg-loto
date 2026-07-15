@@ -14,7 +14,8 @@ export interface TicketDetails {
   // Баланс после покупки — из ответа бэка (balance)
   balance: string;
   date: string;
-  combinations: number[];
+  // Обычно один элемент, но у мультибилетов — несколько (по одному на "сетку")
+  combinations: number[][];
   // short_id купленных билетов — для скачивания PDF (tickets[].shortId из ответа)
   ticketIds: string[];
 }
@@ -40,7 +41,7 @@ export const SuccessPurchaseModal = ({
     price: 100,
     balance: "0",
     date: "2 апр, 2026. 16:00",
-    combinations: [1, 20, 32, 16, 8],
+    combinations: [[1, 20, 32, 16, 8]],
     ticketIds: [],
   };
 
@@ -109,20 +110,32 @@ export const SuccessPurchaseModal = ({
             </span>
           </div>
 
-          <div className="flex justify-between items-center pt-1">
+          <div className="flex flex-col gap-2 pt-1">
             <span className="text-[13px] sm:text-[14px] font-medium text-[#737373]">
               Комбинации
             </span>
-            <div className="flex gap-1.5 flex-wrap justify-end">
-              {data.combinations.map((num, idx) => (
-                <div
-                  key={idx}
-                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#1FAF38] text-white flex items-center justify-center text-[11px] sm:text-[12px] font-bold shadow-sm"
-                >
-                  {num}
+            {data.combinations.map((numbers, gridIdx) => (
+              <div
+                key={gridIdx}
+                className="flex justify-between items-center gap-2"
+              >
+                {data.combinations.length > 1 && (
+                  <span className="text-[11px] font-bold text-[#A3A3A3] uppercase shrink-0">
+                    Сетка {gridIdx + 1}
+                  </span>
+                )}
+                <div className="flex gap-1.5 flex-wrap justify-end flex-1">
+                  {numbers.map((num, idx) => (
+                    <div
+                      key={idx}
+                      className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#1FAF38] text-white flex items-center justify-center text-[11px] sm:text-[12px] font-bold shadow-sm"
+                    >
+                      {num}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
 

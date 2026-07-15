@@ -193,7 +193,9 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
             </h2>
             <div className="flex flex-col gap-4 text-[13px] lg:text-[16px]">
               <div className="flex justify-between items-center">
-                <span className="text-[#737373] font-medium">Дата розыгрыша:</span>
+                <span className="text-[#737373] font-medium">
+                  Дата розыгрыша:
+                </span>
                 <span className="text-[#4B4B4B] font-bold">
                   {currentDraw?.drawDatetimeDisplay ||
                     [currentDraw?.drawTime, currentDraw?.drawDateHuman]
@@ -211,7 +213,9 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-[#737373] font-medium">Онлайн трансляция:</span>
+                <span className="text-[#737373] font-medium">
+                  Онлайн трансляция:
+                </span>
                 <span className="text-[#4B4B4B] font-bold">
                   {currentDraw?.onlineBroadcastUrl ? (
                     <a
@@ -295,7 +299,11 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
                           price: ticket.price,
                           type: "other",
                           ticketNumber: ticket.ticketNumber,
-                          combination: numbers,
+                          combinations:
+                            ticket.combinations &&
+                            ticket.combinations.length > 0
+                              ? ticket.combinations
+                              : [numbers],
                           lotteryId,
                           drawId: currentDraw.drawId,
                           name: `Тираж №${currentDraw.drawNumber}`,

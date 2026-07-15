@@ -122,7 +122,7 @@ export const CartDrawer = () => {
             month: "short",
             year: "numeric",
           }),
-          combinations: items[0].combination ?? [],
+          combinations: items[0].combinations ?? [],
           ticketIds: purchasedTickets.map((t) => t.shortId),
         });
 

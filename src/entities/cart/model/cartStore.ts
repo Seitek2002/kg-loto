@@ -6,8 +6,8 @@ export interface CartItem {
   price: number;
   type: "super" | "other";
   ticketNumber: string;
-  // LTT-билеты не содержат пользовательской комбинации — поле опциональное
-  combination?: number[];
+  // Обычно один элемент, но у мультибилетов — несколько (по одному на "сетку")
+  combinations?: number[][];
   lotteryId: string;
   // drawId теперь число (ltt_id); строка допускается для legacy-совместимости
   drawId: number | string;
