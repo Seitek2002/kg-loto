@@ -413,10 +413,11 @@ export const useCurrentDraw = (lotteryId: string) => {
   });
 };
 
-export const useMyTickets = () => {
+export const useMyTickets = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ["myTickets"],
     queryFn: ticketApi.getMyTickets,
+    enabled,
   });
 };
 
