@@ -18,7 +18,8 @@ export interface MyTicketCardProps {
   badge?: { text: string; variant: "success" | "waiting" | "processing" };
   showButton?: boolean;
   drawNumber?: string;
-  combination?: number[];
+  // Обычно один элемент, но у мультибилетов — несколько (по одному на "сетку")
+  combinations?: number[][];
   onAction?: () => void;
   drawDateDisplay?: string;
   // Скачивание PDF доступно только для реальных LTT-билетов, купленных за баланс
@@ -37,7 +38,7 @@ export const MyTicketCard = ({
   badge,
   showButton = true,
   drawNumber,
-  combination,
+  combinations,
   onAction,
   drawDateDisplay,
   canDownload = false,
@@ -134,16 +135,28 @@ export const MyTicketCard = ({
         )}
       </div>
 
-      {/* 🔥 ОТРИСОВКА ВЫБРАННОЙ КОМБИНАЦИИ (через компонент NumberedBall) */}
-      {combination && combination.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-5">
-          {combination.map((num, idx) => (
-            <NumberedBall
-              key={idx}
-              number={num}
-              size={40} // Размер подгоняем под твои 40px (w-10 h-10)
-              className="shadow-sm"
-            />
+      {/* 🔥 ОТРИСОВКА КОМБИНАЦИЙ (через компонент NumberedBall) — у мультибилетов
+          их несколько, по одной на каждую "сетку" физического билета */}
+      {combinations && combinations.length > 0 && (
+        <div className="flex flex-col gap-3 mb-5">
+          {combinations.map((numbers, gridIdx) => (
+            <div key={gridIdx} className="flex flex-col gap-1.5">
+              {combinations.length > 1 && (
+                <span className="text-[11px] font-bold text-[#A3A3A3] uppercase">
+                  Сетка {gridIdx + 1}
+                </span>
+              )}
+              <div className="flex flex-wrap gap-2">
+                {numbers.map((num, idx) => (
+                  <NumberedBall
+                    key={idx}
+                    number={num}
+                    size={40} // Размер подгоняем под твои 40px (w-10 h-10)
+                    className="shadow-sm"
+                  />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}

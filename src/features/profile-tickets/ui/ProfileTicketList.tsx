@@ -122,7 +122,14 @@ export const ProfileTicketList = () => {
             : "Скоро"),
         logo: t.logo,
         status: mappedStatus,
-        combination: t.combination || [],
+        // combinations — реальный контракт LTT (по одной "сетке" на элемент,
+        // у мультибилетов их несколько); combination — устаревшее поле-фоллбек
+        combinations:
+          t.combinations && t.combinations.length > 0
+            ? t.combinations
+            : t.combination
+              ? [t.combination]
+              : [],
         drawNumber: drawNumberStr,
         drawDateDisplay: t.drawDateDisplay,
         showButton, // <-- Передаем вычисленный флаг
@@ -177,7 +184,7 @@ export const ProfileTicketList = () => {
                 status={ticket.status}
                 showButton={ticket.showButton} // 🔥 Прокидываем флаг в карточку
                 drawNumber={ticket.drawNumber}
-                combination={ticket.combination}
+                combinations={ticket.combinations}
                 drawDateDisplay={ticket.drawDateDisplay}
                 onAction={() => handleCheck(ticket.id)}
                 canDownload={ticket.canDownload}
