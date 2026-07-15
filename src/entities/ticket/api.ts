@@ -353,14 +353,16 @@ export const ticketApi = {
   },
 
   // Проверка результата розыгрыша купленного за баланс билета — сервер сам
-  // достаёт данные билета и проверяет владение, QR/pdf417 передавать не нужно
+  // достаёт данные билета и проверяет владение, QR/pdf417 передавать не нужно.
+  // На деле (в отличие от исходной документации) ответ обёрнут в {data, meta},
+  // как и все остальные эндпоинты — отсюда был краш при обращении к result.draw
   checkTicketResult: async (
     ticketId: string,
   ): Promise<TicketCheckResultResponse> => {
-    const { data } = await api.get<TicketCheckResultResponse>(
+    const { data } = await api.get<{ data: TicketCheckResultResponse }>(
       `/me/balance/tickets/${ticketId}/check-result/`,
     );
-    return data;
+    return data.data;
   },
 };
 
