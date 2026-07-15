@@ -36,12 +36,17 @@ export const ProfilePrizeList = () => {
     return tickets
       .filter((t: MyTicketDto) => t.status === "winning")
       .map((t: MyTicketDto) => {
-        const drawNumberStr = String(t.drawId ?? "").split("-").pop() || "";
+        const drawNumberStr =
+          String(t.drawId ?? "")
+            .split("-")
+            .pop() || "";
 
         return {
           id: t.ticketId || t.ticketNumber,
           prize: t.prizeAmount ? String(t.prizeAmount) : "0",
-          name: t.name || `Тираж №${drawNumberStr}`,
+          // drawName — человекочитаемое название тиража; t.name раньше дублировал
+          // технический drawCode (например "TIRAGE_5_36")
+          name: t.drawName || t.name || `Тираж №${drawNumberStr}`,
           price: Number(t.price) || 0,
           date:
             t.purchaseDateDisplay ||

@@ -17,7 +17,8 @@ export interface MyTicketCardProps {
   status?: "winning" | "unchecked" | "losing";
   badge?: { text: string; variant: "success" | "waiting" | "processing" };
   showButton?: boolean;
-  drawNumber?: string;
+  // Номер физического билета (ticketNumber с бэка), а не тиража
+  ticketNumber?: string;
   // Обычно один элемент, но у мультибилетов — несколько (по одному на "сетку")
   combinations?: number[][];
   onAction?: () => void;
@@ -37,7 +38,7 @@ export const MyTicketCard = ({
   status = "winning",
   badge,
   showButton = true,
-  drawNumber,
+  ticketNumber,
   combinations,
   onAction,
   drawDateDisplay,
@@ -112,7 +113,7 @@ export const MyTicketCard = ({
             {ticketName}
           </h3>
           <div className="text-[13px] text-[#737373] flex flex-col gap-1 font-medium">
-            {drawNumber && <span>Тираж №{drawNumber}</span>}
+            {ticketNumber && <span>Билет №{ticketNumber}</span>}
             <span>Стоимость: {price}</span>
             <span>Дата покупки: {date}</span>
             {drawDateDisplay && (

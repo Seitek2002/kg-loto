@@ -113,7 +113,9 @@ export const ProfileTicketList = () => {
       return {
         id: t.ticketId || t.ticketNumber,
         prize: t.prizeAmount ? String(t.prizeAmount) : "0",
-        name: t.name || `Тираж №${drawNumberStr}`,
+        // drawName — человекочитаемое название тиража; t.name раньше дублировал
+        // технический drawCode (например "TIRAGE_5_36")
+        name: t.drawName || t.name || `Тираж №${drawNumberStr}`,
         price: Number(t.price) || 0,
         date:
           t.purchaseDateDisplay ||
@@ -130,7 +132,7 @@ export const ProfileTicketList = () => {
             : t.combination
               ? [t.combination]
               : [],
-        drawNumber: drawNumberStr,
+        ticketNumber: t.ticketNumber,
         drawDateDisplay: t.drawDateDisplay,
         showButton, // <-- Передаем вычисленный флаг
         // PDF доступен только для реальных LTT-билетов (у мок-билетов barcodeValue пустой)
@@ -183,7 +185,7 @@ export const ProfileTicketList = () => {
                 logoSrc={ticket.logo || undefined}
                 status={ticket.status}
                 showButton={ticket.showButton} // 🔥 Прокидываем флаг в карточку
-                drawNumber={ticket.drawNumber}
+                ticketNumber={ticket.ticketNumber}
                 combinations={ticket.combinations}
                 drawDateDisplay={ticket.drawDateDisplay}
                 onAction={() => handleCheck(ticket.id)}
