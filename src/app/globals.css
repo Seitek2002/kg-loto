@@ -111,3 +111,9 @@ body {
   color: #ffd600;
   text-decoration: underline;
 }
+.html-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 24px;
+  margin-bottom: 24px;
+}
