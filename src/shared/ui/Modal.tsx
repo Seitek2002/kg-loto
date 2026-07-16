@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { useMounted } from "@/hooks/useMounted";
 import { clsx } from "clsx";
@@ -54,7 +55,11 @@ export const Modal = ({
 
   if (!mounted || (!isOpen && !isRendered)) return null;
 
-  return (
+  // 🔥 Портал в document.body — иначе если модалка открыта изнутри карточки
+  // с hover:scale/transition-transform (например ArticleCard), тот transform
+  // становится containing block для position:fixed, и модалка вместо
+  // полноэкранного центрирования "прилипает" к позиции карточки
+  return createPortal(
     <div
       className={clsx(
         "fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6",
@@ -96,6 +101,7 @@ export const Modal = ({
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
