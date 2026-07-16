@@ -21,7 +21,7 @@ export const getNewsList = async (): Promise<NewsItem[]> => {
 
     const res = await fetch(`${baseUrl}/news/`, {
       headers: { "Accept-Language": locale },
-      next: { revalidate: 300 }, // Кеш 5 минут
+      next: { revalidate: 60 }, // Кеш 1 минута
     });
 
     if (!res.ok) return [];
