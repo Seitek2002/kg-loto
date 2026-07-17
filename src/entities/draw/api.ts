@@ -22,6 +22,13 @@ export interface CurrentDraw {
   jackpotAmount?: number;
   currency: string;
   lotteryLogo?: string | null;
+  // Доп. поля, которые реально приходят от LTT (не были описаны в типе раньше)
+  tvBroadcast?: string | null;
+  onlineBroadcastUrl?: string | null;
+  onlineBroadcastLabel?: string | null;
+  drawNumberDisplay?: string;
+  drawDateHuman?: string;
+  jackpotAmountDisplay?: string;
 }
 
 export const useCurrentDraws = (lotteryId?: string) => {

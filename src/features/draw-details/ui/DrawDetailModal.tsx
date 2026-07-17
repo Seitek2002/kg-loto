@@ -6,82 +6,20 @@ import { useMounted } from "@/hooks/useMounted";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
-import { NumberedBall } from "@/shared/ui/NumberedBall";
+import type { CurrentDraw } from "@/entities/draw/api";
 
-// Временные моковые данные
-const MOCK_MODAL_DATA = {
-  title: "Суперджекпот 5 из 36",
-  drawNumber: "№005034",
-  date: "3 апреля 2026",
-  publishTime: "11:34",
-  combinations: [1, 20, 32, 16, 8],
-  totalTickets: "1232",
-  totalWinAmount: "67 658",
-  superPrize: "4 567 126",
-  results: [
-    {
-      id: 1,
-      category: "1",
-      guessed: "5",
-      count: "45",
-      win: "-",
-      totalWin: "-",
-    },
-    {
-      id: 2,
-      category: "2",
-      guessed: "3",
-      count: "123",
-      win: "-",
-      totalWin: "-",
-    },
-    { id: 3, category: "3", guessed: "2", count: "0", win: "-", totalWin: "-" },
-    {
-      id: 4,
-      category: "4",
-      guessed: "3",
-      count: "0",
-      win: "56 000 c",
-      totalWin: "56 000 c",
-    },
-    {
-      id: 5,
-      category: "5",
-      guessed: "1",
-      count: "5",
-      win: "12 000 c",
-      totalWin: "12 000 c",
-    },
-    {
-      id: 6,
-      category: "6",
-      guessed: "5",
-      count: "7",
-      win: "245 c",
-      totalWin: "245 c",
-    },
-    {
-      id: 7,
-      category: "7",
-      guessed: "3",
-      count: "43",
-      win: "50 c",
-      totalWin: "50 c",
-    },
-  ],
-};
+import { NumberedBall } from "@/shared/ui/NumberedBall";
 
 interface DrawDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // drawId теперь число (ltt_id); строка допускается для legacy-совместимости
-  drawId: number | string | null;
+  draw: CurrentDraw | null;
 }
 
 export const DrawDetailsModal = ({
   isOpen,
   onClose,
-  drawId,
+  draw,
 }: DrawDetailsModalProps) => {
   const mounted = useMounted();
 
@@ -97,9 +35,21 @@ export const DrawDetailsModal = ({
     };
   }, [isOpen]);
 
-  if (!mounted) return null;
+  if (!mounted || !draw) return null;
 
-  const data = MOCK_MODAL_DATA;
+  const dateLabel =
+    draw.drawDateHuman ||
+    new Date(draw.drawDate).toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+  const prizeLabel = draw.jackpotAmountDisplay
+    ? `${draw.jackpotAmountDisplay} с`
+    : draw.jackpotAmount
+      ? `${draw.jackpotAmount.toLocaleString("ru-RU")} с`
+      : "—";
 
   return (
     <AnimatePresence>
@@ -121,7 +71,7 @@ export const DrawDetailsModal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative w-full max-w-200 max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-3xl lg:rounded-4xl p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar"
+            className="relative w-full max-w-160 max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-3xl lg:rounded-4xl p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar"
           >
             {/* Кнопка закрытия (Крестик) */}
             <button
@@ -133,28 +83,56 @@ export const DrawDetailsModal = ({
 
             {/* Заголовок */}
             <h2 className="text-[20px] lg:text-[24px] font-black text-[#4B4B4B] mb-4 lg:mb-6 pr-10">
-              {data.title}
+              Тираж №{draw.drawNumberDisplay || draw.drawNumber}
             </h2>
 
             {/* Верхний блок: Итоги тиража и Комбинация */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
               <div className="bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm">
                 <h3 className="text-[#4B4B4B] text-[16px] lg:text-[18px] font-bold mb-4">
-                  Итоги тиража {data.drawNumber}
+                  Итоги тиража
                 </h3>
                 <div className="flex flex-col gap-2 text-[13px] lg:text-[14px]">
                   <div className="flex justify-between lg:justify-start lg:gap-2">
                     <span className="text-[#737373]">Дата тиража:</span>
                     <span className="text-[#4B4B4B] font-bold">
-                      {data.date}
+                      {dateLabel}
                     </span>
                   </div>
                   <div className="flex justify-between lg:justify-start lg:gap-2">
-                    <span className="text-[#737373]">Время публикации:</span>
+                    <span className="text-[#737373]">Время розыгрыша:</span>
                     <span className="text-[#4B4B4B] font-bold">
-                      {data.publishTime}
+                      {draw.drawTime?.slice(0, 5) || "-"}
                     </span>
                   </div>
+                  {draw.tvBroadcast && (
+                    <div className="flex justify-between lg:justify-start lg:gap-2">
+                      <span className="text-[#737373]">Телетрансляция:</span>
+                      <span className="text-[#4B4B4B] font-bold">
+                        {draw.tvBroadcast}
+                      </span>
+                    </div>
+                  )}
+                  {(draw.onlineBroadcastUrl || draw.onlineBroadcastLabel) && (
+                    <div className="flex justify-between lg:justify-start lg:gap-2">
+                      <span className="text-[#737373]">Онлайн трансляция:</span>
+                      <span className="text-[#4B4B4B] font-bold">
+                        {draw.onlineBroadcastUrl ? (
+                          <a
+                            href={draw.onlineBroadcastUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-[#FF7600] transition-colors"
+                          >
+                            {draw.onlineBroadcastLabel ||
+                              draw.onlineBroadcastUrl}
+                          </a>
+                        ) : (
+                          draw.onlineBroadcastLabel
+                        )}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -162,92 +140,31 @@ export const DrawDetailsModal = ({
                 <h3 className="text-[#4B4B4B] text-[16px] lg:text-[18px] font-bold mb-4">
                   Выигрышная комбинация
                 </h3>
-                <div className="flex gap-2 flex-wrap">
-                  {data.combinations.map((num, i) => (
-                    <div
-                      key={i}
-                      className="transform scale-[0.9] lg:scale-100 origin-left"
-                    >
-                      <NumberedBall number={num} size={44} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Средний блок: Статистика и Кнопка */}
-            <div className="bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-              <div className="flex flex-col gap-2 text-[13px] lg:text-[14px]">
-                <div className="flex justify-between lg:justify-start lg:gap-2">
-                  <span className="text-[#737373]">
-                    Число билетов в розыгрыше:
-                  </span>
-                  <span className="text-[#4B4B4B] font-bold">
-                    {data.totalTickets}
-                  </span>
-                </div>
-                <div className="flex justify-between lg:justify-start lg:gap-2">
-                  <span className="text-[#737373]">Общая сумма выигрышей:</span>
-                  <span className="text-[#4B4B4B] font-bold">
-                    {data.totalWinAmount} <span className="underline">с</span>
-                  </span>
-                </div>
-                <div className="flex justify-between lg:justify-start lg:gap-2">
-                  <span className="text-[#737373]">Суперприз:</span>
-                  <span className="text-[#4B4B4B] font-bold">
-                    {data.superPrize} <span className="underline">с</span>
-                  </span>
-                </div>
-              </div>
-              <button className="bg-[#4B4B4B] hover:bg-black text-white py-3 px-6 rounded-full text-[14px] font-bold transition-colors whitespace-nowrap self-start lg:self-center active:scale-95">
-                Купить билет
-              </button>
-            </div>
-
-            {/* Нижний блок: Таблица Итогов розыгрыша */}
-            <div className="bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm">
-              <h3 className="text-[#4B4B4B] text-[18px] font-bold mb-4">
-                Итоги розыгрыша
-              </h3>
-
-              <div className="overflow-x-auto pb-2">
-                <table className="w-full text-center text-[13px] lg:text-[14px] min-w-137.5">
-                  <thead>
-                    <tr className="border-b border-gray-100">
-                      <th className="font-bold text-[#4B4B4B] py-3 text-left">
-                        Категория
-                      </th>
-                      <th className="font-bold text-[#4B4B4B] py-3">
-                        Угаданных чисел
-                      </th>
-                      <th className="font-bold text-[#4B4B4B] py-3">
-                        Комбинаций
-                      </th>
-                      <th className="font-bold text-[#4B4B4B] py-3">Выигрыш</th>
-                      <th className="font-bold text-[#4B4B4B] py-3 text-right">
-                        Сумма выигрышей
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.results.map((row) => (
-                      <tr
-                        key={row.id}
-                        className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50"
+                {draw.winningCombination &&
+                draw.winningCombination.length > 0 ? (
+                  <div className="flex gap-2 flex-wrap">
+                    {draw.winningCombination.map((num, i) => (
+                      <div
+                        key={i}
+                        className="transform scale-[0.9] lg:scale-100 origin-left"
                       >
-                        <td className="py-3 text-[#4B4B4B] text-left">
-                          {row.category}
-                        </td>
-                        <td className="py-3 text-[#4B4B4B]">{row.guessed}</td>
-                        <td className="py-3 text-[#4B4B4B]">{row.count}</td>
-                        <td className="py-3 text-[#4B4B4B]">{row.win}</td>
-                        <td className="py-3 text-[#4B4B4B] text-right">
-                          {row.totalWin}
-                        </td>
-                      </tr>
+                        <NumberedBall number={num} size={44} />
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                ) : (
+                  <span className="text-gray-400 text-[14px]">
+                    Результаты тиража ещё не опубликованы
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Приз */}
+            <div className="bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm">
+              <div className="flex justify-between lg:justify-start lg:gap-2 text-[13px] lg:text-[14px]">
+                <span className="text-[#737373]">Суперприз:</span>
+                <span className="text-[#4B4B4B] font-bold">{prizeLabel}</span>
               </div>
             </div>
 

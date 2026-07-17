@@ -25,7 +25,7 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
   // Если нет — мы будем принудительно держать первый месяц открытым.
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  const [selectedDrawId, setSelectedDrawId] = useState<number | null>(null);
+  const [selectedDraw, setSelectedDraw] = useState<CurrentDraw | null>(null);
 
   const { data: rawDraws, isLoading, isError } = useCurrentDraws(lotteryId);
 
@@ -107,7 +107,6 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
       </div>
     );
   }
-  console.log(archiveData);
 
   if (isError || archiveData.length === 0) {
     return (
@@ -116,7 +115,6 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
       </div>
     );
   }
-
 
   return (
     <div className="mt-8 lg:mt-12 bg-transparent lg:bg-white lg:rounded-4xl lg:p-10 lg:shadow-sm lg:border lg:border-gray-100 text-left">
@@ -202,7 +200,7 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
                               </div>
                               <div
                                 className="text-right text-[#4B4B4B] text-[14px] underline cursor-pointer hover:text-black transition-colors"
-                                onClick={() => setSelectedDrawId(item.drawId)}
+                                onClick={() => setSelectedDraw(item)}
                               >
                                 Подробнее
                               </div>
@@ -210,7 +208,7 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
 
                             {/* --- МОБИЛЬНАЯ КАРТОЧКА --- */}
                             <div
-                              onClick={() => setSelectedDrawId(item.drawId)}
+                              onClick={() => setSelectedDraw(item)}
                               className="flex lg:hidden flex-col gap-3 bg-white p-5 rounded-[20px] shadow-sm border border-gray-100 active:scale-[0.98] transition-transform cursor-pointer"
                             >
                               <div className="flex justify-between items-center">
@@ -226,9 +224,10 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
                                   Приз
                                 </span>
                                 <span className="text-[#4B4B4B] text-[14px] font-bold">
-                                  {item.jackpotAmount?.toLocaleString("ru-RU") ??
-                                  "—"}{" "}
-                                с
+                                  {item.jackpotAmount?.toLocaleString(
+                                    "ru-RU",
+                                  ) ?? "—"}{" "}
+                                  с
                                 </span>
                               </div>
                               <div className="flex justify-between items-center">
@@ -273,9 +272,9 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
       </div>
 
       <DrawDetailsModal
-        isOpen={selectedDrawId !== null}
-        onClose={() => setSelectedDrawId(null)}
-        drawId={selectedDrawId}
+        isOpen={selectedDraw !== null}
+        onClose={() => setSelectedDraw(null)}
+        draw={selectedDraw}
       />
     </div>
   );
