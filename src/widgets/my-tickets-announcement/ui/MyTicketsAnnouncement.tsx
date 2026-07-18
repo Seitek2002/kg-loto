@@ -15,26 +15,23 @@ export const MyTicketsAnnouncement = () => {
   const user = useAuthStore((state) => state.user);
   const { data: tickets } = useMyTickets(!!user);
 
-  const upcomingTickets = useMemo(() => {
+  // Билет с датой тиража в будущем — ещё не финальный признак "текущего"
+  // тиража: у лотереи может уже существовать более новая кампания (LttDraw),
+  // и тот старый тираж, на который куплен билет, больше не тот, что реально
+  // сейчас продаётся/разыгрывается. Поэтому дальше сверяем drawId билета
+  // с drawId актуального (текущего) тиража этой лотереи.
+  const soldTickets = useMemo(() => {
     if (!tickets) return [];
-    const now = Date.now();
-
-    return tickets.filter(
-      (t) =>
-        t.status === "sold" &&
-        !!t.ticketNumber &&
-        !!t.drawDate &&
-        new Date(t.drawDate).getTime() > now,
-    );
+    return tickets.filter((t) => t.status === "sold" && !!t.ticketNumber);
   }, [tickets]);
 
   const lotteryIds = useMemo(
-    () => Array.from(new Set(upcomingTickets.map((t) => t.lotteryId))),
-    [upcomingTickets],
+    () => Array.from(new Set(soldTickets.map((t) => t.lotteryId))),
+    [soldTickets],
   );
 
-  // Телетрансляция лежит на тираже, а не на билете — подтягиваем отдельно
-  // по каждой уникальной лотерее среди билетов пользователя
+  // Текущий тираж (и телетрансляция) лежат на тираже, а не на билете —
+  // подтягиваем отдельно по каждой уникальной лотерее среди билетов пользователя
   const drawQueries = useQueries({
     queries: lotteryIds.map((lotteryId) => ({
       queryKey: ["currentDraw", lotteryId],
@@ -43,13 +40,32 @@ export const MyTicketsAnnouncement = () => {
     })),
   });
 
-  const tvBroadcastByLottery = useMemo(() => {
-    const map: Record<string, string | undefined> = {};
+  const currentDrawByLottery = useMemo(() => {
+    const map: Record<
+      string,
+      { drawId?: number; tvBroadcast?: string } | undefined
+    > = {};
     lotteryIds.forEach((lotteryId, idx) => {
-      map[lotteryId] = drawQueries[idx]?.data?.draw?.tvBroadcast;
+      map[lotteryId] = drawQueries[idx]?.data?.draw;
     });
     return map;
   }, [lotteryIds, drawQueries]);
+
+  const upcomingTickets = useMemo(
+    () =>
+      soldTickets.filter(
+        (t) => currentDrawByLottery[t.lotteryId]?.drawId === t.drawId,
+      ),
+    [soldTickets, currentDrawByLottery],
+  );
+
+  const tvBroadcastByLottery = useMemo(() => {
+    const map: Record<string, string | undefined> = {};
+    lotteryIds.forEach((lotteryId, idx) => {
+      map[lotteryId] = currentDrawByLottery[lotteryId]?.tvBroadcast;
+    });
+    return map;
+  }, [lotteryIds, currentDrawByLottery]);
 
   if (!user || upcomingTickets.length === 0) return null;
 
