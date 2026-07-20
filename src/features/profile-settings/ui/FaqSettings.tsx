@@ -3,32 +3,36 @@
 import { useState } from "react";
 
 import { clsx } from "clsx";
-import { Minus, Plus } from "lucide-react";
+import { Loader2, Minus, Plus } from "lucide-react";
 
-const FAQ_ITEMS = [
-  {
-    id: 1,
-    question: "Кто является организатором лотереи?",
-    answer: "Организатором лотереи является государственная компания...",
-  },
-  {
-    id: 2,
-    question: "Как получить выигрыш?",
-    answer: "Выигрыш можно получить в личном кабинете или в точках продаж.",
-  },
-  {
-    id: 3,
-    question: "Безопасно ли привязывать карту?",
-    answer: "Да, мы используем современные протоколы шифрования.",
-  },
-];
+import { useFAQ } from "@/entities/faq/api/faqClientApi";
 
 export const FaqSettings = () => {
   const [openId, setOpenId] = useState<number | null>(null);
+  // Раньше здесь лежали три вопроса с ответами-заглушками
+  // («Организатором лотереи является государственная компания...»),
+  // хотя реальные вопросы уже ведутся в админке и отдаются на /qa/
+  const { data: faqItems, isLoading } = useFAQ();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-10 text-[#FF7600]">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!faqItems || faqItems.length === 0) {
+    return (
+      <p className="text-[14px] text-[#6E6E6E] py-6">
+        Вопросы и ответы пока не добавлены.
+      </p>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5 overflow-y-auto max-h-screen">
-      {FAQ_ITEMS.map((item) => {
+      {faqItems.map((item, index) => {
         const isOpen = openId === item.id;
         return (
           <div
@@ -40,7 +44,7 @@ export const FaqSettings = () => {
               className="w-full flex items-center justify-between p-5 text-left"
             >
               <span className="text-[20px] text-[#4B4B4B] pr-4">
-                {item.id}. {item.question}
+                {index + 1}. {item.question}
               </span>
               {isOpen ? (
                 <Minus size={20} className="text-[#4B4B4B] shrink-0" />
