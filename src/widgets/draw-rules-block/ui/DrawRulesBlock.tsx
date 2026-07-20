@@ -1,5 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
+
+import type { LotteryPrizeTier } from "@/entities/lottery/api/lotteryClientApi";
 import { LotteryRuleDto } from "@/entities/ticket/api";
 
 import { cn } from "@/shared/lib/utils";
@@ -14,6 +17,9 @@ interface DrawRulesBlockProps {
   // странице 5/42 писало про 36 чисел.
   pickCount?: number;
   maxNumber?: number;
+  // Категории выигрышей с бэка. Пусто — блок не показываем вовсе (лучше ничего,
+  // чем выдуманные суммы, как было с моком)
+  prizeTiers?: LotteryPrizeTier[];
 }
 
 const PICK_COUNT_WORDS: Record<number, string> = {
@@ -25,29 +31,37 @@ const PICK_COUNT_WORDS: Record<number, string> = {
   7: "семи",
 };
 
-// Моковые данные для таблицы призов (пока бэкенд не отдает их динамически)
-const PRIZE_TIERS = [
-  {
-    id: 1,
-    category: "Суперприз",
-    match: "5/5",
-    prize: "Джекпот",
-    isSuper: true,
-  },
-  { id: 2, category: "2", match: "4/5", prize: "10 000", isSuper: false },
-  { id: 3, category: "3", match: "3/5", prize: "500", isSuper: false },
-  { id: 4, category: "4", match: "2/5", prize: "100", isSuper: false },
-];
+// Число совпадений вытаскиваем ТОЛЬКО для сортировки: собственный order с бэка
+// сейчас непригоден (у 5/42 он у всех 0, у 5/36 суперприз идёт вторым). Если
+// формулировка в админке изменится и разбор не сработает — максимум съедет
+// порядок строк, но ни одна сумма не будет искажена.
+const getMatchCount = (tier: LotteryPrizeTier): number => {
+  const match = tier.amount?.match(/(\d+)\s*из\s*\d+/);
+  return match ? Number(match[1]) : -1;
+};
+
+// Подсветка суперприза — чисто косметика, на цифры не влияет
+const isJackpotTier = (tier: LotteryPrizeTier): boolean =>
+  /супер\s*приз|джекпот/i.test(tier.amount || "");
 
 export const DrawRulesBlock = ({
   rules,
   pickCount,
   maxNumber,
+  prizeTiers,
 }: DrawRulesBlockProps) => {
   // Уточняющую часть показываем, только если реально знаем параметры игры —
   // иначе лучше общая формулировка, чем неверные числа
   const hasGameParams = !!pickCount && !!maxNumber;
   const pickCountWord = pickCount ? PICK_COUNT_WORDS[pickCount] : undefined;
+
+  // Сверху крупнейшая категория (5 из 5). Неразобранные строки уходят в конец,
+  // сохраняя исходный порядок с бэка.
+  const sortedTiers = useMemo(() => {
+    return [...(prizeTiers || [])].sort(
+      (a, b) => getMatchCount(b) - getMatchCount(a),
+    );
+  }, [prizeTiers]);
 
   return (
     <section className="font-rubik text-[#4B4B4B] text-left">
@@ -100,80 +114,40 @@ export const DrawRulesBlock = ({
           </Description>
         </div>
 
-        {/* КАРТОЧКА 2: Таблица призов (Мобильная версия) */}
-        <div className="grid lg:hidden grid-cols-3 gap-y-5 items-center text-center bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-          <div className="text-[12px] sm:text-[14px] font-bold text-[#4B4B4B] mb-2">
-            Категория
-          </div>
-          <div className="text-[12px] sm:text-[14px] font-bold text-[#4B4B4B] mb-2">
-            Совпадение
-          </div>
-          <div className="text-[12px] sm:text-[14px] font-bold text-[#4B4B4B] mb-2">
-            Приз
-          </div>
-
-          {PRIZE_TIERS.map((item) => (
-            <div key={item.id} className="contents">
-              <div
-                className={cn(
-                  "text-[16px] sm:text-[20px] font-black",
-                  item.isSuper ? "text-[#F58220]" : "text-[#F6C635]",
-                )}
-              >
-                {item.category}
-              </div>
-              <div className="text-[18px] sm:text-[22px] font-black text-[#4B4B4B] tracking-wide">
-                {item.match}
-              </div>
-              <div
-                className={cn(
-                  "text-[16px] sm:text-[20px] font-black",
-                  item.isSuper ? "text-[#F58220]" : "text-[#F6C635]",
-                )}
-              >
-                {item.prize}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* КАРТОЧКА 2: Таблица призов (ПК версия) */}
-        <div className="hidden lg:flex flex-row items-center bg-white rounded-4xl p-8 shadow-sm border border-gray-100">
-          <div className="flex flex-col space-y-8 pr-8 border-r border-gray-100 min-w-40 text-left">
-            <div className="text-[15px] font-bold text-[#4B4B4B]">
-              Категория
-            </div>
-            <div className="text-[15px] font-bold text-[#4B4B4B]">
-              Совпадение
-            </div>
-            <div className="text-[15px] font-bold text-[#4B4B4B]">Приз</div>
-          </div>
-          <div className="flex flex-row flex-1 justify-around pl-8">
-            {PRIZE_TIERS.map((item) => (
-              <div key={item.id} className="flex flex-col space-y-8">
-                <div
+        {/* КАРТОЧКА 2: Категории выигрышей.
+            Раньше здесь была таблица «Категория / Совпадение / Приз» с
+            захардкоженными суммами, из-за чего на проде висели неверные цифры
+            (10 000 вместо 20 000, 500 вместо 1 000), а на 5/42 — вообще чужие.
+            Бэк отдаёт категорию одной строкой свободного формата, причём разной
+            у разных лотерей, поэтому выводим её как есть: разбирать текст на
+            колонки — значит снова рисковать неверными суммами. Вернём таблицу,
+            когда бэк начнёт отдавать категории структурно. */}
+        {sortedTiers.length > 0 && (
+          <div className="bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100">
+            <h3 className="font-bold text-[14px] lg:text-[16px] mb-4">
+              Категории выигрышей:
+            </h3>
+            <ul className="flex flex-col gap-3 lg:gap-4">
+              {sortedTiers.map((tier) => (
+                <li
+                  key={tier.id}
                   className={cn(
-                    "text-[26px] font-black",
-                    item.isSuper ? "text-[#F58220]" : "text-[#F6C635]",
+                    "flex items-start gap-3 text-[14px] lg:text-[20px] font-bold leading-snug",
+                    isJackpotTier(tier) ? "text-[#F58220]" : "text-[#4B4B4B]",
                   )}
                 >
-                  {item.category}
-                </div>
-                <div className="text-[28px] font-black text-[#4B4B4B] tracking-wide">
-                  {item.match}
-                </div>
-                <div
-                  className={cn(
-                    "text-[26px] font-black",
-                    item.isSuper ? "text-[#F58220]" : "text-[#F6C635]",
-                  )}
-                >
-                  {item.prize}
-                </div>
-              </div>
-            ))}
+                  <span
+                    className={cn(
+                      "mt-2 lg:mt-2.5 w-2 h-2 rounded-full shrink-0",
+                      isJackpotTier(tier) ? "bg-[#F58220]" : "bg-[#F6C635]",
+                    )}
+                  />
+                  <span>{tier.amount}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
+        )}
 
         {/* КАРТОЧКА 3: Дополнительные правила */}
         <div className="bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100 flex flex-col gap-6">
