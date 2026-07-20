@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 
 import { Copy, Loader2 } from "lucide-react";
@@ -9,8 +10,6 @@ import { Copy, Loader2 } from "lucide-react";
 import { Branch } from "@/entities/branch/model/types";
 
 import { Description } from "@/shared/ui/Description";
-// import { useTranslations } from 'next-intl';
-
 import { Title } from "@/shared/ui/Title";
 
 // 🔥 Динамический импорт нашей Shared-карты (отключаем SSR)
@@ -34,18 +33,7 @@ export const WhereToBuyClient = ({
   title,
   description,
 }: WhereToBuyClientProps) => {
-  // const t = useTranslations('where_to_buy');
-
-  // Временный mock для переводов
-  const t = (key: string, params?: { name: string }) => {
-    const dict: Record<string, string> = {
-      title: "Где купить?",
-      desc: "Найдите ближайшую точку продаж и купите счастливый билет!",
-    };
-    if (key === "address_prefix" && params)
-      return `Адрес точки «${params.name}»`;
-    return dict[key] || key;
-  };
+  const t = useTranslations("where_to_buy");
 
   const mapBranches = useMemo(() => {
     return branches

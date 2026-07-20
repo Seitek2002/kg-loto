@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { useTranslations } from "next-intl";
+
 import clsx from "clsx";
 
 import { AuthModal } from "@/features/auth/ui/AuthModal";
@@ -11,8 +13,6 @@ import { useAuthStore } from "@/entities/user/model/authStore";
 
 import { Description } from "@/shared/ui/Description";
 import { MagneticButton } from "@/shared/ui/MagneticButton";
-// import { useTranslations } from 'next-intl';
-
 import { Title } from "@/shared/ui/Title";
 
 export const CheckLottery = ({
@@ -28,18 +28,7 @@ export const CheckLottery = ({
 
   const isAuth = useAuthStore((state) => state.isAuth);
 
-  // const t = useTranslations('check_lottery');
-  // Временно замокаем переводы
-  const t = (key: string) => {
-    const dict: Record<string, string> = {
-      title: "Проверить билет",
-      desc: "Узнайте результаты розыгрыша",
-      label: "Номер билета",
-      placeholder: "Например YT2357912",
-      button: "Проверить",
-    };
-    return dict[key] || key;
-  };
+  const t = useTranslations("check_lottery");
 
   const handleCheck = (e: React.FormEvent) => {
     e.preventDefault();

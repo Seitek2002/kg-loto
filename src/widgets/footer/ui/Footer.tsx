@@ -52,14 +52,20 @@ interface FooterProps {
 }
 
 export const Footer = async ({ menuData }: FooterProps) => {
-  // const t = await getTranslations('footer');
-  // Временно мокаем переводы, пока словаря нет
-  const t = (key: string) => key;
+  const t = await getTranslations("footer");
 
-  const phone1 = t("phone_1") === "phone_1" ? "+996 998 777 377" : t("phone_1");
-  const phone2 = t("phone_2") === "phone_2" ? "+996 226 777 877" : t("phone_2");
-  const phone3 = t("phone_3") === "phone_3" ? "+996 507 778 733" : t("phone_3");
-  const email = t("email") === "email" ? "support@kgloto.kg" : t("email");
+  // Словарь приходит из админки (/page-texts/). Значение может отсутствовать —
+  // тогда next-intl возвращает сам ключ — либо быть пустым (у kk-переводов
+  // телефоны не заполнены). В обоих случаях откатываемся на запасной текст.
+  const tr = (key: string, fallback: string) => {
+    const value = t(key);
+    return !value || value === key ? fallback : value;
+  };
+
+  const phone1 = tr("phone_1", "+996 226 777 877");
+  const phone2 = tr("phone_2", "+996 998 777 377");
+  const phone3 = tr("phone_3", "+996 507 778 733");
+  const email = tr("email", "office@kglottery.kg");
 
   const APP_STORE_LINK =
     "https://apps.apple.com/kg/app/kgloto-checker/id6757925326";
@@ -83,22 +89,22 @@ export const Footer = async ({ menuData }: FooterProps) => {
 
   const footerSections = [
     {
-      title: "Лотереи", // t('lotteries')
+      title: tr("lotteries", "Лотереи"),
       links:
         formatLinks(menuData?.["footer.lotteries"]).length > 0
           ? formatLinks(menuData?.["footer.lotteries"])
-          : [{ name: "Лотерей пока нет", href: "#" }], // t('no_lotteries')
+          : [{ name: tr("no_lotteries", "Лотерей пока нет"), href: "#" }],
     },
     {
-      title: "Как купить", // t('purchases')
+      title: tr("purchases", "Как купить"),
       links: formatLinks(menuData?.["footer.purchases"]),
     },
     {
-      title: "Компания", // t('company')
+      title: tr("company", "Компания"),
       links: formatLinks(menuData?.["footer.company"]),
     },
     {
-      title: "Информация", // t('info')
+      title: tr("info", "Информация"),
       links: formatLinks(menuData?.["footer.info"]),
     },
   ];
@@ -146,8 +152,11 @@ export const Footer = async ({ menuData }: FooterProps) => {
             )}
 
             <p className="text-xs font-medium text-[#6E6E6E]">
-              © {new Date().getFullYear()} KGLOTO. Все права защищены.{" "}
-              {/* t('copyright') */}
+              ©{" "}
+              {tr(
+                "copyright",
+                `${new Date().getFullYear()} KGLOTO. Все права защищены.`,
+              )}
             </p>
           </div>
 
@@ -180,7 +189,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
               <div>
                 <span className="block text-xs text-[#737373] mb-2 lg:mb-3">
-                  Горячая линия
+                  {tr("hotline", "Горячая линия")}
                 </span>
                 <div className="flex flex-col gap-1.5">
                   <a
@@ -215,7 +224,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
 
             <div className="flex lg:hidden items-center justify-between gap-4 mt-2">
               <p className="text-[11px] text-[#737373] max-w-55 leading-relaxed">
-                Гарантируем безопасность платежей
+                {tr("security_guarantee", "Гарантируем безопасность платежей")}
               </p>
               <span className="font-black text-2xl text-[#4B4B4B]">18+</span>
             </div>
@@ -226,7 +235,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
           <div className="flex items-center gap-6">
             <div className="text-right hidden lg:block">
               <p className="text-xs text-[#737373] max-w-25">
-                Скачать приложение
+                {tr("download_app", "Скачать приложение")}
               </p>
             </div>
 
@@ -241,7 +250,7 @@ export const Footer = async ({ menuData }: FooterProps) => {
 
             <div className="flex flex-col gap-3 lg:hidden">
               <p className="text-[13px] text-[#4B4B4B] leading-snug max-w-30">
-                Скачать приложение
+                {tr("download_app", "Скачать приложение")}
               </p>
               <div className="flex flex-col gap-2">
                 <StoreButton

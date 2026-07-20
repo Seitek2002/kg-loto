@@ -2,13 +2,12 @@
 
 import { useRef } from "react";
 
+// 🔥 Временно мокаем переводы, пока у тебя не настроен next-intl в новом проекте
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
-
-// 🔥 Временно мокаем переводы, пока у тебя не настроен next-intl в новом проекте
-// import { useTranslations } from 'next-intl';
 
 import { Title } from "@/shared/ui/Title";
 
@@ -55,20 +54,7 @@ const StoreButton = ({
 export const OurApp = () => {
   const sectionRef = useRef<HTMLElement>(null);
 
-  // const t = useTranslations('ourapp');
-  const t = (key: string) => {
-    const dict: Record<string, string> = {
-      title: "Установить приложение",
-      desc: "Скачайте наше мобильное приложение для удобной покупки билетов и проверки выигрышей",
-      qr_label: "Наведите камеру",
-      download_from: "Загрузить в",
-      inst_title: "Как это работает:",
-      inst_1: "1. Скачайте приложение",
-      inst_2: "2. Авторизуйтесь",
-      inst_3: "3. Покупайте билеты",
-    };
-    return dict[key] || key;
-  };
+  const t = useTranslations("ourapp");
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,

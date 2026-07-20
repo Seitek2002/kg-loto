@@ -8,9 +8,7 @@ import { Title } from "@/shared/ui/Title";
 import { WinnersMarquee } from "./WinnersMarquee";
 
 export const RecentWinnersHistory = async () => {
-  // const t = await getTranslations('home'); // Раскомментируй, когда будет словарь
-  const t = (key: string) =>
-    key === "recent_winners_title" ? "ПОСЛЕДНИЕ ПОБЕДИТЕЛИ" : key;
+  const t = await getTranslations("home");
 
   const winners = await getRecentWinners();
 

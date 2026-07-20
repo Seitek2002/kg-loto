@@ -42,10 +42,7 @@ export default async function LotteryDetailPage({
 }: LotteryDetailPageProps) {
   const { id } = await params;
   const lottery = await getLotteryDetail(id);
-  // Временно замокаем переводы, пока не подключишь next-intl
-  // const t = await getTranslations('lottery');
-  const t = (key: string) =>
-    key === "other_lotteries" ? "Другие лотереи" : key;
+  const t = await getTranslations("lottery");
 
   if (!lottery) return notFound();
 

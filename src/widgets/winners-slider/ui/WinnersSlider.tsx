@@ -23,7 +23,7 @@ export const WinnersSlider = ({
   lotteryId,
 }: WinnersSliderProps) => {
   const { data, isLoading } = useWinners(); // Используем клиентский хук для простоты
-  // const t = useTranslations('winners_history');
+  const t = useTranslations("winners_history");
 
   const displayWinners = data?.pages[0]?.results.slice(0, 6) || [];
 
@@ -35,8 +35,8 @@ export const WinnersSlider = ({
     <section className="my-12 relative overflow-hidden">
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
         <div className="max-w-2xl">
-          <Title>{title || "История победителей"}</Title>
-          <Description>{description || "Наши счастливчики"}</Description>
+          <Title>{title || t("title")}</Title>
+          <Description>{description || t("desc")}</Description>
         </div>
 
         <Link
