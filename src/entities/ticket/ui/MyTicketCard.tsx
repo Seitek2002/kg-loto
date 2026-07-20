@@ -53,8 +53,6 @@ export const MyTicketCard = ({
   // Оранжевый цвет, если это техника или сумма >= 10 000
   const isHighlighted = !isNumeric || numericValue >= 10000;
 
-  console.log(logoSrc);
-
   return (
     <div className="flex flex-col h-fit bg-white border border-[#EAEAEA] rounded-3xl p-5 shadow-sm">
       {/* ВЕРХНЯЯ ЧАСТЬ: Приз и Бейджик */}
