@@ -6,14 +6,15 @@ import { useMounted } from "@/hooks/useMounted";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
-import type { CurrentDraw } from "@/entities/draw/api";
+import { formatPrizeAmount, getDrawPrizeLabel } from "@/entities/draw/api";
+import type { ArchiveDraw } from "@/entities/draw/api";
 
 import { NumberedBall } from "@/shared/ui/NumberedBall";
 
 interface DrawDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  draw: CurrentDraw | null;
+  draw: ArchiveDraw | null;
 }
 
 export const DrawDetailsModal = ({
@@ -45,11 +46,7 @@ export const DrawDetailsModal = ({
       year: "numeric",
     });
 
-  const prizeLabel = draw.jackpotAmountDisplay
-    ? `${draw.jackpotAmountDisplay} с`
-    : draw.jackpotAmount
-      ? `${draw.jackpotAmount.toLocaleString("ru-RU")} с`
-      : "—";
+  const prizeResults = draw.prizeResults || [];
 
   return (
     <AnimatePresence>
@@ -71,7 +68,7 @@ export const DrawDetailsModal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative w-full max-w-160 max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-3xl lg:rounded-4xl p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar"
+            className="relative w-full max-w-200 max-h-[90vh] overflow-y-auto bg-[#F5F5F7] rounded-3xl lg:rounded-4xl p-4 lg:p-8 shadow-2xl z-10 custom-scrollbar"
           >
             {/* Кнопка закрытия (Крестик) */}
             <button
@@ -160,13 +157,77 @@ export const DrawDetailsModal = ({
               </div>
             </div>
 
-            {/* Приз */}
-            <div className="bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm">
-              <div className="flex justify-between lg:justify-start lg:gap-2 text-[13px] lg:text-[14px]">
-                <span className="text-[#737373]">Суперприз:</span>
-                <span className="text-[#4B4B4B] font-bold">{prizeLabel}</span>
+            {/* Суперприз и число победителей */}
+            <div className="bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm mb-4">
+              <div className="flex flex-col gap-2 text-[13px] lg:text-[14px]">
+                <div className="flex justify-between lg:justify-start lg:gap-2">
+                  <span className="text-[#737373]">Суперприз:</span>
+                  <span className="text-[#4B4B4B] font-bold">
+                    {getDrawPrizeLabel(draw)}
+                  </span>
+                </div>
+                {draw.totalWinningTickets != null && (
+                  <div className="flex justify-between lg:justify-start lg:gap-2">
+                    <span className="text-[#737373]">Выигрышных билетов:</span>
+                    <span className="text-[#4B4B4B] font-bold">
+                      {draw.totalWinningTickets.toLocaleString("ru-RU")}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Разбивка призов по категориям. Бэк может прислать пустой массив,
+                если призы по тиражу ещё не заведены — тогда блок не показываем */}
+            {prizeResults.length > 0 && (
+              <div className="bg-white rounded-2xl lg:rounded-[20px] p-5 shadow-sm">
+                <h3 className="text-[#4B4B4B] text-[18px] font-bold mb-4">
+                  Итоги розыгрыша
+                </h3>
+
+                <div className="overflow-x-auto pb-2">
+                  <table className="w-full text-center text-[13px] lg:text-[14px] min-w-125">
+                    <thead>
+                      <tr className="border-b border-gray-100">
+                        <th className="font-bold text-[#4B4B4B] py-3 text-left">
+                          Категория
+                        </th>
+                        <th className="font-bold text-[#4B4B4B] py-3">
+                          Угаданных чисел
+                        </th>
+                        <th className="font-bold text-[#4B4B4B] py-3">
+                          Победителей
+                        </th>
+                        <th className="font-bold text-[#4B4B4B] py-3 text-right">
+                          Выигрыш
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {prizeResults.map((row, i) => (
+                        <tr
+                          key={i}
+                          className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50"
+                        >
+                          <td className="py-3 text-[#4B4B4B] text-left">
+                            {row.categoryName}
+                          </td>
+                          <td className="py-3 text-[#4B4B4B]">
+                            {row.matchCount}
+                          </td>
+                          <td className="py-3 text-[#4B4B4B]">
+                            {row.winnersCount?.toLocaleString("ru-RU") ?? "—"}
+                          </td>
+                          <td className="py-3 text-[#4B4B4B] text-right">
+                            {formatPrizeAmount(row.prizeAmount)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
 
             <style
               dangerouslySetInnerHTML={{

@@ -7,8 +7,8 @@ import { ChevronDown, Loader2 } from "lucide-react";
 
 import { DrawDetailsModal } from "@/features/draw-details/ui/DrawDetailModal";
 
-import { useCurrentDraws } from "@/entities/draw/api";
-import type { CurrentDraw } from "@/entities/draw/api";
+import { getDrawPrizeLabel, useDrawsArchive } from "@/entities/draw/api";
+import type { ArchiveDraw } from "@/entities/draw/api";
 
 import { NumberedBall } from "@/shared/ui/NumberedBall";
 
@@ -25,34 +25,26 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
   // Если нет — мы будем принудительно держать первый месяц открытым.
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  const [selectedDraw, setSelectedDraw] = useState<CurrentDraw | null>(null);
+  const [selectedDraw, setSelectedDraw] = useState<ArchiveDraw | null>(null);
 
-  const { data: rawDraws, isLoading, isError } = useCurrentDraws(lotteryId);
+  // /draws/archive/ уже отдаёт только завершённые тиражи (status=completed по
+  // умолчанию) и сразу с результатами — клиентская фильтрация по статусу/дате
+  // больше не нужна. Раньше архив собирался из /draws/current/, но тот эндпоинт
+  // теперь всегда возвращает по результатам null.
+  const { data: rawDraws, isLoading, isError } = useDrawsArchive(lotteryId);
 
-  // Умная группировка по месяцам.
-  // 🔥 Решили проблему #1: || [] теперь внутри useMemo, а в зависимости передаем rawDraws.
+  // Группировка по месяцам
   const archiveData = useMemo(() => {
-    const draws = (rawDraws as CurrentDraw[]) || [];
+    const draws = rawDraws || [];
     if (draws.length === 0) return [];
 
-    // status у LTT-тиражей — произвольная строка ("finished", "printing", ...),
-    // причём активный (продающийся) тираж имеет статус "printing", а не "open".
-    // В архив относим только завершённые: по статусу либо по прошедшей дате продаж.
-    const FINISHED_STATUSES = ["finished", "completed", "closed", "cancelled"];
-    const now = Date.now();
-    const completed = draws.filter(
-      (d) =>
-        FINISHED_STATUSES.includes(d.status) ||
-        (!!d.salesEndAt && new Date(d.salesEndAt).getTime() < now),
-    );
-
-    completed.sort(
+    const sorted = [...draws].sort(
       (a, b) => new Date(b.drawDate).getTime() - new Date(a.drawDate).getTime(),
     );
 
-    const groups: Record<string, typeof completed> = {};
+    const groups: Record<string, typeof sorted> = {};
 
-    completed.forEach((draw) => {
+    sorted.forEach((draw) => {
       const dateObj = new Date(draw.drawDate);
       const monthStr = dateObj.toLocaleString("ru-RU", {
         month: "long",
@@ -179,9 +171,7 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
                                 {formattedDate}
                               </div>
                               <div className="text-[#4B4B4B] text-[15px]">
-                                {item.jackpotAmount?.toLocaleString("ru-RU") ??
-                                  "—"}{" "}
-                                с
+                                {getDrawPrizeLabel(item)}
                               </div>
                               <div className="flex gap-1.5 flex-wrap">
                                 {item.winningCombination ? (
@@ -224,10 +214,7 @@ export const DrawArchiveBlock = ({ lotteryId }: DrawArchiveBlockProps) => {
                                   Приз
                                 </span>
                                 <span className="text-[#4B4B4B] text-[14px] font-bold">
-                                  {item.jackpotAmount?.toLocaleString(
-                                    "ru-RU",
-                                  ) ?? "—"}{" "}
-                                  с
+                                  {getDrawPrizeLabel(item)}
                                 </span>
                               </div>
                               <div className="flex justify-between items-center">
