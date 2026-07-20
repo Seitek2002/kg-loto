@@ -18,6 +18,7 @@ export interface SliderItem {
   backgroundImage: string | null;
   logo: string | null;
   hasAnimation: boolean;
+  showInWebview: boolean;
   buttonText: string;
   buttonPrice: number | null;
   buttonLabel: string;

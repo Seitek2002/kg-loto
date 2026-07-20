@@ -1,108 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
 
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "swiper/css";
-import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { SliderItem } from "@/entities/slider/model/types";
+import { MediaField, SliderItem } from "@/entities/slider/model/types";
 
-import { HeroBackground } from "./HeroBackground";
-import { HeroCard } from "./HeroCard";
-import { HeroOrbitItem } from "./HeroOrbitItem";
-
-interface NewHeroClientProps {
+interface HeroSliderClientProps {
   slides?: SliderItem[];
 }
 
-const ORBIT_STEP_DEG = 45;
-const FALLBACK_GRADIENTS = [
-  "linear-gradient(135deg, #4a3b2c, #8b6b4a)",
-  "linear-gradient(135deg, #8b58d6, #bca6db)",
-  "linear-gradient(135deg, #d68b58, #dba68c)",
-];
+// Текст, лого и прочее оформление теперь запечены прямо в картинку баннера
+// (решает контент-команда в БД, а не фронт) — с фронта нужны только сама
+// картинка под пк/мобилку и ссылка перехода
+const getMediaUrl = (field: MediaField | string | null | undefined) => {
+  if (!field) return null;
+  return typeof field === "string" ? field : field.url;
+};
 
-export const HeroSliderClient = ({ slides }: NewHeroClientProps) => {
-  // Раньше при пустом списке подставлялись MOCK_SLIDES с рыбным текстом
-  // («НАДО», «Тут мог быть "Подтекст"»). На главной странице это выглядело бы
-  // как настоящий баннер, поэтому лучше не показывать слайдер вовсе.
-  const activeSlides = slides ?? [];
-  const [activeIndex, setActiveIndex] = useState(0);
+// Ссылки на наш домен превращаем в относительные для next/link
+const getCleanHref = (url: string) => {
+  if (!url) return "#";
+  return url.replace("https://kgloto.com", "");
+};
+
+export const HeroSliderClient = ({ slides }: HeroSliderClientProps) => {
+  const activeSlides = (slides ?? []).filter((slide) =>
+    Boolean(getMediaUrl(slide.image)),
+  );
 
   if (activeSlides.length === 0) return null;
 
   return (
-    <div className="relative w-full pt-28 md:pt-32 pb-20 md:pb-24 font-rubik overflow-hidden min-h-125 md:min-h-162.5 flex items-center bg-[#0a235c]">
-      {/* 1. Глобальный фон с кроссфейдом */}
-      <HeroBackground slides={activeSlides} activeIndex={activeIndex} />
+    <div className="relative w-full">
+      <Swiper
+        modules={[Navigation]}
+        slidesPerView={1}
+        loop={activeSlides.length > 1}
+        navigation={{ prevEl: ".hero-prev", nextEl: ".hero-next" }}
+      >
+        {activeSlides.map((slide, index) => {
+          const desktopUrl = getMediaUrl(slide.image)!;
+          const mobileUrl = getMediaUrl(slide.imageMobile) || desktopUrl;
 
-      {/* 2. Орбита (строго без глобуса) */}
-      <div className="absolute bottom-[5%] md:bottom-[-25%] left-1/2 -translate-x-1/2 w-[70%] h-[70%] md:w-full md:h-full mx-auto z-0 pointer-events-none">
-        <motion.div
-          animate={{ rotate: activeIndex * -ORBIT_STEP_DEG }}
-          transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
-          className="w-full h-full relative"
-        >
-          {activeSlides.map((slide, i) => (
-            <div
-              key={`orbit-${slide.id}`}
-              className="absolute top-1/2 left-1/2 flex flex-col items-center justify-center origin-center"
-              style={{
-                transform: `translate(-50%, -50%) rotate(${i * ORBIT_STEP_DEG}deg)`,
-              }}
-            >
-              <HeroOrbitItem slide={slide} />
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* 3. Карточки лотерей (Свайпер) */}
-      <section className="w-full max-w-360 mx-auto z-10 mt-16 md:mt-24">
-        <Swiper
-          modules={[Navigation]}
-          centeredSlides={true}
-          slidesPerView={"auto"}
-          initialSlide={0}
-          spaceBetween={16}
-          speed={800}
-          navigation={{ prevEl: ".hero-prev", nextEl: ".hero-next" }}
-          allowTouchMove={true}
-          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-          className="overflow-visible! px-4"
-          breakpoints={{ 768: { spaceBetween: 40 } }}
-        >
-          {activeSlides.map((slide, index) => (
-            <SwiperSlide
-              key={slide.id}
-              className="w-[85%]! sm:w-[70%]! md:w-[60%]! lg:w-[55%]! mx-auto"
-            >
-              {({ isActive }) => (
-                <HeroCard
-                  slide={slide}
-                  isActive={isActive}
-                  fallbackGradient={
-                    FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length]
-                  }
-                />
-              )}
+          return (
+            <SwiperSlide key={slide.id}>
+              <Link
+                href={getCleanHref(slide.buttonUrl)}
+                prefetch={false}
+                className="relative block w-full h-55 md:h-120 overflow-hidden"
+              >
+                {/* <picture> сам выбирает нужный source по media-query — грузится
+                    только одна картинка, а не обе сразу */}
+                <picture>
+                  <source media="(min-width: 768px)" srcSet={desktopUrl} />
+                  <img
+                    src={mobileUrl}
+                    alt={slide.title || "Баннер"}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading={index === 0 ? "eager" : "lazy"}
+                  />
+                </picture>
+              </Link>
             </SwiperSlide>
-          ))}
-        </Swiper>
+          );
+        })}
+      </Swiper>
 
-        {/* Кнопки переключения (скрыты на мобилках) */}
-        <button className="hero-prev hidden md:flex items-center justify-center absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white hover:scale-110 transition-all cursor-pointer bg-white/10 p-3 md:p-4 rounded-full backdrop-blur-md border border-white/20">
-          <ChevronLeft size={36} strokeWidth={2} />
-        </button>
-        <button className="hero-next hidden md:flex items-center justify-center absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white hover:scale-110 transition-all cursor-pointer bg-white/10 p-3 md:p-4 rounded-full backdrop-blur-md border border-white/20">
-          <ChevronRight size={36} strokeWidth={2} />
-        </button>
-      </section>
+      {activeSlides.length > 1 && (
+        <>
+          <button
+            aria-label="Предыдущий баннер"
+            className="hero-prev flex items-center justify-center absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 text-white/80 hover:text-white hover:scale-110 transition-all cursor-pointer bg-black/20 p-2 md:p-3 rounded-full backdrop-blur-md"
+          >
+            <ChevronLeft size={28} strokeWidth={2} />
+          </button>
+          <button
+            aria-label="Следующий баннер"
+            className="hero-next flex items-center justify-center absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 text-white/80 hover:text-white hover:scale-110 transition-all cursor-pointer bg-black/20 p-2 md:p-3 rounded-full backdrop-blur-md"
+          >
+            <ChevronRight size={28} strokeWidth={2} />
+          </button>
+        </>
+      )}
     </div>
   );
 };
