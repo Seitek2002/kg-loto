@@ -35,15 +35,12 @@ export const SuccessPurchaseModal = ({
   onDownload,
   isDownloading,
 }: SuccessPurchaseModalProps) => {
-  // Моковые данные на случай, если пропсы не передали
-  const data = details || {
-    drawNumber: "№005034",
-    price: 100,
-    balance: "0",
-    date: "2 апр, 2026. 16:00",
-    combinations: [[1, 20, 32, 16, 8]],
-    ticketIds: [],
-  };
+  // Без данных о покупке показывать нечего: раньше здесь стоял мок с выдуманным
+  // тиражом, суммой и комбинацией — то есть пользователю могли показать
+  // несуществующий чек об оплате
+  if (!details) return null;
+
+  const data = details;
 
   return (
     <Modal

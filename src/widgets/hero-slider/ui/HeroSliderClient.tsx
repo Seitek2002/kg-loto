@@ -20,88 +20,6 @@ interface NewHeroClientProps {
   slides?: SliderItem[];
 }
 
-const MOCK_SLIDES: SliderItem[] = [
-  {
-    id: 6,
-    title: "НАДО",
-    subtitle: 'Тут мог быть "Подтекст"',
-    prizeText: "MacBook Air 15",
-    image: {
-      url: "https://kgloto.com/media/slider/2026/03/02/1.json",
-      type: "lottie",
-    },
-    imageMobile: null,
-    imageLayer: null,
-    imageMobileLayer: null,
-    backgroundImage: null,
-    logo: null,
-    hasAnimation: false,
-    buttonText: "Играть",
-    buttonPrice: 236,
-    buttonLabel: "ИГРАТЬ • 236 СОМ",
-    buttonUrl: "",
-  },
-  {
-    id: 5,
-    title: "УЧАСТВУЙ",
-    subtitle: 'Тут мог быть "Подтекст"',
-    prizeText: "IPhone 17 pro max",
-    image: {
-      url: "https://kgloto.com/media/slider/2026/03/02/3.json",
-      type: "lottie",
-    },
-    imageMobile: {
-      url: "https://kgloto.com/media/slider/2026/03/02/2.json",
-      type: "lottie",
-    },
-    imageLayer: {
-      url: "https://kgloto.com/media/slider/2026/03/02/2.lottie",
-      type: "lottie",
-    },
-    imageMobileLayer: {
-      url: "https://kgloto.com/media/slider/2026/03/02/Head_%D0%9C%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%B5%D1%80.jpg",
-      type: "image",
-    },
-    backgroundImage: null,
-    logo: null,
-    hasAnimation: true,
-    buttonText: "Играть",
-    buttonPrice: 136,
-    buttonLabel: "ИГРАТЬ • 136 СОМ",
-    buttonUrl: "https://kg-loto.netlify.app/lottery/3",
-  },
-  {
-    id: 4,
-    title: "ooo",
-    subtitle: "ooo",
-    prizeText: "10000",
-    image: {
-      url: "https://kgloto.com/media/slider/2026/03/02/009631dd-e069-445d-9f9b-883997034fa6.png",
-      type: "image",
-    },
-    imageMobile: {
-      url: "https://kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17.png",
-      type: "image",
-    },
-    imageLayer: {
-      url: "https://kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17_A6bvoeG.png",
-      type: "image",
-    },
-    imageMobileLayer: {
-      url: "https://kgloto.com/media/slider/2026/03/02/5ab25897-d4c1-4590-9143-8f04f9eddb17_lTKfbye.png",
-      type: "image",
-    },
-    backgroundImage:
-      "https://kgloto.com/media/slider/backgrounds/2026/03/02/anime-meme-background-w13zt6adj4t13chk.jpg",
-    logo: "https://kgloto.com/media/slider/logos/2026/03/02/d2c16d99034f9407fd708dfc3356c688.jpg",
-    hasAnimation: true,
-    buttonText: "Играть",
-    buttonPrice: 100,
-    buttonLabel: "ИГРАТЬ • 100 СОМ",
-    buttonUrl: "https://kgloto.com/admin/content/slider/add/",
-  },
-];
-
 const ORBIT_STEP_DEG = 45;
 const FALLBACK_GRADIENTS = [
   "linear-gradient(135deg, #4a3b2c, #8b6b4a)",
@@ -110,10 +28,13 @@ const FALLBACK_GRADIENTS = [
 ];
 
 export const HeroSliderClient = ({ slides }: NewHeroClientProps) => {
-  const activeSlides = slides && slides.length > 0 ? slides : MOCK_SLIDES;
+  // Раньше при пустом списке подставлялись MOCK_SLIDES с рыбным текстом
+  // («НАДО», «Тут мог быть "Подтекст"»). На главной странице это выглядело бы
+  // как настоящий баннер, поэтому лучше не показывать слайдер вовсе.
+  const activeSlides = slides ?? [];
   const [activeIndex, setActiveIndex] = useState(0);
 
-  if (!activeSlides || activeSlides.length === 0) return null;
+  if (activeSlides.length === 0) return null;
 
   return (
     <div className="relative w-full pt-28 md:pt-32 pb-20 md:pb-24 font-rubik overflow-hidden min-h-125 md:min-h-162.5 flex items-center bg-[#0a235c]">
