@@ -2,6 +2,8 @@
 
 import { FolderOpen, Image as ImageIcon, X } from "lucide-react";
 
+import { Modal } from "@/shared/ui/Modal";
+
 interface AndroidUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,53 +17,50 @@ export const AndroidUploadModal = ({
   onSelectGallery,
   onSelectFiles,
 }: AndroidUploadModalProps) => {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      hideCloseButton
+      className="bg-white! rounded-4xl! max-w-xs p-6"
+    >
+      <button
         onClick={onClose}
-      />
+        className="absolute top-4 right-4 text-gray-400"
+        aria-label="Закрыть"
+      >
+        <X size={20} />
+      </button>
 
-      <div className="relative bg-white w-full max-w-xs rounded-4xl p-6 animate-in fade-in zoom-in-95 duration-200">
+      <h3 className="text-lg font-black font-benzin uppercase text-[#4B4B4B] mb-6 text-center">
+        Загрузить из...
+      </h3>
+
+      <div className="flex flex-col gap-3">
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400"
+          onClick={onSelectGallery}
+          className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
         >
-          <X size={20} />
+          <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+            <ImageIcon size={20} />
+          </div>
+          <span className="font-bold font-benzin text-sm uppercase text-gray-800">
+            Галерея
+          </span>
         </button>
 
-        <h3 className="text-lg font-black font-benzin uppercase text-[#4B4B4B] mb-6 text-center">
-          Загрузить из...
-        </h3>
-
-        <div className="flex flex-col gap-3">
-          <button
-            onClick={onSelectGallery}
-            className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
-          >
-            <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-              <ImageIcon size={20} />
-            </div>
-            <span className="font-bold font-benzin text-sm uppercase text-gray-800">
-              Галерея
-            </span>
-          </button>
-
-          <button
-            onClick={onSelectFiles}
-            className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
-          >
-            <div className="w-10 h-10 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
-              <FolderOpen size={20} />
-            </div>
-            <span className="font-bold font-benzin text-sm uppercase text-gray-800">
-              Файлы
-            </span>
-          </button>
-        </div>
+        <button
+          onClick={onSelectFiles}
+          className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
+        >
+          <div className="w-10 h-10 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
+            <FolderOpen size={20} />
+          </div>
+          <span className="font-bold font-benzin text-sm uppercase text-gray-800">
+            Файлы
+          </span>
+        </button>
       </div>
-    </div>
+    </Modal>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -47,10 +47,6 @@ export const Header = ({
     setIsMobileMenuOpen(false);
     openAuthModal(flow);
   };
-
-  useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "auto";
-  }, [isMobileMenuOpen]);
 
   // 🔥 1. Формируем инициал (первая буква имени или "U")
   const userInitial = user?.firstName?.charAt(0).toUpperCase() || "U";

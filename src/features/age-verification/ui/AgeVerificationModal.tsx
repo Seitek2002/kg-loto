@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { Modal } from "@/shared/ui/Modal";
+
 export const AgeVerificationModal = () => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -16,12 +18,16 @@ export const AgeVerificationModal = () => {
     window.location.href = "https://google.com";
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      {/* Анимация появления (zoom-in) */}
-      <div className="bg-white rounded-4xl p-6 sm:p-10 max-w-140 w-full flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-300">
+    <Modal
+      isOpen={isOpen}
+      onClose={handleConfirm}
+      hideCloseButton
+      closeOnBackdropClick={false}
+      closeOnEscape={false}
+      className="bg-white! rounded-4xl! max-w-140 p-6 sm:p-10"
+    >
+      <div className="flex flex-col items-center text-center">
         <h2 className="text-[20px] sm:text-[24px] font-black font-benzin uppercase text-[#4B4B4B] mb-4">
           Подтверждение возраста
         </h2>
@@ -30,9 +36,7 @@ export const AgeVerificationModal = () => {
           Доступ к сервису предоставляется только пользователям старше 18 лет.
         </p>
 
-        {/* Магия флексов: на мобилке колонка, на десктопе строка в обратном порядке */}
         <div className="flex flex-col sm:flex-row-reverse w-full gap-3 sm:gap-4">
-          {/* Светлая кнопка (Отказ) */}
           <button
             onClick={handleReject}
             className="w-full sm:flex-1 bg-white text-[#4B4B4B] border border-[#A3A3A3] py-4 rounded-full font-bold text-[14px] hover:bg-gray-50 active:scale-95 transition-all"
@@ -40,7 +44,6 @@ export const AgeVerificationModal = () => {
             Мне нет 18 лет
           </button>
 
-          {/* Темная кнопка (Подтверждение) */}
           <button
             onClick={handleConfirm}
             className="w-full sm:flex-1 bg-[#4B4B4B] text-white py-4 rounded-full font-bold text-[14px] hover:bg-[#4B4B4B] active:scale-95 transition-all"
@@ -49,6 +52,6 @@ export const AgeVerificationModal = () => {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
