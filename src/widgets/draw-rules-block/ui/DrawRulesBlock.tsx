@@ -2,7 +2,10 @@
 
 import { useMemo } from "react";
 
-import type { LotteryPrizeTier } from "@/entities/lottery/api/lotteryClientApi";
+import type {
+  LotteryPrizeTier,
+  LotteryTermItem,
+} from "@/entities/lottery/api/lotteryClientApi";
 import { LotteryRuleDto } from "@/entities/ticket/api";
 
 import { cn } from "@/shared/lib/utils";
@@ -20,6 +23,8 @@ interface DrawRulesBlockProps {
   // Категории выигрышей с бэка. Пусто — блок не показываем вовсе (лучше ничего,
   // чем выдуманные суммы, как было с моком)
   prizeTiers?: LotteryPrizeTier[];
+  // Условия участия из админки. Раньше не выводились вообще, хотя заполнены
+  terms?: LotteryTermItem[];
 }
 
 const PICK_COUNT_WORDS: Record<number, string> = {
@@ -49,6 +54,7 @@ export const DrawRulesBlock = ({
   pickCount,
   maxNumber,
   prizeTiers,
+  terms,
 }: DrawRulesBlockProps) => {
   // Уточняющую часть показываем, только если реально знаем параметры игры —
   // иначе лучше общая формулировка, чем неверные числа
@@ -62,6 +68,10 @@ export const DrawRulesBlock = ({
       (a, b) => getMatchCount(b) - getMatchCount(a),
     );
   }, [prizeTiers]);
+
+  const sortedTerms = useMemo(() => {
+    return [...(terms || [])].sort((a, b) => a.order - b.order);
+  }, [terms]);
 
   return (
     <section className="font-rubik text-[#4B4B4B] text-left">
@@ -149,7 +159,33 @@ export const DrawRulesBlock = ({
           </div>
         )}
 
-        {/* КАРТОЧКА 3: Дополнительные правила */}
+        {/* КАРТОЧКА 3: Условия участия из админки. Раньше не показывались
+            вообще, хотя заполнены (14 пунктов у 5/36) */}
+        {sortedTerms.length > 0 && (
+          <div className="bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100">
+            <h3 className="font-bold text-[14px] lg:text-[16px] mb-4">
+              Условия участия:
+            </h3>
+            <ol className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-3">
+              {sortedTerms.map((term, index) => (
+                <li key={term.id} className="flex gap-3 items-start">
+                  <span className="text-[12px] lg:text-[14px] font-bold text-gray-400 shrink-0 mt-0.5">
+                    {index + 1}.
+                  </span>
+                  <span className="text-[12px] lg:text-[16px] text-[#6E6E6E] leading-relaxed">
+                    {term.text}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {/* КАРТОЧКА 4: Дополнительные правила.
+            Пока остаётся в коде: этих пунктов (перенос джекпота, округление,
+            срок обращения за выигрышем) нет среди terms с бэка, и выкинуть их —
+            значит потерять информацию. Их стоит завести в админке как условия,
+            тогда хардкод отсюда уйдёт. */}
         <div className="bg-white rounded-3xl lg:rounded-4xl p-6 lg:p-8 shadow-sm border border-gray-100 flex flex-col gap-6">
           <Description className="lg:max-w-none">
             Если в 1-й категории отсутствуют победители, сумма джекпота

@@ -11,7 +11,7 @@ import { PopularTicketsWidget } from "@/widgets/popular-tickets/ui/PopularTicket
 import { WinnersSlider } from "@/widgets/winners-slider";
 
 import { useCartStore } from "@/entities/cart/model/cartStore";
-import { useLotteryPrizeTiers } from "@/entities/lottery/api/lotteryClientApi";
+import { useLotteryContent } from "@/entities/lottery/api/lotteryClientApi";
 import {
   TicketDto,
   getTicketNumbers,
@@ -112,8 +112,8 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
   // тогда берём параметры из кода лотереи
   const gameParams = game ?? parseGameFromLotteryId(lotteryId);
 
-  // Категории выигрышей для вкладки «Правила» — из админки, а не из хардкода
-  const { data: prizeTiers } = useLotteryPrizeTiers(lotteryId);
+  // Контент вкладки «Правила» — из админки, а не из хардкода
+  const { data: lotteryContent } = useLotteryContent(lotteryId);
 
   const isLoading = isDrawLoading || isTicketsLoading;
 
@@ -334,7 +334,8 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
             rules={rules}
             pickCount={gameParams?.pickCount}
             maxNumber={gameParams?.maxNumber}
-            prizeTiers={prizeTiers}
+            prizeTiers={lotteryContent?.prizeTiers}
+            terms={lotteryContent?.terms}
           />
           <PopularTicketsWidget
             title="Другие лотереи"

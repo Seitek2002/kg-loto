@@ -57,27 +57,44 @@ export const useCurrentLotteries = () => {
   });
 };
 
-// Категории выигрышей лотереи.
-// Два запроса, потому что prizeTiers лежат только в детальном /lotteries/{id}/,
-// а он принимает числовой id — тогда как страница тиража знает лотерею по коду
-// («T_5_36»). Бэку отправлена просьба принимать код напрямую; когда сделают,
-// первый запрос уйдёт.
-export const useLotteryPrizeTiers = (lotteryId?: string) => {
+// Пункт условий лотереи (админка → «Условия»)
+export interface LotteryTermItem {
+  id: number;
+  text: string;
+  order: number;
+}
+
+export interface LotteryContent {
+  prizeTiers: LotteryPrizeTier[];
+  terms: LotteryTermItem[];
+}
+
+// Контент лотереи для вкладки «Правила»: категории выигрышей и условия.
+// Два запроса, потому что и то и другое лежит только в детальном
+// /lotteries/{id}/, а он принимает числовой id — тогда как страница тиража знает
+// лотерею по коду («T_5_36»). Бэку отправлена просьба принимать код напрямую;
+// когда сделают, первый запрос уйдёт.
+export const useLotteryContent = (lotteryId?: string) => {
   return useQuery({
-    queryKey: ["lottery-prize-tiers", lotteryId],
-    queryFn: async (): Promise<LotteryPrizeTier[]> => {
+    queryKey: ["lottery-content", lotteryId],
+    queryFn: async (): Promise<LotteryContent> => {
+      const empty: LotteryContent = { prizeTiers: [], terms: [] };
+
       const { data: list } = await api.get<{
         data: { id: number; billingLotteryId: string }[];
       }>("/lotteries/");
 
       const match = list.data?.find((l) => l.billingLotteryId === lotteryId);
-      if (!match) return [];
+      if (!match) return empty;
 
       const { data: detail } = await api.get<{
-        data: { prizeTiers?: LotteryPrizeTier[] };
+        data: { prizeTiers?: LotteryPrizeTier[]; terms?: LotteryTermItem[] };
       }>(`/lotteries/${match.id}/`);
 
-      return detail.data?.prizeTiers ?? [];
+      return {
+        prizeTiers: detail.data?.prizeTiers ?? [],
+        terms: detail.data?.terms ?? [],
+      };
     },
     enabled: !!lotteryId,
     staleTime: 5 * 60 * 1000,
