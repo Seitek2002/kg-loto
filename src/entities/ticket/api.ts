@@ -197,6 +197,17 @@ export const getTicketNumbers = (
   ticket: Pick<TicketDto, "combinations" | "combination">,
 ): number[] => ticket.combinations?.[0] ?? ticket.combination ?? [];
 
+// Параметры игры из кода лотереи: "T_5_36" -> { pickCount: 5, maxNumber: 36 }.
+// Нужен как фоллбек: game приходит только вместе с билетами (/tickets/), а их
+// может не быть — например, когда тираж уже закрыт.
+export const parseGameFromLotteryId = (
+  lotteryId?: string,
+): Pick<TicketGameInfo, "pickCount" | "maxNumber"> | null => {
+  const match = lotteryId?.match(/(\d+)[_/](\d+)$/);
+  if (!match) return null;
+  return { pickCount: Number(match[1]), maxNumber: Number(match[2]) };
+};
+
 // Ответ v2-эндпоинта /api/v2/lottery/tickets/ (работает напрямую с LttTicket)
 export interface LttTicketDto {
   shortId: string;

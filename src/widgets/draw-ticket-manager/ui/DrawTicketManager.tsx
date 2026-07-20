@@ -15,6 +15,7 @@ import {
   TicketDto,
   getTicketNumbers,
   isTicketAvailable,
+  parseGameFromLotteryId,
 } from "@/entities/ticket/api";
 import { useCurrentDraw, useTickets } from "@/entities/ticket/api/ticketApi";
 import { DrawTicketCard } from "@/entities/ticket/ui/DrawTicketCard";
@@ -105,6 +106,10 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
 
   // Параметры игровой сетки (36 для 5/36, 42 для 5/42) — приходят вместе с билетами
   const game = ticketsData?.game;
+
+  // Для текста правил game может быть недоступен (билетов нет / тираж закрыт),
+  // тогда берём параметры из кода лотереи
+  const gameParams = game ?? parseGameFromLotteryId(lotteryId);
 
   const isLoading = isDrawLoading || isTicketsLoading;
 
@@ -321,7 +326,11 @@ export const DrawTicketManager = ({ lotteryId }: { lotteryId: string }) => {
 
       {activeTab === "rules" && (
         <div className="mt-12 lg:mt-16 text-gray-500 py-10">
-          <DrawRulesBlock rules={rules} />
+          <DrawRulesBlock
+            rules={rules}
+            pickCount={gameParams?.pickCount}
+            maxNumber={gameParams?.maxNumber}
+          />
           <PopularTicketsWidget
             title="Другие лотереи"
             currentLotteryId={lotteryId}

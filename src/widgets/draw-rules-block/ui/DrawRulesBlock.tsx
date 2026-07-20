@@ -9,7 +9,21 @@ import { Title } from "@/shared/ui/Title";
 
 interface DrawRulesBlockProps {
   rules: LotteryRuleDto[];
+  // Параметры игры: сколько чисел в комбинации и верхняя граница диапазона.
+  // Раньше «5 (пяти) чисел ... от 1 до 36» было зашито строкой, из-за чего на
+  // странице 5/42 писало про 36 чисел.
+  pickCount?: number;
+  maxNumber?: number;
 }
+
+const PICK_COUNT_WORDS: Record<number, string> = {
+  2: "двух",
+  3: "трёх",
+  4: "четырёх",
+  5: "пяти",
+  6: "шести",
+  7: "семи",
+};
 
 // Моковые данные для таблицы призов (пока бэкенд не отдает их динамически)
 const PRIZE_TIERS = [
@@ -25,7 +39,16 @@ const PRIZE_TIERS = [
   { id: 4, category: "4", match: "2/5", prize: "100", isSuper: false },
 ];
 
-export const DrawRulesBlock = ({ rules }: DrawRulesBlockProps) => {
+export const DrawRulesBlock = ({
+  rules,
+  pickCount,
+  maxNumber,
+}: DrawRulesBlockProps) => {
+  // Уточняющую часть показываем, только если реально знаем параметры игры —
+  // иначе лучше общая формулировка, чем неверные числа
+  const hasGameParams = !!pickCount && !!maxNumber;
+  const pickCountWord = pickCount ? PICK_COUNT_WORDS[pickCount] : undefined;
+
   return (
     <section className="font-rubik text-[#4B4B4B] text-left">
       <Title>ПРАВИЛА ТИРАЖНОЙ ЛОТЕРЕИ</Title>
@@ -62,11 +85,18 @@ export const DrawRulesBlock = ({ rules }: DrawRulesBlockProps) => {
           </h3>
           <Description className="lg:max-w-none">
             Победитель определяется в ходе трансляции тиража. Выигрышная
-            комбинация из 5 (пяти) чисел в диапазоне от 1 до 36 определяется
-            случайным образом с использованием лототрона. Билет считается
-            выигрышным, если указанные в нем числа (в соответствии с выбранными
-            игровыми комбинациями) совпадают с выпавшими номерами в ходе
-            розыгрыша по следующим категориям:
+            комбинация{" "}
+            {hasGameParams && (
+              <>
+                из {pickCount}
+                {pickCountWord ? ` (${pickCountWord})` : ""} чисел в диапазоне
+                от 1 до {maxNumber}{" "}
+              </>
+            )}
+            определяется случайным образом с использованием лототрона. Билет
+            считается выигрышным, если указанные в нем числа (в соответствии с
+            выбранными игровыми комбинациями) совпадают с выпавшими номерами в
+            ходе розыгрыша по следующим категориям:
           </Description>
         </div>
 
@@ -120,10 +150,7 @@ export const DrawRulesBlock = ({ rules }: DrawRulesBlockProps) => {
           </div>
           <div className="flex flex-row flex-1 justify-around pl-8">
             {PRIZE_TIERS.map((item) => (
-              <div
-                key={item.id}
-                className="flex flex-col space-y-8"
-              >
+              <div key={item.id} className="flex flex-col space-y-8">
                 <div
                   className={cn(
                     "text-[26px] font-black",
