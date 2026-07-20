@@ -220,7 +220,7 @@ export const Header = ({
         {/* МОБИЛЬНЫЙ ХЕДЕР */}
         <div
           className={clsx(
-            "flex lg:hidden items-center justify-between px-4 py-3 z-50 relative",
+            "flex lg:hidden items-center justify-between gap-2 px-4 py-3 z-50 relative",
             isMobileMenuOpen
               ? "bg-[#f9f9f9]"
               : isDark
@@ -230,7 +230,7 @@ export const Header = ({
         >
           <Link
             href="/"
-            className="relative w-24 h-10"
+            className="relative w-20 sm:w-24 h-10 min-w-12 shrink"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <Image
@@ -241,14 +241,35 @@ export const Header = ({
             />
           </Link>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 shrink-0">
+            {/* Баланс. Раньше был доступен только внутри бургер-меню.
+                Сумму не обрезаем и не сокращаем (shrink-0 + nowrap): показать
+                «1 000 0…» вместо 1 000 000 хуже, чем не показать вовсе.
+                Место под неё освобождает логотип — он сжимаемый (shrink),
+                и на узких экранах отдаёт ширину цифрам. Иконки кошелька здесь
+                нет намеренно: на 320px её 24px не помещаются вместе с корзиной,
+                а оранжевая сумма с «с» и так читается как деньги. */}
+            {user && (
+              <Link
+                href="/wallet"
+                className="flex items-baseline gap-0.5 shrink-0 whitespace-nowrap"
+              >
+                <span className="text-[13px] font-black text-[#F58220] tabular-nums">
+                  {user.balance || "0"}
+                </span>
+                <span className="text-[11px] font-black text-[#F58220] underline">
+                  с
+                </span>
+              </Link>
+            )}
+
             <LanguageSwitcher isDark={!isMobileMenuOpen} />
 
             {user && (
               <Link
                 href="/cart"
                 className={clsx(
-                  "relative",
+                  "relative shrink-0",
                   isMobileMenuOpen || !isDark ? "text-[#4B4B4B]" : "text-white",
                 )}
               >
@@ -263,7 +284,7 @@ export const Header = ({
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={clsx(
-                "p-1",
+                "p-1 shrink-0",
                 isMobileMenuOpen || !isDark ? "text-[#4B4B4B]" : "text-white",
               )}
             >
