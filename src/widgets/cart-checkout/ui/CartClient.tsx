@@ -10,17 +10,18 @@ import { useMounted } from "@/hooks/useMounted";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 
-import { TopUpModal } from "@/features/top-up/ui/TopUpModal";
-
 import { type CartItem, useCartStore } from "@/entities/cart/model/cartStore";
 import { useBalance } from "@/entities/finance/api/financeApi";
 import {
+  PENDING_PURCHASE_KEY,
+  type PendingPurchase,
   TicketDto,
   getSoldTicketErrorMessage,
   getTicketNumbers,
   isTicketAvailable,
   useDownloadTicketPdf,
   useLttPurchase,
+  useLttPurchasePaylink,
   useTickets,
 } from "@/entities/ticket/api";
 import { useAuthStore } from "@/entities/user/model/authStore";
@@ -142,6 +143,8 @@ export const CartClient = () => {
   const { user, openAuthModal } = useAuthStore();
 
   const { mutate: purchase, isPending: isPurchasing } = useLttPurchase();
+  const { mutate: purchaseViaPaylink, isPending: isPaylinkPending } =
+    useLttPurchasePaylink();
   const { mutate: downloadPdf, isPending: isDownloading } =
     useDownloadTicketPdf();
   const { refetch: refetchBalance } = useBalance();
@@ -152,8 +155,6 @@ export const CartClient = () => {
   const [errorMessage, setErrorMessage] = useState<string>(
     "Возможно, выбранные билеты уже выкуплены. Пожалуйста, попробуйте еще раз.",
   );
-  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
-  const [missingAmount, setMissingAmount] = useState<number>(0);
   const [successDetails, setSuccessDetails] = useState<TicketDetails | null>(
     null,
   );
@@ -182,6 +183,71 @@ export const CartClient = () => {
   const needsTopUp = !!user && Number(user?.balance || 0) < totalPrice;
   const checkoutLabel = needsTopUp ? "Пополнить и оплатить" : "Оплатить";
 
+  // Путь Г: когда баланса не хватает — платим и покупаем одним редиректом на
+  // PayLink. Билеты бронируются сразу; продажа подтвердится вебхуком после оплаты.
+  const startPaylinkCheckout = () => {
+    const referralCode = localStorage.getItem("referral_code") ?? "";
+    const orderId = `ORD-${Date.now()}`;
+    const ticketIds = items.map((t) => t.id);
+    purchaseViaPaylink(
+      {
+        orderId,
+        tickets: ticketIds,
+        note: "",
+        referralCode,
+        redirectUrl: `${window.location.origin}/payment/processing`,
+      },
+      {
+        onSuccess: (res) => {
+          if (res?.paylinkUrl) {
+            // Сохраняем намерение, чтобы после возврата опросить статус билетов
+            const pending: PendingPurchase = {
+              orderId,
+              ticketIds: res.tickets?.map((t) => t.shortId) ?? ticketIds,
+              ts: Date.now(),
+            };
+            try {
+              localStorage.setItem(
+                PENDING_PURCHASE_KEY,
+                JSON.stringify(pending),
+              );
+            } catch {}
+            // Корзину чистим: билеты забронированы, результат появится в «Моих билетах»
+            clearCart();
+            window.location.href = res.paylinkUrl;
+            return;
+          }
+          setErrorMessage(
+            "Не удалось создать ссылку на оплату. Попробуйте ещё раз.",
+          );
+          setIsErrorOpen(true);
+        },
+        onError: (error) => {
+          const status = (error as { response?: { status?: number } })?.response
+            ?.status;
+          const soldMessage = getSoldTicketErrorMessage(error);
+          if (status === 409) {
+            setErrorMessage(
+              "Заказ уже обрабатывается. Подождите несколько секунд и попробуйте снова.",
+            );
+          } else if (soldMessage) {
+            setErrorMessage(soldMessage);
+          } else if (status === 400) {
+            setErrorMessage(
+              "Билет уже занят или продажи тиража закрыты. Обновите список и выберите билет заново.",
+            );
+          } else {
+            setErrorMessage(
+              "Не удалось оформить покупку. Возможно, в профиле не заполнена дата рождения. Попробуйте ещё раз.",
+            );
+          }
+          setIsErrorOpen(true);
+          queryClient.invalidateQueries({ queryKey: ["tickets"] });
+        },
+      },
+    );
+  };
+
   const handleCheckout = () => {
     if (items.length === 0) return;
 
@@ -193,10 +259,9 @@ export const CartClient = () => {
 
     const currentBalance = Number(user?.balance || 0);
 
-    // 1. Денег не хватает -> Открываем модалку пополнения
+    // 1. Денег не хватает -> Путь Г: оплата + покупка одним запросом через PayLink
     if (currentBalance < totalPrice) {
-      setMissingAmount(totalPrice - currentBalance);
-      setIsTopUpOpen(true);
+      startPaylinkCheckout();
       return;
     }
 
@@ -260,11 +325,8 @@ export const CartClient = () => {
           ?.status;
 
         if (status === 402) {
-          // Недостаточно средств (баланс не тронут)
-          const bal = Number(user?.balance || 0);
-          setMissingAmount(Math.max(totalPrice - bal, 0));
-          setIsTopUpOpen(true);
-          refetchBalance();
+          // Недостаточно средств (баланс не тронут) -> оплата через PayLink (путь Г)
+          startPaylinkCheckout();
           return;
         }
 
@@ -414,7 +476,7 @@ export const CartClient = () => {
           </div>
           <Button
             onClick={handleCheckout}
-            isLoading={isPurchasing}
+            isLoading={isPurchasing || isPaylinkPending}
             className="w-full py-4 rounded-xl text-[16px] bg-[#FF7600] hover:bg-[#E56A00] text-white"
           >
             {checkoutLabel}
@@ -441,7 +503,7 @@ export const CartClient = () => {
           </div>
           <Button
             onClick={handleCheckout}
-            isLoading={isPurchasing}
+            isLoading={isPurchasing || isPaylinkPending}
             className="w-full bg-[#FF7600] hover:bg-[#E56A00] text-white py-4 rounded-2xl text-[16px]"
           >
             {checkoutLabel}
@@ -450,21 +512,6 @@ export const CartClient = () => {
       </div>
 
       {/* 🔥 Модалки поверх всего */}
-      <TopUpModal
-        isOpen={isTopUpOpen}
-        onClose={() => setIsTopUpOpen(false)}
-        initialAmount={missingAmount}
-        redirectPath="/cart"
-        title="Выберите кошелек пополнения"
-        description={
-          <span className="text-[#EB5757] text-[13px] lg:text-[15px] block leading-relaxed">
-            Недостаточно средств на вашем балансе.
-            <br />
-            Необходимо пополнить: {missingAmount} сом
-          </span>
-        }
-      />
-
       <ErrorModal
         isOpen={isErrorOpen}
         onClose={() => setIsErrorOpen(false)}

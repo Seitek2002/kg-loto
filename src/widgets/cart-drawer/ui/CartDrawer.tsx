@@ -6,14 +6,15 @@ import { useRouter } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
 
-import { TopUpModal } from "@/features/top-up/ui/TopUpModal";
-
 import { useCartStore } from "@/entities/cart/model/cartStore";
 import { useBalance } from "@/entities/finance/api/financeApi";
 import {
+  PENDING_PURCHASE_KEY,
+  type PendingPurchase,
   getSoldTicketErrorMessage,
   useDownloadTicketPdf,
   useLttPurchase,
+  useLttPurchasePaylink,
 } from "@/entities/ticket/api";
 import { useAuthStore } from "@/entities/user/model/authStore";
 
@@ -47,6 +48,8 @@ export const CartDrawer = () => {
 
   // API
   const { mutate: purchase, isPending } = useLttPurchase();
+  const { mutate: purchaseViaPaylink, isPending: isPaylinkPending } =
+    useLttPurchasePaylink();
   const { mutate: downloadPdf, isPending: isDownloading } =
     useDownloadTicketPdf();
   const { refetch: refetchBalance } = useBalance();
@@ -54,12 +57,10 @@ export const CartDrawer = () => {
   const showToast = useToastStore((s) => s.showToast);
 
   // Модалки
-  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>(
     "Возможно, выбранные вами билеты уже были выкуплены другим участником. Пожалуйста, обновите список и попробуйте снова.",
   );
-  const [missingAmount, setMissingAmount] = useState<number>(0);
 
   // 🔥 СТЕЙТ ДЛЯ УСПЕШНОЙ МОДАЛКИ
   const [successDetails, setSuccessDetails] = useState<TicketDetails | null>(
@@ -76,6 +77,70 @@ export const CartDrawer = () => {
   // поэтому кнопка честно называется «Пополнить и оплатить»
   const needsTopUp = !!user && Number(user?.balance || 0) < totalPrice;
 
+  // Путь Г: когда баланса не хватает — платим и покупаем одним редиректом на
+  // PayLink. Билеты бронируются сразу; продажа подтвердится вебхуком после оплаты.
+  const startPaylinkCheckout = () => {
+    const referralCode = localStorage.getItem("referral_code") ?? "";
+    const orderId = `ORD-${Date.now()}`;
+    const ticketIds = items.map((t) => t.id);
+    purchaseViaPaylink(
+      {
+        orderId,
+        tickets: ticketIds,
+        note: "",
+        referralCode,
+        redirectUrl: `${window.location.origin}/payment/processing`,
+      },
+      {
+        onSuccess: (res) => {
+          if (res?.paylinkUrl) {
+            const pending: PendingPurchase = {
+              orderId,
+              ticketIds: res.tickets?.map((t) => t.shortId) ?? ticketIds,
+              ts: Date.now(),
+            };
+            try {
+              localStorage.setItem(
+                PENDING_PURCHASE_KEY,
+                JSON.stringify(pending),
+              );
+            } catch {}
+            // Корзину чистим: билеты забронированы, результат появится в «Моих билетах»
+            clearCart();
+            window.location.href = res.paylinkUrl;
+            return;
+          }
+          setErrorMessage(
+            "Не удалось создать ссылку на оплату. Попробуйте ещё раз.",
+          );
+          setIsErrorOpen(true);
+        },
+        onError: (error) => {
+          const status = (error as { response?: { status?: number } })?.response
+            ?.status;
+          const soldMessage = getSoldTicketErrorMessage(error);
+          if (status === 409) {
+            setErrorMessage(
+              "Заказ уже обрабатывается. Подождите несколько секунд и попробуйте снова.",
+            );
+          } else if (soldMessage) {
+            setErrorMessage(soldMessage);
+          } else if (status === 400) {
+            setErrorMessage(
+              "Билет уже занят или продажи тиража закрыты. Обновите список и выберите билет заново.",
+            );
+          } else {
+            setErrorMessage(
+              "Не удалось оформить покупку. Возможно, в профиле не заполнена дата рождения. Попробуйте ещё раз.",
+            );
+          }
+          setIsErrorOpen(true);
+          queryClient.invalidateQueries({ queryKey: ["tickets"] });
+        },
+      },
+    );
+  };
+
   const handleCheckout = () => {
     if (!user) {
       setIsExpanded(false); // Закрываем шторку корзины
@@ -85,10 +150,9 @@ export const CartDrawer = () => {
 
     const currentBalance = Number(user?.balance || 0);
 
-    // 1. Денег не хватает -> Открываем модалку пополнения
+    // 1. Денег не хватает -> Путь Г: оплата + покупка одним запросом через PayLink
     if (currentBalance < totalPrice) {
-      setMissingAmount(totalPrice - currentBalance);
-      setIsTopUpOpen(true);
+      startPaylinkCheckout();
       return;
     }
 
@@ -157,10 +221,8 @@ export const CartDrawer = () => {
           ?.status;
 
         if (status === 402) {
-          const bal = Number(user?.balance || 0);
-          setMissingAmount(Math.max(totalPrice - bal, 0));
-          setIsTopUpOpen(true);
-          refetchBalance();
+          // Недостаточно средств (баланс не тронут) -> оплата через PayLink (путь Г)
+          startPaylinkCheckout();
           return;
         }
 
@@ -222,7 +284,7 @@ export const CartDrawer = () => {
 
           <Button
             onClick={handleCheckout}
-            isLoading={isPending}
+            isLoading={isPending || isPaylinkPending}
             className="w-auto bg-[#F58220] hover:bg-[#E56A00] text-white px-6 py-3.5 text-[13px] rounded-2xl"
           >
             {needsTopUp ? "Пополнить и оплатить" : "Оплатить"}
@@ -261,21 +323,6 @@ export const CartDrawer = () => {
       </div>
 
       {/* Модалки рендерятся поверх всего */}
-      <TopUpModal
-        isOpen={isTopUpOpen}
-        onClose={() => setIsTopUpOpen(false)}
-        initialAmount={missingAmount}
-        redirectPath="/cart"
-        title="Выберите кошелек пополнения"
-        description={
-          <span className="text-[#EB5757] text-[13px] lg:text-[15px] block leading-relaxed">
-            Недостаточно средств на вашем балансе.
-            <br />
-            Необходимо пополнить: {missingAmount} сом
-          </span>
-        }
-      />
-
       <ErrorModal
         isOpen={isErrorOpen}
         onClose={() => setIsErrorOpen(false)}

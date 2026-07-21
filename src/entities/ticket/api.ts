@@ -138,6 +138,40 @@ export interface LttPurchaseResponse {
   tickets: LttPurchaseTicketResult[];
 }
 
+// Путь Г: оплата + покупка билетов одним запросом через PayLink, когда на
+// балансе не хватает денег. Бэк сам считает сумму по билетам, создаёт PayLink
+// и после успешной оплаты (webhook) продаёт билеты — баланс не трогается.
+// POST /api/v1/me/balance/ltt-purchase/paylink/
+export interface LttPurchasePaylinkPayload {
+  orderId: string; // ключ идемпотентности, генерируется на фронте
+  tickets: string[]; // short_id билетов
+  note?: string;
+  referralCode?: string;
+  // Куда PayLink вернёт пользователя после оплаты
+  redirectUrl?: string;
+}
+
+export interface LttPurchasePaylinkResponse {
+  orderId: string;
+  // "processing" пока не пришёл webhook об оплате
+  status: string;
+  purchaseId: number;
+  amount: string;
+  paylinkUrl: string;
+  tickets: { shortId: string; status: string }[];
+}
+
+// Намерение покупки через PayLink, которое переживает внешний редирект на оплату.
+// Кладём в localStorage перед уходом на PayLink и читаем на /payment/processing,
+// чтобы опросить статус билетов после возврата.
+export const PENDING_PURCHASE_KEY = "kgloto_pending_purchase";
+
+export interface PendingPurchase {
+  orderId: string;
+  ticketIds: string[]; // short_id купленных билетов (= ticketId в /me/balance/tickets/)
+  ts: number; // время создания, для отсева протухших намерений
+}
+
 // --- ИНТЕРФЕЙСЫ ДЛЯ ПОЛУЧЕНИЯ БИЛЕТОВ (GET) ---
 export interface FetchTicketsParams {
   lotteryId: string;
@@ -320,6 +354,16 @@ export const ticketApi = {
     return "data" in data ? data.data : data;
   },
 
+  // Путь Г: оплата + покупка одним запросом через PayLink (когда нет денег на балансе)
+  lttPurchasePaylink: async (
+    payload: LttPurchasePaylinkPayload,
+  ): Promise<LttPurchasePaylinkResponse> => {
+    const { data } = await api.post<
+      { data: LttPurchasePaylinkResponse } | LttPurchasePaylinkResponse
+    >("/me/balance/ltt-purchase/paylink/", payload);
+    return "data" in data ? data.data : data;
+  },
+
   getCurrentDraw: async (lotteryId: string) => {
     const response = await api.get<any>("/draws/current", {
       params: { lotteryId },
@@ -415,6 +459,13 @@ export const usePurchaseTickets = () => {
 export const useLttPurchase = () => {
   return useMutation({
     mutationFn: ticketApi.lttPurchase,
+  });
+};
+
+// Путь Г: оплата + покупка одним запросом через PayLink
+export const useLttPurchasePaylink = () => {
+  return useMutation({
+    mutationFn: ticketApi.lttPurchasePaylink,
   });
 };
 
