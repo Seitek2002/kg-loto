@@ -4,30 +4,32 @@ import { useEffect, useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { Check, Clock, Loader2 } from "lucide-react";
+import { AlertCircle, Check, Clock, Loader2 } from "lucide-react";
 
 import {
   PENDING_PURCHASE_KEY,
   type PendingPurchase,
-  useMyTickets,
+  ticketApi,
 } from "@/entities/ticket/api";
 
 import { Button } from "@/shared/ui/Button";
 
 // Продажа после оплаты на PayLink подтверждается вебхуком асинхронно, поэтому
-// после возврата опрашиваем /me/balance/tickets/ несколько раз, пока билеты не
-// станут "sold" либо не выйдет таймаут (~20 сек).
+// после возврата опрашиваем прямой статус покупки по orderId несколько раз, пока
+// он не станет confirmed/rejected либо не выйдет таймаут (~20 сек).
 const MAX_ATTEMPTS = 8;
 const INTERVAL_MS = 2500;
 const MAX_INTENT_AGE_MS = 30 * 60 * 1000;
 
-type Phase = "polling" | "success" | "timeout";
+type Phase = "polling" | "success" | "rejected" | "timeout";
 
 export const PaymentProcessingClient = () => {
   const router = useRouter();
-  // enabled: false — автозапрос не нужен, дёргаем refetch вручную в цикле
-  const { refetch } = useMyTickets(false);
   const [phase, setPhase] = useState<Phase>("polling");
+  // orderId нужен только для показа в экране rejected. Выставляем его не в теле
+  // эффекта, а в асинхронном колбэке опроса (после await) — иначе линтер ругается
+  // на синхронный setState внутри эффекта.
+  const [orderId, setOrderId] = useState<string>("");
   const startedRef = useRef(false);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export const PaymentProcessingClient = () => {
     // Нет валидного намерения (зашли напрямую / протухло) — в «Мои билеты»
     if (
       !intent ||
-      !intent.ticketIds?.length ||
+      !intent.orderId ||
       Date.now() - intent.ts > MAX_INTENT_AGE_MS
     ) {
       localStorage.removeItem(PENDING_PURCHASE_KEY);
@@ -54,7 +56,7 @@ export const PaymentProcessingClient = () => {
       return;
     }
 
-    const pendingIds = intent.ticketIds;
+    const currentOrderId = intent.orderId;
     let attempts = 0;
     let cancelled = false;
 
@@ -65,25 +67,28 @@ export const PaymentProcessingClient = () => {
 
     const poll = async () => {
       attempts += 1;
-      let soldCount = 0;
       try {
-        const res = await refetch();
-        const list = res.data ?? [];
-        soldCount = list.filter(
-          (t) => pendingIds.includes(t.ticketId) && t.status === "sold",
-        ).length;
+        const res = await ticketApi.getLttPurchasePaylinkStatus(currentOrderId);
+        if (res.status === "confirmed") {
+          finish("success");
+          return;
+        }
+        if (res.status === "rejected") {
+          setOrderId(currentOrderId);
+          finish("rejected");
+          return;
+        }
+        // "processing" — продолжаем опрашивать
       } catch {
-        // сеть моргнула — не считаем это финалом, просто попробуем ещё раз
+        // 404 / сеть моргнула — не финал, пробуем ещё раз до таймаута
       }
 
       if (cancelled) return;
 
-      if (soldCount >= pendingIds.length) {
-        finish("success");
-        return;
-      }
       if (attempts >= MAX_ATTEMPTS) {
-        finish("timeout");
+        // Оплата ещё не подтверждена (или пользователь не оплатил) —
+        // намерение НЕ удаляем: даём шанс повторно опросить при перезаходе
+        if (!cancelled) setPhase("timeout");
         return;
       }
       setTimeout(poll, INTERVAL_MS);
@@ -93,7 +98,7 @@ export const PaymentProcessingClient = () => {
     return () => {
       cancelled = true;
     };
-  }, [refetch, router]);
+  }, [router]);
 
   if (phase === "polling") {
     return (
@@ -142,7 +147,40 @@ export const PaymentProcessingClient = () => {
     );
   }
 
-  // timeout — оплата, скорее всего, ещё обрабатывается
+  if (phase === "rejected") {
+    return (
+      <div className="flex flex-col items-center mt-10 md:mt-16 text-center">
+        <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-red-50 flex items-center justify-center mb-6 text-red-500 shadow-sm">
+          <AlertCircle className="w-12 h-12" strokeWidth={2} />
+        </div>
+        <h1 className="text-[20px] md:text-[28px] font-black font-benzin uppercase text-[#4B4B4B] mb-4 leading-tight">
+          Не удалось оформить билеты
+        </h1>
+        <p className="text-gray-500 mb-4 max-w-md font-medium leading-relaxed">
+          Оплата прошла, но билеты не удалось передать — возможно, их успели
+          купить в другом месте. Средства могли быть списаны. Пожалуйста,
+          свяжитесь с поддержкой
+          {orderId ? ` и укажите номер заказа ${orderId}` : ""}.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-125">
+          <Button
+            onClick={() => router.push("/profile/support")}
+            className="flex-1 bg-[#F58220] hover:bg-[#E57210] text-white py-4 rounded-full font-bold"
+          >
+            Поддержка
+          </Button>
+          <Button
+            onClick={() => router.push("/profile")}
+            className="flex-1 bg-[#4B4B4B] hover:bg-[#3A3A3A] text-white py-4 rounded-full font-bold"
+          >
+            Мои билеты
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // timeout — оплата ещё обрабатывается (или не была завершена)
   return (
     <div className="flex flex-col items-center mt-10 md:mt-16 text-center">
       <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-[#FFF0D4] flex items-center justify-center mb-6 shadow-sm">

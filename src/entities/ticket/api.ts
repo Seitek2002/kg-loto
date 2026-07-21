@@ -364,6 +364,17 @@ export const ticketApi = {
     return "data" in data ? data.data : data;
   },
 
+  // Прямой статус покупки Пути Г по orderId (processing | confirmed | rejected).
+  // 404 — заказ не найден среди покупок текущего пользователя.
+  getLttPurchasePaylinkStatus: async (
+    orderId: string,
+  ): Promise<LttPurchasePaylinkResponse> => {
+    const { data } = await api.get<
+      { data: LttPurchasePaylinkResponse } | LttPurchasePaylinkResponse
+    >(`/me/balance/ltt-purchase/paylink/${encodeURIComponent(orderId)}/`);
+    return "data" in data ? data.data : data;
+  },
+
   getCurrentDraw: async (lotteryId: string) => {
     const response = await api.get<any>("/draws/current", {
       params: { lotteryId },
