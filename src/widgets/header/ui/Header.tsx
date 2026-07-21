@@ -106,7 +106,9 @@ export const Header = ({
                 {headerUpperMenu[0].title}
               </button>
               <Link
-                href={`tel:${getRelativeUrl(headerUpperMenu[1].link)}`}
+                // CMS-ссылка на телефон уже может содержать "tel:" — срезаем его,
+                // иначе получается нерабочий "tel:tel:+996..."
+                href={`tel:${getRelativeUrl(headerUpperMenu[1].link).replace(/^tel:/, "")}`}
                 className="cursor-pointer hover:underline"
               >
                 {headerUpperMenu[1].title}

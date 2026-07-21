@@ -37,3 +37,22 @@ export const trackPurchase = ({
     })),
   });
 };
+
+// Клик по номеру телефона (tel:-ссылка). Вешается централизованно через
+// AnalyticsClickTracker, поэтому дублировать onClick на каждый <a> не нужно.
+export const trackPhoneClick = (phoneNumber: string) => {
+  if (typeof window === "undefined" || !window.gtag) return;
+
+  window.gtag("event", "phone_click", {
+    phone_number: phoneNumber,
+  });
+};
+
+// Клик по ссылке WhatsApp (wa.me / whatsapp).
+export const trackWhatsappClick = (link: string) => {
+  if (typeof window === "undefined" || !window.gtag) return;
+
+  window.gtag("event", "whatsapp_click", {
+    link,
+  });
+};

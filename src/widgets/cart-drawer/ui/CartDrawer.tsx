@@ -72,6 +72,10 @@ export const CartDrawer = () => {
   const otherCount = items.filter((t) => t.type === "other").length;
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
 
+  // Если авторизован и баланса не хватает — оплата пойдёт через пополнение,
+  // поэтому кнопка честно называется «Пополнить и оплатить»
+  const needsTopUp = !!user && Number(user?.balance || 0) < totalPrice;
+
   const handleCheckout = () => {
     if (!user) {
       setIsExpanded(false); // Закрываем шторку корзины
@@ -221,7 +225,7 @@ export const CartDrawer = () => {
             isLoading={isPending}
             className="w-auto bg-[#F58220] hover:bg-[#E56A00] text-white px-6 py-3.5 text-[13px] rounded-2xl"
           >
-            Оплатить
+            {needsTopUp ? "Пополнить и оплатить" : "Оплатить"}
           </Button>
         </div>
 

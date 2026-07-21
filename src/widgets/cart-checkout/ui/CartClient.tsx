@@ -177,6 +177,11 @@ export const CartClient = () => {
   const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
   const totalTickets = items.length;
 
+  // Авторизован, но баланса не хватает — оплата пойдёт через пополнение,
+  // поэтому кнопка честно называется «Пополнить и оплатить»
+  const needsTopUp = !!user && Number(user?.balance || 0) < totalPrice;
+  const checkoutLabel = needsTopUp ? "Пополнить и оплатить" : "Оплатить";
+
   const handleCheckout = () => {
     if (items.length === 0) return;
 
@@ -412,7 +417,7 @@ export const CartClient = () => {
             isLoading={isPurchasing}
             className="w-full py-4 rounded-xl text-[16px] bg-[#FF7600] hover:bg-[#E56A00] text-white"
           >
-            Оплатить
+            {checkoutLabel}
           </Button>
         </div>
 
@@ -439,7 +444,7 @@ export const CartClient = () => {
             isLoading={isPurchasing}
             className="w-full bg-[#FF7600] hover:bg-[#E56A00] text-white py-4 rounded-2xl text-[16px]"
           >
-            Оплатить
+            {checkoutLabel}
           </Button>
         </div>
       </div>

@@ -8,7 +8,7 @@ import {
   CurrentLotteryDto,
   useCurrentLotteries,
 } from "@/entities/lottery/api/lotteryClientApi";
-import { useCurrentDraw } from "@/entities/ticket/api/ticketApi";
+import { useCurrentDraw, useTickets } from "@/entities/ticket/api/ticketApi";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -114,6 +114,19 @@ export const HeroCountdownBlock = () => {
       : null;
 
   const { timeLeft, isFinished } = useCountdown(targetIso);
+
+  // firstLottery.ticketPrice иногда приходит 0 (в CMS у лотереи не проставлена
+  // цена) — тогда берём реальную цену из первого билета этого тиража. Пустой
+  // drawId отключает запрос (useTickets гейтится по drawId), поэтому лишний
+  // /tickets/ уходит только когда цена действительно неизвестна.
+  const needsPriceFromTicket = !!firstLottery && !firstLottery.ticketPrice;
+  const { data: drawTicketsData } = useTickets({
+    lotteryId: firstLottery?.lotteryId || "",
+    drawId: needsPriceFromTicket ? draw?.drawId || "" : "",
+    limit: 1,
+  });
+  const ticketPrice =
+    firstLottery?.ticketPrice || drawTicketsData?.tickets?.[0]?.price || 100;
 
   const isLoading = isLotteriesLoading || (!!firstLottery && isDrawLoading);
 
@@ -228,7 +241,7 @@ export const HeroCountdownBlock = () => {
                 href={lotteryHref}
                 className="inline-block bg-[#F08000] hover:bg-[#D97300] active:scale-[0.98] text-white text-[17px] font-semibold px-10 py-3.5 rounded-[10px] transition-all"
               >
-                Купить билет за {firstLottery?.ticketPrice ?? 100} сом
+                Купить билет за {ticketPrice} сом
               </Link>
               <span className="text-[13px] text-[#5A6B85]">
                 📲 Билет придёт на WhatsApp
