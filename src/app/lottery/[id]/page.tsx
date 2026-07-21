@@ -11,6 +11,8 @@ import { WinnersSlider } from "@/widgets/winners-slider";
 
 import { getLotteryDetail } from "@/entities/lottery/api/lotteryServerApi";
 
+import { SITE_NAME, buildMetadata } from "@/shared/config/seo";
+
 interface LotteryDetailPageProps {
   params: Promise<{ id: string }>;
 }
@@ -20,21 +22,23 @@ export async function generateMetadata({
 }: LotteryDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   const lottery = await getLotteryDetail(id);
-  const tSeo = await getTranslations("seo");
-
-  const siteName =
-    tSeo("site_name") === "site_name" ? "KGLOTO" : tSeo("site_name");
 
   if (!lottery) {
-    return { title: `Лотерея не найдена | ${siteName}` };
+    return { title: `Лотерея не найдена | ${SITE_NAME}` };
   }
 
-  return {
-    title: `${lottery.title} | ${siteName}`,
+  return buildMetadata({
+    title: `${lottery.title} | ${SITE_NAME}`,
     description:
       lottery.subtitle ||
       `Участвуйте в лотерее ${lottery.title} и выигрывайте призы!`,
-  };
+    path: `/lottery/${id}`,
+    image:
+      lottery.imageLive ||
+      lottery.backgroundImage ||
+      lottery.drawLogo ||
+      lottery.logo,
+  });
 }
 
 export default async function LotteryDetailPage({

@@ -12,6 +12,13 @@ import { Header } from "@/widgets/header";
 
 import { AgeVerificationModal } from "@/features/age-verification";
 
+import {
+  DEFAULT_OG_IMAGE,
+  SITE_URL,
+  organizationJsonLd,
+} from "@/shared/config/seo";
+import { AnalyticsClickTracker } from "@/shared/ui/AnalyticsClickTracker";
+import { JsonLd } from "@/shared/ui/JsonLd";
 import { LiquidFilterDef } from "@/shared/ui/LiquidFilterDef";
 import { ToastContainer } from "@/shared/ui/Toast";
 import { WhatsAppHelpPopup } from "@/shared/ui/WhatsAppHelpPopup";
@@ -63,6 +70,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteName = t("site_name") === "site_name" ? "KGLOTO" : t("site_name");
 
   return {
+    // Базовый URL, чтобы относительные og:image/пути резолвились в абсолютные
+    metadataBase: new URL(SITE_URL),
     title,
     description,
     keywords,
@@ -73,11 +82,13 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName,
       locale: locale,
       type: "website",
+      images: [{ url: DEFAULT_OG_IMAGE }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [DEFAULT_OG_IMAGE],
     },
     icons: { icon: "/favicon.png" },
   };
@@ -137,11 +148,13 @@ export default async function RootLayout({
       <body
         className={`${rubik.variable} ${benzin.variable} antialiased font-rubik bg-[#F5F5F5]`}
       >
+        <JsonLd data={organizationJsonLd()} />
         <NextIntlClientProvider messages={messages}>
           <LiquidFilterDef />
 
           <QueryProvider>
             <ToastContainer />
+            <AnalyticsClickTracker />
             <WhatsAppHelpPopup />
             {!isAgeVerified && <AgeVerificationModal />}
 

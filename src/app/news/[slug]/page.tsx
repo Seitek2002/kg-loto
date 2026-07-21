@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -9,6 +8,8 @@ import { OtherMaterialsSlider } from "@/widgets/other-news-slider";
 
 import { getNewsBySlug, getNewsList } from "@/entities/news/api/newsServerApi";
 
+import { SITE_NAME, SITE_URL, buildMetadata } from "@/shared/config/seo";
+import { JsonLd } from "@/shared/ui/JsonLd";
 import { PageHeader } from "@/shared/ui/PageHeader";
 
 interface NewsDetailsPageProps {
@@ -23,18 +24,18 @@ export async function generateMetadata({
 
   // Делаем запрос (Next.js его закэширует)
   const article = await getNewsBySlug(slug);
-  const tSeo = await getTranslations("seo");
-  const siteName =
-    tSeo("site_name") === "site_name" ? "KGLOTO" : tSeo("site_name");
 
   if (!article) {
-    return { title: `Новость не найдена | ${siteName}` };
+    return { title: `Новость не найдена | ${SITE_NAME}` };
   }
 
-  return {
-    title: `${article.title} | ${siteName}`,
+  return buildMetadata({
+    title: `${article.title} | ${SITE_NAME}`,
     description: article.shortText || article.title,
-  };
+    path: `/news/${slug}`,
+    image: article.image,
+    type: "article",
+  });
 }
 
 export default async function NewsDetailsPage({
@@ -67,8 +68,24 @@ export default async function NewsDetailsPage({
 
   const htmlContent = article.content || article.shortText || "";
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    ...(article.shortText ? { description: article.shortText } : {}),
+    ...(article.image ? { image: [article.image] } : {}),
+    ...(article.publishedAt ? { datePublished: article.publishedAt } : {}),
+    mainEntityOfPage: `${SITE_URL}/news/${slug}`,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F5F5] font-rubik">
+      <JsonLd data={articleJsonLd} />
       <div className="px-4 pt-4">
         <PageHeader title="" />
       </div>

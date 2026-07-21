@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { DrawLotteryList } from "@/widgets/draw-lottery-list/ui/DrawLotteryList";
+
+import { buildMetadata } from "@/shared/config/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Тиражные лотереи | KGLOTO",
+  description:
+    "Тиражные лотереи Кыргызстана: выберите тираж, купите билет онлайн и участвуйте в розыгрыше крупных призов.",
+  path: "/draw-tickets",
+});
 
 export default function DrawLotteryPage() {
   return (
